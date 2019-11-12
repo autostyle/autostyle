@@ -104,17 +104,10 @@ model {
               prerequisites { maven '3.1.0' }
             }
             developers {
-              if (project.ext.artifactId == MAVEN_PLUGIN_ARTIFACT_NAME) {
-                developer {
-                  id 'lutovich'
-                  name 'Konstantin Lutovich'
-                  email 'konstantin.lutovich@neotechnology.com'
-                }
-              }
               developer {
-                id 'nedtwigg'
-                name 'Ned Twigg'
-                email 'ned.twigg@diffplug.com'
+                id 'vladimirsitnikov'
+                name 'Vladimir Sitnikov'
+                email 'sitnikov.vladimir@gmail.com'
               }
             }
           }
