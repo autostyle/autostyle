@@ -43,48 +43,48 @@ import com.diffplug.spotless.ResourceHarness;
  */
 public abstract class EclipseCommonTests extends ResourceHarness {
 
-	/** Returns the complete set of versions supported by the formatter */
-	protected abstract String[] getSupportedVersions();
+  /** Returns the complete set of versions supported by the formatter */
+  protected abstract String[] getSupportedVersions();
 
-	/**
-	 * Returns the input which shall be used with the formatter version.
-	 * The input shall be very simple and supported if possible by all
-	 * formatter versions.
-	 */
-	protected abstract String getTestInput(String version);
+  /**
+   * Returns the input which shall be used with the formatter version.
+   * The input shall be very simple and supported if possible by all
+   * formatter versions.
+   */
+  protected abstract String getTestInput(String version);
 
-	/**
-	 * Returns the output which is expected from the formatter step.
-	 * If possible, the output shall be equal for all versions,
-	 * but since the default formatter preferences are used, this
-	 * might not be achieved for all versions.
-	 */
-	protected abstract String getTestExpectation(String version);
+  /**
+   * Returns the output which is expected from the formatter step.
+   * If possible, the output shall be equal for all versions,
+   * but since the default formatter preferences are used, this
+   * might not be achieved for all versions.
+   */
+  protected abstract String getTestExpectation(String version);
 
-	/** Create formatter step for a specific version */
-	protected abstract FormatterStep createStep(String version);
+  /** Create formatter step for a specific version */
+  protected abstract FormatterStep createStep(String version);
 
-	@Test
-	public void testSupportedVersions() throws Exception {
-		String[] versions = getSupportedVersions();
-		for (String version : versions) {
-			String input = getTestInput(version);
-			String expected = getTestExpectation(version);
-			File inputFile = setFile("someInputFile").toContent(input);
-			FormatterStep step = null;
-			try {
-				step = createStep(version);
-			} catch (Exception e) {
-				fail("Exception occured when instantiating step for version: " + version, e);
-			}
-			String output = null;
-			try {
-				output = LineEnding.toUnix(step.format(input, inputFile));
-			} catch (Exception e) {
-				fail("Exception occured when formatting input with version: " + version, e);
-			}
-			assertThat(output).as("Formatting output unexpected with version: " + version).isEqualTo(expected);
-		}
-	}
+  @Test
+  public void testSupportedVersions() throws Exception {
+    String[] versions = getSupportedVersions();
+    for (String version : versions) {
+      String input = getTestInput(version);
+      String expected = getTestExpectation(version);
+      File inputFile = setFile("someInputFile").toContent(input);
+      FormatterStep step = null;
+      try {
+        step = createStep(version);
+      } catch (Exception e) {
+        fail("Exception occured when instantiating step for version: " + version, e);
+      }
+      String output = null;
+      try {
+        output = LineEnding.toUnix(step.format(input, inputFile));
+      } catch (Exception e) {
+        fail("Exception occured when formatting input with version: " + version, e);
+      }
+      assertThat(output).as("Formatting output unexpected with version: " + version).isEqualTo(expected);
+    }
+  }
 
 }

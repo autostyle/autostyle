@@ -21,66 +21,66 @@ import org.junit.Test;
 
 public class BumpThisNumberIfACustomStepChangesTest extends GradleIntegrationTest {
 
-	private void writeBuildFile(String toInsert) throws IOException {
-		setFile("build.gradle").toLines(
-				"plugins {",
-				"    id 'com.diffplug.gradle.spotless'",
-				"}",
-				"spotless {",
-				"    format 'misc', {",
-				"        target file('README.md')",
-				"        customLazyGroovy('lowercase') {",
-				"             return { str -> str.toLowerCase(Locale.ROOT) }",
-				"        }",
-				toInsert,
-				"    }",
-				"}");
-	}
+  private void writeBuildFile(String toInsert) throws IOException {
+    setFile("build.gradle").toLines(
+        "plugins {",
+        "    id 'com.diffplug.gradle.spotless'",
+        "}",
+        "spotless {",
+        "    format 'misc', {",
+        "        target file('README.md')",
+        "        customLazyGroovy('lowercase') {",
+        "             return { str -> str.toLowerCase(Locale.ROOT) }",
+        "        }",
+        toInsert,
+        "    }",
+        "}");
+  }
 
-	private void writeContentWithBadFormatting() throws IOException {
-		setFile("README.md").toContent("ABC");
-	}
+  private void writeContentWithBadFormatting() throws IOException {
+    setFile("README.md").toContent("ABC");
+  }
 
-	@Override
-	protected void applyIsUpToDate(boolean upToDate) throws IOException {
-		super.applyIsUpToDate(upToDate);
-		assertFile("README.md").hasContent("abc");
-	}
+  @Override
+  protected void applyIsUpToDate(boolean upToDate) throws IOException {
+    super.applyIsUpToDate(upToDate);
+    assertFile("README.md").hasContent("abc");
+  }
 
-	@Test
-	public void customRuleNeverUpToDate() throws IOException {
-		writeBuildFile("");
-		writeContentWithBadFormatting();
-		applyIsUpToDate(false);
-		checkIsUpToDate(false);
-		checkIsUpToDate(false);
-	}
+  @Test
+  public void customRuleNeverUpToDate() throws IOException {
+    writeBuildFile("");
+    writeContentWithBadFormatting();
+    applyIsUpToDate(false);
+    checkIsUpToDate(false);
+    checkIsUpToDate(false);
+  }
 
-	@Test
-	public void unlessBumpThisNumberIfACustomStepChanges() throws IOException {
-		writeBuildFile("bumpThisNumberIfACustomStepChanges(1)");
-		writeContentWithBadFormatting();
-		applyIsUpToDate(false);
-		applyIsUpToDate(false);
-		applyIsUpToDate(true);
-		checkIsUpToDate(true);
+  @Test
+  public void unlessBumpThisNumberIfACustomStepChanges() throws IOException {
+    writeBuildFile("bumpThisNumberIfACustomStepChanges(1)");
+    writeContentWithBadFormatting();
+    applyIsUpToDate(false);
+    applyIsUpToDate(false);
+    applyIsUpToDate(true);
+    checkIsUpToDate(true);
 
-		writeContentWithBadFormatting();
-		applyIsUpToDate(false);
-		checkIsUpToDate(false);
-		checkIsUpToDate(true);
-	}
+    writeContentWithBadFormatting();
+    applyIsUpToDate(false);
+    checkIsUpToDate(false);
+    checkIsUpToDate(true);
+  }
 
-	@Test
-	public void andRunsAgainIfNumberChanges() throws IOException {
-		writeBuildFile("bumpThisNumberIfACustomStepChanges(1)");
-		writeContentWithBadFormatting();
-		applyIsUpToDate(false);
-		checkIsUpToDate(false);
-		checkIsUpToDate(true);
+  @Test
+  public void andRunsAgainIfNumberChanges() throws IOException {
+    writeBuildFile("bumpThisNumberIfACustomStepChanges(1)");
+    writeContentWithBadFormatting();
+    applyIsUpToDate(false);
+    checkIsUpToDate(false);
+    checkIsUpToDate(true);
 
-		writeBuildFile("bumpThisNumberIfACustomStepChanges(2)");
-		checkIsUpToDate(false);
-		checkIsUpToDate(true);
-	}
+    writeBuildFile("bumpThisNumberIfACustomStepChanges(2)");
+    checkIsUpToDate(false);
+    checkIsUpToDate(true);
+  }
 }

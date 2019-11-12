@@ -34,144 +34,144 @@ import com.diffplug.spotless.npm.TypedTsFmtConfigFile;
 
 public class TypescriptExtension extends FormatExtension {
 
-	static final String NAME = "typescript";
+  static final String NAME = "typescript";
 
-	public TypescriptExtension(SpotlessExtension root) {
-		super(root);
-	}
+  public TypescriptExtension(SpotlessExtension root) {
+    super(root);
+  }
 
-	/** Uses the default version of typescript-format. */
-	public TypescriptFormatExtension tsfmt() {
-		return tsfmt(TsFmtFormatterStep.defaultDevDependencies());
-	}
+  /** Uses the default version of typescript-format. */
+  public TypescriptFormatExtension tsfmt() {
+    return tsfmt(TsFmtFormatterStep.defaultDevDependencies());
+  }
 
-	/** Uses the specified version of typescript-format. */
-	public TypescriptFormatExtension tsfmt(String version) {
-		return tsfmt(TsFmtFormatterStep.defaultDevDependenciesWithTsFmt(version));
-	}
+  /** Uses the specified version of typescript-format. */
+  public TypescriptFormatExtension tsfmt(String version) {
+    return tsfmt(TsFmtFormatterStep.defaultDevDependenciesWithTsFmt(version));
+  }
 
-	/** Creates a {@code TypescriptFormatExtension} using exactly the specified npm packages. */
-	public TypescriptFormatExtension tsfmt(Map<String, String> devDependencies) {
-		TypescriptFormatExtension tsfmt = new TypescriptFormatExtension(devDependencies);
-		addStep(tsfmt.createStep());
-		return tsfmt;
-	}
+  /** Creates a {@code TypescriptFormatExtension} using exactly the specified npm packages. */
+  public TypescriptFormatExtension tsfmt(Map<String, String> devDependencies) {
+    TypescriptFormatExtension tsfmt = new TypescriptFormatExtension(devDependencies);
+    addStep(tsfmt.createStep());
+    return tsfmt;
+  }
 
-	public class TypescriptFormatExtension extends NpmStepConfig<TypescriptFormatExtension> {
+  public class TypescriptFormatExtension extends NpmStepConfig<TypescriptFormatExtension> {
 
-		private Map<String, Object> config = Collections.emptyMap();
+    private Map<String, Object> config = Collections.emptyMap();
 
-		@Nullable
-		TsConfigFileType configFileType = null;
+    @Nullable
+    TsConfigFileType configFileType = null;
 
-		@Nullable
-		Object configFilePath = null;
+    @Nullable
+    Object configFilePath = null;
 
-		private final Map<String, String> devDependencies;
+    private final Map<String, String> devDependencies;
 
-		TypescriptFormatExtension(Map<String, String> devDependencies) {
-			this.devDependencies = Objects.requireNonNull(devDependencies);
-		}
+    TypescriptFormatExtension(Map<String, String> devDependencies) {
+      this.devDependencies = Objects.requireNonNull(devDependencies);
+    }
 
-		public void config(final Map<String, Object> config) {
-			this.config = new TreeMap<>(requireNonNull(config));
-			replaceStep(createStep());
-		}
+    public void config(final Map<String, Object> config) {
+      this.config = new TreeMap<>(requireNonNull(config));
+      replaceStep(createStep());
+    }
 
-		public void tsconfigFile(final Object path) {
-			configFile(TsConfigFileType.TSCONFIG, path);
-		}
+    public void tsconfigFile(final Object path) {
+      configFile(TsConfigFileType.TSCONFIG, path);
+    }
 
-		public void tslintFile(final Object path) {
-			configFile(TsConfigFileType.TSLINT, path);
-		}
+    public void tslintFile(final Object path) {
+      configFile(TsConfigFileType.TSLINT, path);
+    }
 
-		public void vscodeFile(final Object path) {
-			configFile(TsConfigFileType.VSCODE, path);
-		}
+    public void vscodeFile(final Object path) {
+      configFile(TsConfigFileType.VSCODE, path);
+    }
 
-		public void tsfmtFile(final Object path) {
-			configFile(TsConfigFileType.TSFMT, path);
-		}
+    public void tsfmtFile(final Object path) {
+      configFile(TsConfigFileType.TSFMT, path);
+    }
 
-		private void configFile(TsConfigFileType filetype, Object path) {
-			this.configFileType = requireNonNull(filetype);
-			this.configFilePath = requireNonNull(path);
-			replaceStep(createStep());
-		}
+    private void configFile(TsConfigFileType filetype, Object path) {
+      this.configFileType = requireNonNull(filetype);
+      this.configFilePath = requireNonNull(path);
+      replaceStep(createStep());
+    }
 
-		public FormatterStep createStep() {
-			final Project project = getProject();
+    public FormatterStep createStep() {
+      final Project project = getProject();
 
-			return TsFmtFormatterStep.create(
-					devDependencies,
-					GradleProvisioner.fromProject(project),
-					project.getBuildDir(),
-					npmFileOrNull(),
-					typedConfigFile(),
-					config);
-		}
+      return TsFmtFormatterStep.create(
+          devDependencies,
+          GradleProvisioner.fromProject(project),
+          project.getBuildDir(),
+          npmFileOrNull(),
+          typedConfigFile(),
+          config);
+    }
 
-		private TypedTsFmtConfigFile typedConfigFile() {
-			if (this.configFileType != null && this.configFilePath != null) {
-				return new TypedTsFmtConfigFile(this.configFileType, getProject().file(this.configFilePath));
-			}
-			return null;
-		}
-	}
+    private TypedTsFmtConfigFile typedConfigFile() {
+      if (this.configFileType != null && this.configFilePath != null) {
+        return new TypedTsFmtConfigFile(this.configFileType, getProject().file(this.configFilePath));
+      }
+      return null;
+    }
+  }
 
-	/** Uses the default version of prettier. */
-	@Override
-	public PrettierConfig prettier() {
-		return prettier(PrettierFormatterStep.defaultDevDependencies());
-	}
+  /** Uses the default version of prettier. */
+  @Override
+  public PrettierConfig prettier() {
+    return prettier(PrettierFormatterStep.defaultDevDependencies());
+  }
 
-	/** Uses the specified version of prettier. */
-	@Override
-	public PrettierConfig prettier(String version) {
-		return prettier(PrettierFormatterStep.defaultDevDependenciesWithPrettier(version));
-	}
+  /** Uses the specified version of prettier. */
+  @Override
+  public PrettierConfig prettier(String version) {
+    return prettier(PrettierFormatterStep.defaultDevDependenciesWithPrettier(version));
+  }
 
-	/** Uses exactly the npm packages specified in the map. */
-	@Override
-	public PrettierConfig prettier(Map<String, String> devDependencies) {
-		PrettierConfig prettierConfig = new TypescriptPrettierConfig(devDependencies);
-		addStep(prettierConfig.createStep());
-		return prettierConfig;
-	}
+  /** Uses exactly the npm packages specified in the map. */
+  @Override
+  public PrettierConfig prettier(Map<String, String> devDependencies) {
+    PrettierConfig prettierConfig = new TypescriptPrettierConfig(devDependencies);
+    addStep(prettierConfig.createStep());
+    return prettierConfig;
+  }
 
-	/**
-	 * Overrides the parser to be set to typescript, no matter what the user's config says.
-	 */
-	public class TypescriptPrettierConfig extends PrettierConfig {
-		TypescriptPrettierConfig(Map<String, String> devDependencies) {
-			super(devDependencies);
-		}
+  /**
+   * Overrides the parser to be set to typescript, no matter what the user's config says.
+   */
+  public class TypescriptPrettierConfig extends PrettierConfig {
+    TypescriptPrettierConfig(Map<String, String> devDependencies) {
+      super(devDependencies);
+    }
 
-		@Override
-		FormatterStep createStep() {
-			fixParserToTypescript();
-			return super.createStep();
-		}
+    @Override
+    FormatterStep createStep() {
+      fixParserToTypescript();
+      return super.createStep();
+    }
 
-		private void fixParserToTypescript() {
-			if (this.prettierConfig == null) {
-				this.prettierConfig = Collections.singletonMap("parser", "typescript");
-			} else {
-				final Object replaced = this.prettierConfig.put("parser", "typescript");
-				if (replaced != null) {
-					getProject().getLogger().warn("overriding parser option to 'typescript'. Was set to '{}'", replaced);
-				}
-			}
-		}
-	}
+    private void fixParserToTypescript() {
+      if (this.prettierConfig == null) {
+        this.prettierConfig = Collections.singletonMap("parser", "typescript");
+      } else {
+        final Object replaced = this.prettierConfig.put("parser", "typescript");
+        if (replaced != null) {
+          getProject().getLogger().warn("overriding parser option to 'typescript'. Was set to '{}'", replaced);
+        }
+      }
+    }
+  }
 
-	@Override
-	protected void setupTask(SpotlessTask task) {
-		// defaults to all typescript files
-		if (target == null) {
-			target = parseTarget("**/*.ts");
-		}
-		super.setupTask(task);
-	}
+  @Override
+  protected void setupTask(SpotlessTask task) {
+    // defaults to all typescript files
+    if (target == null) {
+      target = parseTarget("**/*.ts");
+    }
+    super.setupTask(task);
+  }
 }

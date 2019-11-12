@@ -18,14 +18,14 @@ package com.diffplug.spotless.extra;
 import java.util.Objects;
 
 final class LibExtraPreconditions {
-	// prevent direct instantiation
-	private LibExtraPreconditions() {}
+  // prevent direct instantiation
+  private LibExtraPreconditions() {}
 
-	static <T, I extends Iterable<T>> I requireElementsNonNull(I elements) {
-		Objects.requireNonNull(elements);
-		for (Object element : elements) {
-			Objects.requireNonNull(element);
-		}
-		return elements;
-	}
+  static <T, I extends Iterable<T>> I requireElementsNonNull(I elements) {
+    Objects.requireNonNull(elements);
+    for (Object element : elements) {
+      Objects.requireNonNull(element);
+    }
+    return elements;
+  }
 }

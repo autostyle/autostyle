@@ -21,21 +21,21 @@ import java.util.Locale;
  * @author Baptiste Mesta.
  */
 enum KeywordCase {
-	UPPER {
-		public String transform(String value) {
-			return value.toUpperCase(Locale.ENGLISH);
-		}
-	},
-	LOWER {
-		public String transform(String value) {
-			return value.toLowerCase(Locale.ENGLISH);
-		}
-	},
-	ORIGINAL {
-		public String transform(String value) {
-			return value;
-		}
-	};
+  UPPER {
+    public String transform(String value) {
+      return value.toUpperCase(Locale.ENGLISH);
+    }
+  },
+  LOWER {
+    public String transform(String value) {
+      return value.toLowerCase(Locale.ENGLISH);
+    }
+  },
+  ORIGINAL {
+    public String transform(String value) {
+      return value;
+    }
+  };
 
-	public abstract String transform(String value);
+  public abstract String transform(String value);
 }

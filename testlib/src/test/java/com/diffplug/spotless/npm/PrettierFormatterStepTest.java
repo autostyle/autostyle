@@ -32,98 +32,98 @@ import com.diffplug.spotless.category.NpmTest;
 @RunWith(Enclosed.class)
 public class PrettierFormatterStepTest {
 
-	@Category(NpmTest.class)
-	@RunWith(Parameterized.class)
-	public static class PrettierFormattingOfFileTypesIsWorking extends NpmFormatterStepCommonTests {
+  @Category(NpmTest.class)
+  @RunWith(Parameterized.class)
+  public static class PrettierFormattingOfFileTypesIsWorking extends NpmFormatterStepCommonTests {
 
-		@Parameterized.Parameter
-		public String fileType;
+    @Parameterized.Parameter
+    public String fileType;
 
-		@Parameterized.Parameters(name = "{index}: prettier can be applied to {0}")
-		public static Iterable<String> formattingConfigFiles() {
-			return Arrays.asList("typescript", "json", "javascript-es5", "javascript-es6", "css", "scss", "markdown", "yaml");
-		}
+    @Parameterized.Parameters(name = "{index}: prettier can be applied to {0}")
+    public static Iterable<String> formattingConfigFiles() {
+      return Arrays.asList("typescript", "json", "javascript-es5", "javascript-es6", "css", "scss", "markdown", "yaml");
+    }
 
-		@Test
-		public void formattingUsingConfigFile() throws Exception {
-			String filedir = "npm/prettier/filetypes/" + fileType + "/";
+    @Test
+    public void formattingUsingConfigFile() throws Exception {
+      String filedir = "npm/prettier/filetypes/" + fileType + "/";
 
-			final File prettierRc = createTestFile(filedir + ".prettierrc.yml");
-			final String dirtyFile = filedir + fileType + ".dirty";
-			final String cleanFile = filedir + fileType + ".clean";
+      final File prettierRc = createTestFile(filedir + ".prettierrc.yml");
+      final String dirtyFile = filedir + fileType + ".dirty";
+      final String cleanFile = filedir + fileType + ".clean";
 
-			final FormatterStep formatterStep = PrettierFormatterStep.create(
-					PrettierFormatterStep.defaultDevDependencies(),
-					TestProvisioner.mavenCentral(),
-					buildDir(),
-					npmExecutable(),
-					new PrettierConfig(prettierRc, null));
+      final FormatterStep formatterStep = PrettierFormatterStep.create(
+          PrettierFormatterStep.defaultDevDependencies(),
+          TestProvisioner.mavenCentral(),
+          buildDir(),
+          npmExecutable(),
+          new PrettierConfig(prettierRc, null));
 
-			try (StepHarness stepHarness = StepHarness.forStep(formatterStep)) {
-				stepHarness.testResource(dirtyFile, cleanFile);
-			}
-		}
-	}
+      try (StepHarness stepHarness = StepHarness.forStep(formatterStep)) {
+        stepHarness.testResource(dirtyFile, cleanFile);
+      }
+    }
+  }
 
-	@Category(NpmTest.class)
-	public static class SpecificPrettierFormatterStepTests extends NpmFormatterStepCommonTests {
+  @Category(NpmTest.class)
+  public static class SpecificPrettierFormatterStepTests extends NpmFormatterStepCommonTests {
 
-		@Test
-		public void parserInferenceIsWorking() throws Exception {
-			String filedir = "npm/prettier/filetypes/json/";
+    @Test
+    public void parserInferenceIsWorking() throws Exception {
+      String filedir = "npm/prettier/filetypes/json/";
 
-			final String dirtyFile = filedir + "json.dirty";
-			final String cleanFile = filedir + "json.clean";
+      final String dirtyFile = filedir + "json.dirty";
+      final String cleanFile = filedir + "json.clean";
 
-			final FormatterStep formatterStep = PrettierFormatterStep.create(
-					PrettierFormatterStep.defaultDevDependencies(),
-					TestProvisioner.mavenCentral(),
-					buildDir(),
-					npmExecutable(),
-					new PrettierConfig(null, ImmutableMap.of("filepath", "anyname.json"))); // should select parser based on this name
+      final FormatterStep formatterStep = PrettierFormatterStep.create(
+          PrettierFormatterStep.defaultDevDependencies(),
+          TestProvisioner.mavenCentral(),
+          buildDir(),
+          npmExecutable(),
+          new PrettierConfig(null, ImmutableMap.of("filepath", "anyname.json"))); // should select parser based on this name
 
-			try (StepHarness stepHarness = StepHarness.forStep(formatterStep)) {
-				stepHarness.testResource(dirtyFile, cleanFile);
-			}
-		}
-	}
+      try (StepHarness stepHarness = StepHarness.forStep(formatterStep)) {
+        stepHarness.testResource(dirtyFile, cleanFile);
+      }
+    }
+  }
 
-	@Category(NpmTest.class)
-	public static class PrettierFormattingOptionsAreWorking extends NpmFormatterStepCommonTests {
+  @Category(NpmTest.class)
+  public static class PrettierFormattingOptionsAreWorking extends NpmFormatterStepCommonTests {
 
-		private static final String FILEDIR = "npm/prettier/config/";
+    private static final String FILEDIR = "npm/prettier/config/";
 
-		public void runFormatTest(PrettierConfig config, String cleanFileNameSuffix) throws Exception {
+    public void runFormatTest(PrettierConfig config, String cleanFileNameSuffix) throws Exception {
 
-			final String dirtyFile = FILEDIR + "typescript.dirty";
-			final String cleanFile = FILEDIR + "typescript." + cleanFileNameSuffix + ".clean";
+      final String dirtyFile = FILEDIR + "typescript.dirty";
+      final String cleanFile = FILEDIR + "typescript." + cleanFileNameSuffix + ".clean";
 
-			final FormatterStep formatterStep = PrettierFormatterStep.create(
-					PrettierFormatterStep.defaultDevDependencies(),
-					TestProvisioner.mavenCentral(),
-					buildDir(),
-					npmExecutable(),
-					config); // should select parser based on this name
+      final FormatterStep formatterStep = PrettierFormatterStep.create(
+          PrettierFormatterStep.defaultDevDependencies(),
+          TestProvisioner.mavenCentral(),
+          buildDir(),
+          npmExecutable(),
+          config); // should select parser based on this name
 
-			try (StepHarness stepHarness = StepHarness.forStep(formatterStep)) {
-				stepHarness.testResource(dirtyFile, cleanFile);
-			}
-		}
+      try (StepHarness stepHarness = StepHarness.forStep(formatterStep)) {
+        stepHarness.testResource(dirtyFile, cleanFile);
+      }
+    }
 
-		@Test
-		public void defaultsAreApplied() throws Exception {
-			runFormatTest(new PrettierConfig(null, ImmutableMap.of("parser", "typescript")), "defaults");
-		}
+    @Test
+    public void defaultsAreApplied() throws Exception {
+      runFormatTest(new PrettierConfig(null, ImmutableMap.of("parser", "typescript")), "defaults");
+    }
 
-		@Test
-		public void configFileOptionsAreApplied() throws Exception {
-			runFormatTest(new PrettierConfig(createTestFile(FILEDIR + ".prettierrc.yml"), null), "configfile");
-		}
+    @Test
+    public void configFileOptionsAreApplied() throws Exception {
+      runFormatTest(new PrettierConfig(createTestFile(FILEDIR + ".prettierrc.yml"), null), "configfile");
+    }
 
-		@Test
-		public void configFileOptionsCanBeOverriden() throws Exception {
-			runFormatTest(new PrettierConfig(createTestFile(FILEDIR + ".prettierrc.yml"), ImmutableMap.of("printWidth", 300)), "override");
-		}
+    @Test
+    public void configFileOptionsCanBeOverriden() throws Exception {
+      runFormatTest(new PrettierConfig(createTestFile(FILEDIR + ".prettierrc.yml"), ImmutableMap.of("printWidth", 300)), "override");
+    }
 
-	}
+  }
 }

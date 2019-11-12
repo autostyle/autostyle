@@ -23,123 +23,123 @@ package com.diffplug.spotless;
  * classes, but stripped down and renamed to avoid any confusion.
  */
 public final class ThrowingEx {
-	private ThrowingEx() {}
+  private ThrowingEx() {}
 
-	/** A function that can throw any exception. */
-	@FunctionalInterface
-	public interface Function<T, R> {
-		R apply(T input) throws Exception;
-	}
+  /** A function that can throw any exception. */
+  @FunctionalInterface
+  public interface Function<T, R> {
+    R apply(T input) throws Exception;
+  }
 
-	/** A bi-function that can throw any exception. */
-	@FunctionalInterface
-	public interface BiFunction<T1, T2, R> {
-		R apply(T1 input1, T2 input2) throws Exception;
-	}
+  /** A bi-function that can throw any exception. */
+  @FunctionalInterface
+  public interface BiFunction<T1, T2, R> {
+    R apply(T1 input1, T2 input2) throws Exception;
+  }
 
-	/** A supplier that can throw any exception. */
-	@FunctionalInterface
-	public interface Supplier<T> {
-		T get() throws Exception;
-	}
+  /** A supplier that can throw any exception. */
+  @FunctionalInterface
+  public interface Supplier<T> {
+    T get() throws Exception;
+  }
 
-	/** A runnable that can throw any exception. */
-	@FunctionalInterface
-	public interface Runnable {
-		void run() throws Exception;
-	}
+  /** A runnable that can throw any exception. */
+  @FunctionalInterface
+  public interface Runnable {
+    void run() throws Exception;
+  }
 
-	/** Runs the given runnable, rethrowing any exceptions as runtime exceptions. */
-	public static void run(ThrowingEx.Runnable runnable) {
-		try {
-			runnable.run();
-		} catch (Exception t) {
-			throw asRuntime(t);
-		}
-	}
+  /** Runs the given runnable, rethrowing any exceptions as runtime exceptions. */
+  public static void run(ThrowingEx.Runnable runnable) {
+    try {
+      runnable.run();
+    } catch (Exception t) {
+      throw asRuntime(t);
+    }
+  }
 
-	/** Gets the given value, rethrowing any exceptions as runtime exceptions. */
-	public static <T> T get(ThrowingEx.Supplier<T> supplier) {
-		try {
-			return supplier.get();
-		} catch (Exception t) {
-			throw asRuntime(t);
-		}
-	}
+  /** Gets the given value, rethrowing any exceptions as runtime exceptions. */
+  public static <T> T get(ThrowingEx.Supplier<T> supplier) {
+    try {
+      return supplier.get();
+    } catch (Exception t) {
+      throw asRuntime(t);
+    }
+  }
 
-	/** Wraps the given {@link ThrowingEx.Function} as a standard {@link java.util.function.Function}, rethrowing any exceptions as runtime exceptions. */
-	public static <T, R> java.util.function.Function<T, R> wrap(ThrowingEx.Function<T, R> function) {
-		return input -> {
-			try {
-				return function.apply(input);
-			} catch (Exception t) {
-				throw asRuntime(t);
-			}
-		};
-	}
+  /** Wraps the given {@link ThrowingEx.Function} as a standard {@link java.util.function.Function}, rethrowing any exceptions as runtime exceptions. */
+  public static <T, R> java.util.function.Function<T, R> wrap(ThrowingEx.Function<T, R> function) {
+    return input -> {
+      try {
+        return function.apply(input);
+      } catch (Exception t) {
+        throw asRuntime(t);
+      }
+    };
+  }
 
-	/**
-	 * Casts or wraps the given exception to be a RuntimeException.
-	 *
-	 * If the input exception is a RuntimeException, it is simply
-	 * cast and returned.  Otherwise, it wrapped in a
-	 * {@link WrappedAsRuntimeException} and returned.
-	 */
-	public static RuntimeException asRuntime(Exception e) {
-		if (e instanceof RuntimeException) {
-			return (RuntimeException) e;
-		} else {
-			return new WrappedAsRuntimeException(e);
-		}
-	}
+  /**
+   * Casts or wraps the given exception to be a RuntimeException.
+   *
+   * If the input exception is a RuntimeException, it is simply
+   * cast and returned.  Otherwise, it wrapped in a
+   * {@link WrappedAsRuntimeException} and returned.
+   */
+  public static RuntimeException asRuntime(Exception e) {
+    if (e instanceof RuntimeException) {
+      return (RuntimeException) e;
+    } else {
+      return new WrappedAsRuntimeException(e);
+    }
+  }
 
-	/**
-	 * Utility method for rethrowing an exception's cause with as few wrappers as possible.
-	 *
-	 * ```java
-	 * try {
-	 *     doSomething();
-	 * } catch (Throwable e) {
-	 *     throw unwrapCause(e);
-	 * }
-	 * ```
-	 */
-	public static RuntimeException unwrapCause(Throwable e) {
-		Throwable cause = e.getCause();
-		if (cause == null) {
-			return asRuntimeRethrowError(e);
-		} else {
-			return asRuntimeRethrowError(cause);
-		}
-	}
+  /**
+   * Utility method for rethrowing an exception's cause with as few wrappers as possible.
+   *
+   * ```java
+   * try {
+   *     doSomething();
+   * } catch (Throwable e) {
+   *     throw unwrapCause(e);
+   * }
+   * ```
+   */
+  public static RuntimeException unwrapCause(Throwable e) {
+    Throwable cause = e.getCause();
+    if (cause == null) {
+      return asRuntimeRethrowError(e);
+    } else {
+      return asRuntimeRethrowError(cause);
+    }
+  }
 
-	/**
-	 * Rethrows errors, wraps and returns everything else as a runtime exception.
-	 *
-	 * try {
-	 *     doSomething();
-	 * } catch (Throwable e) {
-	 *     throw asRuntimeRethrowError(e);
-	 * }
-	 * ```
-	 *
-	 * */
-	static RuntimeException asRuntimeRethrowError(Throwable e) {
-		if (e instanceof Error) {
-			throw (Error) e;
-		} else if (e instanceof RuntimeException) {
-			return (RuntimeException) e;
-		} else {
-			return new WrappedAsRuntimeException(e);
-		}
-	}
+  /**
+   * Rethrows errors, wraps and returns everything else as a runtime exception.
+   *
+   * try {
+   *     doSomething();
+   * } catch (Throwable e) {
+   *     throw asRuntimeRethrowError(e);
+   * }
+   * ```
+   *
+   * */
+  static RuntimeException asRuntimeRethrowError(Throwable e) {
+    if (e instanceof Error) {
+      throw (Error) e;
+    } else if (e instanceof RuntimeException) {
+      return (RuntimeException) e;
+    } else {
+      return new WrappedAsRuntimeException(e);
+    }
+  }
 
-	/** A RuntimeException specifically for the purpose of wrapping non-runtime Exceptions as RuntimeExceptions. */
-	public static class WrappedAsRuntimeException extends RuntimeException {
-		private static final long serialVersionUID = -912202209702586994L;
+  /** A RuntimeException specifically for the purpose of wrapping non-runtime Exceptions as RuntimeExceptions. */
+  public static class WrappedAsRuntimeException extends RuntimeException {
+    private static final long serialVersionUID = -912202209702586994L;
 
-		public WrappedAsRuntimeException(Throwable e) {
-			super(e);
-		}
-	}
+    public WrappedAsRuntimeException(Throwable e) {
+      super(e);
+    }
+  }
 }

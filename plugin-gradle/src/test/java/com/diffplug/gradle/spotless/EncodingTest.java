@@ -20,63 +20,63 @@ import java.nio.charset.Charset;
 import org.junit.Test;
 
 public class EncodingTest extends GradleIntegrationTest {
-	@Test
-	public void defaultIsUtf8() throws Exception {
-		setFile("build.gradle").toLines(
-				"plugins {",
-				"    id 'com.diffplug.gradle.spotless'",
-				"}",
-				"spotless {",
-				"    java {",
-				"        target file('test.java')",
-				"        custom 'replaceMicro', { it.replace('µ', 'A') }",
-				"    }",
-				"}");
-		setFile("test.java").toContent("µ");
-		gradleRunner().withArguments("spotlessApply").build();
-		assertFile("test.java").hasContent("A");
-	}
+  @Test
+  public void defaultIsUtf8() throws Exception {
+    setFile("build.gradle").toLines(
+        "plugins {",
+        "    id 'com.diffplug.gradle.spotless'",
+        "}",
+        "spotless {",
+        "    java {",
+        "        target file('test.java')",
+        "        custom 'replaceMicro', { it.replace('µ', 'A') }",
+        "    }",
+        "}");
+    setFile("test.java").toContent("µ");
+    gradleRunner().withArguments("spotlessApply").build();
+    assertFile("test.java").hasContent("A");
+  }
 
-	@Test
-	public void globalIsRespected() throws Exception {
-		setFile("build.gradle").toLines(
-				"plugins {",
-				"    id 'com.diffplug.gradle.spotless'",
-				"}",
-				"spotless {",
-				"    java {",
-				"        target file('test.java')",
-				"        custom 'replaceMicro', { it.replace('µ', 'A') }",
-				"    }",
-				"    encoding 'US-ASCII'",
-				"}");
-		setFile("test.java").toContent("µ");
-		gradleRunner().withArguments("spotlessApply").build();
-		assertFile("test.java").hasContent("??");
-	}
+  @Test
+  public void globalIsRespected() throws Exception {
+    setFile("build.gradle").toLines(
+        "plugins {",
+        "    id 'com.diffplug.gradle.spotless'",
+        "}",
+        "spotless {",
+        "    java {",
+        "        target file('test.java')",
+        "        custom 'replaceMicro', { it.replace('µ', 'A') }",
+        "    }",
+        "    encoding 'US-ASCII'",
+        "}");
+    setFile("test.java").toContent("µ");
+    gradleRunner().withArguments("spotlessApply").build();
+    assertFile("test.java").hasContent("??");
+  }
 
-	@Test
-	public void globalIsRespectedButCanBeOverridden() throws Exception {
-		setFile("build.gradle").toLines(
-				"plugins {",
-				"    id 'com.diffplug.gradle.spotless'",
-				"}",
-				"spotless {",
-				"    java {",
-				"        target file('test.java')",
-				"        custom 'replaceMicro', { it.replace('µ', 'A') }",
-				"    }",
-				"    format 'utf32', {",
-				"        target file('utf32.encoded')",
-				"        custom 'replaceMicro', { it.replace('µ', 'A') }",
-				"        encoding 'UTF-32'",
-				"    }",
-				"    encoding 'US-ASCII'",
-				"}");
-		setFile("test.java").toContent("µ");
-		setFile("utf32.encoded").toContent("µ", Charset.forName("UTF-32"));
-		gradleRunner().withArguments("spotlessApply").build();
-		assertFile("test.java").hasContent("??");
-		assertFile("utf32.encoded").hasContent("A", Charset.forName("UTF-32"));
-	}
+  @Test
+  public void globalIsRespectedButCanBeOverridden() throws Exception {
+    setFile("build.gradle").toLines(
+        "plugins {",
+        "    id 'com.diffplug.gradle.spotless'",
+        "}",
+        "spotless {",
+        "    java {",
+        "        target file('test.java')",
+        "        custom 'replaceMicro', { it.replace('µ', 'A') }",
+        "    }",
+        "    format 'utf32', {",
+        "        target file('utf32.encoded')",
+        "        custom 'replaceMicro', { it.replace('µ', 'A') }",
+        "        encoding 'UTF-32'",
+        "    }",
+        "    encoding 'US-ASCII'",
+        "}");
+    setFile("test.java").toContent("µ");
+    setFile("utf32.encoded").toContent("µ", Charset.forName("UTF-32"));
+    gradleRunner().withArguments("spotlessApply").build();
+    assertFile("test.java").hasContent("??");
+    assertFile("utf32.encoded").hasContent("A", Charset.forName("UTF-32"));
+  }
 }

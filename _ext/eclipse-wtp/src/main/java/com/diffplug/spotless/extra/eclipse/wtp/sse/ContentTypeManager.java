@@ -47,136 +47,136 @@ import com.diffplug.spotless.extra.eclipse.base.service.NoContentTypeSpecificHan
  * @see org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry
  */
 class ContentTypeManager extends NoContentTypeSpecificHandling {
-	private final Map<String, IContentType> id2Object;
-	private final IContentType processorStepType;
+  private final Map<String, IContentType> id2Object;
+  private final IContentType processorStepType;
 
-	/**
-	 * Content type manager as required for cleanup steps.
-	 * @param formatterContentTypeID The content type of the formatter step
-	 */
-	ContentTypeManager(CleanupStep.ProcessorAccessor processor) {
-		id2Object = new HashMap<String, IContentType>();
-		Arrays.asList(
-				ContentTypeIdForCSS.ContentTypeID_CSS,
-				ContentTypeIdForXML.ContentTypeID_XML,
-				ContentTypeIdForHTML.ContentTypeID_HTML,
-				ContentTypeIdForJSON.ContentTypeID_JSON)
-				.stream().forEach(id -> id2Object.put(id, new ContentTypeId(id)));
-		processorStepType = id2Object.get(processor.getThisContentType());
-		if (null == processorStepType) {
-			throw new IllegalArgumentException(
-					String.format(
-							"The manager does not support content type '%s' of processor '%s'.",
-							processor.getThisContentType(), processor.getClass().getName()));
-		}
-	}
+  /**
+   * Content type manager as required for cleanup steps.
+   * @param formatterContentTypeID The content type of the formatter step
+   */
+  ContentTypeManager(CleanupStep.ProcessorAccessor processor) {
+    id2Object = new HashMap<String, IContentType>();
+    Arrays.asList(
+        ContentTypeIdForCSS.ContentTypeID_CSS,
+        ContentTypeIdForXML.ContentTypeID_XML,
+        ContentTypeIdForHTML.ContentTypeID_HTML,
+        ContentTypeIdForJSON.ContentTypeID_JSON)
+        .stream().forEach(id -> id2Object.put(id, new ContentTypeId(id)));
+    processorStepType = id2Object.get(processor.getThisContentType());
+    if (null == processorStepType) {
+      throw new IllegalArgumentException(
+          String.format(
+              "The manager does not support content type '%s' of processor '%s'.",
+              processor.getThisContentType(), processor.getClass().getName()));
+    }
+  }
 
-	@Override
-	public IContentType getContentType(String contentTypeIdentifier) {
-		/*
-		 *  It is OK to return null here since the manager is only used as an additional
-		 *  helper to alter default behavior.
-		 */
-		return id2Object.get(contentTypeIdentifier);
-	}
+  @Override
+  public IContentType getContentType(String contentTypeIdentifier) {
+    /*
+     *  It is OK to return null here since the manager is only used as an additional
+     *  helper to alter default behavior.
+     */
+    return id2Object.get(contentTypeIdentifier);
+  }
 
-	@Override
-	public IContentType findContentTypeFor(InputStream contents, String fileName) throws IOException {
-		//We only format things here with the given processor, so this answer is always correct.
-		return processorStepType;
-	}
+  @Override
+  public IContentType findContentTypeFor(InputStream contents, String fileName) throws IOException {
+    //We only format things here with the given processor, so this answer is always correct.
+    return processorStepType;
+  }
 
-	/**
-	 * The WTP uses the manager only for ID mapping, so most of the methods are not used.
-	 * Actually it has a hand stitched way for transforming the content type ID
-	 * {@code org.eclipse.wst...source} to the plugin ID {@code org.eclipse.wst...core}.
-	 * @see org.eclipse.wst.sse.core.internal.encoding.ContentBasedPreferenceGateway
-	 */
-	private static class ContentTypeId implements IContentType {
+  /**
+   * The WTP uses the manager only for ID mapping, so most of the methods are not used.
+   * Actually it has a hand stitched way for transforming the content type ID
+   * {@code org.eclipse.wst...source} to the plugin ID {@code org.eclipse.wst...core}.
+   * @see org.eclipse.wst.sse.core.internal.encoding.ContentBasedPreferenceGateway
+   */
+  private static class ContentTypeId implements IContentType {
 
-		private final String id;
+    private final String id;
 
-		ContentTypeId(String id) {
-			this.id = id;
-		}
+    ContentTypeId(String id) {
+      this.id = id;
+    }
 
-		@Override
-		public void addFileSpec(String fileSpec, int type) throws CoreException {}
+    @Override
+    public void addFileSpec(String fileSpec, int type) throws CoreException {}
 
-		@Override
-		public void removeFileSpec(String fileSpec, int type) throws CoreException {}
+    @Override
+    public void removeFileSpec(String fileSpec, int type) throws CoreException {}
 
-		@Override
-		public void setDefaultCharset(String userCharset) throws CoreException {}
+    @Override
+    public void setDefaultCharset(String userCharset) throws CoreException {}
 
-		@Override
-		public boolean isUserDefined() {
-			return false;
-		}
+    @Override
+    public boolean isUserDefined() {
+      return false;
+    }
 
-		@Override
-		public IContentType getBaseType() {
-			return null;
-		}
+    @Override
+    public IContentType getBaseType() {
+      return null;
+    }
 
-		@Override
-		public IContentDescription getDefaultDescription() {
-			return null;
-		}
+    @Override
+    public IContentDescription getDefaultDescription() {
+      return null;
+    }
 
-		@Override
-		public IContentDescription getDescriptionFor(InputStream contents, QualifiedName[] options) throws IOException {
-			return null;
-		}
+    @Override
+    public IContentDescription getDescriptionFor(InputStream contents, QualifiedName[] options) throws IOException {
+      return null;
+    }
 
-		@Override
-		public IContentDescription getDescriptionFor(Reader contents, QualifiedName[] options) throws IOException {
-			return null;
-		}
+    @Override
+    public IContentDescription getDescriptionFor(Reader contents, QualifiedName[] options) throws IOException {
+      return null;
+    }
 
-		@Override
-		public String getDefaultCharset() {
-			return null;
-		}
+    @Override
+    public String getDefaultCharset() {
+      return null;
+    }
 
-		@Override
-		public String[] getFileSpecs(int type) {
-			return null;
-		}
+    @Override
+    public String[] getFileSpecs(int type) {
+      return null;
+    }
 
-		@Override
-		public String getId() {
-			return id;
-		}
+    @Override
+    public String getId() {
+      return id;
+    }
 
-		@Override
-		public String getName() {
-			return id;
-		}
+    @Override
+    public String getName() {
+      return id;
+    }
 
-		@Override
-		public boolean isAssociatedWith(String fileName) {
-			return false;
-		}
+    @Override
+    public boolean isAssociatedWith(String fileName) {
+      return false;
+    }
 
-		@Override
-		public boolean isAssociatedWith(String fileName, IScopeContext context) {
-			return false;
-		}
+    @Override
+    public boolean isAssociatedWith(String fileName, IScopeContext context) {
+      return false;
+    }
 
-		@Override
-		public boolean isKindOf(IContentType another) {
-			if (null == another) {
-				return false;
-			}
-			return this.id.equals(another.getId());
-		}
+    @Override
+    public boolean isKindOf(IContentType another) {
+      if (null == another) {
+        return false;
+      }
+      return this.id.equals(another.getId());
+    }
 
-		@Override
-		public IContentTypeSettings getSettings(IScopeContext context) throws CoreException {
-			return null;
-		}
+    @Override
+    public IContentTypeSettings getSettings(IScopeContext context) throws CoreException {
+      return null;
+    }
 
-	}
+  }
 
 }

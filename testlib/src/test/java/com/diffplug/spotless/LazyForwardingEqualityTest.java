@@ -23,40 +23,40 @@ import com.diffplug.common.testing.EqualsTester;
 
 @SuppressWarnings("serial")
 public class LazyForwardingEqualityTest {
-	static Str s(String state) {
-		return new Str(state);
-	}
+  static Str s(String state) {
+    return new Str(state);
+  }
 
-	static Other o(String state) {
-		return new Other(state);
-	}
+  static Other o(String state) {
+    return new Other(state);
+  }
 
-	static class Str extends LazyForwardingEquality<String> {
-		private String state;
+  static class Str extends LazyForwardingEquality<String> {
+    private String state;
 
-		Str(String state) {
-			this.state = state;
-		}
+    Str(String state) {
+      this.state = state;
+    }
 
-		@Override
-		protected String calculateState() {
-			return state;
-		}
-	}
+    @Override
+    protected String calculateState() {
+      return state;
+    }
+  }
 
-	static class Other extends Str {
-		Other(String state) {
-			super(state);
-		}
-	}
+  static class Other extends Str {
+    Other(String state) {
+      super(state);
+    }
+  }
 
-	@Test
-	public void testEquality() {
-		new EqualsTester()
-				.addEqualityGroup(s("hello"), reserializeAndAssert(s("hello")))
-				.addEqualityGroup(s("world"), reserializeAndAssert(s("world")))
-				.addEqualityGroup(o("hello"), reserializeAndAssert(o("hello")))
-				.addEqualityGroup(o("world"), reserializeAndAssert(o("world")))
-				.testEquals();
-	}
+  @Test
+  public void testEquality() {
+    new EqualsTester()
+        .addEqualityGroup(s("hello"), reserializeAndAssert(s("hello")))
+        .addEqualityGroup(s("world"), reserializeAndAssert(s("world")))
+        .addEqualityGroup(o("hello"), reserializeAndAssert(o("hello")))
+        .addEqualityGroup(o("world"), reserializeAndAssert(o("world")))
+        .testEquals();
+  }
 }

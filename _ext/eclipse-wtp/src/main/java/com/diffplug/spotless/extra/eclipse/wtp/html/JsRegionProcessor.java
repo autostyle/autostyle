@@ -43,44 +43,44 @@ import com.diffplug.spotless.extra.eclipse.wtp.html.StructuredDocumentProcessor.
  * </p>
  */
 public class JsRegionProcessor extends RegionProcessor<CodeFormatter> {
-	public JsRegionProcessor(IStructuredDocument document, ITypedRegion scriptRegion, String htmlIndent) {
-		super(document, scriptRegion, htmlIndent);
-	}
+  public JsRegionProcessor(IStructuredDocument document, ITypedRegion scriptRegion, String htmlIndent) {
+    super(document, scriptRegion, htmlIndent);
+  }
 
-	@Override
-	protected void applyFirst(CodeFormatter formatter) throws MalformedTreeException, BadLocationException {
-		MultiTextEdit modifications = new MultiTextEdit();
-		String jsSource = document.get(region.getOffset(), region.getLength());
-		TextEdit jsEdit = formatter.format(CodeFormatter.K_JAVASCRIPT_UNIT, jsSource, 0, jsSource.length(), indentationLevel + 1, LINE_DELIMITER);
-		if (null != jsEdit) {
-			jsEdit.moveTree(region.getOffset());
-			modifications.addChild(jsEdit);
-		}
-		modifications.apply(document);
-	}
+  @Override
+  protected void applyFirst(CodeFormatter formatter) throws MalformedTreeException, BadLocationException {
+    MultiTextEdit modifications = new MultiTextEdit();
+    String jsSource = document.get(region.getOffset(), region.getLength());
+    TextEdit jsEdit = formatter.format(CodeFormatter.K_JAVASCRIPT_UNIT, jsSource, 0, jsSource.length(), indentationLevel + 1, LINE_DELIMITER);
+    if (null != jsEdit) {
+      jsEdit.moveTree(region.getOffset());
+      modifications.addChild(jsEdit);
+    }
+    modifications.apply(document);
+  }
 
-	@Override
-	protected void applySecond(CodeFormatter formatter) throws MalformedTreeException, BadLocationException {
-		MultiTextEdit modifications = new MultiTextEdit();
-		int regionEnd = region.getOffset() + region.getLength();
-		regionEnd += fixDelimiter(modifications, region.getOffset(), false);
-		regionEnd += fixDelimiter(modifications, region.getOffset() + region.getLength() - 1, true);
-		modifications.apply(document);
-		modifications.removeChildren();
-		fixTagIndent(modifications, regionEnd, formatter.createIndentationString(indentationLevel));
-		modifications.apply(document);
-	}
+  @Override
+  protected void applySecond(CodeFormatter formatter) throws MalformedTreeException, BadLocationException {
+    MultiTextEdit modifications = new MultiTextEdit();
+    int regionEnd = region.getOffset() + region.getLength();
+    regionEnd += fixDelimiter(modifications, region.getOffset(), false);
+    regionEnd += fixDelimiter(modifications, region.getOffset() + region.getLength() - 1, true);
+    modifications.apply(document);
+    modifications.removeChildren();
+    fixTagIndent(modifications, regionEnd, formatter.createIndentationString(indentationLevel));
+    modifications.apply(document);
+  }
 
-	/** Factory for {@link StructuredDocumentProcessor}*/
-	public static BiFunction<IStructuredDocument, ITypedRegion, JsRegionProcessor> createFactory(String htmlIndent) {
-		return new BiFunction<IStructuredDocument, ITypedRegion, JsRegionProcessor>() {
+  /** Factory for {@link StructuredDocumentProcessor}*/
+  public static BiFunction<IStructuredDocument, ITypedRegion, JsRegionProcessor> createFactory(String htmlIndent) {
+    return new BiFunction<IStructuredDocument, ITypedRegion, JsRegionProcessor>() {
 
-			@Override
-			public JsRegionProcessor apply(IStructuredDocument document, ITypedRegion region) {
-				return new JsRegionProcessor(document, region, htmlIndent);
-			}
+      @Override
+      public JsRegionProcessor apply(IStructuredDocument document, ITypedRegion region) {
+        return new JsRegionProcessor(document, region, htmlIndent);
+      }
 
-		};
-	}
+    };
+  }
 
 }

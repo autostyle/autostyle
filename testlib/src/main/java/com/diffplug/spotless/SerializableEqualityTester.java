@@ -26,58 +26,58 @@ import com.diffplug.common.base.Box;
 import com.diffplug.common.testing.EqualsTester;
 
 public abstract class SerializableEqualityTester {
-	protected abstract Serializable create();
+  protected abstract Serializable create();
 
-	protected abstract void setupTest(API api) throws Exception;
+  protected abstract void setupTest(API api) throws Exception;
 
-	public interface API {
-		void areDifferentThan();
-	}
+  public interface API {
+    void areDifferentThan();
+  }
 
-	public void testEquals() {
-		List<List<Object>> allGroups = new ArrayList<>();
-		Box<List<Object>> currentGroup = Box.of(new ArrayList<>());
-		API api = new API() {
-			@Override
-			public void areDifferentThan() {
-				currentGroup.modify(current -> {
-					// create two instances, and add them to the group
-					current.add(create());
-					current.add(create());
-					// create two instances using a serialization roundtrip, and add them to the group
-					current.add(reserialize(create()));
-					current.add(reserialize(create()));
-					// add this group to the list of all groups
-					allGroups.add(current);
-					// and return a new blank group for the next call
-					return new ArrayList<>();
-				});
-			}
-		};
-		try {
-			setupTest(api);
-		} catch (Exception e) {
-			throw new AssertionError("Error during setupTest", e);
-		}
-		List<Object> lastGroup = currentGroup.get();
-		if (!lastGroup.isEmpty()) {
-			throw new IllegalArgumentException("Looks like you forgot to make a final call to 'areDifferentThan()'.");
-		}
-		EqualsTester tester = new EqualsTester();
-		for (List<Object> step : allGroups) {
-			tester.addEqualityGroup(step.toArray());
-		}
-		tester.testEquals();
-	}
+  public void testEquals() {
+    List<List<Object>> allGroups = new ArrayList<>();
+    Box<List<Object>> currentGroup = Box.of(new ArrayList<>());
+    API api = new API() {
+      @Override
+      public void areDifferentThan() {
+        currentGroup.modify(current -> {
+          // create two instances, and add them to the group
+          current.add(create());
+          current.add(create());
+          // create two instances using a serialization roundtrip, and add them to the group
+          current.add(reserialize(create()));
+          current.add(reserialize(create()));
+          // add this group to the list of all groups
+          allGroups.add(current);
+          // and return a new blank group for the next call
+          return new ArrayList<>();
+        });
+      }
+    };
+    try {
+      setupTest(api);
+    } catch (Exception e) {
+      throw new AssertionError("Error during setupTest", e);
+    }
+    List<Object> lastGroup = currentGroup.get();
+    if (!lastGroup.isEmpty()) {
+      throw new IllegalArgumentException("Looks like you forgot to make a final call to 'areDifferentThan()'.");
+    }
+    EqualsTester tester = new EqualsTester();
+    for (List<Object> step : allGroups) {
+      tester.addEqualityGroup(step.toArray());
+    }
+    tester.testEquals();
+  }
 
-	@SuppressWarnings("unchecked")
-	private static <T extends Serializable> T reserialize(T input) {
-		byte[] asBytes = LazyForwardingEquality.toBytes(input);
-		ByteArrayInputStream byteInput = new ByteArrayInputStream(asBytes);
-		try (ObjectInputStream objectInput = new ObjectInputStream(byteInput)) {
-			return (T) objectInput.readObject();
-		} catch (IOException | ClassNotFoundException e) {
-			throw ThrowingEx.asRuntime(e);
-		}
-	}
+  @SuppressWarnings("unchecked")
+  private static <T extends Serializable> T reserialize(T input) {
+    byte[] asBytes = LazyForwardingEquality.toBytes(input);
+    ByteArrayInputStream byteInput = new ByteArrayInputStream(asBytes);
+    try (ObjectInputStream objectInput = new ObjectInputStream(byteInput)) {
+      return (T) objectInput.readObject();
+    } catch (IOException | ClassNotFoundException e) {
+      throw ThrowingEx.asRuntime(e);
+    }
+  }
 }

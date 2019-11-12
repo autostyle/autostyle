@@ -24,32 +24,32 @@ package com.diffplug.spotless.sql.dbeaver;
  * which itself is licensed under the Apache 2.0 license.
  */
 class Pair<T1, T2> {
-	private T1 first;
-	private T2 second;
+  private T1 first;
+  private T2 second;
 
-	Pair(T1 first, T2 second) {
-		this.first = first;
-		this.second = second;
-	}
+  Pair(T1 first, T2 second) {
+    this.first = first;
+    this.second = second;
+  }
 
-	T1 getFirst() {
-		return first;
-	}
+  T1 getFirst() {
+    return first;
+  }
 
-	void setFirst(T1 first) {
-		this.first = first;
-	}
+  void setFirst(T1 first) {
+    this.first = first;
+  }
 
-	T2 getSecond() {
-		return second;
-	}
+  T2 getSecond() {
+    return second;
+  }
 
-	void setSecond(T2 second) {
-		this.second = second;
-	}
+  void setSecond(T2 second) {
+    this.second = second;
+  }
 
-	@Override
-	public String toString() {
-		return first + "=" + second;
-	}
+  @Override
+  public String toString() {
+    return first + "=" + second;
+  }
 }

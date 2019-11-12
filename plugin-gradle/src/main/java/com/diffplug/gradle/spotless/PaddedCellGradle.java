@@ -52,52 +52,52 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 // TODO: Cleanup this javadoc - it's a copy of the javadoc of PaddedCellBulk, so some info
 // is out-of-date (like the link to #anyMisbehave(Formatter, List))
 class PaddedCellGradle {
-	/** URL to a page which describes the padded cell thing. */
-	private static final String URL = "https://github.com/diffplug/spotless/blob/master/PADDEDCELL.md";
+  /** URL to a page which describes the padded cell thing. */
+  private static final String URL = "https://github.com/diffplug/spotless/blob/master/PADDEDCELL.md";
 
-	static GradleException youShouldTurnOnPaddedCell(SpotlessTask task) {
-		Path rootPath = task.getProject().getRootDir().toPath();
-		return new GradleException(StringPrinter.buildStringFromLines(
-				"You have a misbehaving rule which can't make up its mind.",
-				"This means that spotlessCheck will fail even after spotlessApply has run.",
-				"",
-				"This is a bug in a formatting rule, not Spotless itself, but Spotless can",
-				"work around this bug and generate helpful bug reports for the broken rule",
-				"if you add 'paddedCell()' to your build.gradle as such: ",
-				"",
-				"    spotless {",
-				"        format 'someFormat', {",
-				"            ...",
-				"            paddedCell()",
-				"        }",
-				"    }",
-				"",
-				"The next time you run spotlessCheck, it will put helpful bug reports into",
-				"'" + rootPath.relativize(diagnoseDir(task).toPath()) + "', and spotlessApply",
-				"and spotlessCheck will be self-consistent from here on out.",
-				"",
-				"For details see " + URL));
-	}
+  static GradleException youShouldTurnOnPaddedCell(SpotlessTask task) {
+    Path rootPath = task.getProject().getRootDir().toPath();
+    return new GradleException(StringPrinter.buildStringFromLines(
+        "You have a misbehaving rule which can't make up its mind.",
+        "This means that spotlessCheck will fail even after spotlessApply has run.",
+        "",
+        "This is a bug in a formatting rule, not Spotless itself, but Spotless can",
+        "work around this bug and generate helpful bug reports for the broken rule",
+        "if you add 'paddedCell()' to your build.gradle as such: ",
+        "",
+        "    spotless {",
+        "        format 'someFormat', {",
+        "            ...",
+        "            paddedCell()",
+        "        }",
+        "    }",
+        "",
+        "The next time you run spotlessCheck, it will put helpful bug reports into",
+        "'" + rootPath.relativize(diagnoseDir(task).toPath()) + "', and spotlessApply",
+        "and spotlessCheck will be self-consistent from here on out.",
+        "",
+        "For details see " + URL));
+  }
 
-	private static File diagnoseDir(SpotlessTask task) {
-		return new File(task.getProject().getBuildDir(), "spotless-diagnose-" + task.formatName());
-	}
+  private static File diagnoseDir(SpotlessTask task) {
+    return new File(task.getProject().getBuildDir(), "spotless-diagnose-" + task.formatName());
+  }
 
-	@SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
-	static void check(SpotlessTask task, Formatter formatter, List<File> problemFiles) throws IOException {
-		if (problemFiles.isEmpty()) {
-			// if the first pass was successful, then paddedCell() mode is unnecessary
-			task.getLogger().info(StringPrinter.buildStringFromLines(
-					task.getName() + " is in paddedCell() mode, but it doesn't need to be.",
-					"If you remove that option, spotless will run ~2x faster.",
-					"For details see " + URL));
-		}
+  @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
+  static void check(SpotlessTask task, Formatter formatter, List<File> problemFiles) throws IOException {
+    if (problemFiles.isEmpty()) {
+      // if the first pass was successful, then paddedCell() mode is unnecessary
+      task.getLogger().info(StringPrinter.buildStringFromLines(
+          task.getName() + " is in paddedCell() mode, but it doesn't need to be.",
+          "If you remove that option, spotless will run ~2x faster.",
+          "For details see " + URL));
+    }
 
-		File diagnoseDir = diagnoseDir(task);
-		File rootDir = task.getProject().getRootDir();
-		List<File> stillFailing = PaddedCellBulk.check(rootDir, diagnoseDir, formatter, problemFiles);
-		if (!stillFailing.isEmpty()) {
-			throw task.formatViolationsFor(formatter, problemFiles);
-		}
-	}
+    File diagnoseDir = diagnoseDir(task);
+    File rootDir = task.getProject().getRootDir();
+    List<File> stillFailing = PaddedCellBulk.check(rootDir, diagnoseDir, formatter, problemFiles);
+    if (!stillFailing.isEmpty()) {
+      throw task.formatViolationsFor(formatter, problemFiles);
+    }
+  }
 }

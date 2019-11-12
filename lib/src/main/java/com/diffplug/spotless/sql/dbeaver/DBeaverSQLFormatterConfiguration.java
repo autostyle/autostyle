@@ -33,56 +33,56 @@ import com.diffplug.spotless.annotations.Internal;
 @Internal
 public class DBeaverSQLFormatterConfiguration {
 
-	/**
-	 * UPPER, LOWER or ORIGINAL
-	 */
-	private static final String SQL_FORMATTER_KEYWORD_CASE = "sql.formatter.keyword.case";
+  /**
+   * UPPER, LOWER or ORIGINAL
+   */
+  private static final String SQL_FORMATTER_KEYWORD_CASE = "sql.formatter.keyword.case";
 
-	/**
-	 * ';' by default
-	 */
-	private static final String SQL_FORMATTER_STATEMENT_DELIMITER = "sql.formatter.statement.delimiter";
-	/**
-	 * space or tag
-	 */
-	private static final String SQL_FORMATTER_INDENT_TYPE = "sql.formatter.indent.type";
-	/**
-	 * 4 by default
-	 */
-	private static final String SQL_FORMATTER_INDENT_SIZE = "sql.formatter.indent.size";
+  /**
+   * ';' by default
+   */
+  private static final String SQL_FORMATTER_STATEMENT_DELIMITER = "sql.formatter.statement.delimiter";
+  /**
+   * space or tag
+   */
+  private static final String SQL_FORMATTER_INDENT_TYPE = "sql.formatter.indent.type";
+  /**
+   * 4 by default
+   */
+  private static final String SQL_FORMATTER_INDENT_SIZE = "sql.formatter.indent.size";
 
-	private String statementDelimiters;
-	private KeywordCase keywordCase;
-	private String indentString;
+  private String statementDelimiters;
+  private KeywordCase keywordCase;
+  private String indentString;
 
-	public DBeaverSQLFormatterConfiguration(Properties properties) {
-		this.keywordCase = KeywordCase.valueOf(properties.getProperty(SQL_FORMATTER_KEYWORD_CASE, "UPPER"));
-		this.statementDelimiters = properties.getProperty(SQL_FORMATTER_STATEMENT_DELIMITER, SQLDialect.INSTANCE
-				.getScriptDelimiter());
-		String indentType = properties.getProperty(SQL_FORMATTER_INDENT_TYPE, "space");
-		int indentSize = Integer.parseInt(properties.getProperty(SQL_FORMATTER_INDENT_SIZE, "4"));
-		indentString = getIndentString(indentType, indentSize);
-	}
+  public DBeaverSQLFormatterConfiguration(Properties properties) {
+    this.keywordCase = KeywordCase.valueOf(properties.getProperty(SQL_FORMATTER_KEYWORD_CASE, "UPPER"));
+    this.statementDelimiters = properties.getProperty(SQL_FORMATTER_STATEMENT_DELIMITER, SQLDialect.INSTANCE
+        .getScriptDelimiter());
+    String indentType = properties.getProperty(SQL_FORMATTER_INDENT_TYPE, "space");
+    int indentSize = Integer.parseInt(properties.getProperty(SQL_FORMATTER_INDENT_SIZE, "4"));
+    indentString = getIndentString(indentType, indentSize);
+  }
 
-	private String getIndentString(String indentType, int indentSize) {
-		char indentChar = indentType.equals("space") ? ' ' : '\t';
-		StringBuilder stringBuilder = new StringBuilder();
-		for (int i = 0; i < indentSize; i++) {
-			stringBuilder.append(indentChar);
-		}
-		return stringBuilder.toString();
-	}
+  private String getIndentString(String indentType, int indentSize) {
+    char indentChar = indentType.equals("space") ? ' ' : '\t';
+    StringBuilder stringBuilder = new StringBuilder();
+    for (int i = 0; i < indentSize; i++) {
+      stringBuilder.append(indentChar);
+    }
+    return stringBuilder.toString();
+  }
 
-	String getStatementDelimiter() {
-		return statementDelimiters;
-	}
+  String getStatementDelimiter() {
+    return statementDelimiters;
+  }
 
-	String getIndentString() {
-		return indentString;
-	}
+  String getIndentString() {
+    return indentString;
+  }
 
-	KeywordCase getKeywordCase() {
-		return keywordCase;
-	}
+  KeywordCase getKeywordCase() {
+    return keywordCase;
+  }
 
 }

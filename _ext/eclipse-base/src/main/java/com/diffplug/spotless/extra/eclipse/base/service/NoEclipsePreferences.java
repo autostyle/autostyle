@@ -34,96 +34,96 @@ import org.osgi.service.prefs.Preferences;
  * Hence modifications are ignored and default values are provided on request.
  */
 public class NoEclipsePreferences implements IPreferencesService {
-	private static final String UNUSED = "unused";
+  private static final String UNUSED = "unused";
 
-	@Override
-	public IEclipsePreferences getRootNode() {
-		//Return value is not effectively used.
-		return DefaultScope.INSTANCE.getNode(UNUSED);
-	}
+  @Override
+  public IEclipsePreferences getRootNode() {
+    //Return value is not effectively used.
+    return DefaultScope.INSTANCE.getNode(UNUSED);
+  }
 
-	@Override
-	public String get(String key, String defaultValue, Preferences[] nodes) {
-		return null;
-	}
+  @Override
+  public String get(String key, String defaultValue, Preferences[] nodes) {
+    return null;
+  }
 
-	@Override
-	public boolean getBoolean(String qualifier, String key, boolean defaultValue, IScopeContext[] contexts) {
-		return false;
-	}
+  @Override
+  public boolean getBoolean(String qualifier, String key, boolean defaultValue, IScopeContext[] contexts) {
+    return false;
+  }
 
-	@Override
-	public byte[] getByteArray(String qualifier, String key, byte[] defaultValue, IScopeContext[] contexts) {
-		return null;
-	}
+  @Override
+  public byte[] getByteArray(String qualifier, String key, byte[] defaultValue, IScopeContext[] contexts) {
+    return null;
+  }
 
-	@Override
-	public double getDouble(String qualifier, String key, double defaultValue, IScopeContext[] contexts) {
-		return 0;
-	}
+  @Override
+  public double getDouble(String qualifier, String key, double defaultValue, IScopeContext[] contexts) {
+    return 0;
+  }
 
-	@Override
-	public float getFloat(String qualifier, String key, float defaultValue, IScopeContext[] contexts) {
-		return 0;
-	}
+  @Override
+  public float getFloat(String qualifier, String key, float defaultValue, IScopeContext[] contexts) {
+    return 0;
+  }
 
-	@Override
-	public int getInt(String qualifier, String key, int defaultValue, IScopeContext[] contexts) {
-		return 0;
-	}
+  @Override
+  public int getInt(String qualifier, String key, int defaultValue, IScopeContext[] contexts) {
+    return 0;
+  }
 
-	@Override
-	public long getLong(String qualifier, String key, long defaultValue, IScopeContext[] contexts) {
-		return 0;
-	}
+  @Override
+  public long getLong(String qualifier, String key, long defaultValue, IScopeContext[] contexts) {
+    return 0;
+  }
 
-	@Override
-	public String getString(String qualifier, String key, String defaultValue, IScopeContext[] contexts) {
-		return null;
-	}
+  @Override
+  public String getString(String qualifier, String key, String defaultValue, IScopeContext[] contexts) {
+    return null;
+  }
 
-	@Override
-	public IStatus exportPreferences(IEclipsePreferences node, OutputStream output, String[] excludesList) throws CoreException {
-		return null;
-	}
+  @Override
+  public IStatus exportPreferences(IEclipsePreferences node, OutputStream output, String[] excludesList) throws CoreException {
+    return null;
+  }
 
-	@Override
-	public IStatus importPreferences(InputStream input) throws CoreException {
-		return null;
-	}
+  @Override
+  public IStatus importPreferences(InputStream input) throws CoreException {
+    return null;
+  }
 
-	@Override
-	public IStatus applyPreferences(IExportedPreferences preferences) throws CoreException {
-		return null;
-	}
+  @Override
+  public IStatus applyPreferences(IExportedPreferences preferences) throws CoreException {
+    return null;
+  }
 
-	@Override
-	public IExportedPreferences readPreferences(InputStream input) throws CoreException {
-		return null;
-	}
+  @Override
+  public IExportedPreferences readPreferences(InputStream input) throws CoreException {
+    return null;
+  }
 
-	@Override
-	public String[] getDefaultLookupOrder(String qualifier, String key) {
-		return null;
-	}
+  @Override
+  public String[] getDefaultLookupOrder(String qualifier, String key) {
+    return null;
+  }
 
-	@Override
-	public String[] getLookupOrder(String qualifier, String key) {
-		return null;
-	}
+  @Override
+  public String[] getLookupOrder(String qualifier, String key) {
+    return null;
+  }
 
-	@Override
-	public void setDefaultLookupOrder(String qualifier, String key, String[] order) {}
+  @Override
+  public void setDefaultLookupOrder(String qualifier, String key, String[] order) {}
 
-	@Override
-	public void exportPreferences(IEclipsePreferences node, IPreferenceFilter[] filters, OutputStream output) throws CoreException {}
+  @Override
+  public void exportPreferences(IEclipsePreferences node, IPreferenceFilter[] filters, OutputStream output) throws CoreException {}
 
-	@Override
-	public IPreferenceFilter[] matches(IEclipsePreferences node, IPreferenceFilter[] filters) throws CoreException {
-		return null;
-	}
+  @Override
+  public IPreferenceFilter[] matches(IEclipsePreferences node, IPreferenceFilter[] filters) throws CoreException {
+    return null;
+  }
 
-	@Override
-	public void applyPreferences(IEclipsePreferences node, IPreferenceFilter[] filters) throws CoreException {}
+  @Override
+  public void applyPreferences(IEclipsePreferences node, IPreferenceFilter[] filters) throws CoreException {}
 
 }

@@ -26,34 +26,34 @@ import java.util.List;
 import org.junit.Test;
 
 public class FileSignatureTest extends ResourceHarness {
-	private final static String[] inputPaths = {"A", "C", "C", "A", "B"};
-	private final static String[] expectedPathList = inputPaths;
-	private final static String[] expectedPathSet = {"A", "B", "C"};
+  private final static String[] inputPaths = {"A", "C", "C", "A", "B"};
+  private final static String[] expectedPathList = inputPaths;
+  private final static String[] expectedPathSet = {"A", "B", "C"};
 
-	@Test
-	public void testFromList() throws IOException {
-		Collection<File> inputFiles = getTestFiles(inputPaths);
-		FileSignature signature = FileSignature.signAsList(inputFiles);
-		Collection<File> expectedFiles = getTestFiles(expectedPathList);
-		Collection<File> outputFiles = signature.files();
-		assertThat(outputFiles).containsExactlyElementsOf(expectedFiles);
-	}
+  @Test
+  public void testFromList() throws IOException {
+    Collection<File> inputFiles = getTestFiles(inputPaths);
+    FileSignature signature = FileSignature.signAsList(inputFiles);
+    Collection<File> expectedFiles = getTestFiles(expectedPathList);
+    Collection<File> outputFiles = signature.files();
+    assertThat(outputFiles).containsExactlyElementsOf(expectedFiles);
+  }
 
-	@Test
-	public void testFromSet() throws IOException {
-		Collection<File> inputFiles = getTestFiles(inputPaths);
-		FileSignature signature = FileSignature.signAsSet(inputFiles);
-		Collection<File> expectedFiles = getTestFiles(expectedPathSet);
-		Collection<File> outputFiles = signature.files();
-		assertThat(outputFiles).containsExactlyElementsOf(expectedFiles);
-	}
+  @Test
+  public void testFromSet() throws IOException {
+    Collection<File> inputFiles = getTestFiles(inputPaths);
+    FileSignature signature = FileSignature.signAsSet(inputFiles);
+    Collection<File> expectedFiles = getTestFiles(expectedPathSet);
+    Collection<File> outputFiles = signature.files();
+    assertThat(outputFiles).containsExactlyElementsOf(expectedFiles);
+  }
 
-	private List<File> getTestFiles(final String[] paths) throws IOException {
-		final List<File> result = new ArrayList<>(paths.length);
-		for (String path : paths) {
-			result.add(setFile(path).toContent(""));
-		}
-		return result;
-	}
+  private List<File> getTestFiles(final String[] paths) throws IOException {
+    final List<File> result = new ArrayList<>(paths.length);
+    for (String path : paths) {
+      result.add(setFile(path).toContent(""));
+    }
+    return result;
+  }
 
 }

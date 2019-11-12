@@ -19,22 +19,22 @@ import java.io.Serializable;
 
 class NpmConfig implements Serializable {
 
-	private static final long serialVersionUID = -1866722789779160491L;
+  private static final long serialVersionUID = -1866722789779160491L;
 
-	private final String packageJsonContent;
+  private final String packageJsonContent;
 
-	private final String npmModule;
+  private final String npmModule;
 
-	public NpmConfig(String packageJsonContent, String npmModule) {
-		this.packageJsonContent = packageJsonContent;
-		this.npmModule = npmModule;
-	}
+  public NpmConfig(String packageJsonContent, String npmModule) {
+    this.packageJsonContent = packageJsonContent;
+    this.npmModule = npmModule;
+  }
 
-	public String getPackageJsonContent() {
-		return packageJsonContent;
-	}
+  public String getPackageJsonContent() {
+    return packageJsonContent;
+  }
 
-	public String getNpmModule() {
-		return npmModule;
-	}
+  public String getNpmModule() {
+    return npmModule;
+  }
 }

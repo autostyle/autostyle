@@ -21,47 +21,47 @@ import java.util.Objects;
 import javax.annotation.Nullable;
 
 final class FilterByFileFormatterStep implements FormatterStep {
-	private final FormatterStep delegateStep;
-	private final SerializableFileFilter filter;
+  private final FormatterStep delegateStep;
+  private final SerializableFileFilter filter;
 
-	FilterByFileFormatterStep(FormatterStep delegateStep, SerializableFileFilter filter) {
-		this.delegateStep = Objects.requireNonNull(delegateStep);
-		this.filter = Objects.requireNonNull(filter);
-	}
+  FilterByFileFormatterStep(FormatterStep delegateStep, SerializableFileFilter filter) {
+    this.delegateStep = Objects.requireNonNull(delegateStep);
+    this.filter = Objects.requireNonNull(filter);
+  }
 
-	@Override
-	public String getName() {
-		return delegateStep.getName();
-	}
+  @Override
+  public String getName() {
+    return delegateStep.getName();
+  }
 
-	@Override
-	public @Nullable String format(String raw, File file) throws Exception {
-		Objects.requireNonNull(raw, "raw");
-		Objects.requireNonNull(file, "file");
-		if (filter.accept(file)) {
-			return delegateStep.format(raw, file);
-		} else {
-			return raw;
-		}
-	}
+  @Override
+  public @Nullable String format(String raw, File file) throws Exception {
+    Objects.requireNonNull(raw, "raw");
+    Objects.requireNonNull(file, "file");
+    if (filter.accept(file)) {
+      return delegateStep.format(raw, file);
+    } else {
+      return raw;
+    }
+  }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		FilterByFileFormatterStep that = (FilterByFileFormatterStep) o;
-		return Objects.equals(delegateStep, that.delegateStep) &&
-				Objects.equals(filter, that.filter);
-	}
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    FilterByFileFormatterStep that = (FilterByFileFormatterStep) o;
+    return Objects.equals(delegateStep, that.delegateStep) &&
+        Objects.equals(filter, that.filter);
+  }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(delegateStep, filter);
-	}
+  @Override
+  public int hashCode() {
+    return Objects.hash(delegateStep, filter);
+  }
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 }

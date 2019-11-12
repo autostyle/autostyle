@@ -28,57 +28,57 @@ import com.diffplug.common.base.StandardSystemProperty;
 import com.diffplug.spotless.generic.EndWithNewlineStep;
 
 public class FormatterTest {
-	// Formatter normally needs to be closed, but no resources will be leaked in this special case
-	@Test
-	public void equality() {
-		new SerializableEqualityTester() {
-			private LineEnding.Policy lineEndingsPolicy = LineEnding.UNIX.createPolicy();
-			private Charset encoding = StandardCharsets.UTF_8;
-			private Path rootDir = Paths.get(StandardSystemProperty.USER_DIR.value());
-			private List<FormatterStep> steps = new ArrayList<>();
-			private FormatExceptionPolicy exceptionPolicy = FormatExceptionPolicy.failOnlyOnError();
+  // Formatter normally needs to be closed, but no resources will be leaked in this special case
+  @Test
+  public void equality() {
+    new SerializableEqualityTester() {
+      private LineEnding.Policy lineEndingsPolicy = LineEnding.UNIX.createPolicy();
+      private Charset encoding = StandardCharsets.UTF_8;
+      private Path rootDir = Paths.get(StandardSystemProperty.USER_DIR.value());
+      private List<FormatterStep> steps = new ArrayList<>();
+      private FormatExceptionPolicy exceptionPolicy = FormatExceptionPolicy.failOnlyOnError();
 
-			@Override
-			protected void setupTest(API api) throws Exception {
-				api.areDifferentThan();
+      @Override
+      protected void setupTest(API api) throws Exception {
+        api.areDifferentThan();
 
-				lineEndingsPolicy = LineEnding.WINDOWS.createPolicy();
-				api.areDifferentThan();
+        lineEndingsPolicy = LineEnding.WINDOWS.createPolicy();
+        api.areDifferentThan();
 
-				encoding = StandardCharsets.UTF_16;
-				api.areDifferentThan();
+        encoding = StandardCharsets.UTF_16;
+        api.areDifferentThan();
 
-				rootDir = rootDir.getParent();
-				api.areDifferentThan();
+        rootDir = rootDir.getParent();
+        api.areDifferentThan();
 
-				steps.add(EndWithNewlineStep.create());
-				api.areDifferentThan();
+        steps.add(EndWithNewlineStep.create());
+        api.areDifferentThan();
 
-				{
-					FormatExceptionPolicyStrict standard = new FormatExceptionPolicyStrict();
-					standard.excludePath("path");
-					exceptionPolicy = standard;
-					api.areDifferentThan();
-				}
+        {
+          FormatExceptionPolicyStrict standard = new FormatExceptionPolicyStrict();
+          standard.excludePath("path");
+          exceptionPolicy = standard;
+          api.areDifferentThan();
+        }
 
-				{
-					FormatExceptionPolicyStrict standard = new FormatExceptionPolicyStrict();
-					standard.excludeStep("step");
-					exceptionPolicy = standard;
-					api.areDifferentThan();
-				}
-			}
+        {
+          FormatExceptionPolicyStrict standard = new FormatExceptionPolicyStrict();
+          standard.excludeStep("step");
+          exceptionPolicy = standard;
+          api.areDifferentThan();
+        }
+      }
 
-			@Override
-			protected Formatter create() {
-				return Formatter.builder()
-						.lineEndingsPolicy(lineEndingsPolicy)
-						.encoding(encoding)
-						.rootDir(rootDir)
-						.steps(steps)
-						.exceptionPolicy(exceptionPolicy)
-						.build();
-			}
-		}.testEquals();
-	}
+      @Override
+      protected Formatter create() {
+        return Formatter.builder()
+            .lineEndingsPolicy(lineEndingsPolicy)
+            .encoding(encoding)
+            .rootDir(rootDir)
+            .steps(steps)
+            .exceptionPolicy(exceptionPolicy)
+            .build();
+      }
+    }.testEquals();
+  }
 }

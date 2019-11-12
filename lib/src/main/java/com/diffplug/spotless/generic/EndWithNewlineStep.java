@@ -18,44 +18,44 @@ package com.diffplug.spotless.generic;
 import com.diffplug.spotless.FormatterStep;
 
 public final class EndWithNewlineStep {
-	// prevent direct instantiation
-	private EndWithNewlineStep() {}
+  // prevent direct instantiation
+  private EndWithNewlineStep() {}
 
-	/** Creates a FormatterStep which forces lines to end with a newline. */
-	public static FormatterStep create() {
-		return FormatterStep.create("endWithNewline",
-				EndWithNewlineStep.class,
-				unused -> EndWithNewlineStep::format);
-	}
+  /** Creates a FormatterStep which forces lines to end with a newline. */
+  public static FormatterStep create() {
+    return FormatterStep.create("endWithNewline",
+        EndWithNewlineStep.class,
+        unused -> EndWithNewlineStep::format);
+  }
 
-	private static String format(String rawUnix) {
-		// simplifies the logic below if we can assume length > 0
-		if (rawUnix.isEmpty()) {
-			return "\n";
-		}
+  private static String format(String rawUnix) {
+    // simplifies the logic below if we can assume length > 0
+    if (rawUnix.isEmpty()) {
+      return "\n";
+    }
 
-		// find the last character which has real content
-		int lastContentCharacter = rawUnix.length() - 1;
-		char c;
-		while (lastContentCharacter >= 0) {
-			c = rawUnix.charAt(lastContentCharacter);
-			if (c == '\n' || c == '\t' || c == ' ') {
-				--lastContentCharacter;
-			} else {
-				break;
-			}
-		}
+    // find the last character which has real content
+    int lastContentCharacter = rawUnix.length() - 1;
+    char c;
+    while (lastContentCharacter >= 0) {
+      c = rawUnix.charAt(lastContentCharacter);
+      if (c == '\n' || c == '\t' || c == ' ') {
+        --lastContentCharacter;
+      } else {
+        break;
+      }
+    }
 
-		// if it's already clean, no need to create another string
-		if (lastContentCharacter == -1) {
-			return "\n";
-		} else if (lastContentCharacter == rawUnix.length() - 2 && rawUnix.charAt(rawUnix.length() - 1) == '\n') {
-			return rawUnix;
-		} else {
-			StringBuilder builder = new StringBuilder(lastContentCharacter + 2);
-			builder.append(rawUnix, 0, lastContentCharacter + 1);
-			builder.append('\n');
-			return builder.toString();
-		}
-	}
+    // if it's already clean, no need to create another string
+    if (lastContentCharacter == -1) {
+      return "\n";
+    } else if (lastContentCharacter == rawUnix.length() - 2 && rawUnix.charAt(rawUnix.length() - 1) == '\n') {
+      return rawUnix;
+    } else {
+      StringBuilder builder = new StringBuilder(lastContentCharacter + 2);
+      builder.append(rawUnix, 0, lastContentCharacter + 1);
+      builder.append('\n');
+      return builder.toString();
+    }
+  }
 }

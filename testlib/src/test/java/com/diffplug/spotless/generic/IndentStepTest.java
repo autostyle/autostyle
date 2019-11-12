@@ -25,61 +25,61 @@ import com.diffplug.spotless.ResourceHarness;
 import com.diffplug.spotless.SerializableEqualityTester;
 
 public class IndentStepTest extends ResourceHarness {
-	@Test
-	public void tabToTab() throws Throwable {
-		FormatterStep indent = IndentStep.Type.TAB.create(4);
-		assertOnResources(indent, "indent/IndentedWithTab.test", "indent/IndentedWithTab.test");
-	}
+  @Test
+  public void tabToTab() throws Throwable {
+    FormatterStep indent = IndentStep.Type.TAB.create(4);
+    assertOnResources(indent, "indent/IndentedWithTab.test", "indent/IndentedWithTab.test");
+  }
 
-	@Test
-	public void spaceToSpace() throws Throwable {
-		FormatterStep indent = IndentStep.Type.SPACE.create(4);
-		assertOnResources(indent, "indent/IndentedWithSpace.test", "indent/IndentedWithSpace.test");
-	}
+  @Test
+  public void spaceToSpace() throws Throwable {
+    FormatterStep indent = IndentStep.Type.SPACE.create(4);
+    assertOnResources(indent, "indent/IndentedWithSpace.test", "indent/IndentedWithSpace.test");
+  }
 
-	@Test
-	public void spaceToTab() throws Throwable {
-		FormatterStep indent = IndentStep.Type.TAB.create(4);
-		assertOnResources(indent, "indent/IndentedWithSpace.test", "indent/IndentedWithTab.test");
-	}
+  @Test
+  public void spaceToTab() throws Throwable {
+    FormatterStep indent = IndentStep.Type.TAB.create(4);
+    assertOnResources(indent, "indent/IndentedWithSpace.test", "indent/IndentedWithTab.test");
+  }
 
-	@Test
-	public void tabToSpace() throws Throwable {
-		FormatterStep indent = IndentStep.Type.SPACE.create(4);
-		assertOnResources(indent, "indent/IndentedWithTab.test", "indent/IndentedWithSpace.test");
-	}
+  @Test
+  public void tabToSpace() throws Throwable {
+    FormatterStep indent = IndentStep.Type.SPACE.create(4);
+    assertOnResources(indent, "indent/IndentedWithTab.test", "indent/IndentedWithSpace.test");
+  }
 
-	@Test
-	public void doesntClipNewlines() throws Throwable {
-		FormatterStep indent = IndentStep.Type.SPACE.create(4);
-		String blankNewlines = "\n\n\n\n";
-		Assert.assertEquals(blankNewlines, indent.format(blankNewlines, new File("")));
-	}
+  @Test
+  public void doesntClipNewlines() throws Throwable {
+    FormatterStep indent = IndentStep.Type.SPACE.create(4);
+    String blankNewlines = "\n\n\n\n";
+    Assert.assertEquals(blankNewlines, indent.format(blankNewlines, new File("")));
+  }
 
-	@Test
-	public void equality() {
-		new SerializableEqualityTester() {
-			IndentStep.Type type = IndentStep.Type.SPACE;
-			int numSpacesPerTab = 2;
+  @Test
+  public void equality() {
+    new SerializableEqualityTester() {
+      IndentStep.Type type = IndentStep.Type.SPACE;
+      int numSpacesPerTab = 2;
 
-			@Override
-			protected void setupTest(API api) {
-				api.areDifferentThan();
+      @Override
+      protected void setupTest(API api) {
+        api.areDifferentThan();
 
-				numSpacesPerTab = 4;
-				api.areDifferentThan();
+        numSpacesPerTab = 4;
+        api.areDifferentThan();
 
-				type = IndentStep.Type.TAB;
-				api.areDifferentThan();
+        type = IndentStep.Type.TAB;
+        api.areDifferentThan();
 
-				numSpacesPerTab = 2;
-				api.areDifferentThan();
-			}
+        numSpacesPerTab = 2;
+        api.areDifferentThan();
+      }
 
-			@Override
-			protected FormatterStep create() {
-				return type.create(numSpacesPerTab);
-			}
-		}.testEquals();
-	}
+      @Override
+      protected FormatterStep create() {
+        return type.create(numSpacesPerTab);
+      }
+    }.testEquals();
+  }
 }

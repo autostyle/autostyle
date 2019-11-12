@@ -24,48 +24,48 @@ import org.osgi.framework.BundleException;
 
 /** Thread save set of bundles, whereas each bundle has a unique symbolic name and a unique ID. */
 class BundleSet {
-	private final Map<String, Bundle> symbolicName2bundle;
-	private final Map<Long, Bundle> id2bundle;
+  private final Map<String, Bundle> symbolicName2bundle;
+  private final Map<Long, Bundle> id2bundle;
 
-	BundleSet() {
-		symbolicName2bundle = new ConcurrentHashMap<String, Bundle>();
-		id2bundle = new ConcurrentHashMap<Long, Bundle>();
-	}
+  BundleSet() {
+    symbolicName2bundle = new ConcurrentHashMap<String, Bundle>();
+    id2bundle = new ConcurrentHashMap<Long, Bundle>();
+  }
 
-	/** Get all bundles in collection */
-	Collection<Bundle> getAll() {
-		return symbolicName2bundle.values();
-	}
+  /** Get all bundles in collection */
+  Collection<Bundle> getAll() {
+    return symbolicName2bundle.values();
+  }
 
-	/** Get bundle by symbolic name or null if collection does not contain the corresponding bundle. */
-	Bundle get(String symbolicName) {
-		return symbolicName2bundle.get(symbolicName);
-	}
+  /** Get bundle by symbolic name or null if collection does not contain the corresponding bundle. */
+  Bundle get(String symbolicName) {
+    return symbolicName2bundle.get(symbolicName);
+  }
 
-	/** Get bundle by its ID or null if collection does not contain the corresponding bundle. */
-	Bundle get(long id) {
-		return id2bundle.get(id);
-	}
+  /** Get bundle by its ID or null if collection does not contain the corresponding bundle. */
+  Bundle get(long id) {
+    return id2bundle.get(id);
+  }
 
-	/** Add bundle to collection.
-	 * @throws BundleException */
-	void add(Bundle bundle) throws BundleException {
-		Bundle existingBundle = symbolicName2bundle.put(bundle.getSymbolicName(), bundle);
-		if (null != existingBundle) {
-			throw new BundleException(
-					String.format("Bundle '%s' (ID: %d) is already part of collection with ID %d.",
-							bundle.getSymbolicName(), bundle.getBundleId(), existingBundle.getBundleId()),
-					BundleException.DUPLICATE_BUNDLE_ERROR);
-		}
-		Bundle bundleWithSameID = id2bundle.put(bundle.getBundleId(), bundle);
-		if (null != bundleWithSameID) {
-			throw new BundleException(
-					String.format("Bundle ID '%d' for '%s' is already used by '%s'.",
-							bundle.getBundleId(),
-							bundle.getSymbolicName(),
-							bundleWithSameID.getSymbolicName()),
-					BundleException.DUPLICATE_BUNDLE_ERROR);
-		}
-	}
+  /** Add bundle to collection.
+   * @throws BundleException */
+  void add(Bundle bundle) throws BundleException {
+    Bundle existingBundle = symbolicName2bundle.put(bundle.getSymbolicName(), bundle);
+    if (null != existingBundle) {
+      throw new BundleException(
+          String.format("Bundle '%s' (ID: %d) is already part of collection with ID %d.",
+              bundle.getSymbolicName(), bundle.getBundleId(), existingBundle.getBundleId()),
+          BundleException.DUPLICATE_BUNDLE_ERROR);
+    }
+    Bundle bundleWithSameID = id2bundle.put(bundle.getBundleId(), bundle);
+    if (null != bundleWithSameID) {
+      throw new BundleException(
+          String.format("Bundle ID '%d' for '%s' is already used by '%s'.",
+              bundle.getBundleId(),
+              bundle.getSymbolicName(),
+              bundleWithSameID.getSymbolicName()),
+          BundleException.DUPLICATE_BUNDLE_ERROR);
+    }
+  }
 
 }

@@ -22,15 +22,15 @@ import com.diffplug.spotless.Provisioner;
 
 /** Uses google-java-format, but only to remove unused imports. */
 public class RemoveUnusedImportsStep {
-	// prevent direct instantiation
-	private RemoveUnusedImportsStep() {}
+  // prevent direct instantiation
+  private RemoveUnusedImportsStep() {}
 
-	static final String NAME = "removeUnusedImports";
+  static final String NAME = "removeUnusedImports";
 
-	public static FormatterStep create(Provisioner provisioner) {
-		Objects.requireNonNull(provisioner, "provisioner");
-		return FormatterStep.createLazy(NAME,
-				() -> new GoogleJavaFormatStep.State(NAME, GoogleJavaFormatStep.defaultVersion(), provisioner),
-				GoogleJavaFormatStep.State::createRemoveUnusedImportsOnly);
-	}
+  public static FormatterStep create(Provisioner provisioner) {
+    Objects.requireNonNull(provisioner, "provisioner");
+    return FormatterStep.createLazy(NAME,
+        () -> new GoogleJavaFormatStep.State(NAME, GoogleJavaFormatStep.defaultVersion(), provisioner),
+        GoogleJavaFormatStep.State::createRemoveUnusedImportsOnly);
+  }
 }

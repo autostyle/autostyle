@@ -35,62 +35,62 @@ import com.diffplug.spotless.category.NpmTest;
 @RunWith(Enclosed.class)
 public class TsFmtFormatterStepTest {
 
-	@Category(NpmTest.class)
-	@RunWith(Parameterized.class)
-	public static class TsFmtUsingVariousFormattingFilesTest extends NpmFormatterStepCommonTests {
-		@Parameterized.Parameter
-		public String formattingConfigFile;
+  @Category(NpmTest.class)
+  @RunWith(Parameterized.class)
+  public static class TsFmtUsingVariousFormattingFilesTest extends NpmFormatterStepCommonTests {
+    @Parameterized.Parameter
+    public String formattingConfigFile;
 
-		@Parameterized.Parameters(name = "{index}: formatting using {0} is working")
-		public static Iterable<String> formattingConfigFiles() {
-			return Arrays.asList("vscode/vscode.json", "tslint/tslint.json", "tsfmt/tsfmt.json", "tsconfig/tsconfig.json");
-		}
+    @Parameterized.Parameters(name = "{index}: formatting using {0} is working")
+    public static Iterable<String> formattingConfigFiles() {
+      return Arrays.asList("vscode/vscode.json", "tslint/tslint.json", "tsfmt/tsfmt.json", "tsconfig/tsconfig.json");
+    }
 
-		@Test
-		public void formattingUsingConfigFile() throws Exception {
-			String configFileName = formattingConfigFile.substring(formattingConfigFile.lastIndexOf('/') >= 0 ? formattingConfigFile.lastIndexOf('/') + 1 : 0);
-			String configFileNameWithoutExtension = configFileName.substring(0, configFileName.lastIndexOf('.'));
-			String filedir = "npm/tsfmt/" + configFileNameWithoutExtension + "/";
+    @Test
+    public void formattingUsingConfigFile() throws Exception {
+      String configFileName = formattingConfigFile.substring(formattingConfigFile.lastIndexOf('/') >= 0 ? formattingConfigFile.lastIndexOf('/') + 1 : 0);
+      String configFileNameWithoutExtension = configFileName.substring(0, configFileName.lastIndexOf('.'));
+      String filedir = "npm/tsfmt/" + configFileNameWithoutExtension + "/";
 
-			final File configFile = createTestFile(filedir + configFileName);
-			final String dirtyFile = filedir + configFileNameWithoutExtension + ".dirty";
-			final String cleanFile = filedir + configFileNameWithoutExtension + ".clean";
+      final File configFile = createTestFile(filedir + configFileName);
+      final String dirtyFile = filedir + configFileNameWithoutExtension + ".dirty";
+      final String cleanFile = filedir + configFileNameWithoutExtension + ".clean";
 
-			// some config options expect to see at least one file in the baseDir, so let's write one there
-			Files.write(new File(configFile.getParentFile(), configFileNameWithoutExtension + ".ts").toPath(), getTestResource(dirtyFile).getBytes(StandardCharsets.UTF_8));
+      // some config options expect to see at least one file in the baseDir, so let's write one there
+      Files.write(new File(configFile.getParentFile(), configFileNameWithoutExtension + ".ts").toPath(), getTestResource(dirtyFile).getBytes(StandardCharsets.UTF_8));
 
-			final FormatterStep formatterStep = TsFmtFormatterStep.create(
-					TsFmtFormatterStep.defaultDevDependencies(),
-					TestProvisioner.mavenCentral(),
-					buildDir(),
-					npmExecutable(),
-					TypedTsFmtConfigFile.named(configFileNameWithoutExtension, configFile),
-					Collections.emptyMap());
+      final FormatterStep formatterStep = TsFmtFormatterStep.create(
+          TsFmtFormatterStep.defaultDevDependencies(),
+          TestProvisioner.mavenCentral(),
+          buildDir(),
+          npmExecutable(),
+          TypedTsFmtConfigFile.named(configFileNameWithoutExtension, configFile),
+          Collections.emptyMap());
 
-			try (StepHarness stepHarness = StepHarness.forStep(formatterStep)) {
-				stepHarness.testResource(dirtyFile, cleanFile);
-			}
-		}
-	}
+      try (StepHarness stepHarness = StepHarness.forStep(formatterStep)) {
+        stepHarness.testResource(dirtyFile, cleanFile);
+      }
+    }
+  }
 
-	@Category(NpmTest.class)
-	public static class TsFmtUsingInlineConfigTest extends NpmFormatterStepCommonTests {
-		@Test
-		public void formattingUsingInlineConfigWorks() throws Exception {
+  @Category(NpmTest.class)
+  public static class TsFmtUsingInlineConfigTest extends NpmFormatterStepCommonTests {
+    @Test
+    public void formattingUsingInlineConfigWorks() throws Exception {
 
-			final ImmutableMap<String, Object> inlineConfig = ImmutableMap.of("indentSize", 1, "convertTabsToSpaces", true);
+      final ImmutableMap<String, Object> inlineConfig = ImmutableMap.of("indentSize", 1, "convertTabsToSpaces", true);
 
-			final FormatterStep formatterStep = TsFmtFormatterStep.create(
-					TsFmtFormatterStep.defaultDevDependencies(),
-					TestProvisioner.mavenCentral(),
-					buildDir(),
-					npmExecutable(),
-					null,
-					inlineConfig);
+      final FormatterStep formatterStep = TsFmtFormatterStep.create(
+          TsFmtFormatterStep.defaultDevDependencies(),
+          TestProvisioner.mavenCentral(),
+          buildDir(),
+          npmExecutable(),
+          null,
+          inlineConfig);
 
-			try (StepHarness stepHarness = StepHarness.forStep(formatterStep)) {
-				stepHarness.testResource("npm/tsfmt/tsfmt/tsfmt.dirty", "npm/tsfmt/tsfmt/tsfmt.clean");
-			}
-		}
-	}
+      try (StepHarness stepHarness = StepHarness.forStep(formatterStep)) {
+        stepHarness.testResource("npm/tsfmt/tsfmt/tsfmt.dirty", "npm/tsfmt/tsfmt/tsfmt.clean");
+      }
+    }
+  }
 }

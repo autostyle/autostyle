@@ -27,30 +27,30 @@ import com.diffplug.spotless.extra.eclipse.wtp.sse.CleanupStep;
 /** Formatter step which calls out to the Eclipse CSS cleanup and formatter. */
 public class EclipseCssFormatterStepImpl extends CleanupStep<EclipseCssFormatterStepImpl.SpotlessCssCleanup> {
 
-	public EclipseCssFormatterStepImpl(Properties properties) throws Exception {
-		super(new SpotlessCssCleanup(), plugin -> plugin.add(new CSSCorePlugin()));
-		configure(properties, true, CSSCorePlugin.getDefault(), new CSSCorePreferenceInitializer());
-	}
+  public EclipseCssFormatterStepImpl(Properties properties) throws Exception {
+    super(new SpotlessCssCleanup(), plugin -> plugin.add(new CSSCorePlugin()));
+    configure(properties, true, CSSCorePlugin.getDefault(), new CSSCorePreferenceInitializer());
+  }
 
-	/**
-	 * The FormatProcessorCSS does not allow a strict case formatting.
-	 * Hence additionally the CleanupProcessorCSS is used.
-	 */
-	public static class SpotlessCssCleanup extends CleanupProcessorCSS implements CleanupStep.ProcessorAccessor {
-		@Override
-		public String getThisContentType() {
-			return getContentType();
-		}
+  /**
+   * The FormatProcessorCSS does not allow a strict case formatting.
+   * Hence additionally the CleanupProcessorCSS is used.
+   */
+  public static class SpotlessCssCleanup extends CleanupProcessorCSS implements CleanupStep.ProcessorAccessor {
+    @Override
+    public String getThisContentType() {
+      return getContentType();
+    }
 
-		@Override
-		public IStructuredFormatProcessor getThisFormatProcessor() {
-			return getFormatProcessor();
-		}
+    @Override
+    public IStructuredFormatProcessor getThisFormatProcessor() {
+      return getFormatProcessor();
+    }
 
-		@Override
-		public void refreshThisCleanupPreferences() {
-			refreshCleanupPreferences();
-		}
+    @Override
+    public void refreshThisCleanupPreferences() {
+      refreshCleanupPreferences();
+    }
 
-	}
+  }
 }

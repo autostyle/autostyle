@@ -21,35 +21,35 @@ import com.diffplug.spotless.extra.groovy.GrEclipseFormatterStep;
 import com.diffplug.spotless.java.ImportOrderStep;
 
 public class GroovyGradleExtension extends FormatExtension {
-	private static final String GRADLE_FILE_EXTENSION = "*.gradle";
-	static final String NAME = "groovyGradle";
+  private static final String GRADLE_FILE_EXTENSION = "*.gradle";
+  static final String NAME = "groovyGradle";
 
-	public GroovyGradleExtension(SpotlessExtension rootExtension) {
-		super(rootExtension);
-	}
+  public GroovyGradleExtension(SpotlessExtension rootExtension) {
+    super(rootExtension);
+  }
 
-	public void importOrder(String... importOrder) {
-		addStep(ImportOrderStep.forGroovy().createFrom(importOrder));
-	}
+  public void importOrder(String... importOrder) {
+    addStep(ImportOrderStep.forGroovy().createFrom(importOrder));
+  }
 
-	public void importOrderFile(Object importOrderFile) {
-		Objects.requireNonNull(importOrderFile);
-		addStep(ImportOrderStep.forGroovy().createFrom(getProject().file(importOrderFile)));
-	}
+  public void importOrderFile(Object importOrderFile) {
+    Objects.requireNonNull(importOrderFile);
+    addStep(ImportOrderStep.forGroovy().createFrom(getProject().file(importOrderFile)));
+  }
 
-	public GroovyExtension.GrEclipseConfig greclipse() {
-		return new GroovyExtension.GrEclipseConfig(GrEclipseFormatterStep.defaultVersion(), this);
-	}
+  public GroovyExtension.GrEclipseConfig greclipse() {
+    return new GroovyExtension.GrEclipseConfig(GrEclipseFormatterStep.defaultVersion(), this);
+  }
 
-	public GroovyExtension.GrEclipseConfig greclipse(String version) {
-		return new GroovyExtension.GrEclipseConfig(version, this);
-	}
+  public GroovyExtension.GrEclipseConfig greclipse(String version) {
+    return new GroovyExtension.GrEclipseConfig(version, this);
+  }
 
-	@Override
-	protected void setupTask(SpotlessTask task) {
-		if (target == null) {
-			target = parseTarget(GRADLE_FILE_EXTENSION);
-		}
-		super.setupTask(task);
-	}
+  @Override
+  protected void setupTask(SpotlessTask task) {
+    if (target == null) {
+      target = parseTarget(GRADLE_FILE_EXTENSION);
+    }
+    super.setupTask(task);
+  }
 }

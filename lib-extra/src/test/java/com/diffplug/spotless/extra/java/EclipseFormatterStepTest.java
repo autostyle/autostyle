@@ -29,49 +29,49 @@ import com.diffplug.spotless.TestProvisioner;
 
 @Deprecated
 public class EclipseFormatterStepTest extends ResourceHarness {
-	@Test
-	public void loadPropertiesSettings() throws Throwable {
-		List<File> eclipseFormatFile = createTestFiles("java/eclipse/formatter.properties");
-		StepHarness.forStep(EclipseFormatterStep.create(eclipseFormatFile, TestProvisioner.mavenCentral()))
-				.testResource("java/eclipse/JavaCodeUnformatted.test", "java/eclipse/JavaCodeFormatted.test");
-	}
+  @Test
+  public void loadPropertiesSettings() throws Throwable {
+    List<File> eclipseFormatFile = createTestFiles("java/eclipse/formatter.properties");
+    StepHarness.forStep(EclipseFormatterStep.create(eclipseFormatFile, TestProvisioner.mavenCentral()))
+        .testResource("java/eclipse/JavaCodeUnformatted.test", "java/eclipse/JavaCodeFormatted.test");
+  }
 
-	@Test
-	public void loadXmlSettings() throws Throwable {
-		List<File> eclipseFormatFile = createTestFiles("java/eclipse/formatter.xml");
-		StepHarness.forStep(EclipseFormatterStep.create(eclipseFormatFile, TestProvisioner.mavenCentral()))
-				.testResource("java/eclipse/JavaCodeUnformatted.test", "java/eclipse/JavaCodeFormatted.test");
-	}
+  @Test
+  public void loadXmlSettings() throws Throwable {
+    List<File> eclipseFormatFile = createTestFiles("java/eclipse/formatter.xml");
+    StepHarness.forStep(EclipseFormatterStep.create(eclipseFormatFile, TestProvisioner.mavenCentral()))
+        .testResource("java/eclipse/JavaCodeUnformatted.test", "java/eclipse/JavaCodeFormatted.test");
+  }
 
-	@Test
-	public void longLiteralProblem() throws Throwable {
-		String folder = "java/eclipse/long_literals/";
-		List<File> eclipseFormatFile = createTestFiles(folder + "spotless.eclipseformat.xml");
-		StepHarness.forStep(EclipseFormatterStep.create(eclipseFormatFile, TestProvisioner.mavenCentral()))
-				.testResourceUnaffected(folder + "Example1.test")
-				.testResourceUnaffected(folder + "Example2.test");
-	}
+  @Test
+  public void longLiteralProblem() throws Throwable {
+    String folder = "java/eclipse/long_literals/";
+    List<File> eclipseFormatFile = createTestFiles(folder + "spotless.eclipseformat.xml");
+    StepHarness.forStep(EclipseFormatterStep.create(eclipseFormatFile, TestProvisioner.mavenCentral()))
+        .testResourceUnaffected(folder + "Example1.test")
+        .testResourceUnaffected(folder + "Example2.test");
+  }
 
-	@Test
-	public void equality() throws IOException {
-		List<File> xmlFile = createTestFiles("java/eclipse/formatter.xml");
-		List<File> propFile = createTestFiles("java/eclipse/formatter.properties");
-		new SerializableEqualityTester() {
-			List<File> settingsFiles;
+  @Test
+  public void equality() throws IOException {
+    List<File> xmlFile = createTestFiles("java/eclipse/formatter.xml");
+    List<File> propFile = createTestFiles("java/eclipse/formatter.properties");
+    new SerializableEqualityTester() {
+      List<File> settingsFiles;
 
-			@Override
-			protected void setupTest(API api) {
-				settingsFiles = xmlFile;
-				api.areDifferentThan();
+      @Override
+      protected void setupTest(API api) {
+        settingsFiles = xmlFile;
+        api.areDifferentThan();
 
-				settingsFiles = propFile;
-				api.areDifferentThan();
-			}
+        settingsFiles = propFile;
+        api.areDifferentThan();
+      }
 
-			@Override
-			protected FormatterStep create() {
-				return EclipseFormatterStep.create(settingsFiles, TestProvisioner.mavenCentral());
-			}
-		}.testEquals();
-	}
+      @Override
+      protected FormatterStep create() {
+        return EclipseFormatterStep.create(settingsFiles, TestProvisioner.mavenCentral());
+      }
+    }.testEquals();
+  }
 }

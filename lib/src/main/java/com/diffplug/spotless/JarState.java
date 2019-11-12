@@ -40,88 +40,88 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  * catch changes in a SNAPSHOT version.
  */
 public final class JarState implements Serializable {
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	private final Set<String> mavenCoordinates;
-	@SuppressWarnings("unused")
-	private final FileSignature fileSignature;
+  private final Set<String> mavenCoordinates;
+  @SuppressWarnings("unused")
+  private final FileSignature fileSignature;
 
-	/*
-	 * Transient because not needed to uniquely identify a JarState instance, and also because
-	 * Gradle only needs this class to be Serializable so it can compare JarState instances for
-	 * incremental builds.
-	 */
-	@SuppressFBWarnings("SE_TRANSIENT_FIELD_NOT_RESTORED")
-	private final transient Set<File> jars;
+  /*
+   * Transient because not needed to uniquely identify a JarState instance, and also because
+   * Gradle only needs this class to be Serializable so it can compare JarState instances for
+   * incremental builds.
+   */
+  @SuppressFBWarnings("SE_TRANSIENT_FIELD_NOT_RESTORED")
+  private final transient Set<File> jars;
 
-	@Deprecated // internal
-	public JarState(String mavenCoordinate, FileSignature fileSignature, Set<File> jars) {
-		this(Arrays.asList(mavenCoordinate), fileSignature, jars);
-	}
+  @Deprecated // internal
+  public JarState(String mavenCoordinate, FileSignature fileSignature, Set<File> jars) {
+    this(Arrays.asList(mavenCoordinate), fileSignature, jars);
+  }
 
-	@Deprecated // internal
-	public JarState(Collection<String> mavenCoordinates, FileSignature fileSignature, Set<File> jars) {
-		this.mavenCoordinates = new TreeSet<String>(mavenCoordinates);
-		this.fileSignature = fileSignature;
-		this.jars = jars;
-	}
+  @Deprecated // internal
+  public JarState(Collection<String> mavenCoordinates, FileSignature fileSignature, Set<File> jars) {
+    this.mavenCoordinates = new TreeSet<String>(mavenCoordinates);
+    this.fileSignature = fileSignature;
+    this.jars = jars;
+  }
 
-	/** Provisions the given maven coordinate and its transitive dependencies. */
-	public static JarState from(String mavenCoordinate, Provisioner provisioner) throws IOException {
-		return from(Collections.singletonList(mavenCoordinate), provisioner);
-	}
+  /** Provisions the given maven coordinate and its transitive dependencies. */
+  public static JarState from(String mavenCoordinate, Provisioner provisioner) throws IOException {
+    return from(Collections.singletonList(mavenCoordinate), provisioner);
+  }
 
-	/** Provisions the given maven coordinates and their transitive dependencies. */
-	public static JarState from(Collection<String> mavenCoordinates, Provisioner provisioner) throws IOException {
-		return provisionWithTransitives(true, mavenCoordinates, provisioner);
-	}
+  /** Provisions the given maven coordinates and their transitive dependencies. */
+  public static JarState from(Collection<String> mavenCoordinates, Provisioner provisioner) throws IOException {
+    return provisionWithTransitives(true, mavenCoordinates, provisioner);
+  }
 
-	/** Provisions the given maven coordinates without their transitive dependencies. */
-	public static JarState withoutTransitives(Collection<String> mavenCoordinates, Provisioner provisioner) throws IOException {
-		return provisionWithTransitives(false, mavenCoordinates, provisioner);
-	}
+  /** Provisions the given maven coordinates without their transitive dependencies. */
+  public static JarState withoutTransitives(Collection<String> mavenCoordinates, Provisioner provisioner) throws IOException {
+    return provisionWithTransitives(false, mavenCoordinates, provisioner);
+  }
 
-	private static JarState provisionWithTransitives(boolean withTransitives, Collection<String> mavenCoordinates, Provisioner provisioner) throws IOException {
-		Objects.requireNonNull(mavenCoordinates, "mavenCoordinates");
-		Objects.requireNonNull(provisioner, "provisioner");
-		Set<File> jars = provisioner.provisionWithTransitives(withTransitives, mavenCoordinates);
-		if (jars.isEmpty()) {
-			throw new NoSuchElementException("Resolved to an empty result: " + mavenCoordinates.stream().collect(Collectors.joining(", ")));
-		}
-		FileSignature fileSignature = FileSignature.signAsSet(jars);
-		return new JarState(mavenCoordinates, fileSignature, jars);
-	}
+  private static JarState provisionWithTransitives(boolean withTransitives, Collection<String> mavenCoordinates, Provisioner provisioner) throws IOException {
+    Objects.requireNonNull(mavenCoordinates, "mavenCoordinates");
+    Objects.requireNonNull(provisioner, "provisioner");
+    Set<File> jars = provisioner.provisionWithTransitives(withTransitives, mavenCoordinates);
+    if (jars.isEmpty()) {
+      throw new NoSuchElementException("Resolved to an empty result: " + mavenCoordinates.stream().collect(Collectors.joining(", ")));
+    }
+    FileSignature fileSignature = FileSignature.signAsSet(jars);
+    return new JarState(mavenCoordinates, fileSignature, jars);
+  }
 
-	URL[] jarUrls() {
-		return jars.stream().map(File::toURI).map(ThrowingEx.wrap(URI::toURL)).toArray(URL[]::new);
-	}
+  URL[] jarUrls() {
+    return jars.stream().map(File::toURI).map(ThrowingEx.wrap(URI::toURL)).toArray(URL[]::new);
+  }
 
-	/**
-	 * Returns a classloader containing the only jars in this JarState.
-	 * Look-up of classes in the `org.slf4j` package
-	 * are not taken from the JarState, but instead redirected to the class loader of this class to enable
-	 * passthrough logging.
-	 * <br/>
-	 * The lifetime of the underlying cacheloader is controlled by {@link SpotlessCache}.
-	 */
-	public ClassLoader getClassLoader() {
-		return SpotlessCache.instance().classloader(this);
-	}
+  /**
+   * Returns a classloader containing the only jars in this JarState.
+   * Look-up of classes in the `org.slf4j` package
+   * are not taken from the JarState, but instead redirected to the class loader of this class to enable
+   * passthrough logging.
+   * <br/>
+   * The lifetime of the underlying cacheloader is controlled by {@link SpotlessCache}.
+   */
+  public ClassLoader getClassLoader() {
+    return SpotlessCache.instance().classloader(this);
+  }
 
-	/**
-	 * Returns a classloader containing the only jars in this JarState.
-	 * Look-up of classes in the `org.slf4j` package
-	 * are not taken from the JarState, but instead redirected to the class loader of this class to enable
-	 * passthrough logging.
-	 * <br/>
-	 * The lifetime of the underlying cacheloader is controlled by {@link SpotlessCache}.
-	 */
-	public ClassLoader getClassLoader(Serializable key) {
-		return SpotlessCache.instance().classloader(key, this);
-	}
+  /**
+   * Returns a classloader containing the only jars in this JarState.
+   * Look-up of classes in the `org.slf4j` package
+   * are not taken from the JarState, but instead redirected to the class loader of this class to enable
+   * passthrough logging.
+   * <br/>
+   * The lifetime of the underlying cacheloader is controlled by {@link SpotlessCache}.
+   */
+  public ClassLoader getClassLoader(Serializable key) {
+    return SpotlessCache.instance().classloader(key, this);
+  }
 
-	/** Returns unmodifiable view on sorted Maven coordinates */
-	public Set<String> getMavenCoordinates() {
-		return Collections.unmodifiableSet(mavenCoordinates);
-	}
+  /** Returns unmodifiable view on sorted Maven coordinates */
+  public Set<String> getMavenCoordinates() {
+    return Collections.unmodifiableSet(mavenCoordinates);
+  }
 }

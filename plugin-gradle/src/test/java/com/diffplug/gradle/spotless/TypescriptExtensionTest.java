@@ -24,107 +24,107 @@ import com.diffplug.spotless.category.NpmTest;
 
 @Category(NpmTest.class)
 public class TypescriptExtensionTest extends GradleIntegrationTest {
-	@Test
-	public void allowToSpecifyFormatterVersion() throws IOException {
-		setFile("build.gradle").toLines(
-				"buildscript { repositories { mavenCentral() } }",
-				"plugins {",
-				"    id 'com.diffplug.gradle.spotless'",
-				"}",
-				"def tsfmtconfig = [:]",
-				"tsfmtconfig['indentSize'] = 1",
-				"tsfmtconfig['convertTabsToSpaces'] = true",
-				"spotless {",
-				"    typescript {",
-				"        target 'test.ts'",
-				"        tsfmt('7.2.1').config(tsfmtconfig)",
-				"    }",
-				"}");
-		setFile("test.ts").toResource("npm/tsfmt/tsfmt/tsfmt.dirty");
-		gradleRunner().withArguments("--stacktrace", "spotlessApply").build();
-		assertFile("test.ts").sameAsResource("npm/tsfmt/tsfmt/tsfmt.clean");
-	}
+  @Test
+  public void allowToSpecifyFormatterVersion() throws IOException {
+    setFile("build.gradle").toLines(
+        "buildscript { repositories { mavenCentral() } }",
+        "plugins {",
+        "    id 'com.diffplug.gradle.spotless'",
+        "}",
+        "def tsfmtconfig = [:]",
+        "tsfmtconfig['indentSize'] = 1",
+        "tsfmtconfig['convertTabsToSpaces'] = true",
+        "spotless {",
+        "    typescript {",
+        "        target 'test.ts'",
+        "        tsfmt('7.2.1').config(tsfmtconfig)",
+        "    }",
+        "}");
+    setFile("test.ts").toResource("npm/tsfmt/tsfmt/tsfmt.dirty");
+    gradleRunner().withArguments("--stacktrace", "spotlessApply").build();
+    assertFile("test.ts").sameAsResource("npm/tsfmt/tsfmt/tsfmt.clean");
+  }
 
-	@Test
-	public void allowToSpecifyMultipleVersionStrings() throws IOException {
-		setFile("build.gradle").toLines(
-				"buildscript { repositories { mavenCentral() } }",
-				"plugins {",
-				"    id 'com.diffplug.gradle.spotless'",
-				"}",
-				"def tsfmtconfig = [:]",
-				"tsfmtconfig['indentSize'] = 1",
-				"tsfmtconfig['convertTabsToSpaces'] = true",
-				"spotless {",
-				"    typescript {",
-				"        target 'test.ts'",
-				"        tsfmt(['typescript-formatter': '7.2.1', 'tslint': '5.1.0', 'typescript': '2.9.2']).config(tsfmtconfig)",
-				"    }",
-				"}");
-		setFile("test.ts").toResource("npm/tsfmt/tsfmt/tsfmt.dirty");
-		gradleRunner().withArguments("--stacktrace", "spotlessApply").build();
-		assertFile("test.ts").sameAsResource("npm/tsfmt/tsfmt/tsfmt.clean");
-	}
+  @Test
+  public void allowToSpecifyMultipleVersionStrings() throws IOException {
+    setFile("build.gradle").toLines(
+        "buildscript { repositories { mavenCentral() } }",
+        "plugins {",
+        "    id 'com.diffplug.gradle.spotless'",
+        "}",
+        "def tsfmtconfig = [:]",
+        "tsfmtconfig['indentSize'] = 1",
+        "tsfmtconfig['convertTabsToSpaces'] = true",
+        "spotless {",
+        "    typescript {",
+        "        target 'test.ts'",
+        "        tsfmt(['typescript-formatter': '7.2.1', 'tslint': '5.1.0', 'typescript': '2.9.2']).config(tsfmtconfig)",
+        "    }",
+        "}");
+    setFile("test.ts").toResource("npm/tsfmt/tsfmt/tsfmt.dirty");
+    gradleRunner().withArguments("--stacktrace", "spotlessApply").build();
+    assertFile("test.ts").sameAsResource("npm/tsfmt/tsfmt/tsfmt.clean");
+  }
 
-	@Test
-	public void useTsfmtInlineConfig() throws IOException {
-		setFile("build.gradle").toLines(
-				"buildscript { repositories { mavenCentral() } }",
-				"plugins {",
-				"    id 'com.diffplug.gradle.spotless'",
-				"}",
-				"def tsfmtconfig = [:]",
-				"tsfmtconfig['indentSize'] = 1",
-				"tsfmtconfig['convertTabsToSpaces'] = true",
-				"spotless {",
-				"    typescript {",
-				"        target 'test.ts'",
-				"        tsfmt().config(tsfmtconfig)",
-				"    }",
-				"}");
-		setFile("test.ts").toResource("npm/tsfmt/tsfmt/tsfmt.dirty");
-		gradleRunner().withArguments("--stacktrace", "spotlessApply").build();
-		assertFile("test.ts").sameAsResource("npm/tsfmt/tsfmt/tsfmt.clean");
-	}
+  @Test
+  public void useTsfmtInlineConfig() throws IOException {
+    setFile("build.gradle").toLines(
+        "buildscript { repositories { mavenCentral() } }",
+        "plugins {",
+        "    id 'com.diffplug.gradle.spotless'",
+        "}",
+        "def tsfmtconfig = [:]",
+        "tsfmtconfig['indentSize'] = 1",
+        "tsfmtconfig['convertTabsToSpaces'] = true",
+        "spotless {",
+        "    typescript {",
+        "        target 'test.ts'",
+        "        tsfmt().config(tsfmtconfig)",
+        "    }",
+        "}");
+    setFile("test.ts").toResource("npm/tsfmt/tsfmt/tsfmt.dirty");
+    gradleRunner().withArguments("--stacktrace", "spotlessApply").build();
+    assertFile("test.ts").sameAsResource("npm/tsfmt/tsfmt/tsfmt.clean");
+  }
 
-	@Test
-	public void useTsfmtFileConfig() throws IOException {
-		setFile("tsfmt.json").toLines(
-				"{",
-				"    \"indentSize\": 1,",
-				"    \"convertTabsToSpaces\": true",
-				"}");
-		setFile("build.gradle").toLines(
-				"buildscript { repositories { mavenCentral() } }",
-				"plugins {",
-				"    id 'com.diffplug.gradle.spotless'",
-				"}",
-				"spotless {",
-				"    typescript {",
-				"        target 'test.ts'",
-				"        tsfmt().tsfmtFile('tsfmt.json')",
-				"    }",
-				"}");
-		setFile("test.ts").toResource("npm/tsfmt/tsfmt/tsfmt.dirty");
-		gradleRunner().withArguments("--stacktrace", "spotlessApply").build();
-		assertFile("test.ts").sameAsResource("npm/tsfmt/tsfmt/tsfmt.clean");
-	}
+  @Test
+  public void useTsfmtFileConfig() throws IOException {
+    setFile("tsfmt.json").toLines(
+        "{",
+        "    \"indentSize\": 1,",
+        "    \"convertTabsToSpaces\": true",
+        "}");
+    setFile("build.gradle").toLines(
+        "buildscript { repositories { mavenCentral() } }",
+        "plugins {",
+        "    id 'com.diffplug.gradle.spotless'",
+        "}",
+        "spotless {",
+        "    typescript {",
+        "        target 'test.ts'",
+        "        tsfmt().tsfmtFile('tsfmt.json')",
+        "    }",
+        "}");
+    setFile("test.ts").toResource("npm/tsfmt/tsfmt/tsfmt.dirty");
+    gradleRunner().withArguments("--stacktrace", "spotlessApply").build();
+    assertFile("test.ts").sameAsResource("npm/tsfmt/tsfmt/tsfmt.clean");
+  }
 
-	@Test
-	public void usePrettier() throws IOException {
-		setFile("build.gradle").toLines(
-				"buildscript { repositories { mavenCentral() } }",
-				"plugins {",
-				"    id 'com.diffplug.gradle.spotless'",
-				"}",
-				"spotless {",
-				"    typescript {",
-				"        target 'test.ts'",
-				"        prettier()",
-				"    }",
-				"}");
-		setFile("test.ts").toResource("npm/prettier/filetypes/typescript/typescript.dirty");
-		gradleRunner().withArguments("--stacktrace", "spotlessApply").build();
-		assertFile("test.ts").sameAsResource("npm/prettier/filetypes/typescript/typescript.clean");
-	}
+  @Test
+  public void usePrettier() throws IOException {
+    setFile("build.gradle").toLines(
+        "buildscript { repositories { mavenCentral() } }",
+        "plugins {",
+        "    id 'com.diffplug.gradle.spotless'",
+        "}",
+        "spotless {",
+        "    typescript {",
+        "        target 'test.ts'",
+        "        prettier()",
+        "    }",
+        "}");
+    setFile("test.ts").toResource("npm/prettier/filetypes/typescript/typescript.dirty");
+    gradleRunner().withArguments("--stacktrace", "spotlessApply").build();
+    assertFile("test.ts").sameAsResource("npm/prettier/filetypes/typescript/typescript.clean");
+  }
 }

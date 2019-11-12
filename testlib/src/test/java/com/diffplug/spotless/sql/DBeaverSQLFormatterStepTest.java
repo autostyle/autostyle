@@ -28,51 +28,51 @@ import com.diffplug.spotless.StepHarness;
 
 public class DBeaverSQLFormatterStepTest extends ResourceHarness {
 
-	@Test
-	public void behavior() throws Exception {
-		FormatterStep step = DBeaverSQLFormatterStep.create(Collections.emptySet());
-		StepHarness.forStep(step)
-				.testResource("sql/dbeaver/full.dirty", "sql/dbeaver/full.clean")
-				.testResource("sql/dbeaver/V1_initial.sql.dirty", "sql/dbeaver/V1_initial.sql.clean")
-				.testResource("sql/dbeaver/alter-table.dirty", "sql/dbeaver/alter-table.clean")
-				.testResource("sql/dbeaver/create.dirty", "sql/dbeaver/create.clean");
-	}
+  @Test
+  public void behavior() throws Exception {
+    FormatterStep step = DBeaverSQLFormatterStep.create(Collections.emptySet());
+    StepHarness.forStep(step)
+        .testResource("sql/dbeaver/full.dirty", "sql/dbeaver/full.clean")
+        .testResource("sql/dbeaver/V1_initial.sql.dirty", "sql/dbeaver/V1_initial.sql.clean")
+        .testResource("sql/dbeaver/alter-table.dirty", "sql/dbeaver/alter-table.clean")
+        .testResource("sql/dbeaver/create.dirty", "sql/dbeaver/create.clean");
+  }
 
-	@Test
-	public void behaviorWithConfigFile() throws Exception {
-		FormatterStep step = DBeaverSQLFormatterStep.create(createTestFiles("sql/dbeaver/sqlConfig.properties"));
-		StepHarness.forStep(step)
-				.testResource("sql/dbeaver/create.dirty", "sql/dbeaver/create.clean");
-	}
+  @Test
+  public void behaviorWithConfigFile() throws Exception {
+    FormatterStep step = DBeaverSQLFormatterStep.create(createTestFiles("sql/dbeaver/sqlConfig.properties"));
+    StepHarness.forStep(step)
+        .testResource("sql/dbeaver/create.dirty", "sql/dbeaver/create.clean");
+  }
 
-	@Test
-	public void behaviorWithAlternativeConfigFile() throws Exception {
-		FormatterStep step = DBeaverSQLFormatterStep.create(createTestFiles("sql/dbeaver/sqlConfig2.properties"));
-		StepHarness.forStep(step)
-				.testResource("sql/dbeaver/create.dirty", "sql/dbeaver/create.clean.alternative");
-	}
+  @Test
+  public void behaviorWithAlternativeConfigFile() throws Exception {
+    FormatterStep step = DBeaverSQLFormatterStep.create(createTestFiles("sql/dbeaver/sqlConfig2.properties"));
+    StepHarness.forStep(step)
+        .testResource("sql/dbeaver/create.dirty", "sql/dbeaver/create.clean.alternative");
+  }
 
-	@Test
-	public void equality() throws Exception {
-		List<File> sqlConfig1 = createTestFiles("sql/dbeaver/sqlConfig.properties");
-		List<File> sqlConfig2 = createTestFiles("sql/dbeaver/sqlConfig2.properties");
-		new SerializableEqualityTester() {
-			List<File> settingsFiles;
+  @Test
+  public void equality() throws Exception {
+    List<File> sqlConfig1 = createTestFiles("sql/dbeaver/sqlConfig.properties");
+    List<File> sqlConfig2 = createTestFiles("sql/dbeaver/sqlConfig2.properties");
+    new SerializableEqualityTester() {
+      List<File> settingsFiles;
 
-			@Override
-			protected void setupTest(API api) {
-				settingsFiles = sqlConfig1;
-				api.areDifferentThan();
+      @Override
+      protected void setupTest(API api) {
+        settingsFiles = sqlConfig1;
+        api.areDifferentThan();
 
-				settingsFiles = sqlConfig2;
-				api.areDifferentThan();
-			}
+        settingsFiles = sqlConfig2;
+        api.areDifferentThan();
+      }
 
-			@Override
-			protected FormatterStep create() {
-				return DBeaverSQLFormatterStep.create(settingsFiles);
-			}
-		}.testEquals();
-	}
+      @Override
+      protected FormatterStep create() {
+        return DBeaverSQLFormatterStep.create(settingsFiles);
+      }
+    }.testEquals();
+  }
 
 }

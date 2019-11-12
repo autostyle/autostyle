@@ -4,7 +4,7 @@
 p,
 #content,.basic-text,.custom-long-class-name,.second-long-class-name,.third-long-class-name,.any-class{
 font-size:12 px;
-	padding: 0px 0px 0px 0px;
+  padding: 0px 0px 0px 0px;
 }
 
 

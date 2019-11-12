@@ -32,62 +32,62 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  * when Spotless is no longer in use to release any resources it has grabbed.
  */
 public final class SpotlessCache {
-	/** Allows comparing keys based on their serialization. */
-	static final class SerializedKey {
-		final byte[] serialized;
-		final int hashCode;
+  /** Allows comparing keys based on their serialization. */
+  static final class SerializedKey {
+    final byte[] serialized;
+    final int hashCode;
 
-		SerializedKey(Serializable key) {
-			Objects.requireNonNull(key);
-			serialized = LazyForwardingEquality.toBytes(key);
-			hashCode = Arrays.hashCode(serialized);
-		}
+    SerializedKey(Serializable key) {
+      Objects.requireNonNull(key);
+      serialized = LazyForwardingEquality.toBytes(key);
+      hashCode = Arrays.hashCode(serialized);
+    }
 
-		@Override
-		public final boolean equals(Object other) {
-			return other instanceof SerializedKey
-					&& Arrays.equals(serialized, ((SerializedKey) other).serialized);
-		}
+    @Override
+    public final boolean equals(Object other) {
+      return other instanceof SerializedKey
+          && Arrays.equals(serialized, ((SerializedKey) other).serialized);
+    }
 
-		@Override
-		public final int hashCode() {
-			return hashCode;
-		}
-	}
+    @Override
+    public final int hashCode() {
+      return hashCode;
+    }
+  }
 
-	final Map<SerializedKey, URLClassLoader> cache = new HashMap<>();
+  final Map<SerializedKey, URLClassLoader> cache = new HashMap<>();
 
-	@SuppressFBWarnings("DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED")
-	synchronized ClassLoader classloader(JarState state) {
-		return classloader(state, state);
-	}
+  @SuppressFBWarnings("DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED")
+  synchronized ClassLoader classloader(JarState state) {
+    return classloader(state, state);
+  }
 
-	@SuppressFBWarnings("DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED")
-	synchronized ClassLoader classloader(Serializable key, JarState state) {
-		SerializedKey serializedKey = new SerializedKey(key);
-		return cache
-				.computeIfAbsent(serializedKey, k -> new FeatureClassLoader(state.jarUrls(), this.getClass().getClassLoader()));
-	}
+  @SuppressFBWarnings("DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED")
+  synchronized ClassLoader classloader(Serializable key, JarState state) {
+    SerializedKey serializedKey = new SerializedKey(key);
+    return cache
+        .computeIfAbsent(serializedKey, k -> new FeatureClassLoader(state.jarUrls(), this.getClass().getClassLoader()));
+  }
 
-	static SpotlessCache instance() {
-		return instance;
-	}
+  static SpotlessCache instance() {
+    return instance;
+  }
 
-	/** Closes all cached classloaders. */
-	public static void clear() {
-		List<URLClassLoader> toDelete;
-		synchronized (instance) {
-			toDelete = new ArrayList<>(instance.cache.values());
-			instance.cache.clear();
-		}
-		for (URLClassLoader classLoader : toDelete) {
-			try {
-				classLoader.close();
-			} catch (IOException e) {
-				throw ThrowingEx.asRuntime(e);
-			}
-		}
-	}
+  /** Closes all cached classloaders. */
+  public static void clear() {
+    List<URLClassLoader> toDelete;
+    synchronized (instance) {
+      toDelete = new ArrayList<>(instance.cache.values());
+      instance.cache.clear();
+    }
+    for (URLClassLoader classLoader : toDelete) {
+      try {
+        classLoader.close();
+      } catch (IOException e) {
+        throw ThrowingEx.asRuntime(e);
+      }
+    }
+  }
 
-	private static final SpotlessCache instance = new SpotlessCache();
+  private static final SpotlessCache instance = new SpotlessCache();
 }

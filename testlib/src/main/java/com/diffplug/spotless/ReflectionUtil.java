@@ -28,26 +28,26 @@ import java.util.Iterator;
  * them.
  */
 public class ReflectionUtil {
-	public static void dumpAllInfo(String name, Object obj) {
-		System.out.println(name + " of type " + obj.getClass());
-		for (Method method : obj.getClass().getMethods()) {
-			dumpMethod(method);
-		}
-	}
+  public static void dumpAllInfo(String name, Object obj) {
+    System.out.println(name + " of type " + obj.getClass());
+    for (Method method : obj.getClass().getMethods()) {
+      dumpMethod(method);
+    }
+  }
 
-	public static void dumpMethod(Method method) {
-		System.out.print(Modifier.toString(method.getModifiers()));
-		System.out.print(" " + method.getReturnType().toString());
-		System.out.print(" " + method.getName() + "(");
-		Iterator<Parameter> paramIter = Arrays.asList(method.getParameters()).iterator();
-		while (paramIter.hasNext()) {
-			Parameter param = paramIter.next();
+  public static void dumpMethod(Method method) {
+    System.out.print(Modifier.toString(method.getModifiers()));
+    System.out.print(" " + method.getReturnType().toString());
+    System.out.print(" " + method.getName() + "(");
+    Iterator<Parameter> paramIter = Arrays.asList(method.getParameters()).iterator();
+    while (paramIter.hasNext()) {
+      Parameter param = paramIter.next();
 
-			System.out.print(param.getType().getName());
-			if (paramIter.hasNext()) {
-				System.out.print(", ");
-			}
-		}
-		System.out.println(")");
-	}
+      System.out.print(param.getType().getName());
+      if (paramIter.hasNext()) {
+        System.out.print(", ");
+      }
+    }
+    System.out.println(")");
+  }
 }

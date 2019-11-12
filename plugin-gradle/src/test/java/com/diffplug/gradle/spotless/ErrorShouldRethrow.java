@@ -32,109 +32,109 @@ import com.diffplug.spotless.LineEnding;
 
 /** Tests the desired behavior from https://github.com/diffplug/spotless/issues/46. */
 public class ErrorShouldRethrow extends GradleIntegrationTest {
-	private void writeBuild(String... toInsert) throws IOException {
-		List<String> lines = new ArrayList<>();
-		lines.add("plugins {");
-		lines.add("    id 'com.diffplug.gradle.spotless'");
-		lines.add("    id 'java'");
-		lines.add("}");
-		lines.add("spotless {");
-		lines.add("    format 'misc', {");
-		lines.add("        lineEndings 'UNIX'");
-		lines.add("        target file('README.md')");
-		lines.add("        custom 'no swearing', {");
-		lines.add("             if (it.toLowerCase(Locale.ROOT).contains('fubar')) {");
-		lines.add("                 throw new RuntimeException('No swearing!');");
-		lines.add("             }");
-		lines.add("        }");
-		lines.addAll(Arrays.asList(toInsert));
-		setFile("build.gradle").toContent(String.join("\n", lines));
-	}
+  private void writeBuild(String... toInsert) throws IOException {
+    List<String> lines = new ArrayList<>();
+    lines.add("plugins {");
+    lines.add("    id 'com.diffplug.gradle.spotless'");
+    lines.add("    id 'java'");
+    lines.add("}");
+    lines.add("spotless {");
+    lines.add("    format 'misc', {");
+    lines.add("        lineEndings 'UNIX'");
+    lines.add("        target file('README.md')");
+    lines.add("        custom 'no swearing', {");
+    lines.add("             if (it.toLowerCase(Locale.ROOT).contains('fubar')) {");
+    lines.add("                 throw new RuntimeException('No swearing!');");
+    lines.add("             }");
+    lines.add("        }");
+    lines.addAll(Arrays.asList(toInsert));
+    setFile("build.gradle").toContent(String.join("\n", lines));
+  }
 
-	@Test
-	public void passesIfNoException() throws Exception {
-		writeBuild(
-				"    } // format",
-				"}     // spotless");
-		setFile("README.md").toContent("This code is fun.");
-		runWithSuccess(":spotlessMisc");
-	}
+  @Test
+  public void passesIfNoException() throws Exception {
+    writeBuild(
+        "    } // format",
+        "}     // spotless");
+    setFile("README.md").toContent("This code is fun.");
+    runWithSuccess(":spotlessMisc");
+  }
 
-	@Test
-	public void anyExceptionShouldFail() throws Exception {
-		writeBuild(
-				"    } // format",
-				"}     // spotless");
-		setFile("README.md").toContent("This code is fubar.");
-		runWithFailure(
-				":spotlessMiscStep 'no swearing' found problem in 'README.md':",
-				"No swearing!",
-				"java.lang.RuntimeException: No swearing!");
-	}
+  @Test
+  public void anyExceptionShouldFail() throws Exception {
+    writeBuild(
+        "    } // format",
+        "}     // spotless");
+    setFile("README.md").toContent("This code is fubar.");
+    runWithFailure(
+        ":spotlessMiscStep 'no swearing' found problem in 'README.md':",
+        "No swearing!",
+        "java.lang.RuntimeException: No swearing!");
+  }
 
-	@Test
-	public void unlessEnforceCheckIsFalse() throws Exception {
-		writeBuild(
-				"    } // format",
-				"    enforceCheck false",
-				"}     // spotless");
-		setFile("README.md").toContent("This code is fubar.");
-		runWithSuccess(":compileJava UP-TO-DATE");
-	}
+  @Test
+  public void unlessEnforceCheckIsFalse() throws Exception {
+    writeBuild(
+        "    } // format",
+        "    enforceCheck false",
+        "}     // spotless");
+    setFile("README.md").toContent("This code is fubar.");
+    runWithSuccess(":compileJava UP-TO-DATE");
+  }
 
-	@Test
-	public void unlessExemptedByStep() throws Exception {
-		writeBuild(
-				"        ignoreErrorForStep 'no swearing'",
-				"    } // format",
-				"}     // spotless");
-		setFile("README.md").toContent("This code is fubar.");
-		runWithSuccess(":spotlessMisc",
-				"Unable to apply step 'no swearing' to 'README.md'");
-	}
+  @Test
+  public void unlessExemptedByStep() throws Exception {
+    writeBuild(
+        "        ignoreErrorForStep 'no swearing'",
+        "    } // format",
+        "}     // spotless");
+    setFile("README.md").toContent("This code is fubar.");
+    runWithSuccess(":spotlessMisc",
+        "Unable to apply step 'no swearing' to 'README.md'");
+  }
 
-	@Test
-	public void unlessExemptedByPath() throws Exception {
-		writeBuild(
-				"        ignoreErrorForPath 'README.md'",
-				"    } // format",
-				"}     // spotless");
-		setFile("README.md").toContent("This code is fubar.");
-		runWithSuccess(":spotlessMisc",
-				"Unable to apply step 'no swearing' to 'README.md'");
-	}
+  @Test
+  public void unlessExemptedByPath() throws Exception {
+    writeBuild(
+        "        ignoreErrorForPath 'README.md'",
+        "    } // format",
+        "}     // spotless");
+    setFile("README.md").toContent("This code is fubar.");
+    runWithSuccess(":spotlessMisc",
+        "Unable to apply step 'no swearing' to 'README.md'");
+  }
 
-	@Test
-	public void failsIfNeitherStepNorFileExempted() throws Exception {
-		writeBuild(
-				"        ignoreErrorForStep 'nope'",
-				"        ignoreErrorForPath 'nope'",
-				"    } // format",
-				"}     // spotless");
-		setFile("README.md").toContent("This code is fubar.");
-		runWithFailure(
-				":spotlessMiscStep 'no swearing' found problem in 'README.md':",
-				"No swearing!",
-				"java.lang.RuntimeException: No swearing!");
-	}
+  @Test
+  public void failsIfNeitherStepNorFileExempted() throws Exception {
+    writeBuild(
+        "        ignoreErrorForStep 'nope'",
+        "        ignoreErrorForPath 'nope'",
+        "    } // format",
+        "}     // spotless");
+    setFile("README.md").toContent("This code is fubar.");
+    runWithFailure(
+        ":spotlessMiscStep 'no swearing' found problem in 'README.md':",
+        "No swearing!",
+        "java.lang.RuntimeException: No swearing!");
+  }
 
-	private void runWithSuccess(String... messages) throws Exception {
-		BuildResult result = gradleRunner().withArguments("check").build();
-		assertResultAndMessages(result, TaskOutcome.SUCCESS, messages);
-	}
+  private void runWithSuccess(String... messages) throws Exception {
+    BuildResult result = gradleRunner().withArguments("check").build();
+    assertResultAndMessages(result, TaskOutcome.SUCCESS, messages);
+  }
 
-	private void runWithFailure(String... messages) throws Exception {
-		BuildResult result = gradleRunner().withArguments("check").buildAndFail();
-		assertResultAndMessages(result, TaskOutcome.FAILED, messages);
-	}
+  private void runWithFailure(String... messages) throws Exception {
+    BuildResult result = gradleRunner().withArguments("check").buildAndFail();
+    assertResultAndMessages(result, TaskOutcome.FAILED, messages);
+  }
 
-	private void assertResultAndMessages(BuildResult result, TaskOutcome outcome, String... messages) {
-		String expectedToStartWith = StringPrinter.buildStringFromLines(messages).trim();
-		int numNewlines = CharMatcher.is('\n').countIn(expectedToStartWith);
-		List<String> actualLines = Splitter.on('\n').splitToList(LineEnding.toUnix(result.getOutput()));
-		String actualStart = String.join("\n", actualLines.subList(0, numNewlines + 1));
-		Assertions.assertThat(actualStart).isEqualTo(expectedToStartWith);
-		Assertions.assertThat(result.tasks(outcome).size() + result.tasks(TaskOutcome.UP_TO_DATE).size())
-				.isEqualTo(result.getTasks().size());
-	}
+  private void assertResultAndMessages(BuildResult result, TaskOutcome outcome, String... messages) {
+    String expectedToStartWith = StringPrinter.buildStringFromLines(messages).trim();
+    int numNewlines = CharMatcher.is('\n').countIn(expectedToStartWith);
+    List<String> actualLines = Splitter.on('\n').splitToList(LineEnding.toUnix(result.getOutput()));
+    String actualStart = String.join("\n", actualLines.subList(0, numNewlines + 1));
+    Assertions.assertThat(actualStart).isEqualTo(expectedToStartWith);
+    Assertions.assertThat(result.tasks(outcome).size() + result.tasks(TaskOutcome.UP_TO_DATE).size())
+        .isEqualTo(result.getTasks().size());
+  }
 }

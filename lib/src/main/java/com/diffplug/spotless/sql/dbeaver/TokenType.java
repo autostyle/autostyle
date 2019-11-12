@@ -25,5 +25,5 @@ package com.diffplug.spotless.sql.dbeaver;
  */
 enum TokenType {
 
-	SPACE, SYMBOL, KEYWORD, NAME, VALUE, COMMAND, COMMENT, END, UNKNOWN
+  SPACE, SYMBOL, KEYWORD, NAME, VALUE, COMMAND, COMMENT, END, UNKNOWN
 }

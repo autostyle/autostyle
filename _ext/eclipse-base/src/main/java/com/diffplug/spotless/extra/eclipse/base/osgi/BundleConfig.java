@@ -25,72 +25,72 @@ import org.osgi.framework.BundleActivator;
 
 /** A bundle configuration is given by its activator and the desired state */
 public abstract class BundleConfig<T extends Enum<T>> {
-	public static class Entry {
-		public final BundleActivator activator;
-		public final int state;
+  public static class Entry {
+    public final BundleActivator activator;
+    public final int state;
 
-		public Entry(BundleActivator activator, int state) {
-			this.activator = activator;
-			this.state = state;
-		}
-	}
+    public Entry(BundleActivator activator, int state) {
+      this.activator = activator;
+      this.state = state;
+    }
+  }
 
-	private final List<Entry> config;
+  private final List<Entry> config;
 
-	protected BundleConfig() {
-		config = new ArrayList<Entry>();
-	}
+  protected BundleConfig() {
+    config = new ArrayList<Entry>();
+  }
 
-	/**
-	 * Activates a bundle with a certain state. A non-active state is used by
-	 * some bundles to allow a slim instantiation (for example in a headless
-	 * Eclipse).
-	 */
-	public void add(BundleActivator activator, int state) {
-		config.add(new Entry(activator, state));
-	}
+  /**
+   * Activates a bundle with a certain state. A non-active state is used by
+   * some bundles to allow a slim instantiation (for example in a headless
+   * Eclipse).
+   */
+  public void add(BundleActivator activator, int state) {
+    config.add(new Entry(activator, state));
+  }
 
-	/** Returns the current configuration */
-	public List<BundleConfig.Entry> get() {
-		return config;
-	}
+  /** Returns the current configuration */
+  public List<BundleConfig.Entry> get() {
+    return config;
+  }
 
-	/** Activates a set of bundles with certain states */
-	public void add(List<Entry> config) {
-		this.config.addAll(config);
-	}
+  /** Activates a set of bundles with certain states */
+  public void add(List<Entry> config) {
+    this.config.addAll(config);
+  }
 
-	/** Add a bundle in active state, which is the nominal choice */
-	public void add(BundleActivator activator) {
-		add(activator, Bundle.ACTIVE);
-	}
+  /** Add a bundle in active state, which is the nominal choice */
+  public void add(BundleActivator activator) {
+    add(activator, Bundle.ACTIVE);
+  }
 
-	/** Activates a set of bundles with in active state */
-	public void add(Collection<BundleActivator> config) {
-		config.stream().forEach(entry -> add(entry));
-	}
+  /** Activates a set of bundles with in active state */
+  public void add(Collection<BundleActivator> config) {
+    config.stream().forEach(entry -> add(entry));
+  }
 
-	/** Add a default bundle with its default state */
-	public void add(T bundle) {
-		add(create(bundle), getDefaultState(bundle));
-	}
+  /** Add a default bundle with its default state */
+  public void add(T bundle) {
+    add(create(bundle), getDefaultState(bundle));
+  }
 
-	/** Add a set of default bundles with their default states */
-	@SuppressWarnings("unchecked")
-	public void add(T... bundles) {
-		Arrays.asList(bundles).forEach(bundle -> add(bundle));
-	}
+  /** Add a set of default bundles with their default states */
+  @SuppressWarnings("unchecked")
+  public void add(T... bundles) {
+    Arrays.asList(bundles).forEach(bundle -> add(bundle));
+  }
 
-	/** Add a default bundle with a custom state */
-	public void add(T bundle, int state) {
-		add(create(bundle), state);
-	}
+  /** Add a default bundle with a custom state */
+  public void add(T bundle, int state) {
+    add(create(bundle), state);
+  }
 
-	/** Applies the default configurations. */
-	public abstract void applyDefault();
+  /** Applies the default configurations. */
+  public abstract void applyDefault();
 
-	protected abstract BundleActivator create(T bundle);
+  protected abstract BundleActivator create(T bundle);
 
-	protected abstract int getDefaultState(T bundle);
+  protected abstract int getDefaultState(T bundle);
 
 }

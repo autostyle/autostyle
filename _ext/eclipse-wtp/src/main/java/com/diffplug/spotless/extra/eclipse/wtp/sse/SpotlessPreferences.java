@@ -32,72 +32,72 @@ import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
 
 /** Adaptations of the Eclipse WTP environment for Spotless. */
 public class SpotlessPreferences {
-	/**
-	 * Optional XML catalog for XSD/DTD lookup.
-	 * Catalog versions 1.0 and 1.1 are supported.
-	 * <p>
-	 * Value is of type {@code Path}.
-	 * </p>
-	 */
-	public static final String USER_CATALOG = "userCatalog";
+  /**
+   * Optional XML catalog for XSD/DTD lookup.
+   * Catalog versions 1.0 and 1.1 are supported.
+   * <p>
+   * Value is of type {@code Path}.
+   * </p>
+   */
+  public static final String USER_CATALOG = "userCatalog";
 
-	/**
-	 * Indicates if external URIs (location hints) should be resolved
-	 * and the referenced DTD/XSD shall be applied. Per default
-	 * external URIs are ignored.
-	 * <p>
-	 * Value is of type <code>Boolean</code>.
-	 * </p>
-	 */
-	public static final String RESOLVE_EXTERNAL_URI = "resolveExternalURI";
+  /**
+   * Indicates if external URIs (location hints) should be resolved
+   * and the referenced DTD/XSD shall be applied. Per default
+   * external URIs are ignored.
+   * <p>
+   * Value is of type <code>Boolean</code>.
+   * </p>
+   */
+  public static final String RESOLVE_EXTERNAL_URI = "resolveExternalURI";
 
-	/** Configures the Eclipse properties for a Plugin and returns its previous values. */
-	public static Properties configurePluginPreferences(Plugin plugin, Properties newValues) {
-		IEclipsePreferences globalPreferences = DefaultScope.INSTANCE.getNode(plugin.getBundle().getSymbolicName());
-		Properties oldValues = new Properties();
-		newValues.forEach((key, value) -> {
-			String oldValue = globalPreferences.get((String) key, null);
-			if (null != oldValue) {
-				oldValues.put(key, oldValue);
-			}
-			globalPreferences.put((String) key, (String) value);
-		});
-		return oldValues;
-	}
+  /** Configures the Eclipse properties for a Plugin and returns its previous values. */
+  public static Properties configurePluginPreferences(Plugin plugin, Properties newValues) {
+    IEclipsePreferences globalPreferences = DefaultScope.INSTANCE.getNode(plugin.getBundle().getSymbolicName());
+    Properties oldValues = new Properties();
+    newValues.forEach((key, value) -> {
+      String oldValue = globalPreferences.get((String) key, null);
+      if (null != oldValue) {
+        oldValues.put(key, oldValue);
+      }
+      globalPreferences.put((String) key, (String) value);
+    });
+    return oldValues;
+  }
 
-	public static void configureCatalog(final Properties config) {
-		Optional<File> catalog = getCatalogConfig(config);
-		Catalog defaultCatalog = getDefaultCatalog();
-		if (catalog.isPresent()) {
-			try {
-				InputStream inputStream = new FileInputStream(catalog.get());
-				String orgBase = defaultCatalog.getBase();
-				defaultCatalog.setBase(catalog.get().toURI().toString());
-				CatalogReader.read((Catalog) defaultCatalog, inputStream);
-				defaultCatalog.setBase(orgBase);
-			} catch (IOException e) {
-				throw new IllegalArgumentException(
-						String.format("Value of '%s' refers to '%s', which cannot be read.", USER_CATALOG, catalog.get()));
-			}
-		} else {
-			defaultCatalog.clear();
-		}
-	}
+  public static void configureCatalog(final Properties config) {
+    Optional<File> catalog = getCatalogConfig(config);
+    Catalog defaultCatalog = getDefaultCatalog();
+    if (catalog.isPresent()) {
+      try {
+        InputStream inputStream = new FileInputStream(catalog.get());
+        String orgBase = defaultCatalog.getBase();
+        defaultCatalog.setBase(catalog.get().toURI().toString());
+        CatalogReader.read((Catalog) defaultCatalog, inputStream);
+        defaultCatalog.setBase(orgBase);
+      } catch (IOException e) {
+        throw new IllegalArgumentException(
+            String.format("Value of '%s' refers to '%s', which cannot be read.", USER_CATALOG, catalog.get()));
+      }
+    } else {
+      defaultCatalog.clear();
+    }
+  }
 
-	private static Catalog getDefaultCatalog() {
-		ICatalog defaultCatalogI = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
-		if (defaultCatalogI instanceof Catalog) {
-			return (Catalog) defaultCatalogI;
-		}
-		throw new IllegalArgumentException("Internal error: Catalog implementation '" + defaultCatalogI.getClass().getCanonicalName() + "' unsupported.");
-	}
+  private static Catalog getDefaultCatalog() {
+    ICatalog defaultCatalogI = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
+    if (defaultCatalogI instanceof Catalog) {
+      return (Catalog) defaultCatalogI;
+    }
+    throw new IllegalArgumentException("Internal error: Catalog implementation '" + defaultCatalogI.getClass().getCanonicalName() + "' unsupported.");
+  }
 
-	private static Optional<File> getCatalogConfig(Properties config) {
-		String newLocation = config.getProperty(USER_CATALOG);
-		if (newLocation != null && !newLocation.isEmpty()) {
-			return Optional.of(new File(newLocation));
-		}
-		return Optional.empty();
-	}
+  private static Optional<File> getCatalogConfig(Properties config) {
+    String newLocation = config.getProperty(USER_CATALOG);
+    if (newLocation != null && !newLocation.isEmpty()) {
+      return Optional.of(new File(newLocation));
+    }
+    return Optional.empty();
+  }
 
 }

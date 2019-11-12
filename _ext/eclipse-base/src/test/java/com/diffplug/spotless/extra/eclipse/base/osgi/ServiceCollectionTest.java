@@ -28,94 +28,94 @@ import org.osgi.framework.ServiceReference;
 
 public class ServiceCollectionTest {
 
-	ServiceCollection instance;
+  ServiceCollection instance;
 
-	@Before
-	public void initialize() {
-		Bundle systemBundle = new TestBundle(0, "test.system");
-		instance = new ServiceCollection(systemBundle, new HashMap<String, String>());
-	}
+  @Before
+  public void initialize() {
+    Bundle systemBundle = new TestBundle(0, "test.system");
+    instance = new ServiceCollection(systemBundle, new HashMap<String, String>());
+  }
 
-	@Test
-	public void testAddGet() {
-		Service1 service1 = new Service1();
-		Service2 service2 = new Service2();
-		instance.add(Interf1.class, service1);
-		instance.add(Interf2a.class, service2);
-		instance.add(Interf2b.class, service2);
-		assertFor(instance).getServiceForReferences(Interf1.class).matchesService(service1);
-		assertFor(instance).getServiceForReferences(Interf2a.class).matchesService(service2);
-		assertFor(instance).getServiceForReferences(Interf2b.class).matchesService(service2);
-	}
+  @Test
+  public void testAddGet() {
+    Service1 service1 = new Service1();
+    Service2 service2 = new Service2();
+    instance.add(Interf1.class, service1);
+    instance.add(Interf2a.class, service2);
+    instance.add(Interf2b.class, service2);
+    assertFor(instance).getServiceForReferences(Interf1.class).matchesService(service1);
+    assertFor(instance).getServiceForReferences(Interf2a.class).matchesService(service2);
+    assertFor(instance).getServiceForReferences(Interf2b.class).matchesService(service2);
+  }
 
-	@Test
-	public void testMultipleServicesPerInterface() {
-		Service1 serviceX = new Service1();
-		Service1 serviceY = new Service1();
-		instance.add(Interf1.class, serviceX);
-		boolean exceptionCaught = false;
-		try {
-			instance.add(Interf1.class, serviceY);
-		} catch (ServiceException e) {
-			exceptionCaught = true;
-			assertThat(e.getMessage()).as("ServiceException does not contain interface class name.").contains(Interf1.class.getName());
-		}
-		assertThat(exceptionCaught).as("No ServiceException thrown for duplicate interfaces.").isTrue();
+  @Test
+  public void testMultipleServicesPerInterface() {
+    Service1 serviceX = new Service1();
+    Service1 serviceY = new Service1();
+    instance.add(Interf1.class, serviceX);
+    boolean exceptionCaught = false;
+    try {
+      instance.add(Interf1.class, serviceY);
+    } catch (ServiceException e) {
+      exceptionCaught = true;
+      assertThat(e.getMessage()).as("ServiceException does not contain interface class name.").contains(Interf1.class.getName());
+    }
+    assertThat(exceptionCaught).as("No ServiceException thrown for duplicate interfaces.").isTrue();
 
-	}
+  }
 
-	private static class ServiceReferenceAssert extends AbstractAssert<ServiceReferenceAssert, ServiceCollection> {
+  private static class ServiceReferenceAssert extends AbstractAssert<ServiceReferenceAssert, ServiceCollection> {
 
-		private final ServiceCollection actual;
-		private final ServiceReference<?> reference;
+    private final ServiceCollection actual;
+    private final ServiceReference<?> reference;
 
-		public ServiceReferenceAssert(ServiceCollection actual) {
-			this(actual, null);
-		}
+    public ServiceReferenceAssert(ServiceCollection actual) {
+      this(actual, null);
+    }
 
-		public ServiceReferenceAssert(ServiceCollection actual, ServiceReference<?> reference) {
-			super(actual, ServiceReferenceAssert.class);
-			this.reference = reference;
-			this.actual = actual;
+    public ServiceReferenceAssert(ServiceCollection actual, ServiceReference<?> reference) {
+      super(actual, ServiceReferenceAssert.class);
+      this.reference = reference;
+      this.actual = actual;
 
-		}
+    }
 
-		ServiceReferenceAssert getServiceForReferences(Class<?> interfaceClass) {
-			ServiceReference<?>[] references = actual.getReferences(interfaceClass.getName());
-			int numberOfFoundReferences = null == references ? 0 : references.length;
-			if (numberOfFoundReferences != 1) {
-				failWithMessage("Expected to find exactly 1 reference for <%s> , but found %d.", interfaceClass.getName(), numberOfFoundReferences);
-			}
-			return new ServiceReferenceAssert(actual, references[0]);
-		}
+    ServiceReferenceAssert getServiceForReferences(Class<?> interfaceClass) {
+      ServiceReference<?>[] references = actual.getReferences(interfaceClass.getName());
+      int numberOfFoundReferences = null == references ? 0 : references.length;
+      if (numberOfFoundReferences != 1) {
+        failWithMessage("Expected to find exactly 1 reference for <%s> , but found %d.", interfaceClass.getName(), numberOfFoundReferences);
+      }
+      return new ServiceReferenceAssert(actual, references[0]);
+    }
 
-		ServiceReferenceAssert matchesService(Object expected) {
-			if (null == reference) {
-				failWithMessage("No reference requested.");
-			}
-			Object serviceForRef = actual.getService(reference);
-			if (null == serviceForRef) {
-				failWithMessage("No service provided for reference.");
-			}
-			if (!serviceForRef.equals(expected)) {
-				failWithMessage("Unexpected service found.");
-			}
+    ServiceReferenceAssert matchesService(Object expected) {
+      if (null == reference) {
+        failWithMessage("No reference requested.");
+      }
+      Object serviceForRef = actual.getService(reference);
+      if (null == serviceForRef) {
+        failWithMessage("No service provided for reference.");
+      }
+      if (!serviceForRef.equals(expected)) {
+        failWithMessage("Unexpected service found.");
+      }
 
-			return this;
-		}
-	}
+      return this;
+    }
+  }
 
-	private static ServiceReferenceAssert assertFor(ServiceCollection actual) {
-		return new ServiceReferenceAssert(actual);
-	}
+  private static ServiceReferenceAssert assertFor(ServiceCollection actual) {
+    return new ServiceReferenceAssert(actual);
+  }
 
-	private static interface Interf1 {};
+  private static interface Interf1 {};
 
-	private static interface Interf2a {};
+  private static interface Interf2a {};
 
-	private static interface Interf2b {};
+  private static interface Interf2b {};
 
-	private static class Service1 implements Interf1 {};
+  private static class Service1 implements Interf1 {};
 
-	private static class Service2 implements Interf2a, Interf2b {};
+  private static class Service2 implements Interf2a, Interf2b {};
 }

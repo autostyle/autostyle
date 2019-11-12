@@ -24,42 +24,42 @@ import java.util.Objects;
  * implementation only requires the `Function<String, String>` implementation.
  */
 public interface FormatterFunc
-		extends ThrowingEx.Function<String, String>, ThrowingEx.BiFunction<String, File, String> {
+    extends ThrowingEx.Function<String, String>, ThrowingEx.BiFunction<String, File, String> {
 
-	@Override
-	default String apply(String input, File source) throws Exception {
-		return apply(input);
-	}
+  @Override
+  default String apply(String input, File source) throws Exception {
+    return apply(input);
+  }
 
-	/**
-	 * `Function<String, String>` and `BiFunction<String, File, String>` whose implementation
-	 * requires a resource which should be released when the function is no longer needed.
-	 */
-	interface Closeable extends FormatterFunc, AutoCloseable {
-		@Override
-		void close();
+  /**
+   * `Function<String, String>` and `BiFunction<String, File, String>` whose implementation
+   * requires a resource which should be released when the function is no longer needed.
+   */
+  interface Closeable extends FormatterFunc, AutoCloseable {
+    @Override
+    void close();
 
-		/** Creates a {@link Closeable} from an AutoCloseable and a function. */
-		public static Closeable of(AutoCloseable closeable, FormatterFunc function) {
-			Objects.requireNonNull(closeable, "closeable");
-			Objects.requireNonNull(function, "function");
-			return new Closeable() {
-				@Override
-				public void close() {
-					ThrowingEx.run(closeable::close);
-				}
+    /** Creates a {@link Closeable} from an AutoCloseable and a function. */
+    public static Closeable of(AutoCloseable closeable, FormatterFunc function) {
+      Objects.requireNonNull(closeable, "closeable");
+      Objects.requireNonNull(function, "function");
+      return new Closeable() {
+        @Override
+        public void close() {
+          ThrowingEx.run(closeable::close);
+        }
 
-				@Override
-				public String apply(String input, File source) throws Exception {
-					return function.apply(Objects.requireNonNull(input), Objects.requireNonNull(source));
-				}
+        @Override
+        public String apply(String input, File source) throws Exception {
+          return function.apply(Objects.requireNonNull(input), Objects.requireNonNull(source));
+        }
 
-				@Override
-				public String apply(String input) throws Exception {
-					return function.apply(Objects.requireNonNull(input));
-				}
-			};
-		}
-	}
+        @Override
+        public String apply(String input) throws Exception {
+          return function.apply(Objects.requireNonNull(input));
+        }
+      };
+    }
+  }
 
 }

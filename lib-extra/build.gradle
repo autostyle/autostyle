@@ -1,5 +1,5 @@
 plugins {
-	id 'java-library'
+  id 'java-library'
 }
 
 ext.artifactId = project.artifactIdLibExtra
@@ -8,21 +8,21 @@ apply from: rootProject.file('gradle/java-setup.gradle')
 apply from: rootProject.file('gradle/java-publish.gradle')
 
 dependencies {
-	api project(':lib')
-	// misc useful utilities
-	implementation "com.diffplug.durian:durian-core:${VER_DURIAN}"
-	implementation "com.diffplug.durian:durian-collect:${VER_DURIAN}"
-	// needed by GitAttributesLineEndings
-	implementation "org.eclipse.jgit:org.eclipse.jgit:5.5.0.201909110433-r"
-	implementation "com.googlecode.concurrent-trees:concurrent-trees:2.6.1"
-	// used for xml parsing in EclipseFormatter
-	implementation "org.codehaus.groovy:groovy-xml:2.4.7"
+  api project(':lib')
+  // misc useful utilities
+  implementation "com.diffplug.durian:durian-core:${VER_DURIAN}"
+  implementation "com.diffplug.durian:durian-collect:${VER_DURIAN}"
+  // needed by GitAttributesLineEndings
+  implementation "org.eclipse.jgit:org.eclipse.jgit:5.5.0.201909110433-r"
+  implementation "com.googlecode.concurrent-trees:concurrent-trees:2.6.1"
+  // used for xml parsing in EclipseFormatter
+  implementation "org.codehaus.groovy:groovy-xml:2.4.7"
 
-	// testing
-	testImplementation project(':testlib')
-	testImplementation "junit:junit:${VER_JUNIT}"
-	testImplementation "org.assertj:assertj-core:${VER_ASSERTJ}"
-	testImplementation "com.diffplug.durian:durian-testlib:${VER_DURIAN}"
+  // testing
+  testImplementation project(':testlib')
+  testImplementation "junit:junit:${VER_JUNIT}"
+  testImplementation "org.assertj:assertj-core:${VER_ASSERTJ}"
+  testImplementation "com.diffplug.durian:durian-testlib:${VER_DURIAN}"
 }
 
 // we'll hold the core lib to a high standard

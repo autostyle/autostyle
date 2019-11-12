@@ -19,40 +19,40 @@ import java.lang.reflect.Method;
 
 class V8FunctionWrapper extends ReflectiveObjectWrapper {
 
-	public static final String WRAPPED_CLASS = "com.eclipsesource.v8.V8Function";
-	public static final String CALLBACK_WRAPPED_CLASS = "com.eclipsesource.v8.JavaCallback";
+  public static final String WRAPPED_CLASS = "com.eclipsesource.v8.V8Function";
+  public static final String CALLBACK_WRAPPED_CLASS = "com.eclipsesource.v8.JavaCallback";
 
-	public V8FunctionWrapper(Reflective reflective, Object v8Function) {
-		super(reflective, v8Function);
-	}
+  public V8FunctionWrapper(Reflective reflective, Object v8Function) {
+    super(reflective, v8Function);
+  }
 
-	public static Object proxiedCallback(WrappedJavaCallback callback, Reflective reflective) {
-		Object proxy = reflective.createDynamicProxy((proxyInstance, method, args) -> {
-			if (isCallbackFunction(reflective, method, args)) {
-				V8ObjectWrapper receiver = new V8ObjectWrapper(reflective, args[0]);
-				V8ArrayWrapper parameters = new V8ArrayWrapper(reflective, args[1]);
-				return callback.invoke(receiver, parameters);
-			}
-			return null;
-		}, CALLBACK_WRAPPED_CLASS);
-		return reflective.clazz(CALLBACK_WRAPPED_CLASS).cast(proxy);
-	}
+  public static Object proxiedCallback(WrappedJavaCallback callback, Reflective reflective) {
+    Object proxy = reflective.createDynamicProxy((proxyInstance, method, args) -> {
+      if (isCallbackFunction(reflective, method, args)) {
+        V8ObjectWrapper receiver = new V8ObjectWrapper(reflective, args[0]);
+        V8ArrayWrapper parameters = new V8ArrayWrapper(reflective, args[1]);
+        return callback.invoke(receiver, parameters);
+      }
+      return null;
+    }, CALLBACK_WRAPPED_CLASS);
+    return reflective.clazz(CALLBACK_WRAPPED_CLASS).cast(proxy);
+  }
 
-	private static boolean isCallbackFunction(Reflective reflective, Method method, Object[] args) {
-		if (!"invoke".equals(method.getName())) {
-			return false;
-		}
-		final Class<?>[] types = reflective.types(args);
-		if (types.length != 2) {
-			return false;
-		}
+  private static boolean isCallbackFunction(Reflective reflective, Method method, Object[] args) {
+    if (!"invoke".equals(method.getName())) {
+      return false;
+    }
+    final Class<?>[] types = reflective.types(args);
+    if (types.length != 2) {
+      return false;
+    }
 
-		return V8ObjectWrapper.WRAPPED_CLASS.equals(types[0].getName()) &&
-				V8ArrayWrapper.WRAPPED_CLASS.equals(types[1].getName());
-	}
+    return V8ObjectWrapper.WRAPPED_CLASS.equals(types[0].getName()) &&
+        V8ArrayWrapper.WRAPPED_CLASS.equals(types[1].getName());
+  }
 
-	@FunctionalInterface
-	public interface WrappedJavaCallback {
-		Object invoke(V8ObjectWrapper receiver, V8ArrayWrapper parameters);
-	}
+  @FunctionalInterface
+  public interface WrappedJavaCallback {
+    Object invoke(V8ObjectWrapper receiver, V8ArrayWrapper parameters);
+  }
 }

@@ -33,81 +33,81 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 @SuppressFBWarnings("SE_TRANSIENT_FIELD_NOT_RESTORED")
 abstract class FormatterStepImpl<State extends Serializable> extends Strict<State> {
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	/** Transient because only the state matters. */
-	final transient String name;
+  /** Transient because only the state matters. */
+  final transient String name;
 
-	/** Transient because only the state matters. */
-	final transient ThrowingEx.Supplier<State> stateSupplier;
+  /** Transient because only the state matters. */
+  final transient ThrowingEx.Supplier<State> stateSupplier;
 
-	FormatterStepImpl(String name, ThrowingEx.Supplier<State> stateSupplier) {
-		this.name = Objects.requireNonNull(name);
-		this.stateSupplier = Objects.requireNonNull(stateSupplier);
-	}
+  FormatterStepImpl(String name, ThrowingEx.Supplier<State> stateSupplier) {
+    this.name = Objects.requireNonNull(name);
+    this.stateSupplier = Objects.requireNonNull(stateSupplier);
+  }
 
-	@Override
-	public String getName() {
-		return name;
-	}
+  @Override
+  public String getName() {
+    return name;
+  }
 
-	@Override
-	protected State calculateState() throws Exception {
-		return stateSupplier.get();
-	}
+  @Override
+  protected State calculateState() throws Exception {
+    return stateSupplier.get();
+  }
 
-	static final class Standard<State extends Serializable> extends FormatterStepImpl<State> {
-		private static final long serialVersionUID = 1L;
+  static final class Standard<State extends Serializable> extends FormatterStepImpl<State> {
+    private static final long serialVersionUID = 1L;
 
-		final transient ThrowingEx.Function<State, FormatterFunc> stateToFormatter;
-		transient FormatterFunc formatter; // initialized lazily
+    final transient ThrowingEx.Function<State, FormatterFunc> stateToFormatter;
+    transient FormatterFunc formatter; // initialized lazily
 
-		Standard(String name, ThrowingEx.Supplier<State> stateSupplier, ThrowingEx.Function<State, FormatterFunc> stateToFormatter) {
-			super(name, stateSupplier);
-			this.stateToFormatter = Objects.requireNonNull(stateToFormatter);
-		}
+    Standard(String name, ThrowingEx.Supplier<State> stateSupplier, ThrowingEx.Function<State, FormatterFunc> stateToFormatter) {
+      super(name, stateSupplier);
+      this.stateToFormatter = Objects.requireNonNull(stateToFormatter);
+    }
 
-		@Override
-		protected String format(State state, String rawUnix, File file) throws Exception {
-			Objects.requireNonNull(state, "state");
-			Objects.requireNonNull(rawUnix, "rawUnix");
-			Objects.requireNonNull(file, "file");
-			if (formatter == null) {
-				formatter = stateToFormatter.apply(state());
-			}
-			return formatter.apply(rawUnix, file);
-		}
+    @Override
+    protected String format(State state, String rawUnix, File file) throws Exception {
+      Objects.requireNonNull(state, "state");
+      Objects.requireNonNull(rawUnix, "rawUnix");
+      Objects.requireNonNull(file, "file");
+      if (formatter == null) {
+        formatter = stateToFormatter.apply(state());
+      }
+      return formatter.apply(rawUnix, file);
+    }
 
-		void cleanupFormatterFunc() {
-			if (formatter instanceof FormatterFunc.Closeable) {
-				((FormatterFunc.Closeable) formatter).close();
-			}
-		}
-	}
+    void cleanupFormatterFunc() {
+      if (formatter instanceof FormatterFunc.Closeable) {
+        ((FormatterFunc.Closeable) formatter).close();
+      }
+    }
+  }
 
-	/** Formatter which is equal to itself, but not to any other Formatter. */
-	static class NeverUpToDate extends FormatterStepImpl<Integer> {
-		private static final long serialVersionUID = 1L;
+  /** Formatter which is equal to itself, but not to any other Formatter. */
+  static class NeverUpToDate extends FormatterStepImpl<Integer> {
+    private static final long serialVersionUID = 1L;
 
-		private static final Random RANDOM = new Random();
+    private static final Random RANDOM = new Random();
 
-		final transient ThrowingEx.Supplier<FormatterFunc> formatterSupplier;
-		transient FormatterFunc formatter; // initialized lazily
+    final transient ThrowingEx.Supplier<FormatterFunc> formatterSupplier;
+    transient FormatterFunc formatter; // initialized lazily
 
-		NeverUpToDate(String name, ThrowingEx.Supplier<FormatterFunc> formatterSupplier) {
-			super(name, RANDOM::nextInt);
-			this.formatterSupplier = Objects.requireNonNull(formatterSupplier, "formatterSupplier");
-		}
+    NeverUpToDate(String name, ThrowingEx.Supplier<FormatterFunc> formatterSupplier) {
+      super(name, RANDOM::nextInt);
+      this.formatterSupplier = Objects.requireNonNull(formatterSupplier, "formatterSupplier");
+    }
 
-		@Override
-		protected String format(Integer state, String rawUnix, File file) throws Exception {
-			if (formatter == null) {
-				formatter = formatterSupplier.get();
-				if (formatter instanceof FormatterFunc.Closeable) {
-					throw new AssertionError("NeverUpToDate does not support FormatterFunc.Closeable.  See https://github.com/diffplug/spotless/pull/284");
-				}
-			}
-			return formatter.apply(rawUnix, file);
-		}
-	}
+    @Override
+    protected String format(Integer state, String rawUnix, File file) throws Exception {
+      if (formatter == null) {
+        formatter = formatterSupplier.get();
+        if (formatter instanceof FormatterFunc.Closeable) {
+          throw new AssertionError("NeverUpToDate does not support FormatterFunc.Closeable.  See https://github.com/diffplug/spotless/pull/284");
+        }
+      }
+      return formatter.apply(rawUnix, file);
+    }
+  }
 }

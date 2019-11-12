@@ -22,26 +22,26 @@ import com.diffplug.spotless.extra.eclipse.EclipseCommonTests;
 
 public class EclipseCdtFormatterStepTest extends EclipseCommonTests {
 
-	@Override
-	protected String[] getSupportedVersions() {
-		return new String[]{"4.7.3a", "4.11.0", "4.12.0", "4.13.0"};
-	}
+  @Override
+  protected String[] getSupportedVersions() {
+    return new String[]{"4.7.3a", "4.11.0", "4.12.0", "4.13.0"};
+  }
 
-	@Override
-	protected String getTestInput(String version) {
-		return "#include <a.h>;\nint main(int argc,   \nchar *argv[]) {}";
-	}
+  @Override
+  protected String getTestInput(String version) {
+    return "#include <a.h>;\nint main(int argc,   \nchar *argv[]) {}";
+  }
 
-	@Override
-	protected String getTestExpectation(String version) {
-		return "#include <a.h>;\nint main(int argc, char *argv[]) {\n}\n";
-	}
+  @Override
+  protected String getTestExpectation(String version) {
+    return "#include <a.h>;\nint main(int argc, char *argv[]) {\n}\n";
+  }
 
-	@Override
-	protected FormatterStep createStep(String version) {
-		EclipseBasedStepBuilder builder = EclipseCdtFormatterStep.createBuilder(TestProvisioner.mavenCentral());
-		builder.setVersion(version);
-		return builder.build();
-	}
+  @Override
+  protected FormatterStep createStep(String version) {
+    EclipseBasedStepBuilder builder = EclipseCdtFormatterStep.createBuilder(TestProvisioner.mavenCentral());
+    builder.setVersion(version);
+    return builder.build();
+  }
 
 }

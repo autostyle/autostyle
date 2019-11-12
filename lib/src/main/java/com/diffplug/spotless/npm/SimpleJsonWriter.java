@@ -30,65 +30,65 @@ import com.diffplug.spotless.ThrowingEx;
 
 public class SimpleJsonWriter {
 
-	private final LinkedHashMap<String, Object> valueMap = new LinkedHashMap<>();
+  private final LinkedHashMap<String, Object> valueMap = new LinkedHashMap<>();
 
-	public static SimpleJsonWriter of(Map<String, ?> values) {
-		SimpleJsonWriter writer = new SimpleJsonWriter();
-		writer.putAll(values);
-		return writer;
-	}
+  public static SimpleJsonWriter of(Map<String, ?> values) {
+    SimpleJsonWriter writer = new SimpleJsonWriter();
+    writer.putAll(values);
+    return writer;
+  }
 
-	SimpleJsonWriter putAll(Map<String, ?> values) {
-		verifyValues(values);
-		this.valueMap.putAll(values);
-		return this;
-	}
+  SimpleJsonWriter putAll(Map<String, ?> values) {
+    verifyValues(values);
+    this.valueMap.putAll(values);
+    return this;
+  }
 
-	SimpleJsonWriter put(String name, Object value) {
-		verifyValues(Collections.singletonMap(name, value));
-		this.valueMap.put(name, value);
-		return this;
-	}
+  SimpleJsonWriter put(String name, Object value) {
+    verifyValues(Collections.singletonMap(name, value));
+    this.valueMap.put(name, value);
+    return this;
+  }
 
-	private void verifyValues(Map<String, ?> values) {
-		if (values.values()
-				.stream()
-				.anyMatch(val -> !(val instanceof String || val instanceof Number || val instanceof Boolean))) {
-			throw new IllegalArgumentException("Only values of type 'String', 'Number' and 'Boolean' are supported. You provided: " + values.values());
-		}
-	}
+  private void verifyValues(Map<String, ?> values) {
+    if (values.values()
+        .stream()
+        .anyMatch(val -> !(val instanceof String || val instanceof Number || val instanceof Boolean))) {
+      throw new IllegalArgumentException("Only values of type 'String', 'Number' and 'Boolean' are supported. You provided: " + values.values());
+    }
+  }
 
-	String toJsonString() {
-		final String valueString = valueMap.entrySet()
-				.stream()
-				.map(entry -> "    " + jsonEscape(entry.getKey()) + ": " + jsonEscape(entry.getValue()))
-				.collect(Collectors.joining(",\n"));
-		return "{\n" + valueString + "\n}";
-	}
+  String toJsonString() {
+    final String valueString = valueMap.entrySet()
+        .stream()
+        .map(entry -> "    " + jsonEscape(entry.getKey()) + ": " + jsonEscape(entry.getValue()))
+        .collect(Collectors.joining(",\n"));
+    return "{\n" + valueString + "\n}";
+  }
 
-	private String jsonEscape(Object val) {
-		requireNonNull(val);
-		if (val instanceof String) {
-			return "\"" + val + "\"";
-		}
-		return val.toString();
-	}
+  private String jsonEscape(Object val) {
+    requireNonNull(val);
+    if (val instanceof String) {
+      return "\"" + val + "\"";
+    }
+    return val.toString();
+  }
 
-	void toJsonFile(File file) {
-		if (!file.getParentFile().exists()) {
-			if (!file.getParentFile().mkdirs()) {
-				throw new RuntimeException("Cannot write to file");
-			}
-		}
-		try {
-			Files.write(file.toPath(), toJsonString().getBytes(StandardCharsets.UTF_8));
-		} catch (IOException e) {
-			throw ThrowingEx.asRuntime(e);
-		}
-	}
+  void toJsonFile(File file) {
+    if (!file.getParentFile().exists()) {
+      if (!file.getParentFile().mkdirs()) {
+        throw new RuntimeException("Cannot write to file");
+      }
+    }
+    try {
+      Files.write(file.toPath(), toJsonString().getBytes(StandardCharsets.UTF_8));
+    } catch (IOException e) {
+      throw ThrowingEx.asRuntime(e);
+    }
+  }
 
-	@Override
-	public String toString() {
-		return this.toJsonString();
-	}
+  @Override
+  public String toString() {
+    return this.toJsonString();
+  }
 }

@@ -20,27 +20,27 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public final class NonSerializableList extends AbstractList<String> {
-	private final String[] elements;
+  private final String[] elements;
 
-	public static NonSerializableList of(String... elements) {
-		Objects.requireNonNull(elements);
-		return new NonSerializableList(elements);
-	}
+  public static NonSerializableList of(String... elements) {
+    Objects.requireNonNull(elements);
+    return new NonSerializableList(elements);
+  }
 
-	private NonSerializableList(String[] elements) {
-		this.elements = Arrays.copyOf(elements, elements.length);
-	}
+  private NonSerializableList(String[] elements) {
+    this.elements = Arrays.copyOf(elements, elements.length);
+  }
 
-	@Override
-	public String get(int index) {
-		if (index < 0 || index >= elements.length) {
-			throw new IndexOutOfBoundsException(String.format("index: %s, size: %s", index, elements.length));
-		}
-		return elements[index];
-	}
+  @Override
+  public String get(int index) {
+    if (index < 0 || index >= elements.length) {
+      throw new IndexOutOfBoundsException(String.format("index: %s, size: %s", index, elements.length));
+    }
+    return elements[index];
+  }
 
-	@Override
-	public int size() {
-		return elements.length;
-	}
+  @Override
+  public int size() {
+    return elements.length;
+  }
 }

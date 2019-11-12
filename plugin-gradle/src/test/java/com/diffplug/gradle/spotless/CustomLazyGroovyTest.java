@@ -20,22 +20,22 @@ import java.io.IOException;
 import org.junit.Test;
 
 public class CustomLazyGroovyTest extends GradleIntegrationTest {
-	@Test
-	public void integration() throws IOException {
-		setFile("build.gradle").toLines(
-				"plugins {",
-				"    id 'com.diffplug.gradle.spotless'",
-				"}",
-				"spotless {",
-				"    format 'misc', {",
-				"        target file('README.md')",
-				"        customLazyGroovy('lowercase') {",
-				"             return { str -> str.toLowerCase(Locale.ROOT) }",
-				"        }",
-				"    }",
-				"}");
-		setFile("README.md").toContent("ABC");
-		gradleRunner().withArguments("spotlessApply").build();
-		assertFile("README.md").hasContent("abc");
-	}
+  @Test
+  public void integration() throws IOException {
+    setFile("build.gradle").toLines(
+        "plugins {",
+        "    id 'com.diffplug.gradle.spotless'",
+        "}",
+        "spotless {",
+        "    format 'misc', {",
+        "        target file('README.md')",
+        "        customLazyGroovy('lowercase') {",
+        "             return { str -> str.toLowerCase(Locale.ROOT) }",
+        "        }",
+        "    }",
+        "}");
+    setFile("README.md").toContent("ABC");
+    gradleRunner().withArguments("spotlessApply").build();
+    assertFile("README.md").hasContent("abc");
+  }
 }

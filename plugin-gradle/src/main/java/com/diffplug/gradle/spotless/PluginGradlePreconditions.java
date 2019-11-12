@@ -18,23 +18,23 @@ package com.diffplug.gradle.spotless;
 import java.util.Objects;
 
 final class PluginGradlePreconditions {
-	// prevent direct instantiation
-	private PluginGradlePreconditions() {}
+  // prevent direct instantiation
+  private PluginGradlePreconditions() {}
 
-	@SafeVarargs
-	static <T> T[] requireElementsNonNull(T... elements) {
-		Objects.requireNonNull(elements);
-		for (T element : elements) {
-			Objects.requireNonNull(element);
-		}
-		return elements;
-	}
+  @SafeVarargs
+  static <T> T[] requireElementsNonNull(T... elements) {
+    Objects.requireNonNull(elements);
+    for (T element : elements) {
+      Objects.requireNonNull(element);
+    }
+    return elements;
+  }
 
-	static <T, I extends Iterable<T>> I requireElementsNonNull(I elements) {
-		Objects.requireNonNull(elements);
-		for (Object element : elements) {
-			Objects.requireNonNull(element);
-		}
-		return elements;
-	}
+  static <T, I extends Iterable<T>> I requireElementsNonNull(I elements) {
+    Objects.requireNonNull(elements);
+    for (Object element : elements) {
+      Objects.requireNonNull(element);
+    }
+    return elements;
+  }
 }

@@ -29,48 +29,48 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public class TypedTsFmtConfigFile implements Serializable {
 
-	private static final long serialVersionUID = -4442310349275775501L;
+  private static final long serialVersionUID = -4442310349275775501L;
 
-	private final TsConfigFileType configFileType;
+  private final TsConfigFileType configFileType;
 
-	private final File configFile;
+  private final File configFile;
 
-	@SuppressFBWarnings("SE_TRANSIENT_FIELD_NOT_RESTORED")
-	@SuppressWarnings("unused")
-	private final FileSignature configFileSignature;
+  @SuppressFBWarnings("SE_TRANSIENT_FIELD_NOT_RESTORED")
+  @SuppressWarnings("unused")
+  private final FileSignature configFileSignature;
 
-	public TypedTsFmtConfigFile(TsConfigFileType configFileType, File configFile) {
-		this.configFileType = requireNonNull(configFileType);
-		this.configFile = requireNonNull(configFile);
-		try {
-			this.configFileSignature = FileSignature.signAsList(configFile);
-		} catch (IOException e) {
-			throw ThrowingEx.asRuntime(e);
-		}
-	}
+  public TypedTsFmtConfigFile(TsConfigFileType configFileType, File configFile) {
+    this.configFileType = requireNonNull(configFileType);
+    this.configFile = requireNonNull(configFile);
+    try {
+      this.configFileSignature = FileSignature.signAsList(configFile);
+    } catch (IOException e) {
+      throw ThrowingEx.asRuntime(e);
+    }
+  }
 
-	TsConfigFileType configFileType() {
-		return configFileType;
-	}
+  TsConfigFileType configFileType() {
+    return configFileType;
+  }
 
-	File configFile() {
-		return configFile;
-	}
+  File configFile() {
+    return configFile;
+  }
 
-	String configFileEnabledOptionName() {
-		return this.configFileType.name().toLowerCase(Locale.ROOT);
-	}
+  String configFileEnabledOptionName() {
+    return this.configFileType.name().toLowerCase(Locale.ROOT);
+  }
 
-	String configFileOptionName() {
-		return this.configFileEnabledOptionName() + "File";
-	}
+  String configFileOptionName() {
+    return this.configFileEnabledOptionName() + "File";
+  }
 
-	String absolutePath() {
-		return this.configFile.getAbsolutePath();
-	}
+  String absolutePath() {
+    return this.configFile.getAbsolutePath();
+  }
 
-	static TypedTsFmtConfigFile named(String name, File file) {
-		return new TypedTsFmtConfigFile(TsConfigFileType.forNameIgnoreCase(name), file);
-	}
+  static TypedTsFmtConfigFile named(String name, File file) {
+    return new TypedTsFmtConfigFile(TsConfigFileType.forNameIgnoreCase(name), file);
+  }
 
 }

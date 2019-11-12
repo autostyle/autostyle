@@ -30,28 +30,28 @@ import com.diffplug.spotless.ResourceHarness;
 import com.diffplug.spotless.TestProvisioner;
 
 public class FileTreeTest extends ResourceHarness {
-	private ConfigurableFileTree fileTree;
+  private ConfigurableFileTree fileTree;
 
-	@Before
-	public void fileTree() throws IOException {
-		Project project = TestProvisioner.gradleProject(rootFolder());
-		fileTree = project.fileTree(rootFolder());
-		fileTree.exclude("userHome"); // somehow we're getting userHome\native\19\windows-amd64\native-platform.dll
-	}
+  @Before
+  public void fileTree() throws IOException {
+    Project project = TestProvisioner.gradleProject(rootFolder());
+    fileTree = project.fileTree(rootFolder());
+    fileTree.exclude("userHome"); // somehow we're getting userHome\native\19\windows-amd64\native-platform.dll
+  }
 
-	@Test
-	public void absolutePathDoesntWork() throws IOException {
-		File someFile = setFile("someFolder/someFile").toContent("");
-		File someFolder = someFile.getParentFile();
-		fileTree.exclude(someFolder.getAbsolutePath());
-		Assertions.assertThat(fileTree).containsExactlyInAnyOrder(someFile);
-	}
+  @Test
+  public void absolutePathDoesntWork() throws IOException {
+    File someFile = setFile("someFolder/someFile").toContent("");
+    File someFolder = someFile.getParentFile();
+    fileTree.exclude(someFolder.getAbsolutePath());
+    Assertions.assertThat(fileTree).containsExactlyInAnyOrder(someFile);
+  }
 
-	@Test
-	public void relativePathDoes() throws IOException {
-		File someFile = setFile("someFolder/someFile").toContent("");
-		File someFolder = someFile.getParentFile();
-		fileTree.exclude(relativize(rootFolder(), someFolder));
-		Assertions.assertThat(fileTree).containsExactlyInAnyOrder();
-	}
+  @Test
+  public void relativePathDoes() throws IOException {
+    File someFile = setFile("someFolder/someFile").toContent("");
+    File someFolder = someFile.getParentFile();
+    fileTree.exclude(relativize(rootFolder(), someFolder));
+    Assertions.assertThat(fileTree).containsExactlyInAnyOrder();
+  }
 }

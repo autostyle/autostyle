@@ -5,8 +5,8 @@ apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
 task sourcesJar(type: Jar) {
-	classifier = 'sources'
-	from sourceSets.main.allJava
+  classifier = 'sources'
+  from sourceSets.main.allJava
 }
 
 // Where it's possible to name parameters and methods clearly enough
@@ -14,39 +14,39 @@ task sourcesJar(type: Jar) {
 //
 // Thus, no javadoc warnings.
 javadoc {
-	options.addStringOption('Xdoclint:none', '-quiet')
+  options.addStringOption('Xdoclint:none', '-quiet')
 }
 
 // use markdown in javadoc
 def makeLink = { url, text -> "<a href=\"${url}\" style=\"text-transform: none;\">${text}</a>" }
 def javadocInfo = '<h2>' + makeLink("https://github.com/${org}/${name}", "${group}:${project.ext.artifactId}:${ext.version}") +
-		' by ' + makeLink('https://www.diffplug.com', 'DiffPlug') + '</h2>'
+    ' by ' + makeLink('https://www.diffplug.com', 'DiffPlug') + '</h2>'
 
 String version_str = ext.version.endsWith('-SNAPSHOT') ? 'snapshot' : ext.version
 apply plugin: 'org.jdrupes.mdoclet'
 javadoc {
-	// Where it's possible to name parameters and methods clearly enough
-	// that javadoc is not necessary, why make the code bigger?
-	//
-	// Thus, no javadoc warnings.
-	options.addStringOption('Xdoclint:none', '-quiet')
-	// setup the header
-	options.header javadocInfo
-	options.footer javadocInfo
-	// setup links
-	options.linksOffline('https://docs.oracle.com/javase/8/docs/api/', '../gradle/javadoc/java8')
-	options.linksOffline('https://docs.gradle.org/2.14/javadoc/', '../gradle/javadoc/gradle')
+  // Where it's possible to name parameters and methods clearly enough
+  // that javadoc is not necessary, why make the code bigger?
+  //
+  // Thus, no javadoc warnings.
+  options.addStringOption('Xdoclint:none', '-quiet')
+  // setup the header
+  options.header javadocInfo
+  options.footer javadocInfo
+  // setup links
+  options.linksOffline('https://docs.oracle.com/javase/8/docs/api/', '../gradle/javadoc/java8')
+  options.linksOffline('https://docs.gradle.org/2.14/javadoc/', '../gradle/javadoc/gradle')
 
-	// put the javadoc into a central location
-	destinationDir rootProject.file("javadoc-publish/build/javadoc/${project.ext.artifactId}/${version_str}")
-	// links to javadoc from the other versions
-	options.linksOffline("https://diffplug.github.io/spotles/javadoc/${project.artifactIdLib}/${version_str}/", "../gradle/javadoc/${project.artifactIdLib}")
-	options.linksOffline("https://diffplug.github.io/spotles/javadoc/${project.artifactIdLibExtra}/${version_str}/", "../gradle/javadoc/${project.artifactIdLibExtra}")
+  // put the javadoc into a central location
+  destinationDir rootProject.file("javadoc-publish/build/javadoc/${project.ext.artifactId}/${version_str}")
+  // links to javadoc from the other versions
+  options.linksOffline("https://diffplug.github.io/spotles/javadoc/${project.artifactIdLib}/${version_str}/", "../gradle/javadoc/${project.artifactIdLib}")
+  options.linksOffline("https://diffplug.github.io/spotles/javadoc/${project.artifactIdLibExtra}/${version_str}/", "../gradle/javadoc/${project.artifactIdLibExtra}")
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-	classifier = 'javadoc'
-	from javadoc.destinationDir
+  classifier = 'javadoc'
+  from javadoc.destinationDir
 }
 
 ////////////////
@@ -55,115 +55,115 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 ext.isSnapshot = ext.version.endsWith('-SNAPSHOT')
 // pulls the credentials from either the environment variable or gradle.properties
 def cred = {
-	if (System.env[it] != null) {
-		return System.env[it]
-	} else if (project.hasProperty(it)) {
-		return project[it]
-	} else {
-		return 'unknown_' + it
-	}
+  if (System.env[it] != null) {
+    return System.env[it]
+  } else if (project.hasProperty(it)) {
+    return project[it]
+  } else {
+    return 'unknown_' + it
+  }
 }
 
 final MAVEN_PLUGIN_ARTIFACT_NAME = 'spotless-maven-plugin'
 
 model {
-	publishing {
-		publications {
-			pluginMaven(MavenPublication) {
-				if (project.ext.artifactId != 'spotless-plugin-gradle') {
-					from components.java
-				}
-				artifact sourcesJar
-				artifact javadocJar
+  publishing {
+    publications {
+      pluginMaven(MavenPublication) {
+        if (project.ext.artifactId != 'spotless-plugin-gradle') {
+          from components.java
+        }
+        artifact sourcesJar
+        artifact javadocJar
 
-				groupId project.group
-				artifactId project.ext.artifactId
-				version project.ext.version
+        groupId project.group
+        artifactId project.ext.artifactId
+        version project.ext.version
 
-				pom.withXml {
-					// add MavenCentral requirements to the POM
-					asNode().children().last() + {
-						resolveStrategy = Closure.DELEGATE_FIRST
-						name project.ext.artifactId
-						description project.description
-						url "https://github.com/${project.org}/${rootProject.name}"
-						scm {
-							url "https://github.com/${project.org}/${rootProject.name}"
-							connection "scm:git:https://github.com/${project.org}/${rootProject.name}.git"
-							developerConnection "scm:git:ssh:git@github.com/${project.org}/${rootProject.name}.git"
-						}
-						licenses {
-							license {
-								name 'The Apache Software License, Version 2.0'
-								url 'https://www.apache.org/licenses/LICENSE-2.0.txt'
-								distribution 'repo'
-							}
-						}
-						if (project.ext.artifactId == MAVEN_PLUGIN_ARTIFACT_NAME) {
-							// Maven plugin required Maven 3.1.0+ to run
-							prerequisites { maven '3.1.0' }
-						}
-						developers {
-							if (project.ext.artifactId == MAVEN_PLUGIN_ARTIFACT_NAME) {
-								developer {
-									id 'lutovich'
-									name 'Konstantin Lutovich'
-									email 'konstantin.lutovich@neotechnology.com'
-								}
-							}
-							developer {
-								id 'nedtwigg'
-								name 'Ned Twigg'
-								email 'ned.twigg@diffplug.com'
-							}
-						}
-					}
-				}
-			}
-		}
-		if (project.ext.isSnapshot) {
-			// upload snapshots to oss.sonatype.org
-			repositories {
-				maven {
-					url = 'https://oss.sonatype.org/content/repositories/snapshots'
-					credentials {
-						username = cred('nexus_user')
-						password = cred('nexus_pass')
-					}
-				}
-			}
-		}
-	}
+        pom.withXml {
+          // add MavenCentral requirements to the POM
+          asNode().children().last() + {
+            resolveStrategy = Closure.DELEGATE_FIRST
+            name project.ext.artifactId
+            description project.description
+            url "https://github.com/${project.org}/${rootProject.name}"
+            scm {
+              url "https://github.com/${project.org}/${rootProject.name}"
+              connection "scm:git:https://github.com/${project.org}/${rootProject.name}.git"
+              developerConnection "scm:git:ssh:git@github.com/${project.org}/${rootProject.name}.git"
+            }
+            licenses {
+              license {
+                name 'The Apache Software License, Version 2.0'
+                url 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+                distribution 'repo'
+              }
+            }
+            if (project.ext.artifactId == MAVEN_PLUGIN_ARTIFACT_NAME) {
+              // Maven plugin required Maven 3.1.0+ to run
+              prerequisites { maven '3.1.0' }
+            }
+            developers {
+              if (project.ext.artifactId == MAVEN_PLUGIN_ARTIFACT_NAME) {
+                developer {
+                  id 'lutovich'
+                  name 'Konstantin Lutovich'
+                  email 'konstantin.lutovich@neotechnology.com'
+                }
+              }
+              developer {
+                id 'nedtwigg'
+                name 'Ned Twigg'
+                email 'ned.twigg@diffplug.com'
+              }
+            }
+          }
+        }
+      }
+    }
+    if (project.ext.isSnapshot) {
+      // upload snapshots to oss.sonatype.org
+      repositories {
+        maven {
+          url = 'https://oss.sonatype.org/content/repositories/snapshots'
+          credentials {
+            username = cred('nexus_user')
+            password = cred('nexus_pass')
+          }
+        }
+      }
+    }
+  }
 }
 
 if (!ext.isSnapshot) {
-	// upload releases to bintray and then mavenCentral
-	bintray {
-		user = cred('bintray_user')
-		key = cred('bintray_pass')
-		publications = [
-			'pluginMaven'
-		]
-		publish = true
-		pkg {
-			repo = 'opensource'
-			name = project.ext.artifactId
-			userOrg = project.org
-			version {
-				name = project.ext.version
-				mavenCentralSync {
-					user = cred('nexus_user')
-					password = cred('nexus_pass')
-				}
-			}
-		}
-	}
+  // upload releases to bintray and then mavenCentral
+  bintray {
+    user = cred('bintray_user')
+    key = cred('bintray_pass')
+    publications = [
+      'pluginMaven'
+    ]
+    publish = true
+    pkg {
+      repo = 'opensource'
+      name = project.ext.artifactId
+      userOrg = project.org
+      version {
+        name = project.ext.version
+        mavenCentralSync {
+          user = cred('nexus_user')
+          password = cred('nexus_pass')
+        }
+      }
+    }
+  }
 
-	publish.dependsOn(bintrayUpload)
-	bintrayUpload.dependsOn([
-		'generatePomFileForPluginMavenPublication',
-		jar,
-		sourcesJar,
-		javadocJar
-	])
+  publish.dependsOn(bintrayUpload)
+  bintrayUpload.dependsOn([
+    'generatePomFileForPluginMavenPublication',
+    jar,
+    sourcesJar,
+    javadocJar
+  ])
 }

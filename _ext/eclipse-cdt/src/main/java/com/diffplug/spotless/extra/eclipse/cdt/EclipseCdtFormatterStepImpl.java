@@ -32,36 +32,36 @@ import com.diffplug.spotless.extra.eclipse.base.SpotlessEclipseFramework;
 
 /** Formatter step which calls out to the Eclipse CDT formatter. */
 public class EclipseCdtFormatterStepImpl {
-	private final CodeFormatter codeFormatter;
+  private final CodeFormatter codeFormatter;
 
-	public EclipseCdtFormatterStepImpl(Properties settings) throws Exception {
-		SpotlessEclipseFramework.setup(
-				config -> {
-					config.applyDefault();
-					config.useSlf4J(EclipseCdtFormatterStepImpl.class.getPackage().getName());
-				},
-				plugins -> {
-					plugins.applyDefault();
-					plugins.add(new FileBuffersPlugin());
-					plugins.add(new CCorePlugin());
-				});
-		Stream<Entry<Object, Object>> stream = settings.entrySet().stream();
-		Map<String, String> settingsMap = stream.collect(Collectors.toMap(
-				e -> String.valueOf(e.getKey()),
-				e -> String.valueOf(e.getValue())));
-		codeFormatter = org.eclipse.cdt.core.ToolFactory.createDefaultCodeFormatter(settingsMap);
-	}
+  public EclipseCdtFormatterStepImpl(Properties settings) throws Exception {
+    SpotlessEclipseFramework.setup(
+        config -> {
+          config.applyDefault();
+          config.useSlf4J(EclipseCdtFormatterStepImpl.class.getPackage().getName());
+        },
+        plugins -> {
+          plugins.applyDefault();
+          plugins.add(new FileBuffersPlugin());
+          plugins.add(new CCorePlugin());
+        });
+    Stream<Entry<Object, Object>> stream = settings.entrySet().stream();
+    Map<String, String> settingsMap = stream.collect(Collectors.toMap(
+        e -> String.valueOf(e.getKey()),
+        e -> String.valueOf(e.getValue())));
+    codeFormatter = org.eclipse.cdt.core.ToolFactory.createDefaultCodeFormatter(settingsMap);
+  }
 
-	/** Formatting C/C++ string */
-	public String format(String raw) throws Exception {
-		//The 'kind' can be set to CodeFormatter.K_UNKNOWN, since it is anyway ignored by the internal formatter
-		TextEdit edit = codeFormatter.format(CodeFormatter.K_UNKNOWN, raw, 0, raw.length(), 0, SpotlessEclipseFramework.LINE_DELIMITER);
-		if (edit == null) {
-			throw new IllegalArgumentException("Invalid C/C++ syntax for formatting.");
-		} else {
-			IDocument doc = new Document(raw);
-			edit.apply(doc);
-			return doc.get();
-		}
-	}
+  /** Formatting C/C++ string */
+  public String format(String raw) throws Exception {
+    //The 'kind' can be set to CodeFormatter.K_UNKNOWN, since it is anyway ignored by the internal formatter
+    TextEdit edit = codeFormatter.format(CodeFormatter.K_UNKNOWN, raw, 0, raw.length(), 0, SpotlessEclipseFramework.LINE_DELIMITER);
+    if (edit == null) {
+      throw new IllegalArgumentException("Invalid C/C++ syntax for formatting.");
+    } else {
+      IDocument doc = new Document(raw);
+      edit.apply(doc);
+      return doc.get();
+    }
+  }
 }

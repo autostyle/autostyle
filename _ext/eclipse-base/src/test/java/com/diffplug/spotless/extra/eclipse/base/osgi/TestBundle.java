@@ -31,110 +31,110 @@ import org.osgi.framework.Version;
 
 /** Helper for testing */
 public class TestBundle implements StaticBundle, TemporaryBundle {
-	private final String symbolicName;
-	private final long id;
+  private final String symbolicName;
+  private final long id;
 
-	public TestBundle(long id, String symbolicName) {
-		this.id = id;
-		this.symbolicName = symbolicName;
-	}
+  public TestBundle(long id, String symbolicName) {
+    this.id = id;
+    this.symbolicName = symbolicName;
+  }
 
-	@Override
-	public int getState() {
-		return 0;
-	}
+  @Override
+  public int getState() {
+    return 0;
+  }
 
-	@Override
-	@Deprecated
-	public Dictionary<String, String> getHeaders() {
-		return null;
-	}
+  @Override
+  @Deprecated
+  public Dictionary<String, String> getHeaders() {
+    return null;
+  }
 
-	@Override
-	public long getBundleId() {
-		return id;
-	}
+  @Override
+  public long getBundleId() {
+    return id;
+  }
 
-	@Override
-	public ServiceReference<?>[] getRegisteredServices() {
-		return null;
-	}
+  @Override
+  public ServiceReference<?>[] getRegisteredServices() {
+    return null;
+  }
 
-	@Override
-	public boolean hasPermission(Object permission) {
-		return false;
-	}
+  @Override
+  public boolean hasPermission(Object permission) {
+    return false;
+  }
 
-	@Override
-	public URL getResource(String name) {
-		return null;
-	}
+  @Override
+  public URL getResource(String name) {
+    return null;
+  }
 
-	@Override
-	@Deprecated
-	public Dictionary<String, String> getHeaders(String locale) {
-		return null;
-	}
+  @Override
+  @Deprecated
+  public Dictionary<String, String> getHeaders(String locale) {
+    return null;
+  }
 
-	@Override
-	public String getSymbolicName() {
-		return symbolicName;
-	}
+  @Override
+  public String getSymbolicName() {
+    return symbolicName;
+  }
 
-	@Override
-	public Class<?> loadClass(String name) throws ClassNotFoundException {
-		return null;
-	}
+  @Override
+  public Class<?> loadClass(String name) throws ClassNotFoundException {
+    return null;
+  }
 
-	@Override
-	public Enumeration<URL> getResources(String name) throws IOException {
-		return null;
-	}
+  @Override
+  public Enumeration<URL> getResources(String name) throws IOException {
+    return null;
+  }
 
-	@Override
-	public Enumeration<String> getEntryPaths(String path) {
-		return null;
-	}
+  @Override
+  public Enumeration<String> getEntryPaths(String path) {
+    return null;
+  }
 
-	@Override
-	public URL getEntry(String path) {
-		return null;
-	}
+  @Override
+  public URL getEntry(String path) {
+    return null;
+  }
 
-	@Override
-	@Deprecated
-	public Enumeration<URL> findEntries(String path, String filePattern, boolean recurse) {
-		return null;
-	}
+  @Override
+  @Deprecated
+  public Enumeration<URL> findEntries(String path, String filePattern, boolean recurse) {
+    return null;
+  }
 
-	@Override
-	public BundleContext getBundleContext() {
-		return null;
-	}
+  @Override
+  public BundleContext getBundleContext() {
+    return null;
+  }
 
-	@Override
-	public Map<X509Certificate, List<X509Certificate>> getSignerCertificates(int signersType) {
-		return null;
-	}
+  @Override
+  public Map<X509Certificate, List<X509Certificate>> getSignerCertificates(int signersType) {
+    return null;
+  }
 
-	@Override
-	public Version getVersion() {
-		return null;
-	}
+  @Override
+  public Version getVersion() {
+    return null;
+  }
 
-	@Override
-	public <A> A adapt(Class<A> type) {
-		return null;
-	}
+  @Override
+  public <A> A adapt(Class<A> type) {
+    return null;
+  }
 
-	@Override
-	public File getDataFile(String filename) {
-		return null;
-	}
+  @Override
+  public File getDataFile(String filename) {
+    return null;
+  }
 
-	@Override
-	public int compareTo(Bundle o) {
-		return 0;
-	}
+  @Override
+  public int compareTo(Bundle o) {
+    return 0;
+  }
 
 }

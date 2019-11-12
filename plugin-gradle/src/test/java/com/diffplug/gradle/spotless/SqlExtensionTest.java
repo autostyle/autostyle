@@ -21,38 +21,38 @@ import org.junit.Test;
 
 public class SqlExtensionTest extends GradleIntegrationTest {
 
-	@Test
-	public void should_format_sql_with_default_configuration() throws IOException {
-		setFile("build.gradle").toLines(
-				"plugins {",
-				"    id 'com.diffplug.gradle.spotless'",
-				"}",
-				"spotless {",
-				"    sql {",
-				"       dbeaver()",
-				"    }",
-				"}");
+  @Test
+  public void should_format_sql_with_default_configuration() throws IOException {
+    setFile("build.gradle").toLines(
+        "plugins {",
+        "    id 'com.diffplug.gradle.spotless'",
+        "}",
+        "spotless {",
+        "    sql {",
+        "       dbeaver()",
+        "    }",
+        "}");
 
-		setFile("src/main/resources/aFolder/create.sql").toResource("sql/dbeaver/create.dirty");
-		gradleRunner().withArguments("spotlessApply").build();
-		assertFile("src/main/resources/aFolder/create.sql").sameAsResource("sql/dbeaver/create.clean");
-	}
+    setFile("src/main/resources/aFolder/create.sql").toResource("sql/dbeaver/create.dirty");
+    gradleRunner().withArguments("spotlessApply").build();
+    assertFile("src/main/resources/aFolder/create.sql").sameAsResource("sql/dbeaver/create.clean");
+  }
 
-	@Test
-	public void should_format_sql_with_alternative_configuration() throws IOException {
-		setFile("build.gradle").toLines(
-				"plugins {",
-				"    id 'com.diffplug.gradle.spotless'",
-				"}",
-				"spotless {",
-				"    sql {",
-				"       dbeaver().configFile 'myConfig.properties'",
-				"    }",
-				"}");
-		setFile("myConfig.properties").toResource("sql/dbeaver/sqlConfig2.properties");
+  @Test
+  public void should_format_sql_with_alternative_configuration() throws IOException {
+    setFile("build.gradle").toLines(
+        "plugins {",
+        "    id 'com.diffplug.gradle.spotless'",
+        "}",
+        "spotless {",
+        "    sql {",
+        "       dbeaver().configFile 'myConfig.properties'",
+        "    }",
+        "}");
+    setFile("myConfig.properties").toResource("sql/dbeaver/sqlConfig2.properties");
 
-		setFile("src/main/resources/aFolder/create.sql").toResource("sql/dbeaver/create.dirty");
-		gradleRunner().withArguments("spotlessApply").build();
-		assertFile("src/main/resources/aFolder/create.sql").sameAsResource("sql/dbeaver/create.clean.alternative");
-	}
+    setFile("src/main/resources/aFolder/create.sql").toResource("sql/dbeaver/create.dirty");
+    gradleRunner().withArguments("spotlessApply").build();
+    assertFile("src/main/resources/aFolder/create.sql").sameAsResource("sql/dbeaver/create.clean.alternative");
+  }
 }

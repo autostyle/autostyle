@@ -29,80 +29,80 @@ import java.util.stream.Stream;
  * <ol>
  *     <li>from System-Property {@code npm.exec} (unverified)</li>
  *     <li>from Environment-Properties in the following order:</li>
- *     	<ol>
- *     	    <li> from NVM_BIN environment variable, if available </li>
- *     	    <li> from NVM_SYMLINK environment variable, if available </li>
- *     	    <li> from NODE_PATH environment variable, if available </li>
- *     	    <li>fallback: PATH environment variable</li>
- *     	</ol>
+ *       <ol>
+ *           <li> from NVM_BIN environment variable, if available </li>
+ *           <li> from NVM_SYMLINK environment variable, if available </li>
+ *           <li> from NODE_PATH environment variable, if available </li>
+ *           <li>fallback: PATH environment variable</li>
+ *       </ol>
  * </ol>
  */
 class NpmExecutableResolver {
 
-	private NpmExecutableResolver() {
-		// no instance
-	}
+  private NpmExecutableResolver() {
+    // no instance
+  }
 
-	static String npmExecutableName() {
-		String npmName = "npm";
-		if (PlatformInfo.normalizedOS() == WINDOWS) {
-			npmName += ".cmd";
-		}
-		return npmName;
-	}
+  static String npmExecutableName() {
+    String npmName = "npm";
+    if (PlatformInfo.normalizedOS() == WINDOWS) {
+      npmName += ".cmd";
+    }
+    return npmName;
+  }
 
-	static Supplier<Optional<File>> systemProperty() {
-		return () -> Optional.ofNullable(System.getProperty("npm.exec"))
-				.map(File::new);
-	}
+  static Supplier<Optional<File>> systemProperty() {
+    return () -> Optional.ofNullable(System.getProperty("npm.exec"))
+        .map(File::new);
+  }
 
-	static Supplier<Optional<File>> environmentNvmBin() {
-		return () -> Optional.ofNullable(System.getenv("NVM_BIN"))
-				.map(File::new)
-				.map(binDir -> new File(binDir, npmExecutableName()))
-				.filter(File::exists)
-				.filter(File::canExecute);
-	}
+  static Supplier<Optional<File>> environmentNvmBin() {
+    return () -> Optional.ofNullable(System.getenv("NVM_BIN"))
+        .map(File::new)
+        .map(binDir -> new File(binDir, npmExecutableName()))
+        .filter(File::exists)
+        .filter(File::canExecute);
+  }
 
-	static Supplier<Optional<File>> environmentNvmSymlink() {
-		return pathListFromEnvironment("NVM_SYMLINK");
-	}
+  static Supplier<Optional<File>> environmentNvmSymlink() {
+    return pathListFromEnvironment("NVM_SYMLINK");
+  }
 
-	static Supplier<Optional<File>> environmentNodepath() {
-		return pathListFromEnvironment("NODE_PATH");
-	}
+  static Supplier<Optional<File>> environmentNodepath() {
+    return pathListFromEnvironment("NODE_PATH");
+  }
 
-	static Supplier<Optional<File>> environmentPath() {
-		return pathListFromEnvironment("PATH");
-	}
+  static Supplier<Optional<File>> environmentPath() {
+    return pathListFromEnvironment("PATH");
+  }
 
-	static Optional<File> tryFind() {
-		return Stream.of(systemProperty(),
-				environmentNvmBin(),
-				environmentNvmSymlink(),
-				environmentNodepath(),
-				environmentPath())
-				.map(Supplier::get)
-				.filter(Optional::isPresent)
-				.map(Optional::get)
-				.findFirst();
-	}
+  static Optional<File> tryFind() {
+    return Stream.of(systemProperty(),
+        environmentNvmBin(),
+        environmentNvmSymlink(),
+        environmentNodepath(),
+        environmentPath())
+        .map(Supplier::get)
+        .filter(Optional::isPresent)
+        .map(Optional::get)
+        .findFirst();
+  }
 
-	private static Supplier<Optional<File>> pathListFromEnvironment(String environmentPathListName) {
-		return () -> {
-			String pathList = System.getenv(environmentPathListName);
-			if (pathList != null) {
-				return Arrays.stream(pathList.split(System.getProperty("path.separator", ":")))
-						.map(File::new)
-						.map(dir -> dir.getName().equalsIgnoreCase("node_modules") ? dir.getParentFile() : dir)
-						.map(dir -> new File(dir, npmExecutableName()))
-						.filter(File::exists)
-						.filter(File::canExecute)
-						.findFirst();
+  private static Supplier<Optional<File>> pathListFromEnvironment(String environmentPathListName) {
+    return () -> {
+      String pathList = System.getenv(environmentPathListName);
+      if (pathList != null) {
+        return Arrays.stream(pathList.split(System.getProperty("path.separator", ":")))
+            .map(File::new)
+            .map(dir -> dir.getName().equalsIgnoreCase("node_modules") ? dir.getParentFile() : dir)
+            .map(dir -> new File(dir, npmExecutableName()))
+            .filter(File::exists)
+            .filter(File::canExecute)
+            .findFirst();
 
-			}
-			return Optional.empty();
-		};
-	}
+      }
+      return Optional.empty();
+    };
+  }
 
 }

@@ -25,54 +25,54 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class EclipseJsonFormatterStepImplTest {
-	private final static String ILLEGAL_CHAR = Character.toString((char) 254);
-	private final static String UNFORMATTED_OBJECT = "{\n \"x\": { \"a\" : \"v\",\"properties\" : \"v\" }}".replaceAll("\n", LINE_DELIMITER);
-	private final static String FORMATTED_OBJECT = "{\n   \"x\": {\n      \"a\": \"v\",\n      \"properties\": \"v\"\n   }\n}".replaceAll("\n", LINE_DELIMITER);
-	private final static String UNFORMATTED_ARRAY = "[\n { \"a\" : \"v\",\"properties\" : \"v\" }]".replaceAll("\n", LINE_DELIMITER);
-	private final static String FORMATTED_ARRAY = "[\n   {\n      \"a\": \"v\",\n      \"properties\": \"v\"\n   }\n]".replaceAll("\n", LINE_DELIMITER);
+  private final static String ILLEGAL_CHAR = Character.toString((char) 254);
+  private final static String UNFORMATTED_OBJECT = "{\n \"x\": { \"a\" : \"v\",\"properties\" : \"v\" }}".replaceAll("\n", LINE_DELIMITER);
+  private final static String FORMATTED_OBJECT = "{\n   \"x\": {\n      \"a\": \"v\",\n      \"properties\": \"v\"\n   }\n}".replaceAll("\n", LINE_DELIMITER);
+  private final static String UNFORMATTED_ARRAY = "[\n { \"a\" : \"v\",\"properties\" : \"v\" }]".replaceAll("\n", LINE_DELIMITER);
+  private final static String FORMATTED_ARRAY = "[\n   {\n      \"a\": \"v\",\n      \"properties\": \"v\"\n   }\n]".replaceAll("\n", LINE_DELIMITER);
 
-	private static EclipseJsonFormatterStepImpl formatter;
+  private static EclipseJsonFormatterStepImpl formatter;
 
-	@Before
-	public void initialize() throws Exception {
-		/*
-		 * The instantiation can be repeated for each step, but only with the same configuration
-		 * All formatter configuration is stored in
-		 * org.eclipse.core.runtime/.settings/org.eclipse.wst.json.core.prefs.
-		 * So a simple test of one configuration item change is considered sufficient.
-		 */
-		Properties properties = new Properties();
-		properties.put(INDENTATION_SIZE, "3"); //Default is 1
-		properties.put(INDENTATION_CHAR, SPACE); //Default is TAB
-		properties.put(CASE_PROPERTY_NAME, Integer.toString(UPPER)); //Dead code, ignored
-		formatter = new EclipseJsonFormatterStepImpl(properties);
-	}
+  @Before
+  public void initialize() throws Exception {
+    /*
+     * The instantiation can be repeated for each step, but only with the same configuration
+     * All formatter configuration is stored in
+     * org.eclipse.core.runtime/.settings/org.eclipse.wst.json.core.prefs.
+     * So a simple test of one configuration item change is considered sufficient.
+     */
+    Properties properties = new Properties();
+    properties.put(INDENTATION_SIZE, "3"); //Default is 1
+    properties.put(INDENTATION_CHAR, SPACE); //Default is TAB
+    properties.put(CASE_PROPERTY_NAME, Integer.toString(UPPER)); //Dead code, ignored
+    formatter = new EclipseJsonFormatterStepImpl(properties);
+  }
 
-	@Test
-	public void formatObject() throws Exception {
-		String output = formatter.format(UNFORMATTED_OBJECT);
-		assertEquals("Unexpected formatting with default preferences.",
-				FORMATTED_OBJECT, output);
-	}
+  @Test
+  public void formatObject() throws Exception {
+    String output = formatter.format(UNFORMATTED_OBJECT);
+    assertEquals("Unexpected formatting with default preferences.",
+        FORMATTED_OBJECT, output);
+  }
 
-	@Test
-	public void formatArray() throws Exception {
-		String output = formatter.format(UNFORMATTED_ARRAY);
-		assertEquals("Unexpected formatting with default preferences.",
-				FORMATTED_ARRAY, output);
-	}
+  @Test
+  public void formatArray() throws Exception {
+    String output = formatter.format(UNFORMATTED_ARRAY);
+    assertEquals("Unexpected formatting with default preferences.",
+        FORMATTED_ARRAY, output);
+  }
 
-	@Test
-	public void illegalCharacter() throws Exception {
-		String output = formatter.format(ILLEGAL_CHAR + UNFORMATTED_OBJECT);
-		assertEquals("Illeagl characteds are not ignored.",
-				ILLEGAL_CHAR + FORMATTED_OBJECT, output);
-	}
+  @Test
+  public void illegalCharacter() throws Exception {
+    String output = formatter.format(ILLEGAL_CHAR + UNFORMATTED_OBJECT);
+    assertEquals("Illeagl characteds are not ignored.",
+        ILLEGAL_CHAR + FORMATTED_OBJECT, output);
+  }
 
-	@Test
-	public void illegalSyntax() throws Exception {
-		String output = formatter.format("{" + UNFORMATTED_OBJECT);
-		assertEquals("Illeagl syntax is not handled on best effort basis.",
-				FORMATTED_OBJECT, output);
-	}
+  @Test
+  public void illegalSyntax() throws Exception {
+    String output = formatter.format("{" + UNFORMATTED_OBJECT);
+    assertEquals("Illeagl syntax is not handled on best effort basis.",
+        FORMATTED_OBJECT, output);
+  }
 }

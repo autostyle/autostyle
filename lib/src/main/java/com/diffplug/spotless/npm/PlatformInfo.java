@@ -20,59 +20,59 @@ import static java.util.Objects.requireNonNull;
 import java.util.Locale;
 
 class PlatformInfo {
-	private PlatformInfo() {
-		// no instance
-	}
+  private PlatformInfo() {
+    // no instance
+  }
 
-	static OS normalizedOS() {
-		final String osNameProperty = System.getProperty("os.name");
-		if (osNameProperty == null) {
-			throw new RuntimeException("No info about OS available, cannot decide which implementation of j2v8 to use");
-		}
-		final String normalizedOsName = osNameProperty.toLowerCase(Locale.ROOT);
-		if (normalizedOsName.contains("win")) {
-			return OS.WINDOWS;
-		}
-		if (normalizedOsName.contains("mac")) {
-			return OS.MACOS;
-		}
-		if (normalizedOsName.contains("nix") || normalizedOsName.contains("nux") || normalizedOsName.contains("aix")) {
-			return OS.LINUX;
-		}
-		throw new RuntimeException("Cannot handle os " + osNameProperty);
-	}
+  static OS normalizedOS() {
+    final String osNameProperty = System.getProperty("os.name");
+    if (osNameProperty == null) {
+      throw new RuntimeException("No info about OS available, cannot decide which implementation of j2v8 to use");
+    }
+    final String normalizedOsName = osNameProperty.toLowerCase(Locale.ROOT);
+    if (normalizedOsName.contains("win")) {
+      return OS.WINDOWS;
+    }
+    if (normalizedOsName.contains("mac")) {
+      return OS.MACOS;
+    }
+    if (normalizedOsName.contains("nix") || normalizedOsName.contains("nux") || normalizedOsName.contains("aix")) {
+      return OS.LINUX;
+    }
+    throw new RuntimeException("Cannot handle os " + osNameProperty);
+  }
 
-	static String normalizedOSName() {
-		return normalizedOS().normalizedOsName();
-	}
+  static String normalizedOSName() {
+    return normalizedOS().normalizedOsName();
+  }
 
-	static String normalizedArchName() {
-		final String osArchProperty = System.getProperty("os.arch");
-		if (osArchProperty == null) {
-			throw new RuntimeException("No info about ARCH available, cannot decide which implementation of j2v8 to use");
-		}
-		final String normalizedOsArch = osArchProperty.toLowerCase(Locale.ROOT);
+  static String normalizedArchName() {
+    final String osArchProperty = System.getProperty("os.arch");
+    if (osArchProperty == null) {
+      throw new RuntimeException("No info about ARCH available, cannot decide which implementation of j2v8 to use");
+    }
+    final String normalizedOsArch = osArchProperty.toLowerCase(Locale.ROOT);
 
-		if (normalizedOsArch.contains("64")) {
-			return "x86_64";
-		}
-		if (normalizedOsArch.contains("x86") || normalizedOsArch.contains("32")) {
-			return "x86";
-		}
-		throw new RuntimeException("Cannot handle arch " + osArchProperty);
-	}
+    if (normalizedOsArch.contains("64")) {
+      return "x86_64";
+    }
+    if (normalizedOsArch.contains("x86") || normalizedOsArch.contains("32")) {
+      return "x86";
+    }
+    throw new RuntimeException("Cannot handle arch " + osArchProperty);
+  }
 
-	enum OS {
-		WINDOWS("win32"), MACOS("macosx"), LINUX("linux");
+  enum OS {
+    WINDOWS("win32"), MACOS("macosx"), LINUX("linux");
 
-		private final String normalizedOsName;
+    private final String normalizedOsName;
 
-		OS(String normalizedOsName) {
-			this.normalizedOsName = requireNonNull(normalizedOsName);
-		}
+    OS(String normalizedOsName) {
+      this.normalizedOsName = requireNonNull(normalizedOsName);
+    }
 
-		public String normalizedOsName() {
-			return normalizedOsName;
-		}
-	}
+    public String normalizedOsName() {
+      return normalizedOsName;
+    }
+  }
 }

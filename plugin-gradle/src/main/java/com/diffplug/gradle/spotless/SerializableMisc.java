@@ -28,41 +28,41 @@ import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.io.Files;
 
 class SerializableMisc {
-	static void toFile(Serializable obj, File file) {
-		try {
-			java.nio.file.Files.createDirectories(file.getParentFile().toPath());
-			try (OutputStream output = Files.asByteSink(file).openBufferedStream()) {
-				toStream(obj, output);
-			}
-		} catch (IOException e) {
-			throw Errors.asRuntime(e);
-		}
-	}
+  static void toFile(Serializable obj, File file) {
+    try {
+      java.nio.file.Files.createDirectories(file.getParentFile().toPath());
+      try (OutputStream output = Files.asByteSink(file).openBufferedStream()) {
+        toStream(obj, output);
+      }
+    } catch (IOException e) {
+      throw Errors.asRuntime(e);
+    }
+  }
 
-	static <T extends Serializable> T fromFile(Class<T> clazz, File file) {
-		try (InputStream input = Files.asByteSource(file).openBufferedStream()) {
-			return fromStream(clazz, input);
-		} catch (IOException e) {
-			throw Errors.asRuntime(e);
-		}
-	}
+  static <T extends Serializable> T fromFile(Class<T> clazz, File file) {
+    try (InputStream input = Files.asByteSource(file).openBufferedStream()) {
+      return fromStream(clazz, input);
+    } catch (IOException e) {
+      throw Errors.asRuntime(e);
+    }
+  }
 
-	static void toStream(Serializable obj, OutputStream stream) {
-		try (ObjectOutputStream objectOutput = new ObjectOutputStream(stream)) {
-			objectOutput.writeObject(obj);
-		} catch (IOException e) {
-			throw Errors.asRuntime(e);
-		}
-	}
+  static void toStream(Serializable obj, OutputStream stream) {
+    try (ObjectOutputStream objectOutput = new ObjectOutputStream(stream)) {
+      objectOutput.writeObject(obj);
+    } catch (IOException e) {
+      throw Errors.asRuntime(e);
+    }
+  }
 
-	@SuppressWarnings("unchecked")
-	static <T> T fromStream(Class<T> clazz, InputStream stream) {
-		try (ObjectInputStream objectInput = new ObjectInputStream(stream)) {
-			T object = (T) objectInput.readObject();
-			Preconditions.checkArgument(clazz.isInstance(object), "Requires class %s, was %s", clazz, object);
-			return object;
-		} catch (ClassNotFoundException | IOException e) {
-			throw Errors.asRuntime(e);
-		}
-	}
+  @SuppressWarnings("unchecked")
+  static <T> T fromStream(Class<T> clazz, InputStream stream) {
+    try (ObjectInputStream objectInput = new ObjectInputStream(stream)) {
+      T object = (T) objectInput.readObject();
+      Preconditions.checkArgument(clazz.isInstance(object), "Requires class %s, was %s", clazz, object);
+      return object;
+    } catch (ClassNotFoundException | IOException e) {
+      throw Errors.asRuntime(e);
+    }
+  }
 }

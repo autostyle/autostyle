@@ -28,53 +28,53 @@ import com.diffplug.spotless.xml.XmlDefaults;
  */
 @Deprecated
 public class XmlExtension extends FormatExtension implements HasBuiltinDelimiterForLicense {
-	static final String NAME = "xml";
+  static final String NAME = "xml";
 
-	public XmlExtension(SpotlessExtension rootExtension) {
-		super(rootExtension);
-	}
+  public XmlExtension(SpotlessExtension rootExtension) {
+    super(rootExtension);
+  }
 
-	public EclipseConfig eclipse() {
-		return new EclipseConfig(EclipseWtpFormatterStep.defaultVersion());
-	}
+  public EclipseConfig eclipse() {
+    return new EclipseConfig(EclipseWtpFormatterStep.defaultVersion());
+  }
 
-	public EclipseConfig eclipse(String version) {
-		return new EclipseConfig(version);
-	}
+  public EclipseConfig eclipse(String version) {
+    return new EclipseConfig(version);
+  }
 
-	public class EclipseConfig {
-		private final EclipseBasedStepBuilder builder;
+  public class EclipseConfig {
+    private final EclipseBasedStepBuilder builder;
 
-		EclipseConfig(String version) {
-			builder = EclipseWtpFormatterStep.createXmlBuilder(GradleProvisioner.fromProject(getProject()));
-			builder.setVersion(version);
-			addStep(builder.build());
-		}
+    EclipseConfig(String version) {
+      builder = EclipseWtpFormatterStep.createXmlBuilder(GradleProvisioner.fromProject(getProject()));
+      builder.setVersion(version);
+      addStep(builder.build());
+    }
 
-		public void configFile(Object... configFiles) {
-			requireElementsNonNull(configFiles);
-			Project project = getProject();
-			builder.setPreferences(project.files(configFiles).getFiles());
-			replaceStep(builder.build());
-		}
+    public void configFile(Object... configFiles) {
+      requireElementsNonNull(configFiles);
+      Project project = getProject();
+      builder.setPreferences(project.files(configFiles).getFiles());
+      replaceStep(builder.build());
+    }
 
-	}
+  }
 
-	@Override
-	protected void setupTask(SpotlessTask task) {
-		if (target == null) {
-			target(XmlDefaults.FILE_FILTER.toArray());
-		}
-		super.setupTask(task);
-	}
+  @Override
+  protected void setupTask(SpotlessTask task) {
+    if (target == null) {
+      target(XmlDefaults.FILE_FILTER.toArray());
+    }
+    super.setupTask(task);
+  }
 
-	@Override
-	public LicenseHeaderConfig licenseHeader(String licenseHeader) {
-		return licenseHeader(licenseHeader, XmlDefaults.DELIMITER_EXPR);
-	}
+  @Override
+  public LicenseHeaderConfig licenseHeader(String licenseHeader) {
+    return licenseHeader(licenseHeader, XmlDefaults.DELIMITER_EXPR);
+  }
 
-	@Override
-	public LicenseHeaderConfig licenseHeaderFile(Object licenseHeaderFile) {
-		return licenseHeaderFile(licenseHeaderFile, XmlDefaults.DELIMITER_EXPR);
-	}
+  @Override
+  public LicenseHeaderConfig licenseHeaderFile(Object licenseHeaderFile) {
+    return licenseHeaderFile(licenseHeaderFile, XmlDefaults.DELIMITER_EXPR);
+  }
 }

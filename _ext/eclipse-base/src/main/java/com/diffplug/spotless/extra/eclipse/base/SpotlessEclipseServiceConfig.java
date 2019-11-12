@@ -41,93 +41,93 @@ import com.diffplug.spotless.extra.eclipse.base.service.*;
  */
 public interface SpotlessEclipseServiceConfig {
 
-	/** Sets property/preference value available to all bundles, plugins and services. */
-	void set(String key, String value);
+  /** Sets property/preference value available to all bundles, plugins and services. */
+  void set(String key, String value);
 
-	/** Sets property/preference values available to all bundles, plugins and services. */
-	default void set(Map<String, String> properties) {
-		properties.forEach((k, v) -> this.set(k, v));
-	}
+  /** Sets property/preference values available to all bundles, plugins and services. */
+  default void set(Map<String, String> properties) {
+    properties.forEach((k, v) -> this.set(k, v));
+  }
 
-	/**
-	 * Add custom service to collection.
-	 * <p>
-	 * Only one service per interface is allowed.
-	 * A service instance implementing multiple interfaces, can be added for each interface.
-	 * <p>
-	 * Please refer to the default method implementation for examples.
-	 *
-	 * @param interfaceClass Service interface
-	 * @param service Service instance
-	 */
-	public <S> void add(Class<S> interfaceClass, S service);
+  /**
+   * Add custom service to collection.
+   * <p>
+   * Only one service per interface is allowed.
+   * A service instance implementing multiple interfaces, can be added for each interface.
+   * <p>
+   * Please refer to the default method implementation for examples.
+   *
+   * @param interfaceClass Service interface
+   * @param service Service instance
+   */
+  public <S> void add(Class<S> interfaceClass, S service);
 
-	/**
-	 * Spotless formatters should not be configured by environment variables, and
-	 * they shall be OS independent.
-	 */
-	default public void hideEnvironment() {
-		add(EnvironmentInfo.class, new HiddenEnvironment());
-	}
+  /**
+   * Spotless formatters should not be configured by environment variables, and
+   * they shall be OS independent.
+   */
+  default public void hideEnvironment() {
+    add(EnvironmentInfo.class, new HiddenEnvironment());
+  }
 
-	/**
-	 * Eclipse provides means to lookup the file content type, e.g. by file name extensions.
-	 * This possibility is not required by most Spotless formatters.
-	 */
-	default public void ignoreContentType() {
-		add(IContentTypeManager.class, new NoContentTypeSpecificHandling());
-	}
+  /**
+   * Eclipse provides means to lookup the file content type, e.g. by file name extensions.
+   * This possibility is not required by most Spotless formatters.
+   */
+  default public void ignoreContentType() {
+    add(IContentTypeManager.class, new NoContentTypeSpecificHandling());
+  }
 
-	/** Disable Eclipse internal debugging. */
-	default public void disableDebugging() {
-		add(DebugOptions.class, new NoDebugging());
-	}
+  /** Disable Eclipse internal debugging. */
+  default public void disableDebugging() {
+    add(DebugOptions.class, new NoDebugging());
+  }
 
-	/** Ignore accesses of unsupported preference. */
-	default public void ignoreUnsupportedPreferences() {
-		add(IPreferencesService.class, new NoEclipsePreferences());
-	}
+  /** Ignore accesses of unsupported preference. */
+  default public void ignoreUnsupportedPreferences() {
+    add(IPreferencesService.class, new NoEclipsePreferences());
+  }
 
-	/**
-	 * Use temporary locations in case plugins require to store file.
-	 * These files (for example workspace preferences) will be deleted
-	 * as soon as the application terminates.
-	 */
-	default public void useTemporaryLocations() {
-		add(Location.class, new TemporaryLocation());
-	}
+  /**
+   * Use temporary locations in case plugins require to store file.
+   * These files (for example workspace preferences) will be deleted
+   * as soon as the application terminates.
+   */
+  default public void useTemporaryLocations() {
+    add(Location.class, new TemporaryLocation());
+  }
 
-	/**
-	 * In case the string which will be formatted does not contain any
-	 * line delimiter (single line), Eclipse falls back to use the
-	 * system property.
-	 * Change the system default to the UNIX line separator as required
-	 * by Spotless.
-	 */
-	default public void changeSystemLineSeparator() {
-		System.setProperty("line.separator", LINE_DELIMITER);
-	}
+  /**
+   * In case the string which will be formatted does not contain any
+   * line delimiter (single line), Eclipse falls back to use the
+   * system property.
+   * Change the system default to the UNIX line separator as required
+   * by Spotless.
+   */
+  default public void changeSystemLineSeparator() {
+    System.setProperty("line.separator", LINE_DELIMITER);
+  }
 
-	/** Adds Eclipse logging service Slf4J binding. */
-	default public void useSlf4J(String loggerName) {
-		useSlf4J(loggerName, (s, l) -> s);
-	}
+  /** Adds Eclipse logging service Slf4J binding. */
+  default public void useSlf4J(String loggerName) {
+    useSlf4J(loggerName, (s, l) -> s);
+  }
 
-	/** Adds Eclipse logging service Slf4J binding with a message customizer function. */
-	default public void useSlf4J(String loggerName, BiFunction<String, LogLevel, String> messageCustomizer) {
-		SingleSlf4JService slf4jServce = new SingleSlf4JService(loggerName, messageCustomizer);
-		add(ExtendedLogService.class, slf4jServce);
-		add(ExtendedLogReaderService.class, slf4jServce);
-		slf4jServce.debug("Initialized Eclipse logging service.");
-	}
+  /** Adds Eclipse logging service Slf4J binding with a message customizer function. */
+  default public void useSlf4J(String loggerName, BiFunction<String, LogLevel, String> messageCustomizer) {
+    SingleSlf4JService slf4jServce = new SingleSlf4JService(loggerName, messageCustomizer);
+    add(ExtendedLogService.class, slf4jServce);
+    add(ExtendedLogReaderService.class, slf4jServce);
+    slf4jServce.debug("Initialized Eclipse logging service.");
+  }
 
-	/** Applies the default configurations. */
-	default public void applyDefault() {
-		hideEnvironment();
-		ignoreContentType();
-		disableDebugging();
-		ignoreUnsupportedPreferences();
-		useTemporaryLocations();
-		changeSystemLineSeparator();
-	}
+  /** Applies the default configurations. */
+  default public void applyDefault() {
+    hideEnvironment();
+    ignoreContentType();
+    disableDebugging();
+    ignoreUnsupportedPreferences();
+    useTemporaryLocations();
+    changeSystemLineSeparator();
+  }
 }

@@ -24,120 +24,120 @@ import com.diffplug.spotless.FormatterStep;
 /** Simple step which checks for consistent indentation characters. */
 public final class IndentStep {
 
-	private static final int DEFAULT_NUM_SPACES_PER_TAB = 4;
+  private static final int DEFAULT_NUM_SPACES_PER_TAB = 4;
 
-	// prevent direct instantiation
-	private IndentStep() {}
+  // prevent direct instantiation
+  private IndentStep() {}
 
-	public enum Type {
-		TAB, SPACE;
+  public enum Type {
+    TAB, SPACE;
 
-		private <T> T tabSpace(T tab, T space) {
-			return this == TAB ? tab : space;
-		}
+    private <T> T tabSpace(T tab, T space) {
+      return this == TAB ? tab : space;
+    }
 
-		/** Creates a step which will indent with the given type of whitespace, converting between tabs and spaces at the default ratio. */
-		public FormatterStep create() {
-			return IndentStep.create(this, defaultNumSpacesPerTab());
-		}
+    /** Creates a step which will indent with the given type of whitespace, converting between tabs and spaces at the default ratio. */
+    public FormatterStep create() {
+      return IndentStep.create(this, defaultNumSpacesPerTab());
+    }
 
-		/** Synonym for {@link IndentStep#create(Type, int)}. */
-		public FormatterStep create(int numSpacesPerTab) {
-			return IndentStep.create(this, numSpacesPerTab);
-		}
-	}
+    /** Synonym for {@link IndentStep#create(Type, int)}. */
+    public FormatterStep create(int numSpacesPerTab) {
+      return IndentStep.create(this, numSpacesPerTab);
+    }
+  }
 
-	/** Creates a step which will indent with the given type of whitespace, converting between tabs and spaces at the given ratio. */
-	public static FormatterStep create(Type type, int numSpacesPerTab) {
-		Objects.requireNonNull(type, "type");
-		return FormatterStep.create("indentWith" + type.tabSpace("Tabs", "Spaces"),
-				new State(type, numSpacesPerTab), State::toFormatter);
-	}
+  /** Creates a step which will indent with the given type of whitespace, converting between tabs and spaces at the given ratio. */
+  public static FormatterStep create(Type type, int numSpacesPerTab) {
+    Objects.requireNonNull(type, "type");
+    return FormatterStep.create("indentWith" + type.tabSpace("Tabs", "Spaces"),
+        new State(type, numSpacesPerTab), State::toFormatter);
+  }
 
-	private static class State implements Serializable {
-		private static final long serialVersionUID = 1L;
+  private static class State implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-		final Type type;
-		final int numSpacesPerTab;
+    final Type type;
+    final int numSpacesPerTab;
 
-		State(Type type, int numSpacesPerTab) {
-			this.type = type;
-			this.numSpacesPerTab = numSpacesPerTab;
-		}
+    State(Type type, int numSpacesPerTab) {
+      this.type = type;
+      this.numSpacesPerTab = numSpacesPerTab;
+    }
 
-		FormatterFunc toFormatter() {
-			return new Runtime(this)::format;
-		}
-	}
+    FormatterFunc toFormatter() {
+      return new Runtime(this)::format;
+    }
+  }
 
-	static class Runtime {
-		final State state;
-		final StringBuilder builder = new StringBuilder();
+  static class Runtime {
+    final State state;
+    final StringBuilder builder = new StringBuilder();
 
-		Runtime(State state) {
-			this.state = state;
-		}
+    Runtime(State state) {
+      this.state = state;
+    }
 
-		String format(String raw) {
-			// reset the buffer
-			builder.setLength(0);
-			int lineStart = 0; // beginning of line
-			do {
-				int contentStart = lineStart; // beginning of non-whitespace
-				int numSpaces = 0;
-				char c;
-				while (contentStart < raw.length() && isSpaceOrTab(c = raw.charAt(contentStart))) {
-					switch (c) {
-					case ' ':
-						++numSpaces;
-						break;
-					case '\t':
-						numSpaces += state.numSpacesPerTab;
-						break;
-					default:
-						throw new IllegalArgumentException("Unexpected char " + c);
-					}
-					++contentStart;
-				}
+    String format(String raw) {
+      // reset the buffer
+      builder.setLength(0);
+      int lineStart = 0; // beginning of line
+      do {
+        int contentStart = lineStart; // beginning of non-whitespace
+        int numSpaces = 0;
+        char c;
+        while (contentStart < raw.length() && isSpaceOrTab(c = raw.charAt(contentStart))) {
+          switch (c) {
+          case ' ':
+            ++numSpaces;
+            break;
+          case '\t':
+            numSpaces += state.numSpacesPerTab;
+            break;
+          default:
+            throw new IllegalArgumentException("Unexpected char " + c);
+          }
+          ++contentStart;
+        }
 
-				// add the leading space in a canonical way
-				if (numSpaces > 0) {
-					switch (state.type) {
-					case SPACE:
-						for (int i = 0; i < numSpaces; ++i) {
-							builder.append(' ');
-						}
-						break;
-					case TAB:
-						for (int i = 0; i < numSpaces / state.numSpacesPerTab; ++i) {
-							builder.append('\t');
-						}
-						break;
-					default:
-						throw new IllegalArgumentException("Unexpected enum " + state.type);
-					}
-				}
+        // add the leading space in a canonical way
+        if (numSpaces > 0) {
+          switch (state.type) {
+          case SPACE:
+            for (int i = 0; i < numSpaces; ++i) {
+              builder.append(' ');
+            }
+            break;
+          case TAB:
+            for (int i = 0; i < numSpaces / state.numSpacesPerTab; ++i) {
+              builder.append('\t');
+            }
+            break;
+          default:
+            throw new IllegalArgumentException("Unexpected enum " + state.type);
+          }
+        }
 
-				// find the start of the next line
-				lineStart = raw.indexOf('\n', contentStart);
-				if (lineStart == -1) {
-					// if we're at the end, append all of it
-					builder.append(raw.subSequence(contentStart, raw.length()));
-					return builder.toString();
-				} else {
-					// increment lineStart by 1 so that we start after the newline next time
-					++lineStart;
-					builder.append(raw.subSequence(contentStart, lineStart));
-				}
-			} while (true);
-		}
-	}
+        // find the start of the next line
+        lineStart = raw.indexOf('\n', contentStart);
+        if (lineStart == -1) {
+          // if we're at the end, append all of it
+          builder.append(raw.subSequence(contentStart, raw.length()));
+          return builder.toString();
+        } else {
+          // increment lineStart by 1 so that we start after the newline next time
+          ++lineStart;
+          builder.append(raw.subSequence(contentStart, lineStart));
+        }
+      } while (true);
+    }
+  }
 
-	private static boolean isSpaceOrTab(char c) {
-		return c == ' ' || c == '\t';
-	}
+  private static boolean isSpaceOrTab(char c) {
+    return c == ' ' || c == '\t';
+  }
 
-	public static int defaultNumSpacesPerTab() {
-		return DEFAULT_NUM_SPACES_PER_TAB;
-	}
+  public static int defaultNumSpacesPerTab() {
+    return DEFAULT_NUM_SPACES_PER_TAB;
+  }
 }

@@ -1,11 +1,11 @@
 {
-	"name": "spotless-prettier-formatter-step",
-	"version": "1.0.0",
-	"devDependencies": {
+  "name": "spotless-prettier-formatter-step",
+  "version": "1.0.0",
+  "devDependencies": {
 ${devDependencies}
-	},
-	"dependencies": {},
-	"engines": {
-		"node": ">=6"
-	}
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=6"
+  }
 }

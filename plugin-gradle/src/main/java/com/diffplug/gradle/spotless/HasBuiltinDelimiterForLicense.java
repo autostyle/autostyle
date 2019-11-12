@@ -27,15 +27,15 @@ package com.diffplug.gradle.spotless;
  */
 public interface HasBuiltinDelimiterForLicense {
 
-	/**
-	 * @param licenseHeader
-	 *            Content that should be at the top of every file.
-	 */
-	FormatExtension.LicenseHeaderConfig licenseHeader(String licenseHeader);
+  /**
+   * @param licenseHeader
+   *            Content that should be at the top of every file.
+   */
+  FormatExtension.LicenseHeaderConfig licenseHeader(String licenseHeader);
 
-	/**
-	 * @param licenseHeaderFile
-	 *            Content that should be at the top of every file.
-	 */
-	FormatExtension.LicenseHeaderConfig licenseHeaderFile(Object licenseHeaderFile);
+  /**
+   * @param licenseHeaderFile
+   *            Content that should be at the top of every file.
+   */
+  FormatExtension.LicenseHeaderConfig licenseHeaderFile(Object licenseHeaderFile);
 }

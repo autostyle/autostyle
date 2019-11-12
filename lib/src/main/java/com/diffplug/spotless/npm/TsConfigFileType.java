@@ -18,12 +18,12 @@ package com.diffplug.spotless.npm;
 import java.util.Arrays;
 
 public enum TsConfigFileType {
-	TSCONFIG, TSLINT, VSCODE, TSFMT;
+  TSCONFIG, TSLINT, VSCODE, TSFMT;
 
-	public static TsConfigFileType forNameIgnoreCase(String name) {
-		return Arrays.stream(values())
-				.filter(type -> type.name().equalsIgnoreCase(name))
-				.findFirst()
-				.orElseThrow(() -> new IllegalArgumentException("Config file type " + name + " is not supported. Supported values (case is ignored): " + Arrays.toString(values())));
-	}
+  public static TsConfigFileType forNameIgnoreCase(String name) {
+    return Arrays.stream(values())
+        .filter(type -> type.name().equalsIgnoreCase(name))
+        .findFirst()
+        .orElseThrow(() -> new IllegalArgumentException("Config file type " + name + " is not supported. Supported values (case is ignored): " + Arrays.toString(values())));
+  }
 }

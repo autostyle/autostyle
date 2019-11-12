@@ -30,33 +30,33 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public class PrettierConfig implements Serializable {
 
-	private static final long serialVersionUID = -8709340269833126583L;
+  private static final long serialVersionUID = -8709340269833126583L;
 
-	@SuppressFBWarnings("SE_TRANSIENT_FIELD_NOT_RESTORED")
-	@Nullable
-	private final transient File prettierConfigPath;
+  @SuppressFBWarnings("SE_TRANSIENT_FIELD_NOT_RESTORED")
+  @Nullable
+  private final transient File prettierConfigPath;
 
-	@SuppressWarnings("unused")
-	private final FileSignature prettierConfigPathSignature;
+  @SuppressWarnings("unused")
+  private final FileSignature prettierConfigPathSignature;
 
-	private final TreeMap<String, Object> options;
+  private final TreeMap<String, Object> options;
 
-	public PrettierConfig(@Nullable File prettierConfigPath, @Nullable Map<String, Object> options) {
-		try {
-			this.prettierConfigPath = prettierConfigPath;
-			this.prettierConfigPathSignature = prettierConfigPath != null ? FileSignature.signAsList(this.prettierConfigPath) : FileSignature.signAsList();
-			this.options = options == null ? new TreeMap<>() : new TreeMap<>(options);
-		} catch (IOException e) {
-			throw ThrowingEx.asRuntime(e);
-		}
-	}
+  public PrettierConfig(@Nullable File prettierConfigPath, @Nullable Map<String, Object> options) {
+    try {
+      this.prettierConfigPath = prettierConfigPath;
+      this.prettierConfigPathSignature = prettierConfigPath != null ? FileSignature.signAsList(this.prettierConfigPath) : FileSignature.signAsList();
+      this.options = options == null ? new TreeMap<>() : new TreeMap<>(options);
+    } catch (IOException e) {
+      throw ThrowingEx.asRuntime(e);
+    }
+  }
 
-	@Nullable
-	public File getPrettierConfigPath() {
-		return prettierConfigPath;
-	}
+  @Nullable
+  public File getPrettierConfigPath() {
+    return prettierConfigPath;
+  }
 
-	public Map<String, Object> getOptions() {
-		return new TreeMap<>(this.options);
-	}
+  public Map<String, Object> getOptions() {
+    return new TreeMap<>(this.options);
+  }
 }

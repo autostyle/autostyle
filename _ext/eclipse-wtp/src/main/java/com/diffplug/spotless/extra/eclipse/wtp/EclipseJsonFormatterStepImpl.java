@@ -33,61 +33,61 @@ import com.diffplug.spotless.extra.eclipse.wtp.sse.CleanupStep;
  */
 public class EclipseJsonFormatterStepImpl extends CleanupStep<EclipseJsonFormatterStepImpl.SpotlessJsonCleanup> {
 
-	public EclipseJsonFormatterStepImpl(Properties properties) throws Exception {
-		super(new SpotlessJsonCleanup(), plugin -> plugin.add(new JSONCorePlugin()));
-		configure(properties, true, JSONCorePlugin.getDefault(), new JSONCorePreferenceInitializer());
-	}
+  public EclipseJsonFormatterStepImpl(Properties properties) throws Exception {
+    super(new SpotlessJsonCleanup(), plugin -> plugin.add(new JSONCorePlugin()));
+    configure(properties, true, JSONCorePlugin.getDefault(), new JSONCorePreferenceInitializer());
+  }
 
-	/**
-	 *  The JSON CleanUp is partly implemented.
-	 *  <p>
-	 *  For example the abstract formatter supports the
-	 *  CASE_PROPERTY_NAME configuration item.
-	 *  However, this seems to be all dead code and there seems
-	 *  to be no way in the latest Eclipse GUI to configure
-	 *  or trigger the clean-up process.
-	 *  </p>
-	 *  <p>
-	 *  Here we just use the CleanupProcessorJSON to reuse the common
-	 *  interface to trigger the formatting.
-	 *  </p>
-	 *  See {@code org.eclipse.wst.json.core.internal.format.AbstractJSONSourceFormatter} for details.
-	 */
-	public static class SpotlessJsonCleanup extends CleanupProcessorJSON implements CleanupStep.ProcessorAccessor {
-		private final FormatProcessorJSON formatter;
+  /**
+   *  The JSON CleanUp is partly implemented.
+   *  <p>
+   *  For example the abstract formatter supports the
+   *  CASE_PROPERTY_NAME configuration item.
+   *  However, this seems to be all dead code and there seems
+   *  to be no way in the latest Eclipse GUI to configure
+   *  or trigger the clean-up process.
+   *  </p>
+   *  <p>
+   *  Here we just use the CleanupProcessorJSON to reuse the common
+   *  interface to trigger the formatting.
+   *  </p>
+   *  See {@code org.eclipse.wst.json.core.internal.format.AbstractJSONSourceFormatter} for details.
+   */
+  public static class SpotlessJsonCleanup extends CleanupProcessorJSON implements CleanupStep.ProcessorAccessor {
+    private final FormatProcessorJSON formatter;
 
-		public SpotlessJsonCleanup() {
-			formatter = new FormatProcessorJSON();
-		}
+    public SpotlessJsonCleanup() {
+      formatter = new FormatProcessorJSON();
+    }
 
-		@Override
-		public String getThisContentType() {
-			return getContentType();
-		}
+    @Override
+    public String getThisContentType() {
+      return getContentType();
+    }
 
-		@Override
-		public IStructuredFormatProcessor getThisFormatProcessor() {
-			return getFormatProcessor();
-		}
+    @Override
+    public IStructuredFormatProcessor getThisFormatProcessor() {
+      return getFormatProcessor();
+    }
 
-		@Override
-		public void refreshThisCleanupPreferences() {
-			refreshCleanupPreferences();
-		}
+    @Override
+    public void refreshThisCleanupPreferences() {
+      refreshCleanupPreferences();
+    }
 
-		@Override
-		public String cleanupContent(String input) throws IOException, CoreException {
-			/*
-			 * The CleanupProcessorJSON.cleanupContent is erroneous and disabled in IDE.
-			 * Hence the clean-up itself is replaced by a format processor.
-			 * The SpotlessJsonCleanup still derives from the CleanupStep base class
-			 * to use the common Spotless WTP configuration.
-			 *
-			 * See Spotless issue #344 for details.
-			 */
-			return formatter.formatContent(input);
-		}
+    @Override
+    public String cleanupContent(String input) throws IOException, CoreException {
+      /*
+       * The CleanupProcessorJSON.cleanupContent is erroneous and disabled in IDE.
+       * Hence the clean-up itself is replaced by a format processor.
+       * The SpotlessJsonCleanup still derives from the CleanupStep base class
+       * to use the common Spotless WTP configuration.
+       *
+       * See Spotless issue #344 for details.
+       */
+      return formatter.formatContent(input);
+    }
 
-	}
+  }
 
 }

@@ -25,28 +25,28 @@ import com.diffplug.spotless.extra.EclipseBasedStepBuilder.State;
 
 /** Formatter step which calls out to the Eclipse CDT formatter. */
 public final class EclipseCdtFormatterStep {
-	// prevent direct instantiation
-	private EclipseCdtFormatterStep() {}
+  // prevent direct instantiation
+  private EclipseCdtFormatterStep() {}
 
-	private static final String NAME = "eclipse cdt formatter";
-	private static final String FORMATTER_CLASS = "com.diffplug.spotless.extra.eclipse.cdt.EclipseCdtFormatterStepImpl";
-	private static final String DEFAULT_VERSION = "4.13.0";
-	private static final String FORMATTER_METHOD = "format";
+  private static final String NAME = "eclipse cdt formatter";
+  private static final String FORMATTER_CLASS = "com.diffplug.spotless.extra.eclipse.cdt.EclipseCdtFormatterStepImpl";
+  private static final String DEFAULT_VERSION = "4.13.0";
+  private static final String FORMATTER_METHOD = "format";
 
-	public static String defaultVersion() {
-		return DEFAULT_VERSION;
-	}
+  public static String defaultVersion() {
+    return DEFAULT_VERSION;
+  }
 
-	/** Provides default configuration */
-	public static EclipseBasedStepBuilder createBuilder(Provisioner provisioner) {
-		return new EclipseBasedStepBuilder(NAME, provisioner, EclipseCdtFormatterStep::apply);
-	}
+  /** Provides default configuration */
+  public static EclipseBasedStepBuilder createBuilder(Provisioner provisioner) {
+    return new EclipseBasedStepBuilder(NAME, provisioner, EclipseCdtFormatterStep::apply);
+  }
 
-	private static FormatterFunc apply(State state) throws Exception {
-		Class<?> formatterClazz = state.loadClass(FORMATTER_CLASS);
-		Object formatter = formatterClazz.getConstructor(Properties.class).newInstance(state.getPreferences());
-		Method method = formatterClazz.getMethod(FORMATTER_METHOD, String.class);
-		return input -> (String) method.invoke(formatter, input);
-	}
+  private static FormatterFunc apply(State state) throws Exception {
+    Class<?> formatterClazz = state.loadClass(FORMATTER_CLASS);
+    Object formatter = formatterClazz.getConstructor(Properties.class).newInstance(state.getPreferences());
+    Method method = formatterClazz.getMethod(FORMATTER_METHOD, String.class);
+    return input -> (String) method.invoke(formatter, input);
+  }
 
 }

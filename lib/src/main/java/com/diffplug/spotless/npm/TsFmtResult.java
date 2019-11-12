@@ -17,25 +17,25 @@ package com.diffplug.spotless.npm;
 
 class TsFmtResult {
 
-	private final String message;
-	private final Boolean error;
-	private final String formatted;
+  private final String message;
+  private final Boolean error;
+  private final String formatted;
 
-	TsFmtResult(String message, Boolean error, String formatted) {
-		this.message = message;
-		this.error = error;
-		this.formatted = formatted;
-	}
+  TsFmtResult(String message, Boolean error, String formatted) {
+    this.message = message;
+    this.error = error;
+    this.formatted = formatted;
+  }
 
-	String getMessage() {
-		return message;
-	}
+  String getMessage() {
+    return message;
+  }
 
-	Boolean isError() {
-		return error;
-	}
+  Boolean isError() {
+    return error;
+  }
 
-	String getFormatted() {
-		return formatted;
-	}
+  String getFormatted() {
+    return formatted;
+  }
 }

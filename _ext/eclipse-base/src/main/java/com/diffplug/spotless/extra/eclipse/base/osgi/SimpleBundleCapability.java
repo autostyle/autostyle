@@ -35,80 +35,80 @@ import org.osgi.resource.Requirement;
  * capability is not supported a split of bundle capability and revision is not required.
  */
 class SimpleBundleCapability implements BundleCapability, BundleRevision {
-	private final Bundle bundle;
+  private final Bundle bundle;
 
-	SimpleBundleCapability(Bundle bundle) {
-		this.bundle = bundle;
-	}
+  SimpleBundleCapability(Bundle bundle) {
+    this.bundle = bundle;
+  }
 
-	@Override
-	public BundleRevision getRevision() {
-		return this;
-	}
+  @Override
+  public BundleRevision getRevision() {
+    return this;
+  }
 
-	@Override
-	public String getNamespace() {
-		return this.getClass().getName(); //All bundles live in th same namespace
-	}
+  @Override
+  public String getNamespace() {
+    return this.getClass().getName(); //All bundles live in th same namespace
+  }
 
-	@Override
-	public Map<String, String> getDirectives() {
-		return Collections.emptyMap();
-	}
+  @Override
+  public Map<String, String> getDirectives() {
+    return Collections.emptyMap();
+  }
 
-	@Override
-	public Map<String, Object> getAttributes() {
-		return Collections.emptyMap();
-	}
+  @Override
+  public Map<String, Object> getAttributes() {
+    return Collections.emptyMap();
+  }
 
-	@Override
-	public BundleRevision getResource() {
-		return this;
-	}
+  @Override
+  public BundleRevision getResource() {
+    return this;
+  }
 
-	@Override
-	public Bundle getBundle() {
-		return bundle;
-	}
+  @Override
+  public Bundle getBundle() {
+    return bundle;
+  }
 
-	@Override
-	public String getSymbolicName() {
-		return bundle.getSymbolicName();
-	}
+  @Override
+  public String getSymbolicName() {
+    return bundle.getSymbolicName();
+  }
 
-	@Override
-	public Version getVersion() {
-		return bundle.getVersion();
-	}
+  @Override
+  public Version getVersion() {
+    return bundle.getVersion();
+  }
 
-	@Override
-	public List<BundleCapability> getDeclaredCapabilities(String namespace) {
-		return Collections.emptyList();
-	}
+  @Override
+  public List<BundleCapability> getDeclaredCapabilities(String namespace) {
+    return Collections.emptyList();
+  }
 
-	@Override
-	public List<BundleRequirement> getDeclaredRequirements(String namespace) {
-		return Collections.emptyList();
-	}
+  @Override
+  public List<BundleRequirement> getDeclaredRequirements(String namespace) {
+    return Collections.emptyList();
+  }
 
-	@Override
-	public int getTypes() {
-		return 0; //It does not matter whether this bunddle is a fragment of not since all bundles are initially provided
-	}
+  @Override
+  public int getTypes() {
+    return 0; //It does not matter whether this bunddle is a fragment of not since all bundles are initially provided
+  }
 
-	@Override
-	public BundleWiring getWiring() {
-		return null; //No wiring information
-	}
+  @Override
+  public BundleWiring getWiring() {
+    return null; //No wiring information
+  }
 
-	@Override
-	public List<Capability> getCapabilities(String namespace) {
-		return Collections.emptyList();
-	}
+  @Override
+  public List<Capability> getCapabilities(String namespace) {
+    return Collections.emptyList();
+  }
 
-	@Override
-	public List<Requirement> getRequirements(String namespace) {
-		return Collections.emptyList();
-	}
+  @Override
+  public List<Requirement> getRequirements(String namespace) {
+    return Collections.emptyList();
+  }
 
 }

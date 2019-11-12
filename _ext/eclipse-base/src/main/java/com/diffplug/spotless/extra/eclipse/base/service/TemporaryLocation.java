@@ -29,117 +29,117 @@ import org.eclipse.osgi.service.datalocation.Location;
 
 /** All files generated at runtime are stored in a temporary location. */
 public class TemporaryLocation implements Location {
-	private static final String TEMP_PREFIX = "com_diffplug_spotless_extra_eclipse";
-	private final URL location;
-	private Location parent;
+  private static final String TEMP_PREFIX = "com_diffplug_spotless_extra_eclipse";
+  private final URL location;
+  private Location parent;
 
-	public TemporaryLocation() {
-		this(null, createTemporaryDirectory());
-	}
+  public TemporaryLocation() {
+    this(null, createTemporaryDirectory());
+  }
 
-	private TemporaryLocation(Location parent, URL defaultValue) {
-		this.location = defaultValue;
-		this.parent = parent;
-	}
+  private TemporaryLocation(Location parent, URL defaultValue) {
+    this.location = defaultValue;
+    this.parent = parent;
+  }
 
-	private static URL createTemporaryDirectory() {
-		try {
-			Path location = Files.createTempDirectory(TEMP_PREFIX);
-			deleteDirectoryRecursivelyOnExit(location);
-			location.toFile().deleteOnExit();
-			return location.toUri().toURL();
-		} catch (IOException e) {
-			throw new IOError(e);
-		}
-	}
+  private static URL createTemporaryDirectory() {
+    try {
+      Path location = Files.createTempDirectory(TEMP_PREFIX);
+      deleteDirectoryRecursivelyOnExit(location);
+      location.toFile().deleteOnExit();
+      return location.toUri().toURL();
+    } catch (IOException e) {
+      throw new IOError(e);
+    }
+  }
 
-	private static void deleteDirectoryRecursivelyOnExit(Path location) {
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			try {
-				Files.walk(location)
-						.sorted(Comparator.reverseOrder())
-						.map(Path::toFile)
-						.forEach(File::delete);
-			} catch (IOException e) {
-				//At shutdown everything is just done on best-efforts basis
-			}
-		}));
-	}
+  private static void deleteDirectoryRecursivelyOnExit(Path location) {
+    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+      try {
+        Files.walk(location)
+            .sorted(Comparator.reverseOrder())
+            .map(Path::toFile)
+            .forEach(File::delete);
+      } catch (IOException e) {
+        //At shutdown everything is just done on best-efforts basis
+      }
+    }));
+  }
 
-	@Override
-	public boolean allowsDefault() {
-		return false;
-	}
+  @Override
+  public boolean allowsDefault() {
+    return false;
+  }
 
-	@Override
-	public URL getDefault() {
-		return null;
-	}
+  @Override
+  public URL getDefault() {
+    return null;
+  }
 
-	@Override
-	public Location getParentLocation() {
-		return parent;
-	}
+  @Override
+  public Location getParentLocation() {
+    return parent;
+  }
 
-	@Override
-	public URL getURL() {
-		return location;
-	}
+  @Override
+  public URL getURL() {
+    return location;
+  }
 
-	@Override
-	public boolean isSet() {
-		return true;
-	}
+  @Override
+  public boolean isSet() {
+    return true;
+  }
 
-	@Override
-	public boolean isReadOnly() {
-		return false;
-	}
+  @Override
+  public boolean isReadOnly() {
+    return false;
+  }
 
-	@Override
-	@Deprecated
-	public boolean setURL(URL value, boolean lock) throws IllegalStateException {
-		throw new IllegalStateException("URL not modifyable.");
-	}
+  @Override
+  @Deprecated
+  public boolean setURL(URL value, boolean lock) throws IllegalStateException {
+    throw new IllegalStateException("URL not modifyable.");
+  }
 
-	@Override
-	public boolean set(URL value, boolean lock) throws IllegalStateException, IOException {
-		throw new IllegalStateException("URL not modifyable.");
-	}
+  @Override
+  public boolean set(URL value, boolean lock) throws IllegalStateException, IOException {
+    throw new IllegalStateException("URL not modifyable.");
+  }
 
-	@Override
-	public boolean set(URL value, boolean lock, String lockFilePath) throws IllegalStateException, IOException {
-		throw new IllegalStateException("URL not modifyable.");
-	}
+  @Override
+  public boolean set(URL value, boolean lock, String lockFilePath) throws IllegalStateException, IOException {
+    throw new IllegalStateException("URL not modifyable.");
+  }
 
-	@Override
-	public boolean lock() throws IOException {
-		return false; //Lock not supported
-	}
+  @Override
+  public boolean lock() throws IOException {
+    return false; //Lock not supported
+  }
 
-	@Override
-	public void release() {
-		//Lock not supported
-	}
+  @Override
+  public void release() {
+    //Lock not supported
+  }
 
-	@Override
-	public boolean isLocked() throws IOException {
-		return false; //Lock not supported
-	}
+  @Override
+  public boolean isLocked() throws IOException {
+    return false; //Lock not supported
+  }
 
-	@Override
-	public Location createLocation(Location parent, URL defaultValue, boolean readonly) {
-		return new TemporaryLocation(parent, defaultValue);
-	}
+  @Override
+  public Location createLocation(Location parent, URL defaultValue, boolean readonly) {
+    return new TemporaryLocation(parent, defaultValue);
+  }
 
-	@Override
-	public URL getDataArea(String path) throws IOException {
-		try {
-			Path locationPath = Paths.get(location.toURI());
-			return locationPath.resolve(path).toUri().toURL();
-		} catch (URISyntaxException e) {
-			throw new IOException("Location not correctly formatted.", e);
-		}
-	}
+  @Override
+  public URL getDataArea(String path) throws IOException {
+    try {
+      Path locationPath = Paths.get(location.toURI());
+      return locationPath.resolve(path).toUri().toURL();
+    } catch (URISyntaxException e) {
+      throw new IOException("Location not correctly formatted.", e);
+    }
+  }
 
 }

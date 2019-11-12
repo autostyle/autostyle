@@ -30,50 +30,50 @@ import org.osgi.framework.ServiceReference;
  */
 public interface StaticBundle extends Bundle {
 
-	@Override
-	default public void start(int options) throws BundleException {}
+  @Override
+  default public void start(int options) throws BundleException {}
 
-	@Override
-	default public void start() throws BundleException {}
+  @Override
+  default public void start() throws BundleException {}
 
-	@Override
-	default public void stop(int options) throws BundleException {}
+  @Override
+  default public void stop(int options) throws BundleException {}
 
-	@Override
-	default public void stop() throws BundleException {}
+  @Override
+  default public void stop() throws BundleException {}
 
-	@Override
-	@Deprecated
-	default public void update(InputStream input) throws BundleException {
-		update();
-	}
+  @Override
+  @Deprecated
+  default public void update(InputStream input) throws BundleException {
+    update();
+  }
 
-	@Override
-	@Deprecated
-	default public void update() throws BundleException {
-		throw new UnsupportedOperationException("Bundle modifications are not supported.");
-	}
+  @Override
+  @Deprecated
+  default public void update() throws BundleException {
+    throw new UnsupportedOperationException("Bundle modifications are not supported.");
+  }
 
-	@Override
-	@Deprecated
-	default public void uninstall() throws BundleException {
-		throw new UnsupportedOperationException("Bundles cannot be uninstalled.");
-	}
+  @Override
+  @Deprecated
+  default public void uninstall() throws BundleException {
+    throw new UnsupportedOperationException("Bundles cannot be uninstalled.");
+  }
 
-	@Override
-	default public long getLastModified() {
-		return 0;
-	}
+  @Override
+  default public long getLastModified() {
+    return 0;
+  }
 
-	@Override
-	@Deprecated
-	default public String getLocation() {
-		throw new UnsupportedOperationException("Bundle lookup by location only required for installation/update.");
-	}
+  @Override
+  @Deprecated
+  default public String getLocation() {
+    throw new UnsupportedOperationException("Bundle lookup by location only required for installation/update.");
+  }
 
-	@Override
-	default public ServiceReference<?>[] getServicesInUse() {
-		return getRegisteredServices(); //There is no distinction between available services and services in use.
-	}
+  @Override
+  default public ServiceReference<?>[] getServicesInUse() {
+    return getRegisteredServices(); //There is no distinction between available services and services in use.
+  }
 
 }

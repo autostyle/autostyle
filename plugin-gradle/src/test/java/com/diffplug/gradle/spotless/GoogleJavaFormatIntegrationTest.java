@@ -20,29 +20,29 @@ import java.io.IOException;
 import org.junit.Test;
 
 public class GoogleJavaFormatIntegrationTest extends GradleIntegrationTest {
-	@Test
-	public void integration() throws IOException {
-		setFile("build.gradle").toLines(
-				"buildscript { repositories { mavenCentral() } }",
-				"plugins {",
-				"    id 'com.diffplug.gradle.spotless'",
-				"}",
-				"",
-				"spotless {",
-				"    java {",
-				"        target file('test.java')",
-				"        googleJavaFormat('1.2')",
-				"    }",
-				"}");
+  @Test
+  public void integration() throws IOException {
+    setFile("build.gradle").toLines(
+        "buildscript { repositories { mavenCentral() } }",
+        "plugins {",
+        "    id 'com.diffplug.gradle.spotless'",
+        "}",
+        "",
+        "spotless {",
+        "    java {",
+        "        target file('test.java')",
+        "        googleJavaFormat('1.2')",
+        "    }",
+        "}");
 
-		setFile("test.java").toResource("java/googlejavaformat/JavaCodeUnformatted.test");
-		gradleRunner().withArguments("spotlessApply").build();
-		assertFile("test.java").sameAsResource("java/googlejavaformat/JavaCodeFormatted.test");
+    setFile("test.java").toResource("java/googlejavaformat/JavaCodeUnformatted.test");
+    gradleRunner().withArguments("spotlessApply").build();
+    assertFile("test.java").sameAsResource("java/googlejavaformat/JavaCodeFormatted.test");
 
-		checkRunsThenUpToDate();
-		replace("build.gradle",
-				"googleJavaFormat('1.2')",
-				"googleJavaFormat('1.3')");
-		checkRunsThenUpToDate();
-	}
+    checkRunsThenUpToDate();
+    replace("build.gradle",
+        "googleJavaFormat('1.2')",
+        "googleJavaFormat('1.3')");
+    checkRunsThenUpToDate();
+  }
 }

@@ -27,53 +27,53 @@ import org.junit.Test;
 
 public class EclipseCssFormatterStepImplTest {
 
-	private final static String ILLEGAL_CHAR = Character.toString((char) 254);
-	private final static String UNFORMATTED = " body {a: v; b: v;}\n".replaceAll("\n", LINE_DELIMITER);
-	private final static String FORMATTED = "BODY {\n   a: v;\n   b: v;\n}".replaceAll("\n", LINE_DELIMITER);
-	private final static String PRE_CODE_UNFORMATTED = "/**<pre>\"Hello\"</pre>*/\n".replaceAll("\n", LINE_DELIMITER);
+  private final static String ILLEGAL_CHAR = Character.toString((char) 254);
+  private final static String UNFORMATTED = " body {a: v; b: v;}\n".replaceAll("\n", LINE_DELIMITER);
+  private final static String FORMATTED = "BODY {\n   a: v;\n   b: v;\n}".replaceAll("\n", LINE_DELIMITER);
+  private final static String PRE_CODE_UNFORMATTED = "/**<pre>\"Hello\"</pre>*/\n".replaceAll("\n", LINE_DELIMITER);
 
-	private EclipseCssFormatterStepImpl formatter;
+  private EclipseCssFormatterStepImpl formatter;
 
-	@Before
-	public void initialize() throws Exception {
-		/*
-		 * The instantiation can be repeated for each step, but only with the same configuration
-		 * All formatter configuration is stored in
-		 * org.eclipse.core.runtime/.settings/org.eclipse.wst.css.core.prefs.
-		 * So a simple test of one configuration item change is considered sufficient.
-		 */
-		Properties properties = new Properties();
-		properties.put(INDENTATION_SIZE, "3"); //Default is 1
-		properties.put(INDENTATION_CHAR, SPACE); //Default is TAB
-		properties.put(CLEANUP_CASE_SELECTOR, Integer.toString(UPPER)); //Done by cleanup
-		formatter = new EclipseCssFormatterStepImpl(properties);
-	}
+  @Before
+  public void initialize() throws Exception {
+    /*
+     * The instantiation can be repeated for each step, but only with the same configuration
+     * All formatter configuration is stored in
+     * org.eclipse.core.runtime/.settings/org.eclipse.wst.css.core.prefs.
+     * So a simple test of one configuration item change is considered sufficient.
+     */
+    Properties properties = new Properties();
+    properties.put(INDENTATION_SIZE, "3"); //Default is 1
+    properties.put(INDENTATION_CHAR, SPACE); //Default is TAB
+    properties.put(CLEANUP_CASE_SELECTOR, Integer.toString(UPPER)); //Done by cleanup
+    formatter = new EclipseCssFormatterStepImpl(properties);
+  }
 
-	@Test
-	public void format() throws Exception {
-		String output = formatter.format(UNFORMATTED);
-		assertEquals("Unexpected formatting with default preferences.",
-				FORMATTED, output);
-	}
+  @Test
+  public void format() throws Exception {
+    String output = formatter.format(UNFORMATTED);
+    assertEquals("Unexpected formatting with default preferences.",
+        FORMATTED, output);
+  }
 
-	@Test
-	public void illegalCharacter() throws Exception {
-		String output = formatter.format(ILLEGAL_CHAR + UNFORMATTED);
-		assertThat(output).as("Illeagl characters are not handled on best effort basis.").contains("BODY {");
-	}
+  @Test
+  public void illegalCharacter() throws Exception {
+    String output = formatter.format(ILLEGAL_CHAR + UNFORMATTED);
+    assertThat(output).as("Illeagl characters are not handled on best effort basis.").contains("BODY {");
+  }
 
-	@Test
-	public void illegalSyntax() throws Exception {
-		String output = formatter.format("{" + UNFORMATTED);
-		assertEquals("Illeagl syntax is not handled on best effort basis.",
-				"{" + LINE_DELIMITER + FORMATTED, output);
-	}
+  @Test
+  public void illegalSyntax() throws Exception {
+    String output = formatter.format("{" + UNFORMATTED);
+    assertEquals("Illeagl syntax is not handled on best effort basis.",
+        "{" + LINE_DELIMITER + FORMATTED, output);
+  }
 
-	@Test
-	public void formatComment() throws Exception {
-		String output = formatter.format(PRE_CODE_UNFORMATTED + UNFORMATTED);
-		assertEquals("Unexpected formatting of cpomments.",
-				PRE_CODE_UNFORMATTED + FORMATTED, output);
-	}
+  @Test
+  public void formatComment() throws Exception {
+    String output = formatter.format(PRE_CODE_UNFORMATTED + UNFORMATTED);
+    assertEquals("Unexpected formatting of cpomments.",
+        PRE_CODE_UNFORMATTED + FORMATTED, output);
+  }
 
 }

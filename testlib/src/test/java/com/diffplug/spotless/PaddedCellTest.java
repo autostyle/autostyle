@@ -35,105 +35,105 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 public class PaddedCellTest {
-	@Rule
-	public TemporaryFolder folder = new TemporaryFolder();
+  @Rule
+  public TemporaryFolder folder = new TemporaryFolder();
 
-	private void misbehaved(FormatterFunc step, String input, PaddedCell.Type expectedOutputType, String steps, String canonical) throws IOException {
-		testCase(step, input, expectedOutputType, steps, canonical, true);
-	}
+  private void misbehaved(FormatterFunc step, String input, PaddedCell.Type expectedOutputType, String steps, String canonical) throws IOException {
+    testCase(step, input, expectedOutputType, steps, canonical, true);
+  }
 
-	private void wellBehaved(FormatterFunc step, String input, PaddedCell.Type expectedOutputType, String canonical) throws IOException {
-		testCase(step, input, expectedOutputType, canonical, canonical, false);
-	}
+  private void wellBehaved(FormatterFunc step, String input, PaddedCell.Type expectedOutputType, String canonical) throws IOException {
+    testCase(step, input, expectedOutputType, canonical, canonical, false);
+  }
 
-	private void testCase(FormatterFunc step, String input, PaddedCell.Type expectedOutputType, String expectedSteps, String canonical, boolean misbehaved) throws IOException {
-		List<FormatterStep> formatterSteps = new ArrayList<>();
-		formatterSteps.add(FormatterStep.createNeverUpToDate("step", step));
-		try (Formatter formatter = Formatter.builder()
-				.lineEndingsPolicy(LineEnding.UNIX.createPolicy())
-				.encoding(StandardCharsets.UTF_8)
-				.rootDir(folder.getRoot().toPath())
-				.steps(formatterSteps).build()) {
+  private void testCase(FormatterFunc step, String input, PaddedCell.Type expectedOutputType, String expectedSteps, String canonical, boolean misbehaved) throws IOException {
+    List<FormatterStep> formatterSteps = new ArrayList<>();
+    formatterSteps.add(FormatterStep.createNeverUpToDate("step", step));
+    try (Formatter formatter = Formatter.builder()
+        .lineEndingsPolicy(LineEnding.UNIX.createPolicy())
+        .encoding(StandardCharsets.UTF_8)
+        .rootDir(folder.getRoot().toPath())
+        .steps(formatterSteps).build()) {
 
-			File file = folder.newFile();
-			Files.write(file.toPath(), input.getBytes(StandardCharsets.UTF_8));
+      File file = folder.newFile();
+      Files.write(file.toPath(), input.getBytes(StandardCharsets.UTF_8));
 
-			PaddedCell result = PaddedCell.check(formatter, file);
-			Assert.assertEquals(misbehaved, result.misbehaved());
-			Assert.assertEquals(expectedOutputType, result.type());
+      PaddedCell result = PaddedCell.check(formatter, file);
+      Assert.assertEquals(misbehaved, result.misbehaved());
+      Assert.assertEquals(expectedOutputType, result.type());
 
-			String actual = String.join(",", result.steps());
-			Assert.assertEquals(expectedSteps, actual);
+      String actual = String.join(",", result.steps());
+      Assert.assertEquals(expectedSteps, actual);
 
-			if (canonical == null) {
-				try {
-					result.canonical();
-					Assert.fail("Expected exception");
-				} catch (IllegalArgumentException expected) {}
-			} else {
-				Assert.assertEquals(canonical, result.canonical());
-			}
-		}
-	}
+      if (canonical == null) {
+        try {
+          result.canonical();
+          Assert.fail("Expected exception");
+        } catch (IllegalArgumentException expected) {}
+      } else {
+        Assert.assertEquals(canonical, result.canonical());
+      }
+    }
+  }
 
-	@Test
-	public void wellBehaved() throws IOException {
-		wellBehaved(input -> input, "CCC", CONVERGE, "CCC");
-		wellBehaved(input -> "A", "CCC", CONVERGE, "A");
-	}
+  @Test
+  public void wellBehaved() throws IOException {
+    wellBehaved(input -> input, "CCC", CONVERGE, "CCC");
+    wellBehaved(input -> "A", "CCC", CONVERGE, "A");
+  }
 
-	@Test
-	public void pingPong() throws IOException {
-		misbehaved(input -> input.equals("A") ? "B" : "A", "CCC", CYCLE, "A,B", "A");
-	}
+  @Test
+  public void pingPong() throws IOException {
+    misbehaved(input -> input.equals("A") ? "B" : "A", "CCC", CYCLE, "A,B", "A");
+  }
 
-	@Test
-	public void fourState() throws IOException {
-		misbehaved(input -> {
-			// @formatter:off
-			switch (input) {
-			case "A": return "B";
-			case "B": return "C";
-			case "C": return "D";
-			default:  return "A";
-			}
-			// @formatter:on
-		}, "CCC", CYCLE, "A,B,C,D", "A");
-	}
+  @Test
+  public void fourState() throws IOException {
+    misbehaved(input -> {
+      // @formatter:off
+      switch (input) {
+      case "A": return "B";
+      case "B": return "C";
+      case "C": return "D";
+      default:  return "A";
+      }
+      // @formatter:on
+    }, "CCC", CYCLE, "A,B,C,D", "A");
+  }
 
-	@Test
-	public void converging() throws IOException {
-		misbehaved(input -> {
-			if (input.isEmpty()) {
-				return input;
-			} else {
-				return input.substring(0, input.length() - 1);
-			}
-		}, "CCC", CONVERGE, "CC,C,", "");
-	}
+  @Test
+  public void converging() throws IOException {
+    misbehaved(input -> {
+      if (input.isEmpty()) {
+        return input;
+      } else {
+        return input.substring(0, input.length() - 1);
+      }
+    }, "CCC", CONVERGE, "CC,C,", "");
+  }
 
-	@Test
-	public void diverging() throws IOException {
-		misbehaved(input -> input + " ", "", DIVERGE, " ,  ,   ,    ,     ,      ,       ,        ,         ,          ", null);
-	}
+  @Test
+  public void diverging() throws IOException {
+    misbehaved(input -> input + " ", "", DIVERGE, " ,  ,   ,    ,     ,      ,       ,        ,         ,          ", null);
+  }
 
-	@Test
-	public void cycleOrder() {
-		BiConsumer<String, String> testCase = (unorderedStr, canonical) -> {
-			List<String> unordered = Arrays.asList(unorderedStr.split(","));
-			for (int i = 0; i < unordered.size(); ++i) {
-				// try every rotation of the list
-				Collections.rotate(unordered, 1);
-				PaddedCell result = CYCLE.create(folder.getRoot(), unordered);
-				// make sure the canonical result is always the appropriate one
-				Assert.assertEquals(canonical, result.canonical());
-			}
-		};
-		// alphabetic
-		testCase.accept("a,b,c", "a");
-		// length
-		testCase.accept("a,aa,aaa", "a");
-		// length > alphabetic
-		testCase.accept("b,aa,aaa", "b");
-	}
+  @Test
+  public void cycleOrder() {
+    BiConsumer<String, String> testCase = (unorderedStr, canonical) -> {
+      List<String> unordered = Arrays.asList(unorderedStr.split(","));
+      for (int i = 0; i < unordered.size(); ++i) {
+        // try every rotation of the list
+        Collections.rotate(unordered, 1);
+        PaddedCell result = CYCLE.create(folder.getRoot(), unordered);
+        // make sure the canonical result is always the appropriate one
+        Assert.assertEquals(canonical, result.canonical());
+      }
+    };
+    // alphabetic
+    testCase.accept("a,b,c", "a");
+    // length
+    testCase.accept("a,aa,aaa", "a");
+    // length > alphabetic
+    testCase.accept("b,aa,aaa", "b");
+  }
 }

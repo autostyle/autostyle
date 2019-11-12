@@ -48,96 +48,96 @@ import org.osgi.framework.Constants;
  * </p>
  */
 class ResourceAccessor {
-	/**
-	 */
-	private final String fatJarResourcePath;
-	private final BundleFile bundleFile;
+  /**
+   */
+  private final String fatJarResourcePath;
+  private final BundleFile bundleFile;
 
-	/** Resources are located in the SpotlessFramework JAR */
-	ResourceAccessor() throws BundleException {
-		this(ResourceAccessor.class);
-	}
+  /** Resources are located in the SpotlessFramework JAR */
+  ResourceAccessor() throws BundleException {
+    this(ResourceAccessor.class);
+  }
 
-	/** Resources are located in the JAR of the given class
-	 * @throws BundleException */
-	ResourceAccessor(Class<?> clazz) throws BundleException {
-		String bundleObjPath = clazz.getName();
-		fatJarResourcePath = bundleObjPath.substring(0, bundleObjPath.lastIndexOf('.'));
-		try {
-			bundleFile = getBundlFile(clazz);
-		} catch (BundleException e) {
-			throw new BundleException(String.format("Failed to locate resources for bunlde '%s'.", clazz.getName()), e);
-		}
-	}
+  /** Resources are located in the JAR of the given class
+   * @throws BundleException */
+  ResourceAccessor(Class<?> clazz) throws BundleException {
+    String bundleObjPath = clazz.getName();
+    fatJarResourcePath = bundleObjPath.substring(0, bundleObjPath.lastIndexOf('.'));
+    try {
+      bundleFile = getBundlFile(clazz);
+    } catch (BundleException e) {
+      throw new BundleException(String.format("Failed to locate resources for bunlde '%s'.", clazz.getName()), e);
+    }
+  }
 
-	private static BundleFile getBundlFile(Class<?> clazz) throws BundleException {
-		URI objUri = getBundleUri(clazz);
-		File jarOrDirectory = new File(objUri.getPath());
-		if (!(jarOrDirectory.exists() && jarOrDirectory.canRead())) {
-			throw new BundleException(String.format("Path '%s' for '%s' is not accessible exist on local file system.", objUri, clazz.getName()), BundleException.READ_ERROR);
-		}
-		try {
-			return jarOrDirectory.isDirectory() ? new DirBundleFile(jarOrDirectory, false) : new ZipBundleFile(jarOrDirectory, null, null, null);
-		} catch (IOException e) {
-			throw new BundleException(String.format("Cannot access bundle at '%s'.", jarOrDirectory), BundleException.READ_ERROR, e);
-		}
-	}
+  private static BundleFile getBundlFile(Class<?> clazz) throws BundleException {
+    URI objUri = getBundleUri(clazz);
+    File jarOrDirectory = new File(objUri.getPath());
+    if (!(jarOrDirectory.exists() && jarOrDirectory.canRead())) {
+      throw new BundleException(String.format("Path '%s' for '%s' is not accessible exist on local file system.", objUri, clazz.getName()), BundleException.READ_ERROR);
+    }
+    try {
+      return jarOrDirectory.isDirectory() ? new DirBundleFile(jarOrDirectory, false) : new ZipBundleFile(jarOrDirectory, null, null, null);
+    } catch (IOException e) {
+      throw new BundleException(String.format("Cannot access bundle at '%s'.", jarOrDirectory), BundleException.READ_ERROR, e);
+    }
+  }
 
-	private static URI getBundleUri(Class<?> clazz) throws BundleException {
-		URL objUrl = clazz.getProtectionDomain().getCodeSource().getLocation();
-		try {
-			return objUrl.toURI();
-		} catch (URISyntaxException e) {
-			throw new BundleException(String.format("Path '%s' for '%s' is invalid.", objUrl, clazz.getName()), BundleException.READ_ERROR, e);
-		}
-	}
+  private static URI getBundleUri(Class<?> clazz) throws BundleException {
+    URL objUrl = clazz.getProtectionDomain().getCodeSource().getLocation();
+    try {
+      return objUrl.toURI();
+    } catch (URISyntaxException e) {
+      throw new BundleException(String.format("Path '%s' for '%s' is invalid.", objUrl, clazz.getName()), BundleException.READ_ERROR, e);
+    }
+  }
 
-	/** Get the manifest name from the resources. */
-	String getManifestName() throws BundleException {
-		URL manifestUrl = getEntry(JarFile.MANIFEST_NAME);
-		if (null != manifestUrl) {
-			try {
-				Manifest manifest = new Manifest(manifestUrl.openStream());
-				String headerValue = manifest.getMainAttributes().getValue(Constants.BUNDLE_SYMBOLICNAME);
-				if (null == headerValue) {
-					throw new BundleException(String.format("Symbolic values not found in '%s'.", manifestUrl), BundleException.MANIFEST_ERROR);
-				}
-				ManifestElement[] elements = ManifestElement.parseHeader(Constants.BUNDLE_SYMBOLICNAME, headerValue);
-				if (null == elements) {
-					throw new BundleException(String.format("Symbolic name not found '%s'. Value is '%s'.", manifestUrl, headerValue), BundleException.MANIFEST_ERROR);
-				}
-				//The parser already checked that at least one value exists
-				return elements[0].getValueComponents()[0];
+  /** Get the manifest name from the resources. */
+  String getManifestName() throws BundleException {
+    URL manifestUrl = getEntry(JarFile.MANIFEST_NAME);
+    if (null != manifestUrl) {
+      try {
+        Manifest manifest = new Manifest(manifestUrl.openStream());
+        String headerValue = manifest.getMainAttributes().getValue(Constants.BUNDLE_SYMBOLICNAME);
+        if (null == headerValue) {
+          throw new BundleException(String.format("Symbolic values not found in '%s'.", manifestUrl), BundleException.MANIFEST_ERROR);
+        }
+        ManifestElement[] elements = ManifestElement.parseHeader(Constants.BUNDLE_SYMBOLICNAME, headerValue);
+        if (null == elements) {
+          throw new BundleException(String.format("Symbolic name not found '%s'. Value is '%s'.", manifestUrl, headerValue), BundleException.MANIFEST_ERROR);
+        }
+        //The parser already checked that at least one value exists
+        return elements[0].getValueComponents()[0];
 
-			} catch (IOException e) {
-				throw new BundleException(String.format("Failed to parse Manifest '%s' in '%s'.", manifestUrl, bundleFile.toString()), BundleException.MANIFEST_ERROR, e);
-			}
-		}
-		throw new BundleException(String.format("'%s' in '%s' not found. Tried also fat JAR location '%s'.", JarFile.MANIFEST_NAME, bundleFile.toString(), fatJarResourcePath), BundleException.MANIFEST_ERROR);
-	}
+      } catch (IOException e) {
+        throw new BundleException(String.format("Failed to parse Manifest '%s' in '%s'.", manifestUrl, bundleFile.toString()), BundleException.MANIFEST_ERROR, e);
+      }
+    }
+    throw new BundleException(String.format("'%s' in '%s' not found. Tried also fat JAR location '%s'.", JarFile.MANIFEST_NAME, bundleFile.toString(), fatJarResourcePath), BundleException.MANIFEST_ERROR);
+  }
 
-	/** Get resource URL for relative path, or null if the path is not present */
-	URL getEntry(String path) {
-		BundleEntry entry = bundleFile.getEntry(getFatJarPath(path));
-		if (null == entry) {
-			entry = bundleFile.getEntry(path);
-		}
-		return null == entry ? null : entry.getLocalURL();
-	}
+  /** Get resource URL for relative path, or null if the path is not present */
+  URL getEntry(String path) {
+    BundleEntry entry = bundleFile.getEntry(getFatJarPath(path));
+    if (null == entry) {
+      entry = bundleFile.getEntry(path);
+    }
+    return null == entry ? null : entry.getLocalURL();
+  }
 
-	/**
-	 * Enumeration of Strings that indicate the paths found or null if the path does not exist.
-	 */
-	Enumeration<String> getEntries(String path) {
-		Enumeration<String> entries = bundleFile.getEntryPaths(getFatJarPath(path));
-		if (null == entries) {
-			entries = bundleFile.getEntryPaths(path);
-		}
-		return entries;
-	}
+  /**
+   * Enumeration of Strings that indicate the paths found or null if the path does not exist.
+   */
+  Enumeration<String> getEntries(String path) {
+    Enumeration<String> entries = bundleFile.getEntryPaths(getFatJarPath(path));
+    if (null == entries) {
+      entries = bundleFile.getEntryPaths(path);
+    }
+    return entries;
+  }
 
-	private String getFatJarPath(String path) {
-		return fatJarResourcePath + "/" + path;
-	}
+  private String getFatJarPath(String path) {
+    return fatJarResourcePath + "/" + path;
+  }
 
 }

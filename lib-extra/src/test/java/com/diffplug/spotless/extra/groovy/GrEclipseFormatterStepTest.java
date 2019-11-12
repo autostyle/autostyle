@@ -21,26 +21,26 @@ import com.diffplug.spotless.extra.EclipseBasedStepBuilder;
 import com.diffplug.spotless.extra.eclipse.EclipseCommonTests;
 
 public class GrEclipseFormatterStepTest extends EclipseCommonTests {
-	@Override
-	protected String[] getSupportedVersions() {
-		return new String[]{"2.3.0", "4.6.3", "4.8.0", "4.8.1", "4.10.0", "4.12.0", "4.13.0"};
-	}
+  @Override
+  protected String[] getSupportedVersions() {
+    return new String[]{"2.3.0", "4.6.3", "4.8.0", "4.8.1", "4.10.0", "4.12.0", "4.13.0"};
+  }
 
-	@Override
-	protected String getTestInput(String version) {
-		return "class F{ def m(){} }";
-	}
+  @Override
+  protected String getTestInput(String version) {
+    return "class F{ def m(){} }";
+  }
 
-	@Override
-	protected String getTestExpectation(String version) {
-		return "class F{\n\tdef m(){}\n}";
-	}
+  @Override
+  protected String getTestExpectation(String version) {
+    return "class F{\n\tdef m(){}\n}";
+  }
 
-	@Override
-	protected FormatterStep createStep(String version) {
-		EclipseBasedStepBuilder builder = GrEclipseFormatterStep.createBuilder(TestProvisioner.mavenCentral());
-		builder.setVersion(version);
-		return builder.build();
-	}
+  @Override
+  protected FormatterStep createStep(String version) {
+    EclipseBasedStepBuilder builder = GrEclipseFormatterStep.createBuilder(TestProvisioner.mavenCentral());
+    builder.setVersion(version);
+    return builder.build();
+  }
 
 }

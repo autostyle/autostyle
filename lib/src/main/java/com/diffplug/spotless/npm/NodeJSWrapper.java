@@ -22,85 +22,85 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 class NodeJSWrapper extends ReflectiveObjectWrapper {
 
-	public static final String V8_RUNTIME_CLASS = "com.eclipsesource.v8.V8";
-	public static final String V8_VALUE_CLASS = "com.eclipsesource.v8.V8Value";
+  public static final String V8_RUNTIME_CLASS = "com.eclipsesource.v8.V8";
+  public static final String V8_VALUE_CLASS = "com.eclipsesource.v8.V8Value";
 
-	public static final String WRAPPED_CLASS = "com.eclipsesource.v8.NodeJS";
+  public static final String WRAPPED_CLASS = "com.eclipsesource.v8.NodeJS";
 
-	private static final AtomicBoolean flagsSet = new AtomicBoolean(false);
+  private static final AtomicBoolean flagsSet = new AtomicBoolean(false);
 
-	public NodeJSWrapper(ClassLoader classLoader) {
-		super(Reflective.withClassLoader(classLoader),
-				reflective -> {
-					final boolean firstRun = flagsSet.compareAndSet(false, true);
-					if (firstRun) {
-						reflective.invokeStaticMethod(V8_RUNTIME_CLASS, "setFlags", "-color=false"); // required to run prettier on windows
-					}
-					return reflective.invokeStaticMethod(WRAPPED_CLASS, "createNodeJS");
-				});
-	}
+  public NodeJSWrapper(ClassLoader classLoader) {
+    super(Reflective.withClassLoader(classLoader),
+        reflective -> {
+          final boolean firstRun = flagsSet.compareAndSet(false, true);
+          if (firstRun) {
+            reflective.invokeStaticMethod(V8_RUNTIME_CLASS, "setFlags", "-color=false"); // required to run prettier on windows
+          }
+          return reflective.invokeStaticMethod(WRAPPED_CLASS, "createNodeJS");
+        });
+  }
 
-	public V8ObjectWrapper require(File npmModulePath) {
-		Objects.requireNonNull(npmModulePath);
-		Object v8Object = invoke("require", npmModulePath);
-		return new V8ObjectWrapper(reflective(), v8Object);
-	}
+  public V8ObjectWrapper require(File npmModulePath) {
+    Objects.requireNonNull(npmModulePath);
+    Object v8Object = invoke("require", npmModulePath);
+    return new V8ObjectWrapper(reflective(), v8Object);
+  }
 
-	public V8ObjectWrapper createNewObject() {
-		Object v8Object = reflective().invokeConstructor(V8ObjectWrapper.WRAPPED_CLASS, nodeJsRuntime());
-		V8ObjectWrapper objectWrapper = new V8ObjectWrapper(reflective(), v8Object);
-		return objectWrapper;
-	}
+  public V8ObjectWrapper createNewObject() {
+    Object v8Object = reflective().invokeConstructor(V8ObjectWrapper.WRAPPED_CLASS, nodeJsRuntime());
+    V8ObjectWrapper objectWrapper = new V8ObjectWrapper(reflective(), v8Object);
+    return objectWrapper;
+  }
 
-	public V8ObjectWrapper createNewObject(Map<String, Object> values) {
-		Objects.requireNonNull(values);
-		V8ObjectWrapper obj = createNewObject();
-		values.forEach(obj::add);
-		return obj;
-	}
+  public V8ObjectWrapper createNewObject(Map<String, Object> values) {
+    Objects.requireNonNull(values);
+    V8ObjectWrapper obj = createNewObject();
+    values.forEach(obj::add);
+    return obj;
+  }
 
-	public V8ArrayWrapper createNewArray(Object... elements) {
-		final V8ArrayWrapper v8ArrayWrapper = this.createNewArray();
-		for (Object element : elements) {
-			v8ArrayWrapper.push(element);
-		}
-		return v8ArrayWrapper;
-	}
+  public V8ArrayWrapper createNewArray(Object... elements) {
+    final V8ArrayWrapper v8ArrayWrapper = this.createNewArray();
+    for (Object element : elements) {
+      v8ArrayWrapper.push(element);
+    }
+    return v8ArrayWrapper;
+  }
 
-	public V8ArrayWrapper createNewArray() {
-		Object v8Array = reflective().invokeConstructor(V8ArrayWrapper.WRAPPED_CLASS, nodeJsRuntime());
-		V8ArrayWrapper arrayWrapper = new V8ArrayWrapper(reflective(), v8Array);
-		return arrayWrapper;
-	}
+  public V8ArrayWrapper createNewArray() {
+    Object v8Array = reflective().invokeConstructor(V8ArrayWrapper.WRAPPED_CLASS, nodeJsRuntime());
+    V8ArrayWrapper arrayWrapper = new V8ArrayWrapper(reflective(), v8Array);
+    return arrayWrapper;
+  }
 
-	public V8FunctionWrapper createNewFunction(V8FunctionWrapper.WrappedJavaCallback callback) {
-		Object v8Function = reflective().invokeConstructor(V8FunctionWrapper.WRAPPED_CLASS,
-				reflective().typed(
-						V8_RUNTIME_CLASS,
-						nodeJsRuntime()),
-				reflective().typed(
-						V8FunctionWrapper.CALLBACK_WRAPPED_CLASS,
-						V8FunctionWrapper.proxiedCallback(callback, reflective())));
-		V8FunctionWrapper functionWrapper = new V8FunctionWrapper(reflective(), v8Function);
-		return functionWrapper;
-	}
+  public V8FunctionWrapper createNewFunction(V8FunctionWrapper.WrappedJavaCallback callback) {
+    Object v8Function = reflective().invokeConstructor(V8FunctionWrapper.WRAPPED_CLASS,
+        reflective().typed(
+            V8_RUNTIME_CLASS,
+            nodeJsRuntime()),
+        reflective().typed(
+            V8FunctionWrapper.CALLBACK_WRAPPED_CLASS,
+            V8FunctionWrapper.proxiedCallback(callback, reflective())));
+    V8FunctionWrapper functionWrapper = new V8FunctionWrapper(reflective(), v8Function);
+    return functionWrapper;
+  }
 
-	public void handleMessage() {
-		invoke("handleMessage");
-	}
+  public void handleMessage() {
+    invoke("handleMessage");
+  }
 
-	private Object nodeJsRuntime() {
-		return invoke("getRuntime");
-	}
+  private Object nodeJsRuntime() {
+    return invoke("getRuntime");
+  }
 
-	public Object v8NullValue(Object value) {
-		if (value == null) {
-			return reflective().staticField(V8_VALUE_CLASS, "NULL");
-		}
-		return value;
-	}
+  public Object v8NullValue(Object value) {
+    if (value == null) {
+      return reflective().staticField(V8_VALUE_CLASS, "NULL");
+    }
+    return value;
+  }
 
-	public boolean isV8NullValue(Object v8Object) {
-		return reflective().staticField(V8_VALUE_CLASS, "NULL") == v8Object;
-	}
+  public boolean isV8NullValue(Object v8Object) {
+    return reflective().staticField(V8_VALUE_CLASS, "NULL") == v8Object;
+  }
 }

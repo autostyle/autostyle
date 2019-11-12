@@ -23,44 +23,44 @@ import com.diffplug.spotless.SerializableEqualityTester;
 import com.diffplug.spotless.StepHarness;
 
 public class TrimTrailingWhitespaceStepTest extends ResourceHarness {
-	@Test
-	public void trimTrailingWhitespace() throws Exception {
-		StepHarness step = StepHarness.forStep(TrimTrailingWhitespaceStep.create());
-		step.testUnaffected("");
-		step.testUnaffected("\n");
-		step.testUnaffected("\n\n\n");
-		step.testUnaffected("   preceding");
+  @Test
+  public void trimTrailingWhitespace() throws Exception {
+    StepHarness step = StepHarness.forStep(TrimTrailingWhitespaceStep.create());
+    step.testUnaffected("");
+    step.testUnaffected("\n");
+    step.testUnaffected("\n\n\n");
+    step.testUnaffected("   preceding");
 
-		step.test("trailing  ", "trailing");
-		step.test("trailing  \n", "trailing\n");
-		step.test("trailing\t", "trailing");
-		step.test("trailing\t\n", "trailing\n");
+    step.test("trailing  ", "trailing");
+    step.test("trailing  \n", "trailing\n");
+    step.test("trailing\t", "trailing");
+    step.test("trailing\t\n", "trailing\n");
 
-		step.test("\t  trailing  ", "\t  trailing");
-		step.test("\t  trailing  \n", "\t  trailing\n");
-		step.test("\t  trailing\t", "\t  trailing");
-		step.test("\t  trailing\t\n", "\t  trailing\n");
+    step.test("\t  trailing  ", "\t  trailing");
+    step.test("\t  trailing  \n", "\t  trailing\n");
+    step.test("\t  trailing\t", "\t  trailing");
+    step.test("\t  trailing\t\n", "\t  trailing\n");
 
-		step.testUnaffected("Line\nLine");
-		step.test("Line  \nLine", "Line\nLine");
-		step.test("Line\nLine  ", "Line\nLine");
-		step.test("Line  \nLine  ", "Line\nLine");
-		step.test("  Line  \nLine  ", "  Line\nLine");
-		step.test("  Line  \n  Line  ", "  Line\n  Line");
-	}
+    step.testUnaffected("Line\nLine");
+    step.test("Line  \nLine", "Line\nLine");
+    step.test("Line\nLine  ", "Line\nLine");
+    step.test("Line  \nLine  ", "Line\nLine");
+    step.test("  Line  \nLine  ", "  Line\nLine");
+    step.test("  Line  \n  Line  ", "  Line\n  Line");
+  }
 
-	@Test
-	public void equality() throws Exception {
-		new SerializableEqualityTester() {
-			@Override
-			protected void setupTest(API api) {
-				api.areDifferentThan();
-			}
+  @Test
+  public void equality() throws Exception {
+    new SerializableEqualityTester() {
+      @Override
+      protected void setupTest(API api) {
+        api.areDifferentThan();
+      }
 
-			@Override
-			protected FormatterStep create() {
-				return EndWithNewlineStep.create();
-			}
-		}.testEquals();
-	}
+      @Override
+      protected FormatterStep create() {
+        return EndWithNewlineStep.create();
+      }
+    }.testEquals();
+  }
 }

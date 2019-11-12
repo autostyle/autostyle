@@ -22,29 +22,29 @@ import com.diffplug.spotless.SerializableEqualityTester;
 import com.diffplug.spotless.StepHarness;
 
 public class EndWithNewlineStepTest {
-	@Test
-	public void behavior() throws Exception {
-		StepHarness harness = StepHarness.forStep(EndWithNewlineStep.create());
-		harness.test("", "\n");
-		harness.test("\n\n\n\n", "\n");
-		harness.test("line", "line\n");
-		harness.test("line\nline\n\n\n\n", "line\nline\n");
-		harness.testUnaffected("\n");
-		harness.testUnaffected("line\n");
-	}
+  @Test
+  public void behavior() throws Exception {
+    StepHarness harness = StepHarness.forStep(EndWithNewlineStep.create());
+    harness.test("", "\n");
+    harness.test("\n\n\n\n", "\n");
+    harness.test("line", "line\n");
+    harness.test("line\nline\n\n\n\n", "line\nline\n");
+    harness.testUnaffected("\n");
+    harness.testUnaffected("line\n");
+  }
 
-	@Test
-	public void equality() throws Exception {
-		new SerializableEqualityTester() {
-			@Override
-			protected void setupTest(API api) {
-				api.areDifferentThan();
-			}
+  @Test
+  public void equality() throws Exception {
+    new SerializableEqualityTester() {
+      @Override
+      protected void setupTest(API api) {
+        api.areDifferentThan();
+      }
 
-			@Override
-			protected FormatterStep create() {
-				return EndWithNewlineStep.create();
-			}
-		}.testEquals();
-	}
+      @Override
+      protected FormatterStep create() {
+        return EndWithNewlineStep.create();
+      }
+    }.testEquals();
+  }
 }

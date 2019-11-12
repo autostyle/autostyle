@@ -22,31 +22,31 @@ import com.diffplug.spotless.FormatterFunc;
 import com.diffplug.spotless.FormatterStep;
 
 public final class ReplaceStep {
-	// prevent direct instantiation
-	private ReplaceStep() {}
+  // prevent direct instantiation
+  private ReplaceStep() {}
 
-	public static FormatterStep create(String name, CharSequence target, CharSequence replacement) {
-		Objects.requireNonNull(name, "name");
-		Objects.requireNonNull(target, "target");
-		Objects.requireNonNull(replacement, "replacement");
-		return FormatterStep.createLazy(name,
-				() -> new State(target, replacement),
-				State::toFormatter);
-	}
+  public static FormatterStep create(String name, CharSequence target, CharSequence replacement) {
+    Objects.requireNonNull(name, "name");
+    Objects.requireNonNull(target, "target");
+    Objects.requireNonNull(replacement, "replacement");
+    return FormatterStep.createLazy(name,
+        () -> new State(target, replacement),
+        State::toFormatter);
+  }
 
-	private static final class State implements Serializable {
-		private static final long serialVersionUID = 1L;
+  private static final class State implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-		private final CharSequence target;
-		private final CharSequence replacement;
+    private final CharSequence target;
+    private final CharSequence replacement;
 
-		State(CharSequence target, CharSequence replacement) {
-			this.target = target;
-			this.replacement = replacement;
-		}
+    State(CharSequence target, CharSequence replacement) {
+      this.target = target;
+      this.replacement = replacement;
+    }
 
-		FormatterFunc toFormatter() {
-			return raw -> raw.replace(target, replacement);
-		}
-	}
+    FormatterFunc toFormatter() {
+      return raw -> raw.replace(target, replacement);
+    }
+  }
 }

@@ -24,44 +24,44 @@ import com.diffplug.spotless.category.NpmTest;
 
 @Category(NpmTest.class)
 public class PrettierIntegrationTest extends GradleIntegrationTest {
-	@Test
-	public void useInlineConfig() throws IOException {
-		setFile("build.gradle").toLines(
-				"buildscript { repositories { mavenCentral() } }",
-				"plugins {",
-				"    id 'com.diffplug.gradle.spotless'",
-				"}",
-				"def prettierConfig = [:]",
-				"prettierConfig['printWidth'] = 50",
-				"prettierConfig['parser'] = 'typescript'",
-				"spotless {",
-				"    format 'mytypescript', {",
-				"        target 'test.ts'",
-				"        prettier().config(prettierConfig)",
-				"    }",
-				"}");
-		setFile("test.ts").toResource("npm/prettier/config/typescript.dirty");
-		gradleRunner().withArguments("--stacktrace", "spotlessApply").build();
-		assertFile("test.ts").sameAsResource("npm/prettier/config/typescript.configfile.clean");
-	}
+  @Test
+  public void useInlineConfig() throws IOException {
+    setFile("build.gradle").toLines(
+        "buildscript { repositories { mavenCentral() } }",
+        "plugins {",
+        "    id 'com.diffplug.gradle.spotless'",
+        "}",
+        "def prettierConfig = [:]",
+        "prettierConfig['printWidth'] = 50",
+        "prettierConfig['parser'] = 'typescript'",
+        "spotless {",
+        "    format 'mytypescript', {",
+        "        target 'test.ts'",
+        "        prettier().config(prettierConfig)",
+        "    }",
+        "}");
+    setFile("test.ts").toResource("npm/prettier/config/typescript.dirty");
+    gradleRunner().withArguments("--stacktrace", "spotlessApply").build();
+    assertFile("test.ts").sameAsResource("npm/prettier/config/typescript.configfile.clean");
+  }
 
-	@Test
-	public void useFileConfig() throws IOException {
-		setFile(".prettierrc.yml").toResource("npm/prettier/config/.prettierrc.yml");
-		setFile("build.gradle").toLines(
-				"buildscript { repositories { mavenCentral() } }",
-				"plugins {",
-				"    id 'com.diffplug.gradle.spotless'",
-				"}",
-				"spotless {",
-				"    format 'mytypescript', {",
-				"        target 'test.ts'",
-				"        prettier().configFile('.prettierrc.yml')",
-				"    }",
-				"}");
-		setFile("test.ts").toResource("npm/prettier/config/typescript.dirty");
-		gradleRunner().withArguments("--stacktrace", "spotlessApply").build();
-		assertFile("test.ts").sameAsResource("npm/prettier/config/typescript.configfile.clean");
-	}
+  @Test
+  public void useFileConfig() throws IOException {
+    setFile(".prettierrc.yml").toResource("npm/prettier/config/.prettierrc.yml");
+    setFile("build.gradle").toLines(
+        "buildscript { repositories { mavenCentral() } }",
+        "plugins {",
+        "    id 'com.diffplug.gradle.spotless'",
+        "}",
+        "spotless {",
+        "    format 'mytypescript', {",
+        "        target 'test.ts'",
+        "        prettier().configFile('.prettierrc.yml')",
+        "    }",
+        "}");
+    setFile("test.ts").toResource("npm/prettier/config/typescript.dirty");
+    gradleRunner().withArguments("--stacktrace", "spotlessApply").build();
+    assertFile("test.ts").sameAsResource("npm/prettier/config/typescript.configfile.clean");
+  }
 
 }

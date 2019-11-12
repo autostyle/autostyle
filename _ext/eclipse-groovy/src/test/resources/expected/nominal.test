@@ -1,12 +1,12 @@
 class TestClass {
-	def a;
+  def a;
 
-	TestClass(String s) {
-		this.a = s
-	}
-	def methodNamedArgs(Map args) {
-		"named args: $args"
-	}
+  TestClass(String s) {
+    this.a = s
+  }
+  def methodNamedArgs(Map args) {
+    "named args: $args"
+  }
 }
 
 def t = new TestClass()

@@ -53,127 +53,127 @@ import com.diffplug.spotless.extra.eclipse.wtp.sse.SpotlessPreferences;
 /** Formatter step which calls out to the Eclipse HTML cleanup and formatter. */
 public class EclipseHtmlFormatterStepImpl extends CleanupStep<EclipseHtmlFormatterStepImpl.SpotlessHtmlCleanup> {
 
-	private final String htmlFormatterIndent;
-	private final CodeFormatter jsFormatter;
+  private final String htmlFormatterIndent;
+  private final CodeFormatter jsFormatter;
 
-	public EclipseHtmlFormatterStepImpl(Properties properties) throws Exception {
-		super(new SpotlessHtmlCleanup(), JS_CORE_CONFIG, additionalPlugins -> {
-			additionalPlugins.add(new CSSCorePlugin());
-			additionalPlugins.add(new XMLCorePlugin());
-			//DTDs must be resolved by URI
-			additionalPlugins.add(new URIResolverPlugin());
-			//Support parsing of the DTD (required, though only the internal EMF models are used)
-			additionalPlugins.add(new DTDCorePlugin());
-			// The JS core uses EFS for determination of temporary storage location
-			additionalPlugins.add(new org.eclipse.core.internal.filesystem.Activator());
-			additionalPlugins.add(new JavaScriptCore());
-			additionalPlugins.add(new HTMLCorePlugin());
-			//The HTML formatter only uses the DOCTYPE/SCHEMA for content model selection.
-			additionalPlugins.add(new PreventExternalURIResolverExtension());
-		});
-		/*
-		 * The cleanup processor tries to load DTDs into the cache (which we have not setup).
-		 * Anyhow, the attempt is bogus since it anyway just silently fails to read the internal DTDs.
-		 * So we forbid to use the cache in the first place.
-		 */
-		properties.setProperty(CMDOCUMENT_GLOBAL_CACHE_ENABLED, Boolean.toString(false));
-		configure(getCSSFormattingProperties(properties), true, CSSCorePlugin.getDefault(), new CSSCorePreferenceInitializer());
-		configure(properties, false, XMLCorePlugin.getDefault(), new XMLCorePreferenceInitializer());
-		configure(properties, false, HTMLCorePlugin.getDefault(), new HTMLCorePreferenceInitializer());
-		htmlFormatterIndent = processor.getIndent();
+  public EclipseHtmlFormatterStepImpl(Properties properties) throws Exception {
+    super(new SpotlessHtmlCleanup(), JS_CORE_CONFIG, additionalPlugins -> {
+      additionalPlugins.add(new CSSCorePlugin());
+      additionalPlugins.add(new XMLCorePlugin());
+      //DTDs must be resolved by URI
+      additionalPlugins.add(new URIResolverPlugin());
+      //Support parsing of the DTD (required, though only the internal EMF models are used)
+      additionalPlugins.add(new DTDCorePlugin());
+      // The JS core uses EFS for determination of temporary storage location
+      additionalPlugins.add(new org.eclipse.core.internal.filesystem.Activator());
+      additionalPlugins.add(new JavaScriptCore());
+      additionalPlugins.add(new HTMLCorePlugin());
+      //The HTML formatter only uses the DOCTYPE/SCHEMA for content model selection.
+      additionalPlugins.add(new PreventExternalURIResolverExtension());
+    });
+    /*
+     * The cleanup processor tries to load DTDs into the cache (which we have not setup).
+     * Anyhow, the attempt is bogus since it anyway just silently fails to read the internal DTDs.
+     * So we forbid to use the cache in the first place.
+     */
+    properties.setProperty(CMDOCUMENT_GLOBAL_CACHE_ENABLED, Boolean.toString(false));
+    configure(getCSSFormattingProperties(properties), true, CSSCorePlugin.getDefault(), new CSSCorePreferenceInitializer());
+    configure(properties, false, XMLCorePlugin.getDefault(), new XMLCorePreferenceInitializer());
+    configure(properties, false, HTMLCorePlugin.getDefault(), new HTMLCorePreferenceInitializer());
+    htmlFormatterIndent = processor.getIndent();
 
-		//Create JS formatter
-		Map<Object, Object> jsOptions = EclipseJsFormatterStepImpl.createFormatterOptions(properties);
-		jsFormatter = ToolFactory.createCodeFormatter(jsOptions, ToolFactory.M_FORMAT_EXISTING);
-		SpotlessPreferences.configurePluginPreferences(CSSCorePlugin.getDefault(), properties);
-	}
+    //Create JS formatter
+    Map<Object, Object> jsOptions = EclipseJsFormatterStepImpl.createFormatterOptions(properties);
+    jsFormatter = ToolFactory.createCodeFormatter(jsOptions, ToolFactory.M_FORMAT_EXISTING);
+    SpotlessPreferences.configurePluginPreferences(CSSCorePlugin.getDefault(), properties);
+  }
 
-	@Override
-	public String format(String raw) throws Exception {
-		raw = super.format(raw);
+  @Override
+  public String format(String raw) throws Exception {
+    raw = super.format(raw);
 
-		// Not sure how Eclipse binds the JS formatter to HTML. The formatting is accomplished manually instead.
-		IStructuredDocument document = (IStructuredDocument) new HTMLDocumentLoader().createNewStructuredDocument();
-		document.setPreferredLineDelimiter(LINE_DELIMITER);
-		document.set(raw);
-		StructuredDocumentProcessor<CodeFormatter> jsProcessor = new StructuredDocumentProcessor<CodeFormatter>(
-				document, IHTMLPartitions.SCRIPT, JsRegionProcessor.createFactory(htmlFormatterIndent));
-		jsProcessor.apply(jsFormatter);
+    // Not sure how Eclipse binds the JS formatter to HTML. The formatting is accomplished manually instead.
+    IStructuredDocument document = (IStructuredDocument) new HTMLDocumentLoader().createNewStructuredDocument();
+    document.setPreferredLineDelimiter(LINE_DELIMITER);
+    document.set(raw);
+    StructuredDocumentProcessor<CodeFormatter> jsProcessor = new StructuredDocumentProcessor<CodeFormatter>(
+        document, IHTMLPartitions.SCRIPT, JsRegionProcessor.createFactory(htmlFormatterIndent));
+    jsProcessor.apply(jsFormatter);
 
-		return document.get();
-	}
+    return document.get();
+  }
 
-	/**
-	 * * The WTP {@link HTMLFormatProcessorImpl} does not allow a strict case formatting.
-	 * Hence additionally the {@link HTMLCleanupProcessorImpl} is used.
-	 * <p>
-	 * Note that a preferences like {@code TAG_NAME_CASE} are not used by the
-	 * formatter, though configurable in the formatters preference GUI.
-	 * The user must instead configure for example {@code CLEANUP_TAG_NAME_CASE}
-	 * in the cleanup GUI.
-	 * </p>
-	 */
-	public static class SpotlessHtmlCleanup extends HTMLCleanupProcessorImpl implements CleanupStep.ProcessorAccessor {
-		private HTMLFormatProcessorImpl processor = null;
+  /**
+   * * The WTP {@link HTMLFormatProcessorImpl} does not allow a strict case formatting.
+   * Hence additionally the {@link HTMLCleanupProcessorImpl} is used.
+   * <p>
+   * Note that a preferences like {@code TAG_NAME_CASE} are not used by the
+   * formatter, though configurable in the formatters preference GUI.
+   * The user must instead configure for example {@code CLEANUP_TAG_NAME_CASE}
+   * in the cleanup GUI.
+   * </p>
+   */
+  public static class SpotlessHtmlCleanup extends HTMLCleanupProcessorImpl implements CleanupStep.ProcessorAccessor {
+    private HTMLFormatProcessorImpl processor = null;
 
-		@Override
-		public String getThisContentType() {
-			return getContentType();
-		}
+    @Override
+    public String getThisContentType() {
+      return getContentType();
+    }
 
-		@Override
-		public IStructuredFormatProcessor getThisFormatProcessor() {
-			return getFormatProcessor();
-		}
+    @Override
+    public IStructuredFormatProcessor getThisFormatProcessor() {
+      return getFormatProcessor();
+    }
 
-		@Override
-		public void refreshThisCleanupPreferences() {
-			refreshCleanupPreferences();
-		}
+    @Override
+    public void refreshThisCleanupPreferences() {
+      refreshCleanupPreferences();
+    }
 
-		@Override
-		protected IStructuredFormatProcessor getFormatProcessor() {
-			if (null == processor) {
-				processor = new HTMLFormatProcessorImpl();
-			}
-			return processor;
-		}
+    @Override
+    protected IStructuredFormatProcessor getFormatProcessor() {
+      if (null == processor) {
+        processor = new HTMLFormatProcessorImpl();
+      }
+      return processor;
+    }
 
-		String getIndent() {
-			/*
-			 *  The processor must not be null,
-			 *  otherwise it has not been configured yet,
-			 *  and the result would be incorrect.
-			 */
-			return processor.getFormatPreferences().getIndent();
-		}
+    String getIndent() {
+      /*
+       *  The processor must not be null,
+       *  otherwise it has not been configured yet,
+       *  and the result would be incorrect.
+       */
+      return processor.getFormatPreferences().getIndent();
+    }
 
-	}
+  }
 
-	private final static Set<String> SUPPORTED_CSS_FORMAT_PREFS = new HashSet<String>(Arrays.asList(
-			CASE_IDENTIFIER,
-			CASE_SELECTOR,
-			CASE_PROPERTY_NAME,
-			CASE_PROPERTY_VALUE,
-			FORMAT_BETWEEN_VALUE,
-			FORMAT_PROP_POST_DELIM,
-			FORMAT_PROP_PRE_DELIM,
-			FORMAT_QUOTE,
-			FORMAT_QUOTE_IN_URI,
-			FORMAT_SPACE_BETWEEN_SELECTORS,
-			WRAPPING_NEWLINE_ON_OPEN_BRACE,
-			WRAPPING_ONE_PER_LINE,
-			WRAPPING_PROHIBIT_WRAP_ON_ATTR,
-			LINE_WIDTH,
-			INDENTATION_CHAR,
-			INDENTATION_SIZE,
-			QUOTE_ATTR_VALUES,
-			CLEAR_ALL_BLANK_LINES));
+  private final static Set<String> SUPPORTED_CSS_FORMAT_PREFS = new HashSet<String>(Arrays.asList(
+      CASE_IDENTIFIER,
+      CASE_SELECTOR,
+      CASE_PROPERTY_NAME,
+      CASE_PROPERTY_VALUE,
+      FORMAT_BETWEEN_VALUE,
+      FORMAT_PROP_POST_DELIM,
+      FORMAT_PROP_PRE_DELIM,
+      FORMAT_QUOTE,
+      FORMAT_QUOTE_IN_URI,
+      FORMAT_SPACE_BETWEEN_SELECTORS,
+      WRAPPING_NEWLINE_ON_OPEN_BRACE,
+      WRAPPING_ONE_PER_LINE,
+      WRAPPING_PROHIBIT_WRAP_ON_ATTR,
+      LINE_WIDTH,
+      INDENTATION_CHAR,
+      INDENTATION_SIZE,
+      QUOTE_ATTR_VALUES,
+      CLEAR_ALL_BLANK_LINES));
 
-	private static Properties getCSSFormattingProperties(final Properties properties) {
-		Properties filteredProperties = new Properties();
-		properties.entrySet().stream().filter(
-				entry -> SUPPORTED_CSS_FORMAT_PREFS.contains(entry.getKey())).forEach(entry -> filteredProperties.put(entry.getKey(), entry.getValue()));
-		return filteredProperties;
-	}
+  private static Properties getCSSFormattingProperties(final Properties properties) {
+    Properties filteredProperties = new Properties();
+    properties.entrySet().stream().filter(
+        entry -> SUPPORTED_CSS_FORMAT_PREFS.contains(entry.getKey())).forEach(entry -> filteredProperties.put(entry.getKey(), entry.getValue()));
+    return filteredProperties;
+  }
 }

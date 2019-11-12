@@ -22,55 +22,55 @@ import java.util.function.Function;
 
 abstract class ReflectiveObjectWrapper implements AutoCloseable {
 
-	private final Object wrappedObj;
-	private final Reflective reflective;
+  private final Object wrappedObj;
+  private final Reflective reflective;
 
-	public ReflectiveObjectWrapper(Reflective reflective, Object wrappedObj) {
-		this.reflective = requireNonNull(reflective);
-		this.wrappedObj = requireNonNull(wrappedObj);
-	}
+  public ReflectiveObjectWrapper(Reflective reflective, Object wrappedObj) {
+    this.reflective = requireNonNull(reflective);
+    this.wrappedObj = requireNonNull(wrappedObj);
+  }
 
-	public ReflectiveObjectWrapper(Reflective reflective, Function<Reflective, Object> wrappedObjSupplier) {
-		this(reflective, wrappedObjSupplier.apply(reflective));
-	}
+  public ReflectiveObjectWrapper(Reflective reflective, Function<Reflective, Object> wrappedObjSupplier) {
+    this(reflective, wrappedObjSupplier.apply(reflective));
+  }
 
-	protected Reflective reflective() {
-		return this.reflective;
-	}
+  protected Reflective reflective() {
+    return this.reflective;
+  }
 
-	protected Object wrappedObj() {
-		return this.wrappedObj;
-	}
+  protected Object wrappedObj() {
+    return this.wrappedObj;
+  }
 
-	protected Object invoke(String methodName, Object... parameters) {
-		return reflective().invokeMethod(wrappedObj(), methodName, parameters);
-	}
+  protected Object invoke(String methodName, Object... parameters) {
+    return reflective().invokeMethod(wrappedObj(), methodName, parameters);
+  }
 
-	protected Object invoke(String methodName, Reflective.TypedValue... parameters) {
-		return reflective().invokeMethod(wrappedObj(), methodName, parameters);
-	}
+  protected Object invoke(String methodName, Reflective.TypedValue... parameters) {
+    return reflective().invokeMethod(wrappedObj(), methodName, parameters);
+  }
 
-	public void release() {
-		invoke("release");
-	}
+  public void release() {
+    invoke("release");
+  }
 
-	@Override
-	public void close() throws Exception {
-		release();
-	}
+  @Override
+  public void close() throws Exception {
+    release();
+  }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (!(o instanceof ReflectiveObjectWrapper))
-			return false;
-		ReflectiveObjectWrapper that = (ReflectiveObjectWrapper) o;
-		return Objects.equals(wrappedObj, that.wrappedObj) && Objects.equals(getClass(), that.getClass());
-	}
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+    if (!(o instanceof ReflectiveObjectWrapper))
+      return false;
+    ReflectiveObjectWrapper that = (ReflectiveObjectWrapper) o;
+    return Objects.equals(wrappedObj, that.wrappedObj) && Objects.equals(getClass(), that.getClass());
+  }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(wrappedObj, getClass());
-	}
+  @Override
+  public int hashCode() {
+    return Objects.hash(wrappedObj, getClass());
+  }
 }

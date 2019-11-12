@@ -20,22 +20,22 @@ import java.io.IOException;
 import org.junit.Test;
 
 public class ScalaExtensionTest extends GradleIntegrationTest {
-	@Test
-	public void integration() throws IOException {
-		setFile("build.gradle").toLines(
-				"buildscript { repositories { mavenCentral() } }",
-				"plugins {",
-				"    id 'com.diffplug.gradle.spotless'",
-				"}",
-				"apply plugin: 'scala'",
-				"spotless {",
-				"    scala {",
-				"        scalafmt().configFile('scalafmt.conf')",
-				"    }",
-				"}");
-		setFile("scalafmt.conf").toResource("scala/scalafmt/scalafmt.conf");
-		setFile("src/main/scala/basic.scala").toResource("scala/scalafmt/basic.dirty");
-		gradleRunner().withArguments("spotlessApply").build();
-		assertFile("src/main/scala/basic.scala").sameAsResource("scala/scalafmt/basic.cleanWithCustomConf_2.0.1");
-	}
+  @Test
+  public void integration() throws IOException {
+    setFile("build.gradle").toLines(
+        "buildscript { repositories { mavenCentral() } }",
+        "plugins {",
+        "    id 'com.diffplug.gradle.spotless'",
+        "}",
+        "apply plugin: 'scala'",
+        "spotless {",
+        "    scala {",
+        "        scalafmt().configFile('scalafmt.conf')",
+        "    }",
+        "}");
+    setFile("scalafmt.conf").toResource("scala/scalafmt/scalafmt.conf");
+    setFile("src/main/scala/basic.scala").toResource("scala/scalafmt/basic.dirty");
+    gradleRunner().withArguments("spotlessApply").build();
+    assertFile("src/main/scala/basic.scala").sameAsResource("scala/scalafmt/basic.cleanWithCustomConf_2.0.1");
+  }
 }

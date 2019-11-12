@@ -107,19 +107,19 @@ apply plugin: 'java'
 
 spotless {
   java {
-    licenseHeader '/* Licensed under Apache-2.0 */'	// License header
-    licenseHeaderFile 'spotless.license.java'		// License header file
+    licenseHeader '/* Licensed under Apache-2.0 */'  // License header
+    licenseHeaderFile 'spotless.license.java'    // License header file
     // Obviously, you can't specify both licenseHeader and licenseHeaderFile at the same time
 
-    importOrder 'java', 'javax', 'org', 'com', 'com.diffplug', ''	// A sequence of package names
-    importOrderFile 'spotless.importorder'				// An import ordering file, exported from Eclipse
+    importOrder 'java', 'javax', 'org', 'com', 'com.diffplug', ''  // A sequence of package names
+    importOrderFile 'spotless.importorder'        // An import ordering file, exported from Eclipse
     // As before, you can't specify both importOrder and importOrderFile at the same time
     // You probably want an empty string at the end - all of the imports you didn't specify
     // explicitly will go there.
 
     removeUnusedImports() // removes any unused imports
 
-    eclipse().configFile 'spotless.eclipseformat.xml'	// XML file dumped out by the Eclipse formatter
+    eclipse().configFile 'spotless.eclipseformat.xml'  // XML file dumped out by the Eclipse formatter
     // If you have Eclipse preference or property files, you can use them too.
     // eclipse('4.7.1') to specify a specific version of eclipse,
     // available versions are: https://github.com/diffplug/spotless/tree/master/lib-extra/src/main/resources/com/diffplug/spotless/extra/eclipse_jdt_formatter
@@ -227,10 +227,10 @@ To apply freshmark to all of the `.md` files in your project, with all of your p
 ```gradle
 spotless {
   freshmark {
-    target 'README.md', 'CONTRIBUTING.md'	// defaults to '**/*.md'
-    propertiesFile('gradle.properties')		// loads all the properties in the given file
+    target 'README.md', 'CONTRIBUTING.md'  // defaults to '**/*.md'
+    propertiesFile('gradle.properties')    // loads all the properties in the given file
     properties {
-      it.put('key', 'value')				// specify other properties manually
+      it.put('key', 'value')        // specify other properties manually
     }
   }
 }
@@ -263,8 +263,8 @@ spotless {
     ktlint().userData(['indent_size': '2', 'continuation_indent_size' : '2'])
 
     // also supports license headers
-    licenseHeader '/* Licensed under Apache-2.0 */'	// License header
-    licenseHeaderFile 'path-to-license-file'		// License header file
+    licenseHeader '/* Licensed under Apache-2.0 */'  // License header
+    licenseHeaderFile 'path-to-license-file'    // License header file
   }
   kotlinGradle {
     // same as kotlin, but for .gradle.kts files (defaults to '*.gradle.kts')
@@ -316,12 +316,12 @@ sql.formatter.indent.size=4
 spotless {
   cpp {
     target '**/*.CPP' // Change file filter. By default files with 'c', 'h', 'C', 'cpp', 'cxx', 'cc', 'c++', 'h', 'hpp', 'hh', 'hxx' and 'inc' extension are supported
-    eclipse().configFile 'spotless.eclipseformat.xml'	// XML file dumped out by the Eclipse formatter
+    eclipse().configFile 'spotless.eclipseformat.xml'  // XML file dumped out by the Eclipse formatter
     // If you have Eclipse preference or property files, you can use them too.
     // eclipse('4.7.1') to specify a specific version of Eclipse,
     // available versions are: https://github.com/diffplug/spotless/tree/master/lib-extra/src/main/resources/com/diffplug/spotless/extra/eclipse_cdt_formatter
-    licenseHeader '// Licensed under Apache'	// License header
-    licenseHeaderFile './license.txt'	// License header file
+    licenseHeader '// Licensed under Apache'  // License header
+    licenseHeaderFile './license.txt'  // License header file
   }
 }
 ```

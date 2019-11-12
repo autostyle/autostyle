@@ -30,24 +30,24 @@ import com.diffplug.spotless.generic.LicenseHeaderStep;
 @Deprecated
 public class CssDefaultsTest extends ResourceHarness {
 
-	@Test
-	public void testDelimiterExpr() throws Exception {
-		final String header = "/*My tests header*/";
-		FormatterStep step = LicenseHeaderStep.createFromHeader(header, CssDefaults.DELIMITER_EXPR);
-		final File dummyFile = setFile("src/main/cpp/file1.dummy").toContent("");
-		for (String testSource : Arrays.asList(
-				"/* Starts with element selector */@\np {",
-				"/* Starts with ID selector */@\n#i {",
-				"/* Starts with class selector */@\n.i {")) {
-			String output = null;
-			try {
-				output = step.format(testSource, dummyFile);
-			} catch (IllegalArgumentException e) {
-				throw new AssertionError(String.format("No delimiter found in '%s'", testSource), e);
-			}
-			String expected = testSource.replaceAll("(.*?)\\@", header);
-			assertThat(output).isEqualTo(expected).as("Unexpected header insertion for '$s'.", testSource);
-		}
-	}
+  @Test
+  public void testDelimiterExpr() throws Exception {
+    final String header = "/*My tests header*/";
+    FormatterStep step = LicenseHeaderStep.createFromHeader(header, CssDefaults.DELIMITER_EXPR);
+    final File dummyFile = setFile("src/main/cpp/file1.dummy").toContent("");
+    for (String testSource : Arrays.asList(
+        "/* Starts with element selector */@\np {",
+        "/* Starts with ID selector */@\n#i {",
+        "/* Starts with class selector */@\n.i {")) {
+      String output = null;
+      try {
+        output = step.format(testSource, dummyFile);
+      } catch (IllegalArgumentException e) {
+        throw new AssertionError(String.format("No delimiter found in '%s'", testSource), e);
+      }
+      String expected = testSource.replaceAll("(.*?)\\@", header);
+      assertThat(output).isEqualTo(expected).as("Unexpected header insertion for '$s'.", testSource);
+    }
+  }
 
 }

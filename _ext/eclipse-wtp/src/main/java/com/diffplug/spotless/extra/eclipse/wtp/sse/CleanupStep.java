@@ -56,99 +56,99 @@ import com.diffplug.spotless.extra.eclipse.base.SpotlessEclipseFramework;
  */
 public class CleanupStep<T extends AbstractStructuredCleanupProcessor & CleanupStep.ProcessorAccessor> {
 
-	/**
-	 * Some of the SEE AbstractStructuredCleanupProcessor interface shall be
-	 * made public to provide cleaner interfaces. */
-	public interface ProcessorAccessor {
-		/** Returns this.getContentType() */
-		String getThisContentType();
+  /**
+   * Some of the SEE AbstractStructuredCleanupProcessor interface shall be
+   * made public to provide cleaner interfaces. */
+  public interface ProcessorAccessor {
+    /** Returns this.getContentType() */
+    String getThisContentType();
 
-		/** Returns this.getFormatProcessor() */
-		IStructuredFormatProcessor getThisFormatProcessor();
+    /** Returns this.getFormatProcessor() */
+    IStructuredFormatProcessor getThisFormatProcessor();
 
-		/** Calls this.refreshCleanupPreferences() */
-		void refreshThisCleanupPreferences();
-	}
+    /** Calls this.refreshCleanupPreferences() */
+    void refreshThisCleanupPreferences();
+  }
 
-	// The formatter cannot per configured per instance
-	private final static Properties CONFIG = new Properties();
-	private static boolean FIRST_CONFIG = true;
+  // The formatter cannot per configured per instance
+  private final static Properties CONFIG = new Properties();
+  private static boolean FIRST_CONFIG = true;
 
-	protected final T processor;
+  protected final T processor;
 
-	protected CleanupStep(T processor, Consumer<Collection<BundleActivator>> addptionalPlugins) throws Exception {
-		this(processor, core -> core.applyDefault(), addptionalPlugins);
-	}
+  protected CleanupStep(T processor, Consumer<Collection<BundleActivator>> addptionalPlugins) throws Exception {
+    this(processor, core -> core.applyDefault(), addptionalPlugins);
+  }
 
-	protected CleanupStep(T processor, Consumer<SpotlessEclipseCoreConfig> core, Consumer<Collection<BundleActivator>> addptionalPlugins) throws Exception {
-		SpotlessEclipseFramework.setup(
-				core,
-				config -> {
-					config.disableDebugging();
-					config.hideEnvironment();
-					config.useTemporaryLocations();
-					config.changeSystemLineSeparator();
-					//Allow association of string passed in the CleanupStep.format to its type/plugin
-					config.add(IContentTypeManager.class, new ContentTypeManager(processor));
-					//The preference lookup via the ContentTypeManager, requires a preference service
-					config.add(IPreferencesService.class, PreferencesService.getDefault());
-					config.useSlf4J(this.getClass().getPackage().getName());
-				},
-				plugins -> {
-					plugins.applyDefault();
-					List<BundleActivator> additional = new LinkedList<BundleActivator>();
-					addptionalPlugins.accept(additional);
-					plugins.add(additional);
-					/*
-					 * The core preferences require do lookup the resources "config/override.properties"
-					 * from the plugin ID.
-					 * The values are never used, nor do we require the complete SSE core plugin to be started.
-					 * Hence we just provide the internal plugin.
-					 */
-					plugins.add(new org.eclipse.wst.sse.core.internal.encoding.util.CodedResourcePlugin());
-				});
-		this.processor = processor;
-		/*
-		 *  Don't refresh the preferences every time a clone of the processor is created.
-		 *  All processors shall use the preferences of its parent.
-		 */
-		this.processor.refreshCleanupPreferences = false;
-	}
+  protected CleanupStep(T processor, Consumer<SpotlessEclipseCoreConfig> core, Consumer<Collection<BundleActivator>> addptionalPlugins) throws Exception {
+    SpotlessEclipseFramework.setup(
+        core,
+        config -> {
+          config.disableDebugging();
+          config.hideEnvironment();
+          config.useTemporaryLocations();
+          config.changeSystemLineSeparator();
+          //Allow association of string passed in the CleanupStep.format to its type/plugin
+          config.add(IContentTypeManager.class, new ContentTypeManager(processor));
+          //The preference lookup via the ContentTypeManager, requires a preference service
+          config.add(IPreferencesService.class, PreferencesService.getDefault());
+          config.useSlf4J(this.getClass().getPackage().getName());
+        },
+        plugins -> {
+          plugins.applyDefault();
+          List<BundleActivator> additional = new LinkedList<BundleActivator>();
+          addptionalPlugins.accept(additional);
+          plugins.add(additional);
+          /*
+           * The core preferences require do lookup the resources "config/override.properties"
+           * from the plugin ID.
+           * The values are never used, nor do we require the complete SSE core plugin to be started.
+           * Hence we just provide the internal plugin.
+           */
+          plugins.add(new org.eclipse.wst.sse.core.internal.encoding.util.CodedResourcePlugin());
+        });
+    this.processor = processor;
+    /*
+     *  Don't refresh the preferences every time a clone of the processor is created.
+     *  All processors shall use the preferences of its parent.
+     */
+    this.processor.refreshCleanupPreferences = false;
+  }
 
-	protected final void configure(Properties properties, boolean usesPreferenceService, Plugin plugin, AbstractPreferenceInitializer preferencesInit) {
-		synchronized (CONFIG) {
-			if (usesPreferenceService) {
-				assertConfigHasNotChanged(properties);
-			}
-			preferencesInit.initializeDefaultPreferences();
-			SpotlessPreferences.configurePluginPreferences(plugin, properties);
-			processor.refreshThisCleanupPreferences(); // Initialize cleanup processor preferences (if there are any)
-			IStructuredFormatProcessor formatter = processor.getThisFormatProcessor(); // Initialize processor preferences by creating the formatter for the first time
-			if (formatter instanceof AbstractStructuredFormatProcessor) {
-				((AbstractStructuredFormatProcessor) formatter).refreshFormatPreferences = false;
-			}
-		}
-	}
+  protected final void configure(Properties properties, boolean usesPreferenceService, Plugin plugin, AbstractPreferenceInitializer preferencesInit) {
+    synchronized (CONFIG) {
+      if (usesPreferenceService) {
+        assertConfigHasNotChanged(properties);
+      }
+      preferencesInit.initializeDefaultPreferences();
+      SpotlessPreferences.configurePluginPreferences(plugin, properties);
+      processor.refreshThisCleanupPreferences(); // Initialize cleanup processor preferences (if there are any)
+      IStructuredFormatProcessor formatter = processor.getThisFormatProcessor(); // Initialize processor preferences by creating the formatter for the first time
+      if (formatter instanceof AbstractStructuredFormatProcessor) {
+        ((AbstractStructuredFormatProcessor) formatter).refreshFormatPreferences = false;
+      }
+    }
+  }
 
-	private static void assertConfigHasNotChanged(final Properties properties) {
-		synchronized (CONFIG) {
-			if (FIRST_CONFIG) {
-				FIRST_CONFIG = false;
-				CONFIG.putAll(properties);
-			} else if (!CONFIG.equals(properties)) {
-				throw new IllegalArgumentException("The Eclipse formatter does not support multiple configurations.");
-			}
-		}
-	}
+  private static void assertConfigHasNotChanged(final Properties properties) {
+    synchronized (CONFIG) {
+      if (FIRST_CONFIG) {
+        FIRST_CONFIG = false;
+        CONFIG.putAll(properties);
+      } else if (!CONFIG.equals(properties)) {
+        throw new IllegalArgumentException("The Eclipse formatter does not support multiple configurations.");
+      }
+    }
+  }
 
-	/**
-	 * Calls the cleanup and formatting task of the processor and returns the formatted string.
-	 * @param raw Dirty string
-	 * @return Formatted string
-	 * @throws Exception All exceptions are considered fatal to the build process (Gradle, Maven, ...) and should not be caught.
-	 */
-	public String format(String raw) throws Exception {
-		return processor.cleanupContent(raw);
-	}
+  /**
+   * Calls the cleanup and formatting task of the processor and returns the formatted string.
+   * @param raw Dirty string
+   * @return Formatted string
+   * @throws Exception All exceptions are considered fatal to the build process (Gradle, Maven, ...) and should not be caught.
+   */
+  public String format(String raw) throws Exception {
+    return processor.cleanupContent(raw);
+  }
 
 }

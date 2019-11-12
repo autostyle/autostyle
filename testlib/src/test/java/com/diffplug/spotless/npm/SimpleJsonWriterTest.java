@@ -28,48 +28,48 @@ import com.diffplug.spotless.ResourceHarness;
 
 public class SimpleJsonWriterTest extends ResourceHarness {
 
-	private SimpleJsonWriter jsonWriter = new SimpleJsonWriter();
+  private SimpleJsonWriter jsonWriter = new SimpleJsonWriter();
 
-	@Test
-	public void itWritesAValidEmptyObject() {
-		assertThat(jsonWriter.toJsonString().replaceAll("\\s", ""), equalTo("{}"));
-	}
+  @Test
+  public void itWritesAValidEmptyObject() {
+    assertThat(jsonWriter.toJsonString().replaceAll("\\s", ""), equalTo("{}"));
+  }
 
-	@Test
-	public void itWritesABooleanProperty() {
-		jsonWriter.put("mybool", true);
-		assertThat(jsonWriter.toJsonString(), equalTo("{\n    \"mybool\": true\n}"));
-	}
+  @Test
+  public void itWritesABooleanProperty() {
+    jsonWriter.put("mybool", true);
+    assertThat(jsonWriter.toJsonString(), equalTo("{\n    \"mybool\": true\n}"));
+  }
 
-	@Test
-	public void itWritesAStringProperty() {
-		jsonWriter.put("mystring", "stringvalue");
-		assertThat(jsonWriter.toJsonString(), equalTo("{\n    \"mystring\": \"stringvalue\"\n}"));
-	}
+  @Test
+  public void itWritesAStringProperty() {
+    jsonWriter.put("mystring", "stringvalue");
+    assertThat(jsonWriter.toJsonString(), equalTo("{\n    \"mystring\": \"stringvalue\"\n}"));
+  }
 
-	@Test
-	public void itWritesAnInteger() {
-		jsonWriter.put("myint", 7);
-		assertThat(jsonWriter.toJsonString(), equalTo("{\n    \"myint\": 7\n}"));
-	}
+  @Test
+  public void itWritesAnInteger() {
+    jsonWriter.put("myint", 7);
+    assertThat(jsonWriter.toJsonString(), equalTo("{\n    \"myint\": 7\n}"));
+  }
 
-	@Test(expected = IllegalArgumentException.class)
-	public void itFailsOnUnsupportedObject() {
-		jsonWriter.put("anyobj", new Object());
-		fail("should not be accepted");
-	}
+  @Test(expected = IllegalArgumentException.class)
+  public void itFailsOnUnsupportedObject() {
+    jsonWriter.put("anyobj", new Object());
+    fail("should not be accepted");
+  }
 
-	@Test
-	public void itHandlesSeveralOptionsSimultaneously() {
-		jsonWriter.putAll(ImmutableMap.of("mystring", "stringvalue", "intvalue", 1));
-		assertThat(jsonWriter.toJsonString(), equalTo("{\n    \"mystring\": \"stringvalue\",\n    \"intvalue\": 1\n}"));
-	}
+  @Test
+  public void itHandlesSeveralOptionsSimultaneously() {
+    jsonWriter.putAll(ImmutableMap.of("mystring", "stringvalue", "intvalue", 1));
+    assertThat(jsonWriter.toJsonString(), equalTo("{\n    \"mystring\": \"stringvalue\",\n    \"intvalue\": 1\n}"));
+  }
 
-	@Test
-	public void itWritesToFile() throws IOException {
-		jsonWriter.put("mystring", "stringvalue");
-		final File file = newFile("target.json");
-		jsonWriter.toJsonFile(file);
-		assertFile(file).hasContent("{\n    \"mystring\": \"stringvalue\"\n}");
-	}
+  @Test
+  public void itWritesToFile() throws IOException {
+    jsonWriter.put("mystring", "stringvalue");
+    final File file = newFile("target.json");
+    jsonWriter.toJsonFile(file);
+    assertFile(file).hasContent("{\n    \"mystring\": \"stringvalue\"\n}");
+  }
 }

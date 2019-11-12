@@ -37,99 +37,99 @@ import com.diffplug.spotless.LineEnding;
 import com.diffplug.spotless.ResourceHarness;
 
 public class GradleIntegrationTest extends ResourceHarness {
-	/**
-	 * Each test gets its own temp folder, and we create a gradle
-	 * build there and run it.
-	 *
-	 * Because those test folders don't have a .gitattributes file,
-	 * git (on windows) will default to \r\n. So now if you read a
-	 * test file from the spotless test resources, and compare it
-	 * to a build result, the line endings won't match.
-	 *
-	 * By sticking this .gitattributes file into the test directory,
-	 * we ensure that the default Spotless line endings policy of
-	 * GIT_ATTRIBUTES will use \n, so that tests match the test
-	 * resources on win and linux.
-	 */
-	@Before
-	public void gitAttributes() throws IOException {
-		setFile(".gitattributes").toContent("* text eol=lf");
-	}
+  /**
+   * Each test gets its own temp folder, and we create a gradle
+   * build there and run it.
+   *
+   * Because those test folders don't have a .gitattributes file,
+   * git (on windows) will default to \r\n. So now if you read a
+   * test file from the spotless test resources, and compare it
+   * to a build result, the line endings won't match.
+   *
+   * By sticking this .gitattributes file into the test directory,
+   * we ensure that the default Spotless line endings policy of
+   * GIT_ATTRIBUTES will use \n, so that tests match the test
+   * resources on win and linux.
+   */
+  @Before
+  public void gitAttributes() throws IOException {
+    setFile(".gitattributes").toContent("* text eol=lf");
+  }
 
-	protected final GradleRunner gradleRunner() throws IOException {
-		return GradleRunner.create()
-				// Test against Gradle 2.14.1 in order to maintain backwards compatibility.
-				// https://github.com/diffplug/spotless/issues/161
-				.withGradleVersion("2.14.1")
-				.withProjectDir(rootFolder())
-				.withPluginClasspath();
-	}
+  protected final GradleRunner gradleRunner() throws IOException {
+    return GradleRunner.create()
+        // Test against Gradle 2.14.1 in order to maintain backwards compatibility.
+        // https://github.com/diffplug/spotless/issues/161
+        .withGradleVersion("2.14.1")
+        .withProjectDir(rootFolder())
+        .withPluginClasspath();
+  }
 
-	/** Dumps the complete file contents of the folder to the console. */
-	protected String getContents() throws IOException {
-		return getContents(subPath -> !subPath.startsWith(".gradle"));
-	}
+  /** Dumps the complete file contents of the folder to the console. */
+  protected String getContents() throws IOException {
+    return getContents(subPath -> !subPath.startsWith(".gradle"));
+  }
 
-	protected String getContents(Predicate<String> subpathsToInclude) throws IOException {
-		TreeDef<File> treeDef = TreeDef.forFile(Errors.rethrow());
-		List<File> files = TreeStream.depthFirst(treeDef, rootFolder())
-				.filter(File::isFile)
-				.collect(Collectors.toList());
+  protected String getContents(Predicate<String> subpathsToInclude) throws IOException {
+    TreeDef<File> treeDef = TreeDef.forFile(Errors.rethrow());
+    List<File> files = TreeStream.depthFirst(treeDef, rootFolder())
+        .filter(File::isFile)
+        .collect(Collectors.toList());
 
-		ListIterator<File> iterator = files.listIterator(files.size());
-		int rootLength = rootFolder().getAbsolutePath().length() + 1;
-		return StringPrinter.buildString(printer -> Errors.rethrow().run(() -> {
-			while (iterator.hasPrevious()) {
-				File file = iterator.previous();
-				String subPath = file.getAbsolutePath().substring(rootLength);
-				if (subpathsToInclude.test(subPath)) {
-					printer.println("### " + subPath + " ###");
-					printer.println(read(subPath));
-				}
-			}
-		}));
-	}
+    ListIterator<File> iterator = files.listIterator(files.size());
+    int rootLength = rootFolder().getAbsolutePath().length() + 1;
+    return StringPrinter.buildString(printer -> Errors.rethrow().run(() -> {
+      while (iterator.hasPrevious()) {
+        File file = iterator.previous();
+        String subPath = file.getAbsolutePath().substring(rootLength);
+        if (subpathsToInclude.test(subPath)) {
+          printer.println("### " + subPath + " ###");
+          printer.println(read(subPath));
+        }
+      }
+    }));
+  }
 
-	protected void checkRunsThenUpToDate() throws IOException {
-		checkIsUpToDate(false);
-		checkIsUpToDate(true);
-	}
+  protected void checkRunsThenUpToDate() throws IOException {
+    checkIsUpToDate(false);
+    checkIsUpToDate(true);
+  }
 
-	protected void applyIsUpToDate(boolean upToDate) throws IOException {
-		taskIsUpToDate("spotlessApply", upToDate);
-	}
+  protected void applyIsUpToDate(boolean upToDate) throws IOException {
+    taskIsUpToDate("spotlessApply", upToDate);
+  }
 
-	protected void checkIsUpToDate(boolean upToDate) throws IOException {
-		taskIsUpToDate("spotlessCheck", upToDate);
-	}
+  protected void checkIsUpToDate(boolean upToDate) throws IOException {
+    taskIsUpToDate("spotlessCheck", upToDate);
+  }
 
-	private static final boolean IS_UNIX = LineEnding.PLATFORM_NATIVE.str().equals("\n");
-	private static final int FILESYSTEM_RESOLUTION_MS = IS_UNIX ? 2000 : 150;
+  private static final boolean IS_UNIX = LineEnding.PLATFORM_NATIVE.str().equals("\n");
+  private static final int FILESYSTEM_RESOLUTION_MS = IS_UNIX ? 2000 : 150;
 
-	void pauseForFilesystem() {
-		Errors.rethrow().run(() -> Thread.sleep(FILESYSTEM_RESOLUTION_MS));
-	}
+  void pauseForFilesystem() {
+    Errors.rethrow().run(() -> Thread.sleep(FILESYSTEM_RESOLUTION_MS));
+  }
 
-	private void taskIsUpToDate(String task, boolean upToDate) throws IOException {
-		pauseForFilesystem();
-		BuildResult buildResult = gradleRunner().withArguments(task).build();
+  private void taskIsUpToDate(String task, boolean upToDate) throws IOException {
+    pauseForFilesystem();
+    BuildResult buildResult = gradleRunner().withArguments(task).build();
 
-		TaskOutcome expected = upToDate ? TaskOutcome.UP_TO_DATE : TaskOutcome.SUCCESS;
-		TaskOutcome notExpected = upToDate ? TaskOutcome.SUCCESS : TaskOutcome.UP_TO_DATE;
+    TaskOutcome expected = upToDate ? TaskOutcome.UP_TO_DATE : TaskOutcome.SUCCESS;
+    TaskOutcome notExpected = upToDate ? TaskOutcome.SUCCESS : TaskOutcome.UP_TO_DATE;
 
-		boolean everythingAsExpected = !buildResult.tasks(expected).isEmpty() &&
-				buildResult.tasks(notExpected).isEmpty() &&
-				buildResult.getTasks().size() == buildResult.tasks(expected).size();
-		if (!everythingAsExpected) {
-			Assert.fail("Expected all tasks to be " + expected + ", but instead was\n" + buildResultToString(buildResult));
-		}
-	}
+    boolean everythingAsExpected = !buildResult.tasks(expected).isEmpty() &&
+        buildResult.tasks(notExpected).isEmpty() &&
+        buildResult.getTasks().size() == buildResult.tasks(expected).size();
+    if (!everythingAsExpected) {
+      Assert.fail("Expected all tasks to be " + expected + ", but instead was\n" + buildResultToString(buildResult));
+    }
+  }
 
-	static String buildResultToString(BuildResult result) {
-		return StringPrinter.buildString(printer -> {
-			for (BuildTask task : result.getTasks()) {
-				printer.println(task.getPath() + " " + task.getOutcome());
-			}
-		});
-	}
+  static String buildResultToString(BuildResult result) {
+    return StringPrinter.buildString(printer -> {
+      for (BuildTask task : result.getTasks()) {
+        printer.println(task.getPath() + " " + task.getOutcome());
+      }
+    });
+  }
 }

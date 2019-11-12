@@ -34,60 +34,60 @@ import com.diffplug.spotless.ThrowingEx.Supplier;
 
 /** A step for [FreshMark](https://github.com/diffplug/freshmark). */
 public class FreshMarkStep {
-	// prevent direct instantiation
-	private FreshMarkStep() {}
+  // prevent direct instantiation
+  private FreshMarkStep() {}
 
-	private static final String DEFAULT_VERSION = "1.3.1";
-	private static final String NAME = "freshmark";
-	private static final String MAVEN_COORDINATE = "com.diffplug.freshmark:freshmark:";
-	private static final String FORMATTER_CLASS = "com.diffplug.freshmark.FreshMark";
-	private static final String FORMATTER_METHOD = "compile";
+  private static final String DEFAULT_VERSION = "1.3.1";
+  private static final String NAME = "freshmark";
+  private static final String MAVEN_COORDINATE = "com.diffplug.freshmark:freshmark:";
+  private static final String FORMATTER_CLASS = "com.diffplug.freshmark.FreshMark";
+  private static final String FORMATTER_METHOD = "compile";
 
-	/** Creates a formatter step for the given version and settings file. */
-	public static FormatterStep create(Supplier<Map<String, ?>> properties, Provisioner provisioner) {
-		return create(defaultVersion(), properties, provisioner);
-	}
+  /** Creates a formatter step for the given version and settings file. */
+  public static FormatterStep create(Supplier<Map<String, ?>> properties, Provisioner provisioner) {
+    return create(defaultVersion(), properties, provisioner);
+  }
 
-	/** Creates a formatter step for the given version and settings file. */
-	public static FormatterStep create(String version, Supplier<Map<String, ?>> properties, Provisioner provisioner) {
-		Objects.requireNonNull(version, "version");
-		Objects.requireNonNull(properties, "properties");
-		Objects.requireNonNull(provisioner, "provisioner");
-		return FormatterStep.createLazy(NAME,
-				() -> new State(JarState.from(MAVEN_COORDINATE + version, provisioner), properties.get()),
-				State::createFormat);
-	}
+  /** Creates a formatter step for the given version and settings file. */
+  public static FormatterStep create(String version, Supplier<Map<String, ?>> properties, Provisioner provisioner) {
+    Objects.requireNonNull(version, "version");
+    Objects.requireNonNull(properties, "properties");
+    Objects.requireNonNull(provisioner, "provisioner");
+    return FormatterStep.createLazy(NAME,
+        () -> new State(JarState.from(MAVEN_COORDINATE + version, provisioner), properties.get()),
+        State::createFormat);
+  }
 
-	public static String defaultVersion() {
-		return DEFAULT_VERSION;
-	}
+  public static String defaultVersion() {
+    return DEFAULT_VERSION;
+  }
 
-	private static class State implements Serializable {
-		private static final long serialVersionUID = 1L;
+  private static class State implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-		/** The jar that contains the eclipse formatter. */
-		final JarState jarState;
-		final NavigableMap<String, ?> properties;
+    /** The jar that contains the eclipse formatter. */
+    final JarState jarState;
+    final NavigableMap<String, ?> properties;
 
-		State(JarState jarState, Map<String, ?> properties) {
-			this.jarState = jarState;
-			// because equality is computed based on serialization, it's important to order the properties
-			// before writing them
-			this.properties = new TreeMap<>(properties);
-			requireKeysAndValuesNonNull(this.properties);
-		}
+    State(JarState jarState, Map<String, ?> properties) {
+      this.jarState = jarState;
+      // because equality is computed based on serialization, it's important to order the properties
+      // before writing them
+      this.properties = new TreeMap<>(properties);
+      requireKeysAndValuesNonNull(this.properties);
+    }
 
-		FormatterFunc createFormat() throws Exception {
-			Logger logger = Logger.getLogger(FreshMarkStep.class.getName());
-			Consumer<String> loggingStream = logger::warning;
+    FormatterFunc createFormat() throws Exception {
+      Logger logger = Logger.getLogger(FreshMarkStep.class.getName());
+      Consumer<String> loggingStream = logger::warning;
 
-			ClassLoader classLoader = jarState.getClassLoader();
+      ClassLoader classLoader = jarState.getClassLoader();
 
-			// instantiate the formatter and get its format method
-			Class<?> formatterClazz = classLoader.loadClass(FORMATTER_CLASS);
-			Object formatter = formatterClazz.getConstructor(Map.class, Consumer.class).newInstance(properties, loggingStream);
-			Method method = formatterClazz.getMethod(FORMATTER_METHOD, String.class);
-			return input -> (String) method.invoke(formatter, input);
-		}
-	}
+      // instantiate the formatter and get its format method
+      Class<?> formatterClazz = classLoader.loadClass(FORMATTER_CLASS);
+      Object formatter = formatterClazz.getConstructor(Map.class, Consumer.class).newInstance(properties, loggingStream);
+      Method method = formatterClazz.getMethod(FORMATTER_METHOD, String.class);
+      return input -> (String) method.invoke(formatter, input);
+    }
+  }
 }

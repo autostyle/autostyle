@@ -25,18 +25,18 @@ import com.diffplug.common.collect.testing.features.CollectionSize;
 import junit.framework.TestSuite;
 
 public class NonSerializableListTest {
-	public static TestSuite suite() {
-		return ListTestSuiteBuilder
-				.using(new TestStringListGenerator() {
-					@Override
-					protected List<String> create(String[] elements) {
-						return NonSerializableList.of(elements);
-					}
-				})
-				.named("NonSerializableList")
-				.withFeatures(
-						CollectionSize.ANY,
-						CollectionFeature.ALLOWS_NULL_QUERIES)
-				.createTestSuite();
-	}
+  public static TestSuite suite() {
+    return ListTestSuiteBuilder
+        .using(new TestStringListGenerator() {
+          @Override
+          protected List<String> create(String[] elements) {
+            return NonSerializableList.of(elements);
+          }
+        })
+        .named("NonSerializableList")
+        .withFeatures(
+            CollectionSize.ANY,
+            CollectionFeature.ALLOWS_NULL_QUERIES)
+        .createTestSuite();
+  }
 }

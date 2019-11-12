@@ -26,39 +26,39 @@ import com.diffplug.spotless.StepHarness;
 import com.diffplug.spotless.TestProvisioner;
 
 public class FreshMarkStepTest {
-	@Test
-	public void behavior() throws Exception {
-		HashMap<String, String> map = new HashMap<>();
-		map.put("lib", "MyLib");
-		map.put("author", "Me");
-		StepHarness.forStep(FreshMarkStep.create(() -> map, TestProvisioner.mavenCentral()))
-				.testResource("freshmark/FreshMarkUnformatted.test", "freshmark/FreshMarkFormatted.test");
-	}
+  @Test
+  public void behavior() throws Exception {
+    HashMap<String, String> map = new HashMap<>();
+    map.put("lib", "MyLib");
+    map.put("author", "Me");
+    StepHarness.forStep(FreshMarkStep.create(() -> map, TestProvisioner.mavenCentral()))
+        .testResource("freshmark/FreshMarkUnformatted.test", "freshmark/FreshMarkFormatted.test");
+  }
 
-	@Test
-	public void equality() throws Exception {
-		new SerializableEqualityTester() {
-			String version = "1.3.1";
-			Map<String, Object> props = new HashMap<>();
+  @Test
+  public void equality() throws Exception {
+    new SerializableEqualityTester() {
+      String version = "1.3.1";
+      Map<String, Object> props = new HashMap<>();
 
-			@Override
-			protected void setupTest(API api) {
-				// same version and props == same
-				api.areDifferentThan();
-				// change the version, and it's different
-				version = "1.3.0";
-				api.areDifferentThan();
-				// change the props, and it's different
-				props.put("1", "2");
-				api.areDifferentThan();
-			}
+      @Override
+      protected void setupTest(API api) {
+        // same version and props == same
+        api.areDifferentThan();
+        // change the version, and it's different
+        version = "1.3.0";
+        api.areDifferentThan();
+        // change the props, and it's different
+        props.put("1", "2");
+        api.areDifferentThan();
+      }
 
-			@Override
-			protected FormatterStep create() {
-				String finalVersion = this.version;
-				Map<String, ?> finalProps = new HashMap<>(props);
-				return FreshMarkStep.create(finalVersion, () -> finalProps, TestProvisioner.mavenCentral());
-			}
-		}.testEquals();
-	}
+      @Override
+      protected FormatterStep create() {
+        String finalVersion = this.version;
+        Map<String, ?> finalProps = new HashMap<>(props);
+        return FreshMarkStep.create(finalVersion, () -> finalProps, TestProvisioner.mavenCentral());
+      }
+    }.testEquals();
+  }
 }

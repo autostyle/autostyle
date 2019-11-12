@@ -23,59 +23,59 @@ import org.eclipse.osgi.service.environment.EnvironmentInfo;
 /** Empty default Eclipse environment. No system information is accessible. */
 public class HiddenEnvironment implements EnvironmentInfo {
 
-	@Override
-	public String[] getCommandLineArgs() {
-		return new String[0];
-	}
+  @Override
+  public String[] getCommandLineArgs() {
+    return new String[0];
+  }
 
-	@Override
-	public String[] getFrameworkArgs() {
-		return new String[0];
-	}
+  @Override
+  public String[] getFrameworkArgs() {
+    return new String[0];
+  }
 
-	@Override
-	public String[] getNonFrameworkArgs() {
-		return new String[0];
-	}
+  @Override
+  public String[] getNonFrameworkArgs() {
+    return new String[0];
+  }
 
-	@Override
-	public String getOSArch() {
-		return System.getProperty("os.arch");
-	}
+  @Override
+  public String getOSArch() {
+    return System.getProperty("os.arch");
+  }
 
-	@Override
-	public String getNL() {
-		return Locale.getDefault().getLanguage();
-	}
+  @Override
+  public String getNL() {
+    return Locale.getDefault().getLanguage();
+  }
 
-	@Override
-	public String getOS() {
-		return Constants.OS_UNKNOWN;
-	}
+  @Override
+  public String getOS() {
+    return Constants.OS_UNKNOWN;
+  }
 
-	@Override
-	public String getWS() {
-		return null; //No window system
-	}
+  @Override
+  public String getWS() {
+    return null; //No window system
+  }
 
-	@Override
-	public boolean inDebugMode() {
-		return false;
-	}
+  @Override
+  public boolean inDebugMode() {
+    return false;
+  }
 
-	@Override
-	public boolean inDevelopmentMode() {
-		return false;
-	}
+  @Override
+  public boolean inDevelopmentMode() {
+    return false;
+  }
 
-	@Override
-	public String setProperty(String key, String value) {
-		return value; //Launcher information is not stored
-	}
+  @Override
+  public String setProperty(String key, String value) {
+    return value; //Launcher information is not stored
+  }
 
-	@Override
-	public String getProperty(String key) {
-		return null; //Launcher information/configuration is not required
-	}
+  @Override
+  public String getProperty(String key) {
+    return null; //Launcher information/configuration is not required
+  }
 
 }

@@ -24,52 +24,52 @@ import com.diffplug.spotless.FormatterStep;
 import com.diffplug.spotless.kotlin.KtLintStep;
 
 public class KotlinGradleExtension extends FormatExtension {
-	private static final String GRADLE_KOTLIN_DSL_FILE_EXTENSION = "*.gradle.kts";
+  private static final String GRADLE_KOTLIN_DSL_FILE_EXTENSION = "*.gradle.kts";
 
-	static final String NAME = "kotlinGradle";
+  static final String NAME = "kotlinGradle";
 
-	public KotlinGradleExtension(SpotlessExtension rootExtension) {
-		super(rootExtension);
-	}
+  public KotlinGradleExtension(SpotlessExtension rootExtension) {
+    super(rootExtension);
+  }
 
-	/** Adds the specified version of [ktlint](https://github.com/pinterest/ktlint). */
-	public KotlinFormatExtension ktlint(String version) {
-		Objects.requireNonNull(version, "version");
-		return new KotlinFormatExtension(version, Collections.emptyMap());
-	}
+  /** Adds the specified version of [ktlint](https://github.com/pinterest/ktlint). */
+  public KotlinFormatExtension ktlint(String version) {
+    Objects.requireNonNull(version, "version");
+    return new KotlinFormatExtension(version, Collections.emptyMap());
+  }
 
-	public KotlinFormatExtension ktlint() {
-		return ktlint(KtLintStep.defaultVersion());
-	}
+  public KotlinFormatExtension ktlint() {
+    return ktlint(KtLintStep.defaultVersion());
+  }
 
-	public class KotlinFormatExtension {
+  public class KotlinFormatExtension {
 
-		private final String version;
-		private Map<String, String> userData;
+    private final String version;
+    private Map<String, String> userData;
 
-		KotlinFormatExtension(String version, Map<String, String> config) {
-			this.version = version;
-			this.userData = config;
-			addStep(createStep());
-		}
+    KotlinFormatExtension(String version, Map<String, String> config) {
+      this.version = version;
+      this.userData = config;
+      addStep(createStep());
+    }
 
-		public void userData(Map<String, String> userData) {
-			// Copy the map to a sorted map because up-to-date checking is based on binary-equals of the serialized
-			// representation.
-			this.userData = ImmutableSortedMap.copyOf(userData);
-			replaceStep(createStep());
-		}
+    public void userData(Map<String, String> userData) {
+      // Copy the map to a sorted map because up-to-date checking is based on binary-equals of the serialized
+      // representation.
+      this.userData = ImmutableSortedMap.copyOf(userData);
+      replaceStep(createStep());
+    }
 
-		private FormatterStep createStep() {
-			return KtLintStep.createForScript(version, GradleProvisioner.fromProject(getProject()), userData);
-		}
-	}
+    private FormatterStep createStep() {
+      return KtLintStep.createForScript(version, GradleProvisioner.fromProject(getProject()), userData);
+    }
+  }
 
-	@Override
-	protected void setupTask(SpotlessTask task) {
-		if (target == null) {
-			target = parseTarget(GRADLE_KOTLIN_DSL_FILE_EXTENSION);
-		}
-		super.setupTask(task);
-	}
+  @Override
+  protected void setupTask(SpotlessTask task) {
+    if (target == null) {
+      target = parseTarget(GRADLE_KOTLIN_DSL_FILE_EXTENSION);
+    }
+    super.setupTask(task);
+  }
 }

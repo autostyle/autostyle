@@ -19,15 +19,15 @@ import java.util.Map;
 import java.util.Objects;
 
 final class LibMarkdownPreconditions {
-	// prevent direct instantiation
-	private LibMarkdownPreconditions() {}
+  // prevent direct instantiation
+  private LibMarkdownPreconditions() {}
 
-	static <K, V> Map<K, V> requireKeysAndValuesNonNull(Map<K, V> map) {
-		Objects.requireNonNull(map);
-		map.forEach((key, value) -> {
-			Objects.requireNonNull(key);
-			Objects.requireNonNull(value);
-		});
-		return map;
-	}
+  static <K, V> Map<K, V> requireKeysAndValuesNonNull(Map<K, V> map) {
+    Objects.requireNonNull(map);
+    map.forEach((key, value) -> {
+      Objects.requireNonNull(key);
+      Objects.requireNonNull(value);
+    });
+    return map;
+  }
 }

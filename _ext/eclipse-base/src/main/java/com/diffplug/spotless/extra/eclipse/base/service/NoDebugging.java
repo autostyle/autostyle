@@ -24,64 +24,64 @@ import org.eclipse.osgi.service.debug.DebugTrace;
 /** No debugging shall be performed */
 public class NoDebugging implements DebugOptions {
 
-	@Override
-	public boolean getBooleanOption(String option, boolean defaultValue) {
-		return false;
-	}
+  @Override
+  public boolean getBooleanOption(String option, boolean defaultValue) {
+    return false;
+  }
 
-	@Override
-	public String getOption(String option) {
-		return null;
-	}
+  @Override
+  public String getOption(String option) {
+    return null;
+  }
 
-	@Override
-	public String getOption(String option, String defaultValue) {
-		return null;
-	}
+  @Override
+  public String getOption(String option, String defaultValue) {
+    return null;
+  }
 
-	@Override
-	public int getIntegerOption(String option, int defaultValue) {
-		return 0;
-	}
+  @Override
+  public int getIntegerOption(String option, int defaultValue) {
+    return 0;
+  }
 
-	@Override
-	public Map<String, String> getOptions() {
-		return null;
-	}
+  @Override
+  public Map<String, String> getOptions() {
+    return null;
+  }
 
-	@Override
-	public void setOption(String option, String value) {}
+  @Override
+  public void setOption(String option, String value) {}
 
-	@Override
-	public void setOptions(Map<String, String> options) {}
+  @Override
+  public void setOptions(Map<String, String> options) {}
 
-	@Override
-	public void removeOption(String option) {}
+  @Override
+  public void removeOption(String option) {}
 
-	@Override
-	public boolean isDebugEnabled() {
-		return false;
-	}
+  @Override
+  public boolean isDebugEnabled() {
+    return false;
+  }
 
-	@Override
-	public void setDebugEnabled(boolean value) {}
+  @Override
+  public void setDebugEnabled(boolean value) {}
 
-	@Override
-	public void setFile(File newFile) {}
+  @Override
+  public void setFile(File newFile) {}
 
-	@Override
-	public File getFile() {
-		return null;
-	}
+  @Override
+  public File getFile() {
+    return null;
+  }
 
-	@Override
-	public DebugTrace newDebugTrace(String bundleSymbolicName) {
-		return null;
-	}
+  @Override
+  public DebugTrace newDebugTrace(String bundleSymbolicName) {
+    return null;
+  }
 
-	@Override
-	public DebugTrace newDebugTrace(String bundleSymbolicName, Class<?> traceEntryClass) {
-		return null;
-	}
+  @Override
+  public DebugTrace newDebugTrace(String bundleSymbolicName, Class<?> traceEntryClass) {
+    return null;
+  }
 
 }

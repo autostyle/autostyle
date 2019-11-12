@@ -22,38 +22,38 @@ import org.junit.Test;
 import com.diffplug.common.base.StringPrinter;
 
 public class GroovyGradleExtensionTest extends GradleIntegrationTest {
-	private static final String HEADER = "//My tests header";
+  private static final String HEADER = "//My tests header";
 
-	@Test
-	public void defaultTarget() throws IOException {
-		testTarget(true);
-	}
+  @Test
+  public void defaultTarget() throws IOException {
+    testTarget(true);
+  }
 
-	@Test
-	public void customTarget() throws IOException {
-		testTarget(false);
-	}
+  @Test
+  public void customTarget() throws IOException {
+    testTarget(false);
+  }
 
-	private void testTarget(boolean useDefaultTarget) throws IOException {
-		String target = useDefaultTarget ? "" : "target 'other.gradle'";
-		String buildContent = StringPrinter.buildStringFromLines(
-				"plugins {",
-				"    id 'com.diffplug.gradle.spotless'",
-				"}",
-				"spotless {",
-				"    groovyGradle {",
-				target,
-				"        licenseHeader('" + HEADER + "', 'plugins')",
-				"    }",
-				"}");
-		setFile("build.gradle").toContent(buildContent);
+  private void testTarget(boolean useDefaultTarget) throws IOException {
+    String target = useDefaultTarget ? "" : "target 'other.gradle'";
+    String buildContent = StringPrinter.buildStringFromLines(
+        "plugins {",
+        "    id 'com.diffplug.gradle.spotless'",
+        "}",
+        "spotless {",
+        "    groovyGradle {",
+        target,
+        "        licenseHeader('" + HEADER + "', 'plugins')",
+        "    }",
+        "}");
+    setFile("build.gradle").toContent(buildContent);
 
-		gradleRunner().withArguments("spotlessApply").build();
+    gradleRunner().withArguments("spotlessApply").build();
 
-		if (useDefaultTarget) {
-			assertFile("build.gradle").hasContent(HEADER + "\n" + buildContent);
-		} else {
-			assertFile("build.gradle").hasContent(buildContent);
-		}
-	}
+    if (useDefaultTarget) {
+      assertFile("build.gradle").hasContent(HEADER + "\n" + buildContent);
+    } else {
+      assertFile("build.gradle").hasContent(buildContent);
+    }
+  }
 }

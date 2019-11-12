@@ -1,20 +1,20 @@
 plugins {
-	id 'java-library'
+  id 'java-library'
 }
 ext.artifactId = project.artifactIdTestLib
 ext.version = project.versionLib
 apply from: rootProject.file('gradle/java-setup.gradle')
 
 dependencies {
-	api project(':lib')
-	api "com.diffplug.durian:durian-core:${VER_DURIAN}"
-	api "com.diffplug.durian:durian-testlib:${VER_DURIAN}"
-	api "junit:junit:${VER_JUNIT}"
-	api "org.assertj:assertj-core:${VER_ASSERTJ}"
+  api project(':lib')
+  api "com.diffplug.durian:durian-core:${VER_DURIAN}"
+  api "com.diffplug.durian:durian-testlib:${VER_DURIAN}"
+  api "junit:junit:${VER_JUNIT}"
+  api "org.assertj:assertj-core:${VER_ASSERTJ}"
 
-	implementation "com.diffplug.durian:durian-io:${VER_DURIAN}"
-	implementation "com.diffplug.durian:durian-collect:${VER_DURIAN}"
-	implementation gradleTestKit()
+  implementation "com.diffplug.durian:durian-io:${VER_DURIAN}"
+  implementation "com.diffplug.durian:durian-collect:${VER_DURIAN}"
+  implementation gradleTestKit()
 }
 
 // we'll hold the testlib to a low standard (prize brevity)

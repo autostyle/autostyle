@@ -43,116 +43,116 @@ import com.diffplug.spotless.extra.eclipse.base.SpotlessEclipseFramework;
 
 /** Spotless-Formatter step which calls out to the Groovy-Eclipse formatter. */
 public class GrEclipseFormatterStepImpl {
-	/**
-	 * Groovy compiler problems can be ignored.
-	 * <p>
-	 * Value is either 'true' or 'false'
-	 * </p>
-	 */
-	public static final String IGNORE_FORMATTER_PROBLEMS = "ignoreFormatterProblems";
+  /**
+   * Groovy compiler problems can be ignored.
+   * <p>
+   * Value is either 'true' or 'false'
+   * </p>
+   */
+  public static final String IGNORE_FORMATTER_PROBLEMS = "ignoreFormatterProblems";
 
-	private final FormatterPreferencesOnStore preferencesStore;
-	private final boolean ignoreFormatterProblems;
+  private final FormatterPreferencesOnStore preferencesStore;
+  private final boolean ignoreFormatterProblems;
 
-	public GrEclipseFormatterStepImpl(final Properties properties) throws Exception {
-		if (SpotlessEclipseFramework.setup(
-				config -> {
-					config.applyDefault();
-					config.useSlf4J(GrEclipseFormatterStepImpl.class.getPackage().getName());
-				},
-				plugins -> {
-					plugins.add(new GroovyCoreActivator());
-				})) {}
-		PreferenceStore preferences = createPreferences(properties);
-		preferencesStore = new FormatterPreferencesOnStore(preferences);
-		ignoreFormatterProblems = Boolean.parseBoolean(properties.getProperty(IGNORE_FORMATTER_PROBLEMS, "false"));
-	}
+  public GrEclipseFormatterStepImpl(final Properties properties) throws Exception {
+    if (SpotlessEclipseFramework.setup(
+        config -> {
+          config.applyDefault();
+          config.useSlf4J(GrEclipseFormatterStepImpl.class.getPackage().getName());
+        },
+        plugins -> {
+          plugins.add(new GroovyCoreActivator());
+        })) {}
+    PreferenceStore preferences = createPreferences(properties);
+    preferencesStore = new FormatterPreferencesOnStore(preferences);
+    ignoreFormatterProblems = Boolean.parseBoolean(properties.getProperty(IGNORE_FORMATTER_PROBLEMS, "false"));
+  }
 
-	/** Formatting Groovy string  */
-	public String format(String raw) throws Exception {
-		IDocument doc = new Document(raw);
-		GroovyErrorListener errorListener = new GroovyErrorListener();
-		TextSelection selectAll = new TextSelection(doc, 0, doc.getLength());
-		GroovyFormatter codeFormatter = new DefaultGroovyFormatter(selectAll, doc, preferencesStore, false);
-		TextEdit edit = codeFormatter.format();
-		if (!ignoreFormatterProblems && errorListener.errorsDetected()) {
-			throw new IllegalArgumentException(errorListener.toString());
-		}
-		edit.apply(doc);
-		return doc.get();
-	}
+  /** Formatting Groovy string  */
+  public String format(String raw) throws Exception {
+    IDocument doc = new Document(raw);
+    GroovyErrorListener errorListener = new GroovyErrorListener();
+    TextSelection selectAll = new TextSelection(doc, 0, doc.getLength());
+    GroovyFormatter codeFormatter = new DefaultGroovyFormatter(selectAll, doc, preferencesStore, false);
+    TextEdit edit = codeFormatter.format();
+    if (!ignoreFormatterProblems && errorListener.errorsDetected()) {
+      throw new IllegalArgumentException(errorListener.toString());
+    }
+    edit.apply(doc);
+    return doc.get();
+  }
 
-	/**
-	 * Eclipse Groovy formatter does not signal problems by its return value, but by logging errors.
-	 */
-	private static class GroovyErrorListener implements ILogListener, IGroovyLogger {
+  /**
+   * Eclipse Groovy formatter does not signal problems by its return value, but by logging errors.
+   */
+  private static class GroovyErrorListener implements ILogListener, IGroovyLogger {
 
-		private final List<String> errors;
+    private final List<String> errors;
 
-		public GroovyErrorListener() {
-			/*
-			 * We need a synchronized list here, in case multiple instantiations
-			 * run in parallel.
-			 */
-			errors = Collections.synchronizedList(new ArrayList<String>());
-			ILog groovyLogger = GroovyCoreActivator.getDefault().getLog();
-			groovyLogger.addLogListener(this);
-			GroovyLogManager.manager.addLogger(this);
-		}
+    public GroovyErrorListener() {
+      /*
+       * We need a synchronized list here, in case multiple instantiations
+       * run in parallel.
+       */
+      errors = Collections.synchronizedList(new ArrayList<String>());
+      ILog groovyLogger = GroovyCoreActivator.getDefault().getLog();
+      groovyLogger.addLogListener(this);
+      GroovyLogManager.manager.addLogger(this);
+    }
 
-		@Override
-		public void logging(final IStatus status, final String plugin) {
-			errors.add(status.getMessage());
-		}
+    @Override
+    public void logging(final IStatus status, final String plugin) {
+      errors.add(status.getMessage());
+    }
 
-		public boolean errorsDetected() {
-			ILog groovyLogger = GroovyCoreActivator.getDefault().getLog();
-			groovyLogger.removeLogListener(this);
-			GroovyLogManager.manager.removeLogger(this);
-			return 0 != errors.size();
-		}
+    public boolean errorsDetected() {
+      ILog groovyLogger = GroovyCoreActivator.getDefault().getLog();
+      groovyLogger.removeLogListener(this);
+      GroovyLogManager.manager.removeLogger(this);
+      return 0 != errors.size();
+    }
 
-		@Override
-		public String toString() {
-			StringBuilder string = new StringBuilder();
-			if (1 < errors.size()) {
-				string.append("Multiple problems detected during step execution:");
-			} else if (0 == errors.size()) {
-				string.append("Step sucesfully executed.");
-			}
-			for (String error : errors) {
-				string.append(System.lineSeparator());
-				string.append(error);
-			}
+    @Override
+    public String toString() {
+      StringBuilder string = new StringBuilder();
+      if (1 < errors.size()) {
+        string.append("Multiple problems detected during step execution:");
+      } else if (0 == errors.size()) {
+        string.append("Step sucesfully executed.");
+      }
+      for (String error : errors) {
+        string.append(System.lineSeparator());
+        string.append(error);
+      }
 
-			return string.toString();
-		}
+      return string.toString();
+    }
 
-		@Override
-		public boolean isCategoryEnabled(TraceCategory cat) {
-			/*
-			 * Note that the compiler errors are just additionally caught here.
-			 * They are also printed directly to System.err.
-			 * See org.codehaus.jdt.groovy.internal.compiler.ast.GroovyCompilationUnitDeclaration.recordProblems
-			 * for details.
-			 */
-			return TraceCategory.COMPILER.equals(cat);
-		}
+    @Override
+    public boolean isCategoryEnabled(TraceCategory cat) {
+      /*
+       * Note that the compiler errors are just additionally caught here.
+       * They are also printed directly to System.err.
+       * See org.codehaus.jdt.groovy.internal.compiler.ast.GroovyCompilationUnitDeclaration.recordProblems
+       * for details.
+       */
+      return TraceCategory.COMPILER.equals(cat);
+    }
 
-		@Override
-		public void log(TraceCategory arg0, String arg1) {
-			errors.add(arg1);
-		}
+    @Override
+    public void log(TraceCategory arg0, String arg1) {
+      errors.add(arg1);
+    }
 
-	}
+  }
 
-	private static PreferenceStore createPreferences(final Properties properties) throws IOException {
-		final PreferenceStore preferences = new PreferenceStore();
-		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		properties.store(output, null);
-		ByteArrayInputStream input = new ByteArrayInputStream(output.toByteArray());
-		preferences.load(input);
-		return preferences;
-	}
+  private static PreferenceStore createPreferences(final Properties properties) throws IOException {
+    final PreferenceStore preferences = new PreferenceStore();
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    properties.store(output, null);
+    ByteArrayInputStream input = new ByteArrayInputStream(output.toByteArray());
+    preferences.load(input);
+    return preferences;
+  }
 
 }

@@ -29,41 +29,41 @@ import com.diffplug.spotless.FormatterProperties;
 import com.diffplug.spotless.markdown.FreshMarkStep;
 
 public class FreshMarkExtension extends FormatExtension {
-	static final String NAME = "freshmark";
+  static final String NAME = "freshmark";
 
-	public final List<Action<Map<String, Object>>> propertyActions = new ArrayList<>();
+  public final List<Action<Map<String, Object>>> propertyActions = new ArrayList<>();
 
-	public FreshMarkExtension(SpotlessExtension root) {
-		super(root);
-		addStep(FreshMarkStep.create(() -> {
-			Map<String, Object> map = new HashMap<>();
-			for (Action<Map<String, Object>> action : propertyActions) {
-				action.execute(map);
-			}
-			return map;
-		}, GradleProvisioner.fromProject(getProject())));
-	}
+  public FreshMarkExtension(SpotlessExtension root) {
+    super(root);
+    addStep(FreshMarkStep.create(() -> {
+      Map<String, Object> map = new HashMap<>();
+      for (Action<Map<String, Object>> action : propertyActions) {
+        action.execute(map);
+      }
+      return map;
+    }, GradleProvisioner.fromProject(getProject())));
+  }
 
-	public void properties(Action<Map<String, Object>> action) {
-		propertyActions.add(Objects.requireNonNull(action));
-	}
+  public void properties(Action<Map<String, Object>> action) {
+    propertyActions.add(Objects.requireNonNull(action));
+  }
 
-	public void propertiesFile(Object... files) {
-		requireElementsNonNull(files);
-		propertyActions.add(map -> {
-			FormatterProperties preferences = FormatterProperties.from(getProject().files(files));
-			/* FreshMarkStep.State serializes the properties and not the files.
-			 * Therefore they must be stored in a hash-map like used by Properties.*/
-			preferences.getProperties().forEach((key, value) -> map.put(key.toString(), value));
-		});
-	}
+  public void propertiesFile(Object... files) {
+    requireElementsNonNull(files);
+    propertyActions.add(map -> {
+      FormatterProperties preferences = FormatterProperties.from(getProject().files(files));
+      /* FreshMarkStep.State serializes the properties and not the files.
+       * Therefore they must be stored in a hash-map like used by Properties.*/
+      preferences.getProperties().forEach((key, value) -> map.put(key.toString(), value));
+    });
+  }
 
-	@Override
-	protected void setupTask(SpotlessTask task) {
-		// defaults to all markdown files
-		if (target == null) {
-			target = parseTarget("**/*.md");
-		}
-		super.setupTask(task);
-	}
+  @Override
+  protected void setupTask(SpotlessTask task) {
+    // defaults to all markdown files
+    if (target == null) {
+      target = parseTarget("**/*.md");
+    }
+    super.setupTask(task);
+  }
 }

@@ -29,30 +29,30 @@ import com.diffplug.spotless.extra.eclipse.base.SpotlessEclipseFramework;
 /** Formatter step which calls out to the Eclipse JDT formatter. */
 public class EclipseJdtFormatterStepImpl {
 
-	private final CodeFormatter codeFormatter;
+  private final CodeFormatter codeFormatter;
 
-	public EclipseJdtFormatterStepImpl(Properties settings) throws Exception {
-		SpotlessEclipseFramework.setup(
-				config -> {
-					config.applyDefault();
-					config.useSlf4J(EclipseJdtFormatterStepImpl.class.getPackage().getName());
-				},
-				plugins -> {
-					plugins.applyDefault();
-					plugins.add(new JavaCore());
-				});
-		this.codeFormatter = ToolFactory.createCodeFormatter(settings, ToolFactory.M_FORMAT_EXISTING);
-	}
+  public EclipseJdtFormatterStepImpl(Properties settings) throws Exception {
+    SpotlessEclipseFramework.setup(
+        config -> {
+          config.applyDefault();
+          config.useSlf4J(EclipseJdtFormatterStepImpl.class.getPackage().getName());
+        },
+        plugins -> {
+          plugins.applyDefault();
+          plugins.add(new JavaCore());
+        });
+    this.codeFormatter = ToolFactory.createCodeFormatter(settings, ToolFactory.M_FORMAT_EXISTING);
+  }
 
-	public String format(String raw) throws Exception {
-		TextEdit edit = codeFormatter.format(CodeFormatter.K_COMPILATION_UNIT | CodeFormatter.F_INCLUDE_COMMENTS, raw, 0, raw.length(), 0, SpotlessEclipseFramework.LINE_DELIMITER);
-		if (edit == null) {
-			throw new IllegalArgumentException("Invalid java syntax for formatting.");
-		} else {
-			IDocument doc = new Document(raw);
-			edit.apply(doc);
-			return doc.get();
-		}
-	}
+  public String format(String raw) throws Exception {
+    TextEdit edit = codeFormatter.format(CodeFormatter.K_COMPILATION_UNIT | CodeFormatter.F_INCLUDE_COMMENTS, raw, 0, raw.length(), 0, SpotlessEclipseFramework.LINE_DELIMITER);
+    if (edit == null) {
+      throw new IllegalArgumentException("Invalid java syntax for formatting.");
+    } else {
+      IDocument doc = new Document(raw);
+      edit.apply(doc);
+      return doc.get();
+    }
+  }
 
 }

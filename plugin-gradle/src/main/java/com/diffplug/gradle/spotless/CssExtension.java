@@ -28,57 +28,57 @@ import com.diffplug.spotless.extra.wtp.EclipseWtpFormatterStep;
  */
 @Deprecated
 public class CssExtension extends FormatExtension implements HasBuiltinDelimiterForLicense {
-	static final String NAME = "css";
+  static final String NAME = "css";
 
-	public CssExtension(SpotlessExtension rootExtension) {
-		super(rootExtension);
-	}
+  public CssExtension(SpotlessExtension rootExtension) {
+    super(rootExtension);
+  }
 
-	public EclipseConfig eclipse() {
-		return new EclipseConfig(EclipseWtpFormatterStep.defaultVersion());
-	}
+  public EclipseConfig eclipse() {
+    return new EclipseConfig(EclipseWtpFormatterStep.defaultVersion());
+  }
 
-	public EclipseConfig eclipse(String version) {
-		return new EclipseConfig(version);
-	}
+  public EclipseConfig eclipse(String version) {
+    return new EclipseConfig(version);
+  }
 
-	/**
-	 * The CSS Eclipse configuration is deprecated. Use the {@link FormatExtension.EclipseWtpConfig} instead.
-	 */
-	@Deprecated
-	public class EclipseConfig {
-		private final EclipseBasedStepBuilder builder;
+  /**
+   * The CSS Eclipse configuration is deprecated. Use the {@link FormatExtension.EclipseWtpConfig} instead.
+   */
+  @Deprecated
+  public class EclipseConfig {
+    private final EclipseBasedStepBuilder builder;
 
-		EclipseConfig(String version) {
-			builder = EclipseWtpFormatterStep.createCssBuilder(GradleProvisioner.fromProject(getProject()));
-			builder.setVersion(version);
-			addStep(builder.build());
-		}
+    EclipseConfig(String version) {
+      builder = EclipseWtpFormatterStep.createCssBuilder(GradleProvisioner.fromProject(getProject()));
+      builder.setVersion(version);
+      addStep(builder.build());
+    }
 
-		public void configFile(Object... configFiles) {
-			requireElementsNonNull(configFiles);
-			Project project = getProject();
-			builder.setPreferences(project.files(configFiles).getFiles());
-			replaceStep(builder.build());
-		}
+    public void configFile(Object... configFiles) {
+      requireElementsNonNull(configFiles);
+      Project project = getProject();
+      builder.setPreferences(project.files(configFiles).getFiles());
+      replaceStep(builder.build());
+    }
 
-	}
+  }
 
-	@Override
-	protected void setupTask(SpotlessTask task) {
-		if (target == null) {
-			target(CssDefaults.FILE_FILTER.toArray());
-		}
-		super.setupTask(task);
-	}
+  @Override
+  protected void setupTask(SpotlessTask task) {
+    if (target == null) {
+      target(CssDefaults.FILE_FILTER.toArray());
+    }
+    super.setupTask(task);
+  }
 
-	@Override
-	public LicenseHeaderConfig licenseHeader(String licenseHeader) {
-		return licenseHeader(licenseHeader, CssDefaults.DELIMITER_EXPR);
-	}
+  @Override
+  public LicenseHeaderConfig licenseHeader(String licenseHeader) {
+    return licenseHeader(licenseHeader, CssDefaults.DELIMITER_EXPR);
+  }
 
-	@Override
-	public LicenseHeaderConfig licenseHeaderFile(Object licenseHeaderFile) {
-		return licenseHeaderFile(licenseHeaderFile, CssDefaults.DELIMITER_EXPR);
-	}
+  @Override
+  public LicenseHeaderConfig licenseHeaderFile(Object licenseHeaderFile) {
+    return licenseHeaderFile(licenseHeaderFile, CssDefaults.DELIMITER_EXPR);
+  }
 }

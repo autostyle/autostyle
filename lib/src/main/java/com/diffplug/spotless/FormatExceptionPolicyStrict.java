@@ -24,35 +24,35 @@ import java.util.TreeSet;
  * halt the build except for a specifically excluded path or step.
  */
 public class FormatExceptionPolicyStrict extends NoLambda.EqualityBasedOnSerialization implements FormatExceptionPolicy {
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	private final Set<String> excludeSteps = new TreeSet<>();
-	private final Set<String> excludePaths = new TreeSet<>();
+  private final Set<String> excludeSteps = new TreeSet<>();
+  private final Set<String> excludePaths = new TreeSet<>();
 
-	/** Adds a step name to exclude. */
-	public void excludeStep(String stepName) {
-		excludeSteps.add(Objects.requireNonNull(stepName));
-	}
+  /** Adds a step name to exclude. */
+  public void excludeStep(String stepName) {
+    excludeSteps.add(Objects.requireNonNull(stepName));
+  }
 
-	/** Adds a relative path to exclude. */
-	public void excludePath(String relativePath) {
-		excludePaths.add(Objects.requireNonNull(relativePath));
-	}
+  /** Adds a relative path to exclude. */
+  public void excludePath(String relativePath) {
+    excludePaths.add(Objects.requireNonNull(relativePath));
+  }
 
-	@Override
-	public void handleError(Throwable e, FormatterStep step, String relativePath) {
-		Objects.requireNonNull(e, "e");
-		Objects.requireNonNull(step, "step");
-		Objects.requireNonNull(relativePath, "relativePath");
-		if (excludeSteps.contains(step.getName())) {
-			FormatExceptionPolicyLegacy.warning(e, step, relativePath);
-		} else {
-			if (excludePaths.contains(relativePath)) {
-				FormatExceptionPolicyLegacy.warning(e, step, relativePath);
-			} else {
-				FormatExceptionPolicyLegacy.error(e, step, relativePath);
-				throw ThrowingEx.asRuntimeRethrowError(e);
-			}
-		}
-	}
+  @Override
+  public void handleError(Throwable e, FormatterStep step, String relativePath) {
+    Objects.requireNonNull(e, "e");
+    Objects.requireNonNull(step, "step");
+    Objects.requireNonNull(relativePath, "relativePath");
+    if (excludeSteps.contains(step.getName())) {
+      FormatExceptionPolicyLegacy.warning(e, step, relativePath);
+    } else {
+      if (excludePaths.contains(relativePath)) {
+        FormatExceptionPolicyLegacy.warning(e, step, relativePath);
+      } else {
+        FormatExceptionPolicyLegacy.error(e, step, relativePath);
+        throw ThrowingEx.asRuntimeRethrowError(e);
+      }
+    }
+  }
 }

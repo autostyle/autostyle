@@ -23,31 +23,31 @@ import com.diffplug.spotless.FormatterFunc;
 import com.diffplug.spotless.FormatterStep;
 
 public final class ReplaceRegexStep {
-	// prevent direct instantiation
-	private ReplaceRegexStep() {}
+  // prevent direct instantiation
+  private ReplaceRegexStep() {}
 
-	public static FormatterStep create(String name, String regex, String replacement) {
-		Objects.requireNonNull(name, "name");
-		Objects.requireNonNull(regex, "regex");
-		Objects.requireNonNull(replacement, "replacement");
-		return FormatterStep.createLazy(name,
-				() -> new State(Pattern.compile(regex, Pattern.UNIX_LINES | Pattern.MULTILINE), replacement),
-				State::toFormatter);
-	}
+  public static FormatterStep create(String name, String regex, String replacement) {
+    Objects.requireNonNull(name, "name");
+    Objects.requireNonNull(regex, "regex");
+    Objects.requireNonNull(replacement, "replacement");
+    return FormatterStep.createLazy(name,
+        () -> new State(Pattern.compile(regex, Pattern.UNIX_LINES | Pattern.MULTILINE), replacement),
+        State::toFormatter);
+  }
 
-	private static final class State implements Serializable {
-		private static final long serialVersionUID = 1L;
+  private static final class State implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-		private final Pattern regex;
-		private final String replacement;
+    private final Pattern regex;
+    private final String replacement;
 
-		State(Pattern regex, String replacement) {
-			this.regex = regex;
-			this.replacement = replacement;
-		}
+    State(Pattern regex, String replacement) {
+      this.regex = regex;
+      this.replacement = replacement;
+    }
 
-		FormatterFunc toFormatter() {
-			return raw -> regex.matcher(raw).replaceAll(replacement);
-		}
-	}
+    FormatterFunc toFormatter() {
+      return raw -> regex.matcher(raw).replaceAll(replacement);
+    }
+  }
 }

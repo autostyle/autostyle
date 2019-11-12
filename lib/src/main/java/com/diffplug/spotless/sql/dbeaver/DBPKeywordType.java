@@ -24,5 +24,5 @@ package com.diffplug.spotless.sql.dbeaver;
  * which itself is licensed under the Apache 2.0 license.
  */
 enum DBPKeywordType {
-	KEYWORD, FUNCTION, TYPE, OTHER
+  KEYWORD, FUNCTION, TYPE, OTHER
 }

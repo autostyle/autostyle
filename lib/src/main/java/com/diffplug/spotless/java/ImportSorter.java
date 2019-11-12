@@ -25,110 +25,110 @@ import java.util.Scanner;
 // Based on ImportSorterStep from https://github.com/krasa/EclipseCodeFormatter,
 // which itself is licensed under the Apache 2.0 license.
 final class ImportSorter {
-	private static final int START_INDEX_OF_IMPORTS_PACKAGE_DECLARATION = 7;
-	static final String N = "\n";
+  private static final int START_INDEX_OF_IMPORTS_PACKAGE_DECLARATION = 7;
+  static final String N = "\n";
 
-	private final List<String> importsOrder;
+  private final List<String> importsOrder;
 
-	ImportSorter(List<String> importsOrder) {
-		this.importsOrder = new ArrayList<>(importsOrder);
-	}
+  ImportSorter(List<String> importsOrder) {
+    this.importsOrder = new ArrayList<>(importsOrder);
+  }
 
-	String format(String raw, String lineFormat) {
-		// parse file
-		Scanner scanner = new Scanner(raw);
-		int firstImportLine = 0;
-		int lastImportLine = 0;
-		int line = 0;
-		boolean isMultiLineComment = false;
-		List<String> imports = new ArrayList<>();
-		while (scanner.hasNext()) {
-			line++;
-			String next = scanner.nextLine();
-			if (next == null) {
-				break;
-			}
-			//Since we have no AST, we only consider the most common use cases.
-			isMultiLineComment |= next.contains("/*");
-			if (isMultiLineComment && next.contains("*/")) {
-				isMultiLineComment = false;
-				if (!next.contains("/*")) {
-					continue;
-				}
-			}
+  String format(String raw, String lineFormat) {
+    // parse file
+    Scanner scanner = new Scanner(raw);
+    int firstImportLine = 0;
+    int lastImportLine = 0;
+    int line = 0;
+    boolean isMultiLineComment = false;
+    List<String> imports = new ArrayList<>();
+    while (scanner.hasNext()) {
+      line++;
+      String next = scanner.nextLine();
+      if (next == null) {
+        break;
+      }
+      //Since we have no AST, we only consider the most common use cases.
+      isMultiLineComment |= next.contains("/*");
+      if (isMultiLineComment && next.contains("*/")) {
+        isMultiLineComment = false;
+        if (!next.contains("/*")) {
+          continue;
+        }
+      }
 
-			if (next.startsWith("import ")) {
-				int i = next.indexOf(".");
-				if (isNotValidImport(i)) {
-					continue;
-				}
-				if (firstImportLine == 0) {
-					firstImportLine = line;
-				}
-				lastImportLine = line;
-				int endIndex = next.indexOf(";");
+      if (next.startsWith("import ")) {
+        int i = next.indexOf(".");
+        if (isNotValidImport(i)) {
+          continue;
+        }
+        if (firstImportLine == 0) {
+          firstImportLine = line;
+        }
+        lastImportLine = line;
+        int endIndex = next.indexOf(";");
 
-				String imprt = next.substring(START_INDEX_OF_IMPORTS_PACKAGE_DECLARATION, endIndex != -1 ? endIndex : next.length());
-				if (!isMultiLineComment && !imports.contains(imprt)) {
-					imports.add(imprt);
-				}
-			}
-			if (!isMultiLineComment && isBeginningOfScope(next)) {
-				break; //Don't dare to touch lines after a scope started
-			}
-		}
-		scanner.close();
+        String imprt = next.substring(START_INDEX_OF_IMPORTS_PACKAGE_DECLARATION, endIndex != -1 ? endIndex : next.length());
+        if (!isMultiLineComment && !imports.contains(imprt)) {
+          imports.add(imprt);
+        }
+      }
+      if (!isMultiLineComment && isBeginningOfScope(next)) {
+        break; //Don't dare to touch lines after a scope started
+      }
+    }
+    scanner.close();
 
-		List<String> sortedImports = ImportSorterImpl.sort(imports, importsOrder, lineFormat);
-		return applyImportsToDocument(raw, firstImportLine, lastImportLine, sortedImports);
-	}
+    List<String> sortedImports = ImportSorterImpl.sort(imports, importsOrder, lineFormat);
+    return applyImportsToDocument(raw, firstImportLine, lastImportLine, sortedImports);
+  }
 
-	private static boolean isBeginningOfScope(String line) {
-		int scope = line.indexOf("{");
-		if (0 <= scope) {
-			return !line.substring(0, scope).contains("//");
-		}
-		return false;
-	}
+  private static boolean isBeginningOfScope(String line) {
+    int scope = line.indexOf("{");
+    if (0 <= scope) {
+      return !line.substring(0, scope).contains("//");
+    }
+    return false;
+  }
 
-	private static String applyImportsToDocument(final String document, int firstImportLine, int lastImportLine, List<String> strings) {
-		if (document.isEmpty()) {
-			return document;
-		}
-		boolean importsAlreadyAppended = false;
-		Scanner scanner = new Scanner(document);
-		int curentLine = 0;
-		final StringBuilder sb = new StringBuilder();
-		while (scanner.hasNext()) {
-			curentLine++;
-			String next = scanner.nextLine();
-			if (next == null) {
-				break;
-			}
-			if (curentLine >= firstImportLine && curentLine <= lastImportLine) {
-				if (!importsAlreadyAppended) {
-					for (String string : strings) {
-						sb.append(string);
-					}
-				}
-				importsAlreadyAppended = true;
-			} else {
-				append(sb, next);
-			}
-		}
-		scanner.close();
-		if (!document.endsWith("\n")) {
-			sb.setLength(sb.length() - 1);
-		}
-		return sb.toString();
-	}
+  private static String applyImportsToDocument(final String document, int firstImportLine, int lastImportLine, List<String> strings) {
+    if (document.isEmpty()) {
+      return document;
+    }
+    boolean importsAlreadyAppended = false;
+    Scanner scanner = new Scanner(document);
+    int curentLine = 0;
+    final StringBuilder sb = new StringBuilder();
+    while (scanner.hasNext()) {
+      curentLine++;
+      String next = scanner.nextLine();
+      if (next == null) {
+        break;
+      }
+      if (curentLine >= firstImportLine && curentLine <= lastImportLine) {
+        if (!importsAlreadyAppended) {
+          for (String string : strings) {
+            sb.append(string);
+          }
+        }
+        importsAlreadyAppended = true;
+      } else {
+        append(sb, next);
+      }
+    }
+    scanner.close();
+    if (!document.endsWith("\n")) {
+      sb.setLength(sb.length() - 1);
+    }
+    return sb.toString();
+  }
 
-	private static void append(StringBuilder sb, String next) {
-		sb.append(next);
-		sb.append(N);
-	}
+  private static void append(StringBuilder sb, String next) {
+    sb.append(next);
+    sb.append(N);
+  }
 
-	private static boolean isNotValidImport(int i) {
-		return i <= START_INDEX_OF_IMPORTS_PACKAGE_DECLARATION;
-	}
+  private static boolean isNotValidImport(int i) {
+    return i <= START_INDEX_OF_IMPORTS_PACKAGE_DECLARATION;
+  }
 }

@@ -29,58 +29,58 @@ import com.diffplug.spotless.FormatterStep;
 import com.diffplug.spotless.scala.ScalaFmtStep;
 
 public class ScalaExtension extends FormatExtension {
-	static final String NAME = "scala";
+  static final String NAME = "scala";
 
-	public ScalaExtension(SpotlessExtension rootExtension) {
-		super(rootExtension);
-	}
+  public ScalaExtension(SpotlessExtension rootExtension) {
+    super(rootExtension);
+  }
 
-	public ScalaFmtConfig scalafmt() {
-		return scalafmt(ScalaFmtStep.defaultVersion());
-	}
+  public ScalaFmtConfig scalafmt() {
+    return scalafmt(ScalaFmtStep.defaultVersion());
+  }
 
-	public ScalaFmtConfig scalafmt(String version) {
-		return new ScalaFmtConfig(version);
-	}
+  public ScalaFmtConfig scalafmt(String version) {
+    return new ScalaFmtConfig(version);
+  }
 
-	public class ScalaFmtConfig {
-		final String version;
-		@Nullable
-		Object configFile;
+  public class ScalaFmtConfig {
+    final String version;
+    @Nullable
+    Object configFile;
 
-		ScalaFmtConfig(String version) {
-			this.version = Objects.requireNonNull(version);
-			addStep(createStep());
-		}
+    ScalaFmtConfig(String version) {
+      this.version = Objects.requireNonNull(version);
+      addStep(createStep());
+    }
 
-		public void configFile(Object configFile) {
-			this.configFile = Objects.requireNonNull(configFile);
-			replaceStep(createStep());
-		}
+    public void configFile(Object configFile) {
+      this.configFile = Objects.requireNonNull(configFile);
+      replaceStep(createStep());
+    }
 
-		private FormatterStep createStep() {
-			File resolvedConfigFile = configFile == null ? null : getProject().file(configFile);
-			return ScalaFmtStep.create(version, GradleProvisioner.fromProject(getProject()), resolvedConfigFile);
-		}
-	}
+    private FormatterStep createStep() {
+      File resolvedConfigFile = configFile == null ? null : getProject().file(configFile);
+      return ScalaFmtStep.create(version, GradleProvisioner.fromProject(getProject()), resolvedConfigFile);
+    }
+  }
 
-	/** If the user hasn't specified the files yet, we'll assume he/she means all of the kotlin files. */
-	@Override
-	protected void setupTask(SpotlessTask task) {
-		if (target == null) {
-			JavaPluginConvention javaPlugin = getProject().getConvention().findPlugin(JavaPluginConvention.class);
-			if (javaPlugin == null) {
-				throw new GradleException("You must either specify 'target' manually or apply the 'scala' plugin.");
-			}
-			FileCollection union = getProject().files();
-			for (SourceSet sourceSet : javaPlugin.getSourceSets()) {
-				union = union.plus(sourceSet.getAllSource().filter(file -> {
-					String name = file.getName();
-					return name.endsWith(".scala") || name.endsWith(".sc");
-				}));
-			}
-			target = union;
-		}
-		super.setupTask(task);
-	}
+  /** If the user hasn't specified the files yet, we'll assume he/she means all of the kotlin files. */
+  @Override
+  protected void setupTask(SpotlessTask task) {
+    if (target == null) {
+      JavaPluginConvention javaPlugin = getProject().getConvention().findPlugin(JavaPluginConvention.class);
+      if (javaPlugin == null) {
+        throw new GradleException("You must either specify 'target' manually or apply the 'scala' plugin.");
+      }
+      FileCollection union = getProject().files();
+      for (SourceSet sourceSet : javaPlugin.getSourceSets()) {
+        union = union.plus(sourceSet.getAllSource().filter(file -> {
+          String name = file.getName();
+          return name.endsWith(".scala") || name.endsWith(".sc");
+        }));
+      }
+      target = union;
+    }
+    super.setupTask(task);
+  }
 }

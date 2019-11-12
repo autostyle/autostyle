@@ -34,67 +34,67 @@ import javax.annotation.Nullable;
  * distinct functionality of the build tool.
  */
 class FeatureClassLoader extends URLClassLoader {
-	static {
-		ClassLoader.registerAsParallelCapable();
-	}
+  static {
+    ClassLoader.registerAsParallelCapable();
+  }
 
-	/**
-	 * The following packages must be provided by the build tool or the corresponding Spotless plugin:
-	 * <ul>
-	 *   <li>org.slf4j - SLF4J API must be provided. If no SLF4J binding is provided, log messages are dropped.</li>
-	 * </ul>
-	 */
-	static final List<String> BUILD_TOOLS_PACKAGES = Collections.unmodifiableList(Arrays.asList("org.slf4j."));
-	// NOTE: if this changes, you need to also update the `JarState.getClassLoader` methods.
+  /**
+   * The following packages must be provided by the build tool or the corresponding Spotless plugin:
+   * <ul>
+   *   <li>org.slf4j - SLF4J API must be provided. If no SLF4J binding is provided, log messages are dropped.</li>
+   * </ul>
+   */
+  static final List<String> BUILD_TOOLS_PACKAGES = Collections.unmodifiableList(Arrays.asList("org.slf4j."));
+  // NOTE: if this changes, you need to also update the `JarState.getClassLoader` methods.
 
-	private final ClassLoader buildToolClassLoader;
+  private final ClassLoader buildToolClassLoader;
 
-	/**
-	 * Constructs a new FeatureClassLoader for the given URLs, based on an {@code URLClassLoader},
-	 * using the system class loader as parent. For {@link #BUILD_TOOLS_PACKAGES }, the build
-	 * tool class loader is used.
-	 *
-	 * @param urls the URLs from which to load classes and resources
-	 * @param buildToolClassLoader The build tool class loader
-	 * @exception  SecurityException  If a security manager exists and prevents the creation of a class loader.
-	 * @exception  NullPointerException if {@code urls} is {@code null}.
-	 */
+  /**
+   * Constructs a new FeatureClassLoader for the given URLs, based on an {@code URLClassLoader},
+   * using the system class loader as parent. For {@link #BUILD_TOOLS_PACKAGES }, the build
+   * tool class loader is used.
+   *
+   * @param urls the URLs from which to load classes and resources
+   * @param buildToolClassLoader The build tool class loader
+   * @exception  SecurityException  If a security manager exists and prevents the creation of a class loader.
+   * @exception  NullPointerException if {@code urls} is {@code null}.
+   */
 
-	FeatureClassLoader(URL[] urls, ClassLoader buildToolClassLoader) {
-		super(urls, getParentClassLoader());
-		Objects.requireNonNull(buildToolClassLoader);
-		this.buildToolClassLoader = buildToolClassLoader;
-	}
+  FeatureClassLoader(URL[] urls, ClassLoader buildToolClassLoader) {
+    super(urls, getParentClassLoader());
+    Objects.requireNonNull(buildToolClassLoader);
+    this.buildToolClassLoader = buildToolClassLoader;
+  }
 
-	@Override
-	protected Class<?> findClass(String name) throws ClassNotFoundException {
-		for (String buildToolPackage : BUILD_TOOLS_PACKAGES) {
-			if (name.startsWith(buildToolPackage)) {
-				return buildToolClassLoader.loadClass(name);
-			}
-		}
-		return super.findClass(name);
-	}
+  @Override
+  protected Class<?> findClass(String name) throws ClassNotFoundException {
+    for (String buildToolPackage : BUILD_TOOLS_PACKAGES) {
+      if (name.startsWith(buildToolPackage)) {
+        return buildToolClassLoader.loadClass(name);
+      }
+    }
+    return super.findClass(name);
+  }
 
-	/**
-	 * Making spotless Java 9+ compatible. In Java 8 (and minor) the bootstrap
-	 * class loader saw every platform class. In Java 9+ it was changed so the
-	 * bootstrap class loader does not see all classes anymore. This might lead
-	 * to ClassNotFoundException in formatters (e.g. freshmark).
-	 *
-	 * @return <code>null</code> on Java 8 (and minor), otherwise <code>PlatformClassLoader</code>
-	 */
-	@Nullable
-	private static ClassLoader getParentClassLoader() {
-		double version = Double.parseDouble(System.getProperty("java.specification.version"));
-		if (version > 1.8) {
-			try {
-				return (ClassLoader) ClassLoader.class.getMethod("getPlatformClassLoader").invoke(null);
-			} catch (Exception e) {
-				throw ThrowingEx.asRuntime(e);
-			}
-		} else {
-			return null;
-		}
-	}
+  /**
+   * Making spotless Java 9+ compatible. In Java 8 (and minor) the bootstrap
+   * class loader saw every platform class. In Java 9+ it was changed so the
+   * bootstrap class loader does not see all classes anymore. This might lead
+   * to ClassNotFoundException in formatters (e.g. freshmark).
+   *
+   * @return <code>null</code> on Java 8 (and minor), otherwise <code>PlatformClassLoader</code>
+   */
+  @Nullable
+  private static ClassLoader getParentClassLoader() {
+    double version = Double.parseDouble(System.getProperty("java.specification.version"));
+    if (version > 1.8) {
+      try {
+        return (ClassLoader) ClassLoader.class.getMethod("getPlatformClassLoader").invoke(null);
+      } catch (Exception e) {
+        throw ThrowingEx.asRuntime(e);
+      }
+    } else {
+      return null;
+    }
+  }
 }

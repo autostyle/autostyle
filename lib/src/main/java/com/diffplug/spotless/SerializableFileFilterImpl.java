@@ -23,21 +23,21 @@ import java.util.List;
 import java.util.Objects;
 
 class SerializableFileFilterImpl {
-	static class SkipFilesNamed extends NoLambda.EqualityBasedOnSerialization implements SerializableFileFilter {
-		private static final long serialVersionUID = 1L;
+  static class SkipFilesNamed extends NoLambda.EqualityBasedOnSerialization implements SerializableFileFilter {
+    private static final long serialVersionUID = 1L;
 
-		private final String[] namesToSkip;
+    private final String[] namesToSkip;
 
-		SkipFilesNamed(String... namesToSkip) {
-			Objects.requireNonNull(namesToSkip);
-			List<String> sorted = toSortedSet(Arrays.asList(namesToSkip));
-			this.namesToSkip = sorted.toArray(new String[sorted.size()]);
-		}
+    SkipFilesNamed(String... namesToSkip) {
+      Objects.requireNonNull(namesToSkip);
+      List<String> sorted = toSortedSet(Arrays.asList(namesToSkip));
+      this.namesToSkip = sorted.toArray(new String[sorted.size()]);
+    }
 
-		@Override
-		public boolean accept(File pathname) {
-			String name = pathname.getName();
-			return Arrays.stream(namesToSkip).noneMatch(name::equals);
-		}
-	}
+    @Override
+    public boolean accept(File pathname) {
+      String name = pathname.getName();
+      return Arrays.stream(namesToSkip).noneMatch(name::equals);
+    }
+  }
 }

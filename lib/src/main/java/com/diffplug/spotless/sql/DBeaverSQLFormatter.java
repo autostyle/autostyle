@@ -25,14 +25,14 @@ import com.diffplug.spotless.sql.dbeaver.SQLTokenizedFormatter;
  */
 public class DBeaverSQLFormatter {
 
-	private final SQLTokenizedFormatter sqlTokenizedFormatter;
+  private final SQLTokenizedFormatter sqlTokenizedFormatter;
 
-	DBeaverSQLFormatter(Properties properties) {
-		DBeaverSQLFormatterConfiguration configuration = new DBeaverSQLFormatterConfiguration(properties);
-		sqlTokenizedFormatter = new SQLTokenizedFormatter(configuration);
-	}
+  DBeaverSQLFormatter(Properties properties) {
+    DBeaverSQLFormatterConfiguration configuration = new DBeaverSQLFormatterConfiguration(properties);
+    sqlTokenizedFormatter = new SQLTokenizedFormatter(configuration);
+  }
 
-	public String format(String input) {
-		return sqlTokenizedFormatter.format(input);
-	}
+  public String format(String input) {
+    return sqlTokenizedFormatter.format(input);
+  }
 }

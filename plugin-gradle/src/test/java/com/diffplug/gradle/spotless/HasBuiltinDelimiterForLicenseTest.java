@@ -21,37 +21,37 @@ import org.junit.Test;
 
 public class HasBuiltinDelimiterForLicenseTest extends GradleIntegrationTest {
 
-	@Test
-	public void testWithCommonInterfaceForConfiguringLicences() throws IOException {
-		// TODO: JLL Convert this to a Kotlin example when supported: https://github.com/gradle/kotlin-dsl/issues/492
-		setFile("build.gradle").toLines(
-				"import com.diffplug.gradle.spotless.HasBuiltinDelimiterForLicense",
-				"plugins {",
-				"    id(\"org.jetbrains.kotlin.jvm\") version \"1.2.31\"",
-				"    id(\"com.diffplug.gradle.spotless\")",
-				"}",
-				"repositories { mavenCentral() }",
-				"spotless {",
-				"    kotlin {",
-				"        assert (it instanceof HasBuiltinDelimiterForLicense) : \"Was `$it`\"",
-				"    }",
-				"    java {",
-				"        assert (it instanceof HasBuiltinDelimiterForLicense) : \"Was `$it`\"",
-				"    }",
-				"    cpp {",
-				"        assert (it instanceof HasBuiltinDelimiterForLicense) : \"Was `$it`\"",
-				"    }",
-				"    css {",
-				"        assert (it instanceof HasBuiltinDelimiterForLicense) : \"Was `$it`\"",
-				"    }",
-				"    xml {",
-				"        assert (it instanceof HasBuiltinDelimiterForLicense) : \"Was `$it`\"",
-				"    }",
-				"}");
-		gradleRunner()
-				.withGradleVersion("4.6")
-				.withArguments("spotlessApply")
-				.forwardOutput()
-				.build();
-	}
+  @Test
+  public void testWithCommonInterfaceForConfiguringLicences() throws IOException {
+    // TODO: JLL Convert this to a Kotlin example when supported: https://github.com/gradle/kotlin-dsl/issues/492
+    setFile("build.gradle").toLines(
+        "import com.diffplug.gradle.spotless.HasBuiltinDelimiterForLicense",
+        "plugins {",
+        "    id(\"org.jetbrains.kotlin.jvm\") version \"1.2.31\"",
+        "    id(\"com.diffplug.gradle.spotless\")",
+        "}",
+        "repositories { mavenCentral() }",
+        "spotless {",
+        "    kotlin {",
+        "        assert (it instanceof HasBuiltinDelimiterForLicense) : \"Was `$it`\"",
+        "    }",
+        "    java {",
+        "        assert (it instanceof HasBuiltinDelimiterForLicense) : \"Was `$it`\"",
+        "    }",
+        "    cpp {",
+        "        assert (it instanceof HasBuiltinDelimiterForLicense) : \"Was `$it`\"",
+        "    }",
+        "    css {",
+        "        assert (it instanceof HasBuiltinDelimiterForLicense) : \"Was `$it`\"",
+        "    }",
+        "    xml {",
+        "        assert (it instanceof HasBuiltinDelimiterForLicense) : \"Was `$it`\"",
+        "    }",
+        "}");
+    gradleRunner()
+        .withGradleVersion("4.6")
+        .withArguments("spotlessApply")
+        .forwardOutput()
+        .build();
+  }
 }

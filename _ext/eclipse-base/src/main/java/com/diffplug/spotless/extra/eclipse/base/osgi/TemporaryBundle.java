@@ -40,68 +40,68 @@ import org.osgi.framework.Version;
  */
 public interface TemporaryBundle extends Bundle {
 
-	@Override
-	default public Version getVersion() {
-		return Version.emptyVersion; //Cannot support multiple version using single class loader.
-	}
+  @Override
+  default public Version getVersion() {
+    return Version.emptyVersion; //Cannot support multiple version using single class loader.
+  }
 
-	@Override
-	default public int compareTo(Bundle o) {
-		//Symbolic name is sufficient to distinguish bundles
-		return getSymbolicName().compareTo(o.getSymbolicName());
-	}
+  @Override
+  default public int compareTo(Bundle o) {
+    //Symbolic name is sufficient to distinguish bundles
+    return getSymbolicName().compareTo(o.getSymbolicName());
+  }
 
-	@Override
-	default public <A> A adapt(Class<A> type) {
-		return null; //Adaptation is not successful
-	}
+  @Override
+  default public <A> A adapt(Class<A> type) {
+    return null; //Adaptation is not successful
+  }
 
-	@Override
-	@Deprecated
-	default public Dictionary<String, String> getHeaders() {
-		throw new UnsupportedOperationException("Bundle META information is not available.");
-	}
+  @Override
+  @Deprecated
+  default public Dictionary<String, String> getHeaders() {
+    throw new UnsupportedOperationException("Bundle META information is not available.");
+  }
 
-	@Override
-	@Deprecated
-	default public Dictionary<String, String> getHeaders(String locale) {
-		return getHeaders();
-	}
+  @Override
+  @Deprecated
+  default public Dictionary<String, String> getHeaders(String locale) {
+    return getHeaders();
+  }
 
-	@Override
-	default public URL getResource(String name) {
-		return getClass().getClassLoader().getResource(name);
-	}
+  @Override
+  default public URL getResource(String name) {
+    return getClass().getClassLoader().getResource(name);
+  }
 
-	@Override
-	default public Enumeration<URL> getResources(String name) throws IOException {
-		return getClass().getClassLoader().getResources(name);
-	}
+  @Override
+  default public Enumeration<URL> getResources(String name) throws IOException {
+    return getClass().getClassLoader().getResources(name);
+  }
 
-	@Override
-	@Deprecated
-	default public Enumeration<URL> findEntries(String path, String filePattern, boolean recurse) {
-		return null; //Local JAR look-up are not supported per default
-	}
+  @Override
+  @Deprecated
+  default public Enumeration<URL> findEntries(String path, String filePattern, boolean recurse) {
+    return null; //Local JAR look-up are not supported per default
+  }
 
-	@Override
-	default public Class<?> loadClass(String name) throws ClassNotFoundException {
-		return getClass().getClassLoader().loadClass(name);
-	}
+  @Override
+  default public Class<?> loadClass(String name) throws ClassNotFoundException {
+    return getClass().getClassLoader().loadClass(name);
+  }
 
-	@Override
-	default public boolean hasPermission(Object permission) {
-		return true; //Dedicated permissions are not supported
-	}
+  @Override
+  default public boolean hasPermission(Object permission) {
+    return true; //Dedicated permissions are not supported
+  }
 
-	@Override
-	default public Map<X509Certificate, List<X509Certificate>> getSignerCertificates(int signersType) {
-		return new HashMap<X509Certificate, List<X509Certificate>>(0); //Bundle is not signed
-	}
+  @Override
+  default public Map<X509Certificate, List<X509Certificate>> getSignerCertificates(int signersType) {
+    return new HashMap<X509Certificate, List<X509Certificate>>(0); //Bundle is not signed
+  }
 
-	@Override
-	default public File getDataFile(String filename) {
-		return null; //No file system support for persistent files
-	}
+  @Override
+  default public File getDataFile(String filename) {
+    return null; //No file system support for persistent files
+  }
 
 }

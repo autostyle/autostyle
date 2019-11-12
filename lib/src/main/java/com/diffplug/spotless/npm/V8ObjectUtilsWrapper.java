@@ -21,15 +21,15 @@ import java.util.Map;
 
 class V8ObjectUtilsWrapper {
 
-	public static final String WRAPPED_CLASS = "com.eclipsesource.v8.utils.V8ObjectUtils";
+  public static final String WRAPPED_CLASS = "com.eclipsesource.v8.utils.V8ObjectUtils";
 
-	public static Map<String, ? super Object> toMap(final V8ObjectWrapper object) {
-		requireNonNull(object);
+  public static Map<String, ? super Object> toMap(final V8ObjectWrapper object) {
+    requireNonNull(object);
 
-		final Reflective reflective = object.reflective();
+    final Reflective reflective = object.reflective();
 
-		@SuppressWarnings("unchecked")
-		final Map<String, ? super Object> map = (Map<String, ? super Object>) reflective.invokeStaticMethod(WRAPPED_CLASS, "toMap", object.wrappedObj());
-		return map;
-	}
+    @SuppressWarnings("unchecked")
+    final Map<String, ? super Object> map = (Map<String, ? super Object>) reflective.invokeStaticMethod(WRAPPED_CLASS, "toMap", object.wrappedObj());
+    return map;
+  }
 }

@@ -21,10 +21,10 @@ import org.gradle.api.plugins.JavaBasePlugin;
 import org.gradle.util.GradleVersion;
 
 class SpotlessPluginLegacy {
-	static final GradleVersion CONFIG_AVOIDANCE_INTRODUCED = GradleVersion.version("4.9");
+  static final GradleVersion CONFIG_AVOIDANCE_INTRODUCED = GradleVersion.version("4.9");
 
-	static void enforceCheck(SpotlessExtension extension, Project project) {
-		Task check = project.getTasks().getByName(JavaBasePlugin.CHECK_TASK_NAME);
-		check.dependsOn(extension.rootCheckTask);
-	}
+  static void enforceCheck(SpotlessExtension extension, Project project) {
+    Task check = project.getTasks().getByName(JavaBasePlugin.CHECK_TASK_NAME);
+    check.dependsOn(extension.rootCheckTask);
+  }
 }

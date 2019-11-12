@@ -26,88 +26,88 @@ import com.diffplug.spotless.StepHarness;
 import com.diffplug.spotless.TestProvisioner;
 
 public class GoogleJavaFormatStepTest extends ResourceHarness {
-	@Test
-	public void behavior() throws Exception {
-		FormatterStep step = GoogleJavaFormatStep.create("1.2", TestProvisioner.mavenCentral());
-		StepHarness.forStep(step)
-				.testResource("java/googlejavaformat/JavaCodeUnformatted.test", "java/googlejavaformat/JavaCodeFormatted.test")
-				.testResource("java/googlejavaformat/JavaCodeWithLicenseUnformatted.test", "java/googlejavaformat/JavaCodeWithLicenseFormatted.test")
-				.testResource("java/googlejavaformat/JavaCodeWithLicensePackageUnformatted.test", "java/googlejavaformat/JavaCodeWithLicensePackageFormatted.test")
-				.testResource("java/googlejavaformat/JavaCodeWithPackageUnformatted.test", "java/googlejavaformat/JavaCodeWithPackageFormatted.test");
-	}
+  @Test
+  public void behavior() throws Exception {
+    FormatterStep step = GoogleJavaFormatStep.create("1.2", TestProvisioner.mavenCentral());
+    StepHarness.forStep(step)
+        .testResource("java/googlejavaformat/JavaCodeUnformatted.test", "java/googlejavaformat/JavaCodeFormatted.test")
+        .testResource("java/googlejavaformat/JavaCodeWithLicenseUnformatted.test", "java/googlejavaformat/JavaCodeWithLicenseFormatted.test")
+        .testResource("java/googlejavaformat/JavaCodeWithLicensePackageUnformatted.test", "java/googlejavaformat/JavaCodeWithLicensePackageFormatted.test")
+        .testResource("java/googlejavaformat/JavaCodeWithPackageUnformatted.test", "java/googlejavaformat/JavaCodeWithPackageFormatted.test");
+  }
 
-	@Test
-	public void behaviorWithAospStyle() throws Exception {
-		FormatterStep step = GoogleJavaFormatStep.create("1.2", "AOSP", TestProvisioner.mavenCentral());
-		StepHarness.forStep(step)
-				.testResource("java/googlejavaformat/JavaCodeUnformatted.test", "java/googlejavaformat/JavaCodeFormattedAOSP.test")
-				.testResource("java/googlejavaformat/JavaCodeWithLicenseUnformatted.test", "java/googlejavaformat/JavaCodeWithLicenseFormattedAOSP.test")
-				.testResource("java/googlejavaformat/JavaCodeWithLicensePackageUnformatted.test", "java/googlejavaformat/JavaCodeWithLicensePackageFormattedAOSP.test")
-				.testResource("java/googlejavaformat/JavaCodeWithPackageUnformatted.test", "java/googlejavaformat/JavaCodeWithPackageFormattedAOSP.test");
-	}
+  @Test
+  public void behaviorWithAospStyle() throws Exception {
+    FormatterStep step = GoogleJavaFormatStep.create("1.2", "AOSP", TestProvisioner.mavenCentral());
+    StepHarness.forStep(step)
+        .testResource("java/googlejavaformat/JavaCodeUnformatted.test", "java/googlejavaformat/JavaCodeFormattedAOSP.test")
+        .testResource("java/googlejavaformat/JavaCodeWithLicenseUnformatted.test", "java/googlejavaformat/JavaCodeWithLicenseFormattedAOSP.test")
+        .testResource("java/googlejavaformat/JavaCodeWithLicensePackageUnformatted.test", "java/googlejavaformat/JavaCodeWithLicensePackageFormattedAOSP.test")
+        .testResource("java/googlejavaformat/JavaCodeWithPackageUnformatted.test", "java/googlejavaformat/JavaCodeWithPackageFormattedAOSP.test");
+  }
 
-	@Test
-	public void equality() throws Exception {
-		new SerializableEqualityTester() {
-			String version = "1.2";
-			String style = "";
+  @Test
+  public void equality() throws Exception {
+    new SerializableEqualityTester() {
+      String version = "1.2";
+      String style = "";
 
-			@Override
-			protected void setupTest(API api) {
-				// same version == same
-				api.areDifferentThan();
-				// change the version, and it's different
-				version = "1.1";
-				api.areDifferentThan();
-				// change the style, and it's different
-				style = "AOSP";
-				api.areDifferentThan();
-			}
+      @Override
+      protected void setupTest(API api) {
+        // same version == same
+        api.areDifferentThan();
+        // change the version, and it's different
+        version = "1.1";
+        api.areDifferentThan();
+        // change the style, and it's different
+        style = "AOSP";
+        api.areDifferentThan();
+      }
 
-			@Override
-			protected FormatterStep create() {
-				String finalVersion = this.version;
-				return GoogleJavaFormatStep.create(finalVersion, style, TestProvisioner.mavenCentral());
-			}
-		}.testEquals();
-	}
+      @Override
+      protected FormatterStep create() {
+        String finalVersion = this.version;
+        return GoogleJavaFormatStep.create(finalVersion, style, TestProvisioner.mavenCentral());
+      }
+    }.testEquals();
+  }
 
-	@Test
-	public void fixWindowsBugForGfj1Point1() {
-		fixWindowsBugTestcase("");
-		fixWindowsBugTestcase(
-				"",
-				"import somepackage;",
-				"");
-		fixWindowsBugTestcase(
-				"import somepackage;",
-				"",
-				"public class SomeClass {}");
-		fixWindowsBugTestcase(
-				"/** Some license */",
-				"import somepackage;",
-				"",
-				"public class SomeClass {}");
-		fixWindowsBugTestcase(
-				"package thispackage;",
-				"",
-				"import somepackage;",
-				"",
-				"public class SomeClass {}");
-		fixWindowsBugTestcase(
-				"/*",
-				" * A License.",
-				" */",
-				"",
-				"package thispackage;",
-				"",
-				"import somepackage;",
-				"",
-				"public class SomeClass {}");
-	}
+  @Test
+  public void fixWindowsBugForGfj1Point1() {
+    fixWindowsBugTestcase("");
+    fixWindowsBugTestcase(
+        "",
+        "import somepackage;",
+        "");
+    fixWindowsBugTestcase(
+        "import somepackage;",
+        "",
+        "public class SomeClass {}");
+    fixWindowsBugTestcase(
+        "/** Some license */",
+        "import somepackage;",
+        "",
+        "public class SomeClass {}");
+    fixWindowsBugTestcase(
+        "package thispackage;",
+        "",
+        "import somepackage;",
+        "",
+        "public class SomeClass {}");
+    fixWindowsBugTestcase(
+        "/*",
+        " * A License.",
+        " */",
+        "",
+        "package thispackage;",
+        "",
+        "import somepackage;",
+        "",
+        "public class SomeClass {}");
+  }
 
-	private void fixWindowsBugTestcase(String... lines) {
-		String input = StringPrinter.buildStringFromLines(lines);
-		Assert.assertEquals(input, GoogleJavaFormatStep.fixWindowsBug(input, "1.1"));
-	}
+  private void fixWindowsBugTestcase(String... lines) {
+    String input = StringPrinter.buildStringFromLines(lines);
+    Assert.assertEquals(input, GoogleJavaFormatStep.fixWindowsBug(input, "1.1"));
+  }
 }

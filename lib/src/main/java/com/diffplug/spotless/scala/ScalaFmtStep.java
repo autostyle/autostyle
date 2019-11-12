@@ -36,109 +36,109 @@ import com.diffplug.spotless.Provisioner;
 
 /** Wraps up [scalafmt](https://github.com/olafurpg/scalafmt) as a FormatterStep. */
 public class ScalaFmtStep {
-	// prevent direct instantiation
-	private ScalaFmtStep() {}
+  // prevent direct instantiation
+  private ScalaFmtStep() {}
 
-	private static final Pattern VERSION_PRE_2_0 = Pattern.compile("[10]\\.(\\d+)\\.\\d+");
-	private static final String DEFAULT_VERSION = "2.0.1";
-	static final String NAME = "scalafmt";
-	static final String MAVEN_COORDINATE_PRE_2_0 = "com.geirsson:scalafmt-core_2.11:";
-	static final String MAVEN_COORDINATE = "org.scalameta:scalafmt-core_2.11:";
+  private static final Pattern VERSION_PRE_2_0 = Pattern.compile("[10]\\.(\\d+)\\.\\d+");
+  private static final String DEFAULT_VERSION = "2.0.1";
+  static final String NAME = "scalafmt";
+  static final String MAVEN_COORDINATE_PRE_2_0 = "com.geirsson:scalafmt-core_2.11:";
+  static final String MAVEN_COORDINATE = "org.scalameta:scalafmt-core_2.11:";
 
-	public static FormatterStep create(Provisioner provisioner) {
-		return create(defaultVersion(), provisioner, null);
-	}
+  public static FormatterStep create(Provisioner provisioner) {
+    return create(defaultVersion(), provisioner, null);
+  }
 
-	public static FormatterStep create(String version, Provisioner provisioner, @Nullable File configFile) {
-		Objects.requireNonNull(version, "version");
-		Objects.requireNonNull(provisioner, "provisioner");
-		return FormatterStep.createLazy(NAME,
-				() -> new State(version, provisioner, configFile),
-				State::createFormat);
-	}
+  public static FormatterStep create(String version, Provisioner provisioner, @Nullable File configFile) {
+    Objects.requireNonNull(version, "version");
+    Objects.requireNonNull(provisioner, "provisioner");
+    return FormatterStep.createLazy(NAME,
+        () -> new State(version, provisioner, configFile),
+        State::createFormat);
+  }
 
-	public static String defaultVersion() {
-		return DEFAULT_VERSION;
-	}
+  public static String defaultVersion() {
+    return DEFAULT_VERSION;
+  }
 
-	static final class State implements Serializable {
-		private static final long serialVersionUID = 1L;
+  static final class State implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-		final JarState jarState;
-		final FileSignature configSignature;
+    final JarState jarState;
+    final FileSignature configSignature;
 
-		State(String version, Provisioner provisioner, @Nullable File configFile) throws IOException {
-			String mavenCoordinate;
-			Matcher versionMatcher = VERSION_PRE_2_0.matcher(version);
-			if (versionMatcher.matches()) {
-				mavenCoordinate = MAVEN_COORDINATE_PRE_2_0;
-			} else {
-				mavenCoordinate = MAVEN_COORDINATE;
-			}
+    State(String version, Provisioner provisioner, @Nullable File configFile) throws IOException {
+      String mavenCoordinate;
+      Matcher versionMatcher = VERSION_PRE_2_0.matcher(version);
+      if (versionMatcher.matches()) {
+        mavenCoordinate = MAVEN_COORDINATE_PRE_2_0;
+      } else {
+        mavenCoordinate = MAVEN_COORDINATE;
+      }
 
-			this.jarState = JarState.from(mavenCoordinate + version, provisioner);
-			this.configSignature = FileSignature.signAsList(configFile == null ? Collections.emptySet() : Collections.singleton(configFile));
-		}
+      this.jarState = JarState.from(mavenCoordinate + version, provisioner);
+      this.configSignature = FileSignature.signAsList(configFile == null ? Collections.emptySet() : Collections.singleton(configFile));
+    }
 
-		FormatterFunc createFormat() throws Exception {
-			ClassLoader classLoader = jarState.getClassLoader();
+    FormatterFunc createFormat() throws Exception {
+      ClassLoader classLoader = jarState.getClassLoader();
 
-			// scalafmt returns instances of formatted, we get result by calling get()
-			Class<?> formatted = classLoader.loadClass("org.scalafmt.Formatted");
-			Method formattedGet = formatted.getMethod("get");
+      // scalafmt returns instances of formatted, we get result by calling get()
+      Class<?> formatted = classLoader.loadClass("org.scalafmt.Formatted");
+      Method formattedGet = formatted.getMethod("get");
 
-			// this is how we actually do a format
-			Class<?> scalafmt = classLoader.loadClass("org.scalafmt.Scalafmt");
-			Class<?> scalaSet = classLoader.loadClass("scala.collection.immutable.Set");
+      // this is how we actually do a format
+      Class<?> scalafmt = classLoader.loadClass("org.scalafmt.Scalafmt");
+      Class<?> scalaSet = classLoader.loadClass("scala.collection.immutable.Set");
 
-			Object defaultScalaFmtConfig = scalafmt.getMethod("format$default$2").invoke(null);
-			Object emptyRange = scalafmt.getMethod("format$default$3").invoke(null);
-			Method formatMethod = scalafmt.getMethod("format", String.class, defaultScalaFmtConfig.getClass(), scalaSet);
+      Object defaultScalaFmtConfig = scalafmt.getMethod("format$default$2").invoke(null);
+      Object emptyRange = scalafmt.getMethod("format$default$3").invoke(null);
+      Method formatMethod = scalafmt.getMethod("format", String.class, defaultScalaFmtConfig.getClass(), scalaSet);
 
-			// now we just need to parse the config, if any
-			Object config;
-			if (configSignature.files().isEmpty()) {
-				config = defaultScalaFmtConfig;
-			} else {
-				File file = configSignature.getOnlyFile();
+      // now we just need to parse the config, if any
+      Object config;
+      if (configSignature.files().isEmpty()) {
+        config = defaultScalaFmtConfig;
+      } else {
+        File file = configSignature.getOnlyFile();
 
-				Class<?> optionCls = classLoader.loadClass("scala.Option");
-				Class<?> configCls = classLoader.loadClass("org.scalafmt.config.Config");
-				Class<?> scalafmtCls = classLoader.loadClass("org.scalafmt.Scalafmt");
+        Class<?> optionCls = classLoader.loadClass("scala.Option");
+        Class<?> configCls = classLoader.loadClass("org.scalafmt.config.Config");
+        Class<?> scalafmtCls = classLoader.loadClass("org.scalafmt.Scalafmt");
 
-				Object either;
+        Object either;
 
-				try {
-					// scalafmt >= 1.6.0
-					Method parseHoconConfig = scalafmtCls.getMethod("parseHoconConfig", String.class);
+        try {
+          // scalafmt >= 1.6.0
+          Method parseHoconConfig = scalafmtCls.getMethod("parseHoconConfig", String.class);
 
-					String configStr = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+          String configStr = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
 
-					Object configured = parseHoconConfig.invoke(null, configStr);
-					either = invokeNoArg(configured, "toEither");
-				} catch (NoSuchMethodException e) {
-					// scalafmt >= v0.7.0-RC1 && scalafmt < 1.6.0
-					Method fromHocon = configCls.getMethod("fromHoconString", String.class, optionCls);
-					Object fromHoconEmptyPath = configCls.getMethod("fromHoconString$default$2").invoke(null);
+          Object configured = parseHoconConfig.invoke(null, configStr);
+          either = invokeNoArg(configured, "toEither");
+        } catch (NoSuchMethodException e) {
+          // scalafmt >= v0.7.0-RC1 && scalafmt < 1.6.0
+          Method fromHocon = configCls.getMethod("fromHoconString", String.class, optionCls);
+          Object fromHoconEmptyPath = configCls.getMethod("fromHoconString$default$2").invoke(null);
 
-					String configStr = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+          String configStr = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
 
-					Object configured = fromHocon.invoke(null, configStr, fromHoconEmptyPath);
-					either = invokeNoArg(configured, "toEither");
-				}
+          Object configured = fromHocon.invoke(null, configStr, fromHoconEmptyPath);
+          either = invokeNoArg(configured, "toEither");
+        }
 
-				config = invokeNoArg(invokeNoArg(either, "right"), "get");
-			}
-			return input -> {
-				Object resultInsideFormatted = formatMethod.invoke(null, input, config, emptyRange);
-				return (String) formattedGet.invoke(resultInsideFormatted);
-			};
-		}
-	}
+        config = invokeNoArg(invokeNoArg(either, "right"), "get");
+      }
+      return input -> {
+        Object resultInsideFormatted = formatMethod.invoke(null, input, config, emptyRange);
+        return (String) formattedGet.invoke(resultInsideFormatted);
+      };
+    }
+  }
 
-	private static Object invokeNoArg(Object obj, String toInvoke) throws Exception {
-		Class<?> clazz = obj.getClass();
-		Method method = clazz.getMethod(toInvoke);
-		return method.invoke(obj);
-	}
+  private static Object invokeNoArg(Object obj, String toInvoke) throws Exception {
+    Class<?> clazz = obj.getClass();
+    Method method = clazz.getMethod(toInvoke);
+    return method.invoke(obj);
+  }
 }

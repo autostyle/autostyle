@@ -26,30 +26,30 @@ import com.diffplug.spotless.FormatterStep;
 /** SQL formatter step which wraps up DBeaver's SqlTokenizedFormatter implementation. */
 public class DBeaverSQLFormatterStep {
 
-	private static final String NAME = "dbeaverSql";
+  private static final String NAME = "dbeaverSql";
 
-	// prevent direct instantiation
-	private DBeaverSQLFormatterStep() {}
+  // prevent direct instantiation
+  private DBeaverSQLFormatterStep() {}
 
-	public static FormatterStep create(Iterable<File> files) {
-		return FormatterStep.createLazy(NAME,
-				() -> new State(files),
-				State::createFormat);
-	}
+  public static FormatterStep create(Iterable<File> files) {
+    return FormatterStep.createLazy(NAME,
+        () -> new State(files),
+        State::createFormat);
+  }
 
-	static final class State implements Serializable {
-		private static final long serialVersionUID = 1L;
+  static final class State implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-		final FileSignature settingsSignature;
+    final FileSignature settingsSignature;
 
-		State(final Iterable<File> settingsFiles) throws Exception {
-			this.settingsSignature = FileSignature.signAsList(settingsFiles);
-		}
+    State(final Iterable<File> settingsFiles) throws Exception {
+      this.settingsSignature = FileSignature.signAsList(settingsFiles);
+    }
 
-		FormatterFunc createFormat() throws Exception {
-			FormatterProperties preferences = FormatterProperties.from(settingsSignature.files());
-			DBeaverSQLFormatter dbeaverSqlFormatter = new DBeaverSQLFormatter(preferences.getProperties());
-			return dbeaverSqlFormatter::format;
-		}
-	}
+    FormatterFunc createFormat() throws Exception {
+      FormatterProperties preferences = FormatterProperties.from(settingsSignature.files());
+      DBeaverSQLFormatter dbeaverSqlFormatter = new DBeaverSQLFormatter(preferences.getProperties());
+      return dbeaverSqlFormatter::format;
+    }
+  }
 }

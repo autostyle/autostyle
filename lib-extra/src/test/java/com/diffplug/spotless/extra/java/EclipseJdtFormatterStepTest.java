@@ -22,27 +22,27 @@ import com.diffplug.spotless.extra.eclipse.EclipseCommonTests;
 
 public class EclipseJdtFormatterStepTest extends EclipseCommonTests {
 
-	@Override
-	protected String[] getSupportedVersions() {
-		return new String[]{"4.6.1", "4.6.2", "4.6.3", "4.7.0", "4.7.1", "4.7.2", "4.7.3a", "4.8.0", "4.9.0", "4.10.0",
-				"4.11.0", "4.12.0", "4.13.0"};
-	}
+  @Override
+  protected String[] getSupportedVersions() {
+    return new String[]{"4.6.1", "4.6.2", "4.6.3", "4.7.0", "4.7.1", "4.7.2", "4.7.3a", "4.8.0", "4.9.0", "4.10.0",
+        "4.11.0", "4.12.0", "4.13.0"};
+  }
 
-	@Override
-	protected String getTestInput(String version) {
-		return "package p; class C{}";
-	}
+  @Override
+  protected String getTestInput(String version) {
+    return "package p; class C{}";
+  }
 
-	@Override
-	protected String getTestExpectation(String version) {
-		return "package p;\nclass C {\n}";
-	}
+  @Override
+  protected String getTestExpectation(String version) {
+    return "package p;\nclass C {\n}";
+  }
 
-	@Override
-	protected FormatterStep createStep(String version) {
-		EclipseBasedStepBuilder builder = EclipseJdtFormatterStep.createBuilder(TestProvisioner.mavenCentral());
-		builder.setVersion(version);
-		return builder.build();
-	}
+  @Override
+  protected FormatterStep createStep(String version) {
+    EclipseBasedStepBuilder builder = EclipseJdtFormatterStep.createBuilder(TestProvisioner.mavenCentral());
+    builder.setVersion(version);
+    return builder.build();
+  }
 
 }

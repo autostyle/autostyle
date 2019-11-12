@@ -1,11 +1,11 @@
 {
-	"name": "spotless-tsfmt-formatter-step",
-	"version": "1.0.0",
-	"devDependencies": {
+  "name": "spotless-tsfmt-formatter-step",
+  "version": "1.0.0",
+  "devDependencies": {
 ${devDependencies}
-	},
-	"dependencies": {},
-	"engines": {
-		"node": ">= 4.2.0"
-	}
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">= 4.2.0"
+  }
 }

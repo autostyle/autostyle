@@ -20,24 +20,24 @@ import java.io.IOException;
 import org.junit.Test;
 
 public class FreshMarkExtensionTest extends GradleIntegrationTest {
-	@Test
-	public void integration() throws IOException {
-		setFile("build.gradle").toLines(
-				"buildscript { repositories { mavenCentral() } }",
-				"plugins {",
-				"    id 'java'",
-				"    id 'com.diffplug.gradle.spotless'",
-				"}",
-				"spotless {",
-				"    freshmark {",
-				"        properties {",
-				"            it.put('lib', 'MyLib')",
-				"            it.put('author', 'Me')",
-				"        }",
-				"    }",
-				"}");
-		setFile("README.md").toResource("freshmark/FreshMarkUnformatted.test");
-		gradleRunner().withArguments("spotlessApply").build();
-		assertFile("README.md").sameAsResource("freshmark/FreshMarkFormatted.test");
-	}
+  @Test
+  public void integration() throws IOException {
+    setFile("build.gradle").toLines(
+        "buildscript { repositories { mavenCentral() } }",
+        "plugins {",
+        "    id 'java'",
+        "    id 'com.diffplug.gradle.spotless'",
+        "}",
+        "spotless {",
+        "    freshmark {",
+        "        properties {",
+        "            it.put('lib', 'MyLib')",
+        "            it.put('author', 'Me')",
+        "        }",
+        "    }",
+        "}");
+    setFile("README.md").toResource("freshmark/FreshMarkUnformatted.test");
+    gradleRunner().withArguments("spotlessApply").build();
+    assertFile("README.md").sameAsResource("freshmark/FreshMarkFormatted.test");
+  }
 }

@@ -26,20 +26,20 @@ import java.util.List;
  */
 @Deprecated
 public class CssDefaults {
-	//Prevent instantiation
-	private CssDefaults() {};
+  //Prevent instantiation
+  private CssDefaults() {};
 
-	/**
-	 * Filter based on Eclipse-WTP <code>org.eclipse.core.contenttype.contentTypes</code>
-	 * extension <code>org.eclipse.wst.css.core.csssource</code>.
-	 */
-	public static final List<String> FILE_FILTER = Collections.unmodifiableList(
-			Arrays.asList("**/*.css"));
+  /**
+   * Filter based on Eclipse-WTP <code>org.eclipse.core.contenttype.contentTypes</code>
+   * extension <code>org.eclipse.wst.css.core.csssource</code>.
+   */
+  public static final List<String> FILE_FILTER = Collections.unmodifiableList(
+      Arrays.asList("**/*.css"));
 
-	/**
-	 * Match line that starts with a selector. Selection is quite broad.
-	 * Assure that multiline licenses have a proper indentation.
-	 * Assure that your has been formatted before (no whitespace before first selector).
-	 */
-	public static final String DELIMITER_EXPR = "[A-Za-z\\.\\#]+";
+  /**
+   * Match line that starts with a selector. Selection is quite broad.
+   * Assure that multiline licenses have a proper indentation.
+   * Assure that your has been formatted before (no whitespace before first selector).
+   */
+  public static final String DELIMITER_EXPR = "[A-Za-z\\.\\#]+";
 }

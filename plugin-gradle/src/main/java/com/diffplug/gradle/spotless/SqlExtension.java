@@ -23,41 +23,41 @@ import com.diffplug.spotless.FormatterStep;
 import com.diffplug.spotless.sql.DBeaverSQLFormatterStep;
 
 public class SqlExtension extends FormatExtension {
-	static final String NAME = "sql";
+  static final String NAME = "sql";
 
-	public SqlExtension(SpotlessExtension rootExtension) {
-		super(rootExtension);
-	}
+  public SqlExtension(SpotlessExtension rootExtension) {
+    super(rootExtension);
+  }
 
-	public DBeaverSQLFormatterConfig dbeaver() {
-		return new DBeaverSQLFormatterConfig();
-	}
+  public DBeaverSQLFormatterConfig dbeaver() {
+    return new DBeaverSQLFormatterConfig();
+  }
 
-	public class DBeaverSQLFormatterConfig {
-		Object[] configFiles;
+  public class DBeaverSQLFormatterConfig {
+    Object[] configFiles;
 
-		DBeaverSQLFormatterConfig() {
-			configFiles = new Object[0];
-			addStep(createStep());
-		}
+    DBeaverSQLFormatterConfig() {
+      configFiles = new Object[0];
+      addStep(createStep());
+    }
 
-		public void configFile(Object... configFiles) {
-			this.configFiles = requireElementsNonNull(configFiles);
-			replaceStep(createStep());
-		}
+    public void configFile(Object... configFiles) {
+      this.configFiles = requireElementsNonNull(configFiles);
+      replaceStep(createStep());
+    }
 
-		private FormatterStep createStep() {
-			Project project = getProject();
-			return DBeaverSQLFormatterStep.create(project.files(configFiles).getFiles());
-		}
-	}
+    private FormatterStep createStep() {
+      Project project = getProject();
+      return DBeaverSQLFormatterStep.create(project.files(configFiles).getFiles());
+    }
+  }
 
-	/** If the user hasn't specified the files yet, we'll assume he/she means all of the sql files. */
-	@Override
-	protected void setupTask(SpotlessTask task) {
-		if (target == null) {
-			target("**/*.sql");
-		}
-		super.setupTask(task);
-	}
+  /** If the user hasn't specified the files yet, we'll assume he/she means all of the sql files. */
+  @Override
+  protected void setupTask(SpotlessTask task) {
+    if (target == null) {
+      target("**/*.sql");
+    }
+    super.setupTask(task);
+  }
 }

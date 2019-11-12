@@ -19,21 +19,21 @@ import java.io.Serializable;
 
 /** A policy for handling exceptions in the format. */
 public interface FormatExceptionPolicy extends Serializable, NoLambda {
-	/** Called for every error in the formatter. */
-	public void handleError(Throwable e, FormatterStep step, String relativePath);
+  /** Called for every error in the formatter. */
+  public void handleError(Throwable e, FormatterStep step, String relativePath);
 
-	/**
-	 * Returns a byte array representation of everything inside this `FormatExceptionPolicy`.
-	 *
-	 * The main purpose of this method is to ensure one can't instantiate this class with lambda
-	 * expressions, which are notoriously difficult to serialize and deserialize properly.
-	 */
-	public byte[] toBytes();
+  /**
+   * Returns a byte array representation of everything inside this `FormatExceptionPolicy`.
+   *
+   * The main purpose of this method is to ensure one can't instantiate this class with lambda
+   * expressions, which are notoriously difficult to serialize and deserialize properly.
+   */
+  public byte[] toBytes();
 
-	/**
-	 * A policy which rethrows subclasses of `Error` and logs other kinds of Exception.
-	 */
-	public static FormatExceptionPolicy failOnlyOnError() {
-		return new FormatExceptionPolicyLegacy();
-	}
+  /**
+   * A policy which rethrows subclasses of `Error` and logs other kinds of Exception.
+   */
+  public static FormatExceptionPolicy failOnlyOnError() {
+    return new FormatExceptionPolicyLegacy();
+  }
 }

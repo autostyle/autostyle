@@ -28,77 +28,77 @@ import org.junit.Test;
 /** Eclipse JDT wrapper integration tests */
 public class EclipseJdtFormatterStepImplTest {
 
-	private final static String UNFORMATTED = "package com.diffplug.gradle.spotless;\n" +
-			"public class C {\n" +
-			"  static void hello() {" +
-			"    System.out.println(\"Hello World!\");\n" +
-			"  }\n" +
-			"}".replaceAll("\n", LINE_DELIMITER);
-	private final static String FORMATTED = "package com.diffplug.gradle.spotless;\n" +
-			"public class C {\n" +
-			"\tstatic void hello() {\n" +
-			"\t\tSystem.out.println(\"Hello World!\");\n" +
-			"\t}\n" +
-			"}".replaceAll("\n", LINE_DELIMITER);
+  private final static String UNFORMATTED = "package com.diffplug.gradle.spotless;\n" +
+      "public class C {\n" +
+      "  static void hello() {" +
+      "    System.out.println(\"Hello World!\");\n" +
+      "  }\n" +
+      "}".replaceAll("\n", LINE_DELIMITER);
+  private final static String FORMATTED = "package com.diffplug.gradle.spotless;\n" +
+      "public class C {\n" +
+      "\tstatic void hello() {\n" +
+      "\t\tSystem.out.println(\"Hello World!\");\n" +
+      "\t}\n" +
+      "}".replaceAll("\n", LINE_DELIMITER);
 
-	private final static String PRE_UNFORMATTED = "/**<pre>void f(){}</pre>*/\n".replaceAll("\n", LINE_DELIMITER);
-	private final static String PRE_FORMATTED = "/**\n * <pre>\n * void f() {\n * }\n * </pre>\n */\n".replaceAll("\n", LINE_DELIMITER);
+  private final static String PRE_UNFORMATTED = "/**<pre>void f(){}</pre>*/\n".replaceAll("\n", LINE_DELIMITER);
+  private final static String PRE_FORMATTED = "/**\n * <pre>\n * void f() {\n * }\n * </pre>\n */\n".replaceAll("\n", LINE_DELIMITER);
 
-	private final static String ILLEGAL_CHAR = Character.toString((char) 254);
+  private final static String ILLEGAL_CHAR = Character.toString((char) 254);
 
-	@Test
-	public void defaultFormat() throws Throwable {
-		String output = format(UNFORMATTED, config -> {});
-		assertEquals("Unexpected formatting with default preferences.",
-				FORMATTED, output);
-	}
+  @Test
+  public void defaultFormat() throws Throwable {
+    String output = format(UNFORMATTED, config -> {});
+    assertEquals("Unexpected formatting with default preferences.",
+        FORMATTED, output);
+  }
 
-	/**
-	 * The exception handling has changed sine about JDT 4.10.
-	 * Before that version, JDT caught very internal parser error.
-	 * The latest behavior is in line with Eclipse-Groovy.
-	 * CDT however (still) catches parser exceptions in the formatter step.
-	 * Spotless anyhow provides possibilities to change exception behavior.
-	 * Furthermore it is assumed that Spotless runs on compile-able code.
-	 */
-	@Test(expected = IndexOutOfBoundsException.class)
-	public void invalidFormat() throws Throwable {
-		format(FORMATTED.replace("void hello() {", "void hello()  "), config -> {});
-	}
+  /**
+   * The exception handling has changed sine about JDT 4.10.
+   * Before that version, JDT caught very internal parser error.
+   * The latest behavior is in line with Eclipse-Groovy.
+   * CDT however (still) catches parser exceptions in the formatter step.
+   * Spotless anyhow provides possibilities to change exception behavior.
+   * Furthermore it is assumed that Spotless runs on compile-able code.
+   */
+  @Test(expected = IndexOutOfBoundsException.class)
+  public void invalidFormat() throws Throwable {
+    format(FORMATTED.replace("void hello() {", "void hello()  "), config -> {});
+  }
 
-	@Test
-	public void invalidCharater() throws Throwable {
-		String output = format(FORMATTED.replace("void hello() {", "void hello()" + ILLEGAL_CHAR + " {"), config -> {});
-		assertTrue("Invalid charater not formatted on best effort basis.", output.contains("void hello()" + ILLEGAL_CHAR + " {" + LINE_DELIMITER));
-	}
+  @Test
+  public void invalidCharater() throws Throwable {
+    String output = format(FORMATTED.replace("void hello() {", "void hello()" + ILLEGAL_CHAR + " {"), config -> {});
+    assertTrue("Invalid charater not formatted on best effort basis.", output.contains("void hello()" + ILLEGAL_CHAR + " {" + LINE_DELIMITER));
+  }
 
-	@Test
-	public void invalidConfiguration() throws Throwable {
-		String output = format(FORMATTED, config -> {
-			config.setProperty(DefaultCodeFormatterConstants.FORMATTER_TAB_CHAR, JavaCore.SPACE);
-			config.setProperty(DefaultCodeFormatterConstants.FORMATTER_TAB_SIZE, "noInteger");
-		});
-		assertEquals("Invalid indentation configuration not replaced by default value (4 spaces)",
-				FORMATTED.replace("\t", "    "), output);
-	}
+  @Test
+  public void invalidConfiguration() throws Throwable {
+    String output = format(FORMATTED, config -> {
+      config.setProperty(DefaultCodeFormatterConstants.FORMATTER_TAB_CHAR, JavaCore.SPACE);
+      config.setProperty(DefaultCodeFormatterConstants.FORMATTER_TAB_SIZE, "noInteger");
+    });
+    assertEquals("Invalid indentation configuration not replaced by default value (4 spaces)",
+        FORMATTED.replace("\t", "    "), output);
+  }
 
-	@Test
-	/**	Test that an internal code formatter can be created to format the Java code within HTML pre-tags. (see also Spotless issue #191) */
-	public void internalCodeFormatter() throws Throwable {
-		String output = format(PRE_UNFORMATTED + UNFORMATTED, config -> {
-			config.setProperty(
-					DefaultCodeFormatterConstants.FORMATTER_COMMENT_FORMAT_HEADER,
-					DefaultCodeFormatterConstants.TRUE);
-		});
-		assertEquals("Code within HTML <pre> tag not formatted.",
-				PRE_FORMATTED + FORMATTED, output);
-	}
+  @Test
+  /**  Test that an internal code formatter can be created to format the Java code within HTML pre-tags. (see also Spotless issue #191) */
+  public void internalCodeFormatter() throws Throwable {
+    String output = format(PRE_UNFORMATTED + UNFORMATTED, config -> {
+      config.setProperty(
+          DefaultCodeFormatterConstants.FORMATTER_COMMENT_FORMAT_HEADER,
+          DefaultCodeFormatterConstants.TRUE);
+    });
+    assertEquals("Code within HTML <pre> tag not formatted.",
+        PRE_FORMATTED + FORMATTED, output);
+  }
 
-	private static String format(final String input, final Consumer<Properties> config) throws Exception {
-		Properties properties = new Properties();
-		config.accept(properties);
-		EclipseJdtFormatterStepImpl formatter = new EclipseJdtFormatterStepImpl(properties);
-		return formatter.format(input);
-	}
+  private static String format(final String input, final Consumer<Properties> config) throws Exception {
+    Properties properties = new Properties();
+    config.accept(properties);
+    EclipseJdtFormatterStepImpl formatter = new EclipseJdtFormatterStepImpl(properties);
+    return formatter.format(input);
+  }
 
 }

@@ -22,16 +22,16 @@ import com.diffplug.spotless.ResourceHarness;
 
 public abstract class NpmFormatterStepCommonTests extends ResourceHarness {
 
-	protected File npmExecutable() {
-		return NpmExecutableResolver.tryFind().orElseThrow(() -> new IllegalStateException("cannot detect node binary"));
-	}
+  protected File npmExecutable() {
+    return NpmExecutableResolver.tryFind().orElseThrow(() -> new IllegalStateException("cannot detect node binary"));
+  }
 
-	private File buildDir = null;
+  private File buildDir = null;
 
-	protected File buildDir() throws IOException {
-		if (this.buildDir == null) {
-			this.buildDir = newFolder("build-dir");
-		}
-		return this.buildDir;
-	}
+  protected File buildDir() throws IOException {
+    if (this.buildDir == null) {
+      this.buildDir = newFolder("build-dir");
+    }
+    return this.buildDir;
+  }
 }

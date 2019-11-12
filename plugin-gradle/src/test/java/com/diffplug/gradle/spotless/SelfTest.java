@@ -34,109 +34,109 @@ import com.diffplug.spotless.TestProvisioner;
  */
 @Ignore
 public class SelfTest {
-	enum Type {
-		CHECK {
-			@Override
-			public void runAllTasks(Project project) {
-				project.getTasks().stream()
-						.filter(task -> task instanceof SpotlessTask)
-						.map(task -> (SpotlessTask) task)
-						.forEach(task -> Errors.rethrow().run(() -> {
-							IncrementalTaskInputs inputs = Mocks.mockIncrementalTaskInputs(task.getTarget());
-							task.setCheck();
-							task.performAction(inputs);
-						}));
-			}
+  enum Type {
+    CHECK {
+      @Override
+      public void runAllTasks(Project project) {
+        project.getTasks().stream()
+            .filter(task -> task instanceof SpotlessTask)
+            .map(task -> (SpotlessTask) task)
+            .forEach(task -> Errors.rethrow().run(() -> {
+              IncrementalTaskInputs inputs = Mocks.mockIncrementalTaskInputs(task.getTarget());
+              task.setCheck();
+              task.performAction(inputs);
+            }));
+      }
 
-			@Override
-			public <T> T checkApply(T check, T apply) {
-				return check;
-			}
-		},
-		APPLY {
-			@Override
-			public void runAllTasks(Project project) {
-				project.getTasks().stream()
-						.filter(task -> task instanceof SpotlessTask)
-						.map(task -> (SpotlessTask) task)
-						.forEach(task -> Errors.rethrow().run(() -> {
-							IncrementalTaskInputs inputs = Mocks.mockIncrementalTaskInputs(task.getTarget());
-							task.setApply();
-							task.performAction(inputs);
-						}));
-			}
+      @Override
+      public <T> T checkApply(T check, T apply) {
+        return check;
+      }
+    },
+    APPLY {
+      @Override
+      public void runAllTasks(Project project) {
+        project.getTasks().stream()
+            .filter(task -> task instanceof SpotlessTask)
+            .map(task -> (SpotlessTask) task)
+            .forEach(task -> Errors.rethrow().run(() -> {
+              IncrementalTaskInputs inputs = Mocks.mockIncrementalTaskInputs(task.getTarget());
+              task.setApply();
+              task.performAction(inputs);
+            }));
+      }
 
-			@Override
-			public <T> T checkApply(T check, T apply) {
-				return apply;
-			}
-		};
+      @Override
+      public <T> T checkApply(T check, T apply) {
+        return apply;
+      }
+    };
 
-		public abstract void runAllTasks(Project project);
+    public abstract void runAllTasks(Project project);
 
-		public abstract <T> T checkApply(T check, T apply);
-	}
+    public abstract <T> T checkApply(T check, T apply);
+  }
 
-	@Test
-	public void spotlessApply() throws Exception {
-		runTasksManually(Type.APPLY);
-	}
+  @Test
+  public void spotlessApply() throws Exception {
+    runTasksManually(Type.APPLY);
+  }
 
-	@Test
-	public void spotlessCheck() throws Exception {
-		runTasksManually(Type.CHECK);
-	}
+  @Test
+  public void spotlessCheck() throws Exception {
+    runTasksManually(Type.CHECK);
+  }
 
-	/** Runs a full task manually, so you can step through all the logic. */
-	private static void runTasksManually(Type type) throws Exception {
-		Project project = createProject(extension -> {
-			extension.java(java -> {
-				java.target("**/*.java");
-				java.licenseHeaderFile("spotless.license.java");
-				java.importOrderFile("spotless.importorder");
-				java.eclipse().configFile("spotless.eclipseformat.xml");
-				java.trimTrailingWhitespace();
-				java.customLazy("Lambda fix", () -> raw -> {
-					if (!raw.contains("public class SelfTest ")) {
-						// don't format this line away, lol
-						return raw.replace("} )", "})").replace("} ,", "},");
-					} else {
-						return raw;
-					}
-				});
-			});
-			extension.format("misc", misc -> {
-				misc.target("**/*.gradle", "**/*.md", "**/*.gitignore");
-				misc.indentWithTabs();
-				misc.trimTrailingWhitespace();
-				misc.endWithNewline();
-			});
-		});
-		type.runAllTasks(project);
-	}
+  /** Runs a full task manually, so you can step through all the logic. */
+  private static void runTasksManually(Type type) throws Exception {
+    Project project = createProject(extension -> {
+      extension.java(java -> {
+        java.target("**/*.java");
+        java.licenseHeaderFile("spotless.license.java");
+        java.importOrderFile("spotless.importorder");
+        java.eclipse().configFile("spotless.eclipseformat.xml");
+        java.trimTrailingWhitespace();
+        java.customLazy("Lambda fix", () -> raw -> {
+          if (!raw.contains("public class SelfTest ")) {
+            // don't format this line away, lol
+            return raw.replace("} )", "})").replace("} ,", "},");
+          } else {
+            return raw;
+          }
+        });
+      });
+      extension.format("misc", misc -> {
+        misc.target("**/*.gradle", "**/*.md", "**/*.gitignore");
+        misc.indentWithTabs();
+        misc.trimTrailingWhitespace();
+        misc.endWithNewline();
+      });
+    });
+    type.runAllTasks(project);
+  }
 
-	/** Creates a Project which has had the SpotlessExtension setup. */
-	private static Project createProject(Consumer<SpotlessExtension> test) throws Exception {
-		Project project = TestProvisioner.gradleProject(new File("").getAbsoluteFile());
-		// create the spotless plugin
-		SpotlessPlugin plugin = project.getPlugins().apply(SpotlessPlugin.class);
-		// setup the plugin
-		test.accept(plugin.getExtension());
-		// return the configured plugin
-		return project;
-	}
+  /** Creates a Project which has had the SpotlessExtension setup. */
+  private static Project createProject(Consumer<SpotlessExtension> test) throws Exception {
+    Project project = TestProvisioner.gradleProject(new File("").getAbsoluteFile());
+    // create the spotless plugin
+    SpotlessPlugin plugin = project.getPlugins().apply(SpotlessPlugin.class);
+    // setup the plugin
+    test.accept(plugin.getExtension());
+    // return the configured plugin
+    return project;
+  }
 
-	/** Runs against the `spotlessSelfApply.gradle` file. */
-	static void runWithTestKit(Type type) throws Exception {
-		GradleRunner.create()
-				.withPluginClasspath()
-				.withProjectDir(new File(StandardSystemProperty.USER_DIR.value()).getParentFile())
-				.withArguments(
-						"--build-file", "spotlessSelf.gradle",
-						"--project-cache-dir", ".gradle-selfapply",
-						"spotless" + type.checkApply("Check", "Apply"),
-						"--stacktrace")
-				.forwardOutput()
-				.build();
-	}
+  /** Runs against the `spotlessSelfApply.gradle` file. */
+  static void runWithTestKit(Type type) throws Exception {
+    GradleRunner.create()
+        .withPluginClasspath()
+        .withProjectDir(new File(StandardSystemProperty.USER_DIR.value()).getParentFile())
+        .withArguments(
+            "--build-file", "spotlessSelf.gradle",
+            "--project-cache-dir", ".gradle-selfapply",
+            "spotless" + type.checkApply("Check", "Apply"),
+            "--stacktrace")
+        .forwardOutput()
+        .build();
+  }
 }

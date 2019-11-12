@@ -32,21 +32,21 @@ import com.diffplug.spotless.extra.eclipse.base.osgi.BundleConfig;
  */
 public class SpotlessEclipseCoreConfig extends BundleConfig<SpotlessEclipseFramework.DefaultBundles> {
 
-	SpotlessEclipseCoreConfig() {}
+  SpotlessEclipseCoreConfig() {}
 
-	@Override
-	public void applyDefault() {
-		add(SpotlessEclipseFramework.DefaultBundles.createAll());
-	}
+  @Override
+  public void applyDefault() {
+    add(SpotlessEclipseFramework.DefaultBundles.createAll());
+  }
 
-	@Override
-	protected BundleActivator create(DefaultBundles bundle) {
-		return bundle.create();
-	}
+  @Override
+  protected BundleActivator create(DefaultBundles bundle) {
+    return bundle.create();
+  }
 
-	@Override
-	protected int getDefaultState(DefaultBundles bundle) {
-		return bundle.getDesiredState();
-	}
+  @Override
+  protected int getDefaultState(DefaultBundles bundle) {
+    return bundle.getDesiredState();
+  }
 
 }

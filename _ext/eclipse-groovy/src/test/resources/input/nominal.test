@@ -1,15 +1,15 @@
 class TestClass {
-	def a;
-	
+  def a;
+
 TestClass(String s) {
 this.a = s
 }
-	def methodNamedArgs(Map args) {
-	"named args: $args"
-	}
+  def methodNamedArgs(Map args) {
+  "named args: $args"
+  }
 }
 
 def t = new TestClass()
-def arr = [4, 
-'string1', 
+def arr = [4,
+'string1',
 'string2']

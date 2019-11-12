@@ -29,37 +29,37 @@ import com.diffplug.spotless.Provisioner;
 
 /** Gradle integration for Provisioner. */
 public class GradleProvisioner {
-	private GradleProvisioner() {}
+  private GradleProvisioner() {}
 
-	public static Provisioner fromProject(Project project) {
-		Objects.requireNonNull(project);
-		return (withTransitives, mavenCoords) -> {
-			try {
-				Dependency[] deps = mavenCoords.stream()
-						.map(project.getBuildscript().getDependencies()::create)
-						.toArray(Dependency[]::new);
+  public static Provisioner fromProject(Project project) {
+    Objects.requireNonNull(project);
+    return (withTransitives, mavenCoords) -> {
+      try {
+        Dependency[] deps = mavenCoords.stream()
+            .map(project.getBuildscript().getDependencies()::create)
+            .toArray(Dependency[]::new);
 
-				// #372 workaround: Accessing rootProject.configurations from multiple projects is not thread-safe
-				ConfigurationContainer configContainer;
-				synchronized (project.getRootProject()) {
-					configContainer = project.getRootProject().getBuildscript().getConfigurations();
-				}
-				Configuration config = configContainer.detachedConfiguration(deps);
-				config.setDescription(mavenCoords.toString());
-				config.setTransitive(withTransitives);
-				return config.resolve();
-			} catch (Exception e) {
-				logger.log(Level.SEVERE,
-						StringPrinter.buildStringFromLines("You probably need to add a repository containing the '" + mavenCoords + "' artifact in the 'build.gradle' of your root project.",
-								"E.g.: 'buildscript { repositories { mavenCentral() }}'",
-								"Note that included buildscripts (using 'apply from') do not share their buildscript repositories with the underlying project.",
-								"You have to specify the missing repository explicitly in the buildscript of the root project."),
-						e);
-				throw e;
-			}
-		};
-	}
+        // #372 workaround: Accessing rootProject.configurations from multiple projects is not thread-safe
+        ConfigurationContainer configContainer;
+        synchronized (project.getRootProject()) {
+          configContainer = project.getRootProject().getBuildscript().getConfigurations();
+        }
+        Configuration config = configContainer.detachedConfiguration(deps);
+        config.setDescription(mavenCoords.toString());
+        config.setTransitive(withTransitives);
+        return config.resolve();
+      } catch (Exception e) {
+        logger.log(Level.SEVERE,
+            StringPrinter.buildStringFromLines("You probably need to add a repository containing the '" + mavenCoords + "' artifact in the 'build.gradle' of your root project.",
+                "E.g.: 'buildscript { repositories { mavenCentral() }}'",
+                "Note that included buildscripts (using 'apply from') do not share their buildscript repositories with the underlying project.",
+                "You have to specify the missing repository explicitly in the buildscript of the root project."),
+            e);
+        throw e;
+      }
+    };
+  }
 
-	private static final Logger logger = Logger.getLogger(GradleProvisioner.class.getName());
+  private static final Logger logger = Logger.getLogger(GradleProvisioner.class.getName());
 
 }
