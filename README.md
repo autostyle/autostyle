@@ -1,21 +1,18 @@
-# <img align="left" src="_images/spotless_logo.png"> Spotless: Keep your code spotless
+# Autostyle: fix code style automatically
 
 <!---freshmark shields
 output = [
   link(image('Travis CI', 'https://travis-ci.org/{{org}}/{{name}}.svg?branch=master'), 'https://travis-ci.org/{{org}}/{{name}}'),
-  link(shield('Live chat', 'gitter', 'chat', 'brightgreen'), 'https://gitter.im/{{org}}/{{name}}'),
   link(shield('License Apache', 'license', 'apache', 'brightgreen'), 'https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)')
   ].join('\n');
 -->
-[![Travis CI](https://travis-ci.org/diffplug/spotless.svg?branch=master)](https://travis-ci.org/diffplug/spotless)
-[![Live chat](https://img.shields.io/badge/gitter-chat-brightgreen.svg)](https://gitter.im/diffplug/spotless)
+[![Travis CI](https://travis-ci.org/autostyle/autostyle.svg?branch=master)](https://travis-ci.org/autostyle/autostyle)
 [![License Apache](https://img.shields.io/badge/license-apache-brightgreen.svg)](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0))
 <!---freshmark /shields -->
 
-Spotless can format &lt;java | kotlin | scala | sql | groovy | javascript | flow | typeScript | css | scss | less | jsx | vue | graphql | json | yaml | markdown | license headers | anything> using &lt;gradle | maven | anything>.
+Autostyle can format &lt;java | kotlin | scala | sql | groovy | javascript | flow | typeScript | css | scss | less | jsx | vue | graphql | json | yaml | markdown | license headers | anything> using &lt;Gradle>.
 
-- [Spotless for Gradle](plugin-gradle)
-- [Spotless for Maven](plugin-maven)
+- [Autostyle for Gradle](plugin-gradle)
 - [Other build systems](CONTRIBUTING.md#how-to-add-a-new-plugin-for-a-build-system)
 
 Ideally, a code formatter can do more than just find formatting errors - it should fix them as well. Such a formatter is really just a `Function<String, String>`, which returns a formatted version of its potentially unformatted input.
@@ -28,32 +25,32 @@ It's easy to build such a function, but there are some gotchas and lots of integ
 function lib(className)   { return '| [`' + className + '`](lib/src/main/java/com/diffplug/spotless/' + className.replace('.', '/') + '.java) | ' }
 function extra(className) { return '| [`' + className + '`](lib-extra/src/main/java/com/diffplug/spotless/extra/' + className.replace('.', '/') + '.java) | ' }
 
-//                                               | GRADLE        | MAVEN        | (new)   |
+//                                               | GRADLE        | (new)   |
 output = [
 '| Feature / FormatterStep                       | [plugin-gradle](plugin-gradle/README.md) | [plugin-maven](plugin-maven/README.md) | [(Your build tool here)](CONTRIBUTING.md#how-to-add-a-new-plugin-for-a-build-system) |',
-'| --------------------------------------------- | ------------- | ------------ | --------|',
-lib('generic.EndWithNewlineStep')                +'{{yes}}       | {{yes}}       | {{no}}  |',
-lib('generic.IndentStep')                        +'{{yes}}       | {{yes}}       | {{no}}  |',
-lib('generic.LicenseHeaderStep')                 +'{{yes}}       | {{yes}}      | {{no}}  |',
-lib('generic.ReplaceRegexStep')                  +'{{yes}}       | {{yes}}       | {{no}}  |',
-lib('generic.ReplaceStep')                       +'{{yes}}       | {{yes}}       | {{no}}  |',
-lib('generic.TrimTrailingWhitespaceStep')        +'{{yes}}       | {{yes}}       | {{no}}  |',
-extra('cpp.EclipseFormatterStep')                +'{{yes}}       | {{yes}}       | {{no}}  |',
-extra('groovy.GrEclipseFormatterStep')           +'{{yes}}       | {{no}}       | {{no}}  |',
-lib('java.GoogleJavaFormatStep')                 +'{{yes}}       | {{yes}}      | {{no}}  |',
-lib('java.ImportOrderStep')                      +'{{yes}}       | {{yes}}      | {{no}}  |',
-lib('java.RemoveUnusedImportsStep')              +'{{yes}}       | {{yes}}      | {{no}}  |',
-extra('java.EclipseFormatterStep')               +'{{yes}}       | {{yes}}      | {{no}}  |',
-lib('kotlin.KtLintStep')                         +'{{yes}}       | {{yes}}      | {{no}}  |',
-lib('markdown.FreshMarkStep')                    +'{{yes}}       | {{no}}       | {{no}}  |',
-lib('npm.PrettierFormatterStep')                 +'{{yes}}       | {{no}}       | {{no}}  |',
-lib('npm.TsFmtFormatterStep')                    +'{{yes}}       | {{no}}       | {{no}}  |',
-lib('scala.ScalaFmtStep')                        +'{{yes}}       | {{yes}}       | {{no}}  |',
-lib('sql.DBeaverSQLFormatterStep')               +'{{yes}}       | {{no}}       | {{no}}  |',
-extra('wtp.EclipseWtpFormatterStep')             +'{{yes}}       | {{yes}}      | {{no}}  |',
-'| [(Your FormatterStep here)](CONTRIBUTING.md#how-to-add-a-new-formatterstep) | {{no}}        | {{no}}       | {{no}}  |',
-'| Fast up-to-date checking                      | {{yes}}       | {{no}}       | {{no}}  |',
-'| Automatic idempotency safeguard               | {{yes}}       | {{no}}       | {{no}}  |',
+'| --------------------------------------------- | ------------- | --------|',
+lib('generic.EndWithNewlineStep')                +'{{yes}}       | {{no}}  |',
+lib('generic.IndentStep')                        +'{{yes}}       | {{no}}  |',
+lib('generic.LicenseHeaderStep')                 +'{{yes}}       | {{no}}  |',
+lib('generic.ReplaceRegexStep')                  +'{{yes}}       | {{no}}  |',
+lib('generic.ReplaceStep')                       +'{{yes}}       | {{no}}  |',
+lib('generic.TrimTrailingWhitespaceStep')        +'{{yes}}       | {{no}}  |',
+extra('cpp.EclipseFormatterStep')                +'{{yes}}       | {{no}}  |',
+extra('groovy.GrEclipseFormatterStep')           +'{{yes}}       | {{no}}  |',
+lib('java.GoogleJavaFormatStep')                 +'{{yes}}       | {{no}}  |',
+lib('java.ImportOrderStep')                      +'{{yes}}       | {{no}}  |',
+lib('java.RemoveUnusedImportsStep')              +'{{yes}}       | {{no}}  |',
+extra('java.EclipseFormatterStep')               +'{{yes}}       | {{no}}  |',
+lib('kotlin.KtLintStep')                         +'{{yes}}       | {{no}}  |',
+lib('markdown.FreshMarkStep')                    +'{{yes}}       | {{no}}  |',
+lib('npm.PrettierFormatterStep')                 +'{{yes}}       | {{no}}  |',
+lib('npm.TsFmtFormatterStep')                    +'{{yes}}       | {{no}}  |',
+lib('scala.ScalaFmtStep')                        +'{{yes}}       | {{no}}  |',
+lib('sql.DBeaverSQLFormatterStep')               +'{{yes}}       | {{no}}  |',
+extra('wtp.EclipseWtpFormatterStep')             +'{{yes}}       | {{no}}  |',
+'| [(Your FormatterStep here)](CONTRIBUTING.md#how-to-add-a-new-formatterstep) | {{no}}       | {{no}}  |',
+'| Fast up-to-date checking                      | {{yes}}       | {{no}}  |',
+'| Automatic idempotency safeguard               | {{yes}}       | {{no}}  |',
 ''
 ].join('\n');
 -->
@@ -121,3 +118,4 @@ Once someone has filled in one square of the formatter/build system matrix, it's
 - Built by [gradle](https://gradle.org/).
 - Tested by [junit](https://junit.org/).
 - Maintained by [DiffPlug](https://www.diffplug.com/).
+- Originally forked from [spotless](https://github.com/diffplug/spotless) by DiffPlug.

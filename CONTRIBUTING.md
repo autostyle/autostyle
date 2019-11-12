@@ -1,10 +1,10 @@
-# Contributing to Spotless
+# Contributing to Autostyle
 
-Pull requests are welcome, preferably against `master`.  Feel free to develop spotless any way you like, but the easiest way to look at the code is to clone the repo and run `gradlew ide`, which will download, setup, and start an Eclipse IDE for you.
+Pull requests are welcome, preferably against `master`.  Feel free to develop autostyle any way you like, but the easiest way to look at the code is to clone the repo and open the repository in IntelliJ IDEA (community edition is just fine).
 
-## How Spotless works
+## How Autostyle works
 
-Spotless' most basic element is the `FormatterStep`, which has one method that really matters: `String format(String rawUnix, File file)`.  Each step is guaranteed that its input string will contain only unix newlines, and the step's output should also contain only unix newlines.  The file argument is provided only to allow path-dependent formatting (e.g. special formatting for `package-info.java`), but most formatters are path-independent and won't use that argument.
+Autostyle's most basic element is the `FormatterStep`, which has one method that really matters: `String format(String rawUnix, File file)`.  Each step is guaranteed that its input string will contain only unix newlines, and the step's output should also contain only unix newlines.  The file argument is provided only to allow path-dependent formatting (e.g. special formatting for `package-info.java`), but most formatters are path-independent and won't use that argument.
 
 In order to use and combine `FormatterStep`, you first create a `Formatter`, which has the following parameters:
 
@@ -12,7 +12,7 @@ In order to use and combine `FormatterStep`, you first create a `Formatter`, whi
 - a list of `FormatterStep`
 - a line endings policy (`LineEnding.GIT_ATTRIBUTES` is almost always the best choice)
 
-Once you have an instance of `Formatter`, you can call `boolean isClean(File)`, or `void applyTo(File)` to either check or apply formatting to a file.  Spotless will then:
+Once you have an instance of `Formatter`, you can call `boolean isClean(File)`, or `void applyTo(File)` to either check or apply formatting to a file.  Autostyle will then:
 
 - parse the raw bytes into a String according to the encoding
 - normalize its line endings to `\n`
@@ -23,21 +23,21 @@ You can also use lower-level methods like `String compute(String unix, File file
 
 All `FormatterStep` implement `Serializable`, `equals`, and `hashCode`, so build systems that support up-to-date checks can easily and correctly determine if any actions need to be taken.
 
-Spotless also provides `PaddedCell`, which makes it easy to diagnose and correct idempotence problems.
+Autostyle also provides `PaddedCell`, which makes it easy to diagnose and correct idempotence problems.
 
 ## Project layout
 
-For the folders below in monospace text, they are published on maven central at the coordinate `com.diffplug.spotless:spotless-${FOLDER_NAME}`.  The other folders are dev infrastructure.
+For the folders below in monospace text, they are published on maven central at the coordinate `com.diffplug.autostyle:autostyle-${FOLDER_NAME}`.  The other folders are dev infrastructure.
 
 | Folder | Description |
 | ------ | ----------- |
-| `lib` | Contains all of Spotless' core infrastructure and most of its `FormatterStep` - has no external dependencies. |
+| `lib` | Contains all of Autostyle's core infrastructure and most of its `FormatterStep` - has no external dependencies. |
 | `testlib` | Contains testing infrastructure and all test resources, so that they can be reused in plugin-specific integration tests.  Also contains tests for `lib`. |
-| `lib-extra` | Contains the optional parts of Spotless which require external dependencies.  `LineEnding.GIT_ATTRIBUTES` won't work unless `lib-extra` is available. |
-| `plugin-gradle` | Integrates spotless and all of its formatters into Gradle. |
-| `plugin-maven` | Integrates spotless and all of its formatters into Maven. |
+| `lib-extra` | Contains the optional parts of Autostyle which require external dependencies.  `LineEnding.GIT_ATTRIBUTES` won't work unless `lib-extra` is available. |
+| `plugin-gradle` | Integrates autostyle and all of its formatters into Gradle. |
+| `plugin-maven` | Integrates autostyle and all of its formatters into Maven. |
 | javadoc-publish | Logic for publishing javadoc to github-pages. |
-| ide | Generates and launches an IDE for developing spotless. |
+| ide | Generates and launches an IDE for developing autostyle. |
 | _ext | Folder for generating glue jars (specifically packaging Eclipse jars from p2 for consumption using maven).
 
 ## How to add a new FormatterStep
@@ -91,9 +91,9 @@ FormatterStep create    (String name, State state                  , Function<St
 FormatterStep createLazy(String name, Supplier<State> stateSupplier, Function<State, FormatterFunc> stateToFormatter)
 ```
 
-If your formatting step only needs to call one or two methods of the external dependency, you can pull it in at runtime and call it via reflection.  See the logic for [`EclipseFormatterStep`](lib-extra/src/main/java/com/diffplug/spotless/extra/java/EclipseFormatterStep.java) or [`GoogleJavaFormatStep`](lib/src/main/java/com/diffplug/spotless/java/GoogleJavaFormatStep.java).
+If your formatting step only needs to call one or two methods of the external dependency, you can pull it in at runtime and call it via reflection.  See the logic for [`EclipseFormatterStep`](lib-extra/src/main/java/com/autostyle/autostyle/extra/java/EclipseFormatterStep.java) or [`GoogleJavaFormatStep`](lib/src/main/java/com/autostyle/autostyle/java/GoogleJavaFormatStep.java).
 
-Here's a checklist for creating a new step for Spotless:
+Here's a checklist for creating a new step for Autostyle:
 
 - [ ] Class name ends in Step, `SomeNewStep`.
 - [ ] Class has a public static method named `create` that returns a `FormatterStep`.
@@ -111,13 +111,13 @@ The gist of it is that you will have to:
 - (Optional) Tie into the build system's native up-to-date mechanism.
 - (Optional) Use `PaddedCell` to proactively catch and resolve idempotence issues.
 
-`plugin-gradle` is the canonical example which uses everything that Spotless has to offer.  It's only ~700 lines.
+`plugin-gradle` is the canonical example which uses everything that Autostyle has to offer.  It's only ~700 lines.
 
 If you get something running, we'd love to host your plugin within this repo as a peer to `plugin-gradle` and `plugin-maven`.
 
 ## License
 
-By contributing your code, you agree to license your contribution under the terms of the APLv2: https://github.com/diffplug/spotless/blob/master/LICENSE.txt
+By contributing your code, you agree to license your contribution under the terms of the APLv2: https://github.com/diffplug/autostyle/blob/master/LICENSE.txt
 
 All files are released with the Apache 2.0 license as such:
 

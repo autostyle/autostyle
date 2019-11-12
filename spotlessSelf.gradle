@@ -33,19 +33,8 @@ spotless {
 		bumpThisNumberIfACustomStepChanges(1)
 		licenseHeaderFile 'spotless.license'
 		importOrderFile   'spotless.importorder'
-		eclipse().configFile 'spotless.eclipseformat.xml'
 		trimTrailingWhitespace()
 		removeUnusedImports()
-	}
-	groovyGradle {
-		target fileTree('.') {
-			include '**/*.gradle'
-			exclude '_ext/**'
-		}
-		paddedCell()
-		custom 'noInternalDeps', noInternalDepsClosure
-		bumpThisNumberIfACustomStepChanges(3)
-		greclipse().configFile('spotless.eclipseformat.xml', 'spotless.groovyformat.prefs')
 	}
 	freshmark {
 		target '**/*.md'

@@ -4,7 +4,7 @@
 ./gradlew --scan build --build-cache || exit 1
 ./gradlew npmTest --build-cache || exit 1
 
-if [ "$TRAVIS_REPO_SLUG" == "diffplug/spotless" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ]; then
+if [ "$TRAVIS_REPO_SLUG" == "autostyle/autostyle" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ]; then
 	# Make sure that all pom are up-to-date
 	./gradlew generatePomFileForPluginMavenPublication --build-cache
 	# Publish the artifacts
