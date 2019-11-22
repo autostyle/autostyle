@@ -3,8 +3,10 @@
 <!---freshmark shields
 output = [
   link(image('Travis CI', 'https://travis-ci.org/{{org}}/{{name}}.svg?branch=master'), 'https://travis-ci.org/{{org}}/{{name}}'),
+  link(image('CI Status', 'https://github.com/{{org}}/{{name}}/workflows/CI/badge.svg'), 'https://github.com/{{org}}/{{name}}/actions'),
 -->
 [![Travis CI](https://travis-ci.org/autostyle/autostyle.svg?branch=master)](https://travis-ci.org/autostyle/autostyle)
+[![CI Status](https://github.com/autostyle/autostyle/workflows/CI/badge.svg)](https://github.com/autostyle/autostyle/actions)
 <!---freshmark /shields -->
 
 Autostyle can format &lt;java | kotlin | scala | sql | groovy | javascript | flow | typeScript | css | scss | less | jsx | vue | graphql | json | yaml | markdown | license headers | anything> using &lt;Gradle>.
