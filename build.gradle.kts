@@ -2,13 +2,9 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
 plugins {
   id("com.github.ben-manes.versions") version "0.22.0"
-  id("com.diffplug.gradle.eclipse.resourcefilters") version "3.18.1"
   id("com.gradle.plugin-publish") version "0.10.1" apply false
-  id("com.gradle.build-scan") version "2.4"
   id("com.jfrog.bintray") version "1.8.4" apply false
   id("org.jdrupes.mdoclet") version "1.0.5" apply false
-  id("org.ajoberstar.git-publish") version "2.1.1" apply false
-  id("com.github.spotbugs") version "2.0.0" apply false
 }
 
 val String.v: String get() = rootProject.extra["$this.version"] as String
