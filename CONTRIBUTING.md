@@ -27,7 +27,7 @@ Autostyle also provides `PaddedCell`, which makes it easy to diagnose and correc
 
 ## Project layout
 
-For the folders below in monospace text, they are published on maven central at the coordinate `com.diffplug.autostyle:autostyle-${FOLDER_NAME}`.  The other folders are dev infrastructure.
+For the folders below in monospace text, they are published on maven central at the coordinate `com.github.autostyle:autostyle-${FOLDER_NAME}`.  The other folders are dev infrastructure.
 
 | Folder | Description |
 | ------ | ----------- |
@@ -117,12 +117,12 @@ If you get something running, we'd love to host your plugin within this repo as 
 
 ## License
 
-By contributing your code, you agree to license your contribution under the terms of the APLv2: https://github.com/diffplug/autostyle/blob/master/LICENSE.txt
+By contributing your code, you agree to license your contribution under the terms of the APLv2: https://github.com/autostyle/autostyle/blob/master/LICENSE
 
 All files are released with the Apache 2.0 license as such:
 
 ```
-Copyright 2016 DiffPlug
+Copyright YYYY Vladimir Sitnikov <sitnikov.vladimir@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

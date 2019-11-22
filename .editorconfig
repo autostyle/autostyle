@@ -14,5 +14,5 @@ indent_size = 2
 
 [*.java]
 # Doc: https://youtrack.jetbrains.com/issue/IDEA-170643#focus=streamItem-27-3708697.0-0
-ij_java_imports_layout = java.**,|,javax.**,|,org.**,|,com.**,|,com.diffplug.**,|,*
+ij_java_imports_layout = java.**,|,javax.**,|,org.**,|,com.**,|,com.github.autostyle.**,|,*
 ij_java_use_single_class_imports = true

@@ -2,9 +2,9 @@
 
 <!---freshmark shields
 output = [
-  link(shield('Gradle plugin', 'plugins.gradle.org', 'com.diffplug.gradle.spotless', 'blue'), 'https://plugins.gradle.org/plugin/com.diffplug.gradle.spotless'),
-  link(shield('Maven central', 'mavencentral', 'com.diffplug.gradle.spotless:spotless', 'blue'), 'https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.diffplug.spotless%22%20AND%20a%3A%22spotless-plugin-gradle%22'),
-  link(shield('Javadoc', 'javadoc', '{{stableGradle}}', 'blue'), 'https://{{org}}.github.io/{{name}}/javadoc/spotless-plugin-gradle/{{stableGradle}}/'),
+  link(shield('Gradle plugin', 'plugins.gradle.org', 'com.github.autostyle.gradle', 'blue'), 'https://plugins.gradle.org/plugin/com.github.autostyle.gradle'),
+  link(shield('Maven central', 'mavencentral', 'com.github.autostyle.gradle:spotless', 'blue'), 'https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.github.autostyle%22%20AND%20a%3A%22autostyle-plugin-gradle%22'),
+  link(shield('Javadoc', 'javadoc', '{{stableGradle}}', 'blue'), 'https://{{org}}.github.io/{{name}}/javadoc/autostyle-plugin-gradle/{{stableGradle}}/'),
   '',
   link(shield('Changelog', 'changelog', '{{versionGradle}}', 'brightgreen'), 'CHANGES.md'),
   link(image('Travis CI', 'https://travis-ci.org/{{org}}/{{name}}.svg?branch=master'), 'https://travis-ci.org/{{org}}/{{name}}'),
@@ -12,18 +12,18 @@ output = [
   link(shield('License Apache', 'license', 'apache', 'brightgreen'), 'https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)')
   ].join('\n');
 -->
-[![Gradle plugin](https://img.shields.io/badge/plugins.gradle.org-com.diffplug.gradle.spotless-blue.svg)](https://plugins.gradle.org/plugin/com.diffplug.gradle.spotless)
-[![Maven central](https://img.shields.io/badge/mavencentral-com.diffplug.gradle.spotless%3Aspotless-blue.svg)](https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.diffplug.spotless%22%20AND%20a%3A%22spotless-plugin-gradle%22)
-[![Javadoc](https://img.shields.io/badge/javadoc-3.26.0-blue.svg)](https://diffplug.github.io/spotless/javadoc/spotless-plugin-gradle/3.26.0/)
+[![Gradle plugin](https://img.shields.io/badge/plugins.gradle.org-com.github.autostyle.gradle-blue.svg)](https://plugins.gradle.org/plugin/com.github.autostyle.gradle)
+[![Maven central](https://img.shields.io/badge/mavencentral-com.github.autostyle.gradle%3Aspotless-blue.svg)](https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.github.autostyle%22%20AND%20a%3A%22autostyle-plugin-gradle%22)
+[![Javadoc](https://img.shields.io/badge/javadoc-3.26.0-blue.svg)](https://autostyle.github.io/spotless/javadoc/autostyle-plugin-gradle/3.26.0/)
 
 [![Changelog](https://img.shields.io/badge/changelog-3.27.0--SNAPSHOT-brightgreen.svg)](CHANGES.md)
-[![Travis CI](https://travis-ci.org/diffplug/spotless.svg?branch=master)](https://travis-ci.org/diffplug/spotless)
-[![Live chat](https://img.shields.io/badge/gitter-chat-brightgreen.svg)](https://gitter.im/diffplug/spotless)
+[![Travis CI](https://travis-ci.org/autostyle/autostyle.svg?branch=master)](https://travis-ci.org/autostyle/autostyle)
+[![Live chat](https://img.shields.io/badge/gitter-chat-brightgreen.svg)](https://gitter.im/autostyle/autostyle)
 [![License Apache](https://img.shields.io/badge/license-apache-brightgreen.svg)](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0))
 <!---freshmark /shields -->
 
 <!---freshmark javadoc
-output = prefixDelimiterReplace(input, 'https://{{org}}.github.io/{{name}}/javadoc/spotless-plugin-gradle/', '/', stableGradle)
+output = prefixDelimiterReplace(input, 'https://{{org}}.github.io/{{name}}/javadoc/autostyle-plugin-gradle/', '/', stableGradle)
 -->
 
 Spotless is a general-purpose formatting plugin used by [a thousand projects on GitHub](https://github.com/search?l=gradle&q=spotless&type=Code).  It is completely à la carte, but also includes powerful "batteries-included" if you opt-in.
@@ -35,7 +35,7 @@ cmd> gradlew build
 ...
 :spotlessJavaCheck FAILED
 > The following files had format violations:
-  src\main\java\com\diffplug\gradle\spotless\FormatExtension.java
+  src\main\java\com\github\autostyle\gradle\FormatExtension.java
     @@ -109,7 +109,7 @@
     ...
     -\t\t····if·(targets.length·==·0)·{
@@ -51,7 +51,7 @@ cmd> gradlew build
 BUILD SUCCESSFUL
 ```
 
-To use it in your buildscript, just [add the Spotless dependency](https://plugins.gradle.org/plugin/com.diffplug.gradle.spotless), and configure it like so:
+To use it in your buildscript, just [add the Spotless dependency](https://plugins.gradle.org/plugin/com.github.autostyle.gradle), and configure it like so:
 
 ```gradle
 spotless {
@@ -75,7 +75,7 @@ spotless {
 }
 ```
 
-Spotless can check and apply formatting to any plain-text file, using simple rules ([javadoc](https://diffplug.github.io/spotless/javadoc/spotless-plugin-gradle/3.26.0/com/diffplug/gradle/spotless/FormatExtension.html)) like those above.  It also supports more powerful formatters:
+Spotless can check and apply formatting to any plain-text file, using simple rules ([javadoc](https://autostyle.github.io/spotless/javadoc/autostyle-plugin-gradle/3.26.0/com/github/autostyle/gradle/FormatExtension.html)) like those above.  It also supports more powerful formatters:
 
 * Eclipse's [CDT](#eclipse-cdt) C/C++ code formatter
 * Eclipse's java code formatter (including style and import ordering)
@@ -92,7 +92,7 @@ Spotless can check and apply formatting to any plain-text file, using simple rul
 
 Contributions are welcome, see [the contributing guide](../CONTRIBUTING.md) for development info.
 
-Spotless requires Gradle to be running on JRE 8+.<sup>See [issue #7](https://github.com/diffplug/spotless/issues/7) for details.</sup>
+Spotless requires Gradle to be running on JRE 8+.<sup>See [issue #7](https://github.com/autostyle/autostyle/issues/7) for details.</sup>
 
 <a name="java"></a>
 
@@ -122,7 +122,7 @@ spotless {
     eclipse().configFile 'spotless.eclipseformat.xml'  // XML file dumped out by the Eclipse formatter
     // If you have Eclipse preference or property files, you can use them too.
     // eclipse('4.7.1') to specify a specific version of eclipse,
-    // available versions are: https://github.com/diffplug/spotless/tree/master/lib-extra/src/main/resources/com/diffplug/spotless/extra/eclipse_jdt_formatter
+    // available versions are: https://github.com/autostyle/autostyle/tree/master/lib-extra/src/main/resources/com/autostyle/autostyle/extra/eclipse_jdt_formatter
   }
 }
 ```
@@ -207,7 +207,7 @@ spotless {
     // Use the default version and Groovy-Eclipse default configuration
     greclipse()
     // optional: you can specify a specific version or config file(s)
-    // available versions: https://github.com/diffplug/spotless/tree/master/lib-extra/src/main/resources/com/diffplug/spotless/extra/groovy_eclipse_formatter
+    // available versions: https://github.com/autostyle/autostyle/tree/master/lib-extra/src/main/resources/com/autostyle/autostyle/extra/groovy_eclipse_formatter
     greclipse('2.3.0').configFile('spotless.eclipseformat.xml', 'org.codehaus.groovy.eclipse.ui.prefs')
   }
 }
@@ -290,7 +290,7 @@ spotless {
   sql {
     // default value for target files
     target '**/*.sql'
-    // configFile is optional, arguments available here: https://github.com/diffplug/spotless/blob/master/lib/src/main/java/com/diffplug/spotless/sql/dbeaver/DBeaverSQLFormatterConfiguration.java
+    // configFile is optional, arguments available here: https://github.com/autostyle/autostyle/blob/master/lib/src/main/java/com/autostyle/autostyle/sql/dbeaver/DBeaverSQLFormatterConfiguration.java
     dbeaver().configFile('dbeaver.props')
   }
 }
@@ -319,7 +319,7 @@ spotless {
     eclipse().configFile 'spotless.eclipseformat.xml'  // XML file dumped out by the Eclipse formatter
     // If you have Eclipse preference or property files, you can use them too.
     // eclipse('4.7.1') to specify a specific version of Eclipse,
-    // available versions are: https://github.com/diffplug/spotless/tree/master/lib-extra/src/main/resources/com/diffplug/spotless/extra/eclipse_cdt_formatter
+    // available versions are: https://github.com/autostyle/autostyle/tree/master/lib-extra/src/main/resources/com/autostyle/autostyle/extra/eclipse_cdt_formatter
     licenseHeader '// Licensed under Apache'  // License header
     licenseHeaderFile './license.txt'  // License header file
   }
@@ -490,7 +490,7 @@ spotless {
       exclude '**/build/**'
     }
     // Use for example eclipseWtp('xml', '4.7.3a') to specify a specific version of Eclipse,
-    // available versions are: https://github.com/diffplug/spotless/tree/master/lib-extra/src/main/resources/com/diffplug/spotless/extra/eclipse_wtp_formatters
+    // available versions are: https://github.com/autostyle/autostyle/tree/master/lib-extra/src/main/resources/com/autostyle/autostyle/extra/eclipse_wtp_formatters
     eclipseWtp('xml').configFile 'spotless.xml.prefs', 'spotless.common.properties'
   }
 }
@@ -607,9 +607,9 @@ spotless {
 }
 ```
 
-If you use `custom` or `customLazy`, you might want to take a look at [this javadoc](https://diffplug.github.io/spotless/javadoc/spotless-plugin-gradle/3.26.0/com/diffplug/gradle/spotless/FormatExtension.html#bumpThisNumberIfACustomStepChanges-int-) for a big performance win.
+If you use `custom` or `customLazy`, you might want to take a look at [this javadoc](https://autostyle.github.io/spotless/javadoc/autostyle-plugin-gradle/3.26.0/com/github/autostyle/gradle/FormatExtension.html#bumpThisNumberIfACustomStepChanges-int-) for a big performance win.
 
-See [`JavaExtension.java`](src/main/java/com/diffplug/gradle/spotless/JavaExtension.java) if you'd like to see how a language-specific set of custom rules is implemented.  We'd love PR's which add support for other languages.
+See [`JavaExtension.java`](src/main/java/com/github/autostyle/gradle/JavaExtension.java) if you'd like to see how a language-specific set of custom rules is implemented.  We'd love PR's which add support for other languages.
 
 <a name="invisible"></a>
 
@@ -637,7 +637,7 @@ You can easily set the line endings of different files using [a `.gitattributes`
 
 The `check` task is Gradle's built-in task for grouping all verification tasks - unit tests, static analysis, etc.  By default, `spotlessCheck` is added as a dependency to `check`.
 
-You might want to disable this behavior.  We [recommend against this](https://github.com/diffplug/spotless/issues/79#issuecomment-290844602), but it's easy to do if you'd like:
+You might want to disable this behavior.  We [recommend against this](https://github.com/autostyle/autostyle/issues/79#issuecomment-290844602), but it's easy to do if you'd like:
 
 ```gradle
 spotless {
@@ -688,7 +688,7 @@ The patterns are matched using `String#matches(String)` against the absolute fil
 
 ## Example configurations (from real-world projects)
 
-Spotless is hosted on jcenter and at plugins.gradle.org. [Go here](https://plugins.gradle.org/plugin/com.diffplug.gradle.spotless) if you're not sure how to import the plugin.
+Spotless is hosted on jcenter and at plugins.gradle.org. [Go here](https://plugins.gradle.org/plugin/com.github.autostyle.gradle) if you're not sure how to import the plugin.
 
 * [One thousand github projects](https://github.com/search?l=gradle&q=spotless&type=Code)
 * [JUnit 5](https://github.com/junit-team/junit-lambda/blob/151d52ffab07881de71a8396a9620f18072c65ec/build.gradle#L86-L101) (aka JUnit Lambda)

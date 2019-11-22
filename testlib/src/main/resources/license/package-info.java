@@ -5,4 +5,4 @@
  *
  * @since 1.0
  */
-package com.diffplug.spotless;
+package com.github.autostyle;

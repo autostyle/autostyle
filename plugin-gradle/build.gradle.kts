@@ -20,13 +20,13 @@ dependencies {
 /////////////////////
 //task spotlessCheck(type: JavaExec) {
 //  classpath sourceSets.test.runtimeClasspath
-//  main = "com.diffplug.gradle.spotless.SelfTestCheck"
+//  main = "com.github.autostyle.gradle.SelfTestCheck"
 //}
 //check.dependsOn(spotlessCheck)
 //
 //task spotlessApply(type: JavaExec) {
 //  classpath sourceSets.test.runtimeClasspath
-//  main = "com.diffplug.gradle.spotless.SelfTestApply"
+//  main = "com.github.autostyle.gradle.SelfTestApply"
 //}
 
 tasks.named<Test>("test") {
