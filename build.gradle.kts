@@ -25,6 +25,11 @@ allprojects {
   val javaUsed = file("src/main/java").isDirectory
   if (javaUsed) {
     apply(plugin = "java-library")
+    dependencies {
+      compileOnly("net.jcip:jcip-annotations:1.0")
+      compileOnly("com.github.spotbugs:spotbugs-annotations:3.1.6")
+      compileOnly("com.google.code.findbugs:jsr305:3.0.2")
+    }
   }
 
   val hasTests = file("src/test/java").isDirectory || file("src/test/kotlin").isDirectory
