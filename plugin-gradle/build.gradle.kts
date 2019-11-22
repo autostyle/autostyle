@@ -1,18 +1,18 @@
 plugins {
-  id("com.gradle.plugin-publish")
-  id("java-gradle-plugin")
+    id("com.gradle.plugin-publish")
+    id("java-gradle-plugin")
 }
 
 dependencies {
-  api(project(":lib"))
-  api(project(":lib-extra"))
-  implementation("com.diffplug.durian:durian-core")
-  implementation("com.diffplug.durian:durian-io")
-  implementation("com.diffplug.durian:durian-collect")
+    api(project(":lib"))
+    api(project(":lib-extra"))
+    implementation("com.diffplug.durian:durian-core")
+    implementation("com.diffplug.durian:durian-io")
+    implementation("com.diffplug.durian:durian-collect")
 
-  testImplementation(project(":testlib"))
-  testImplementation("org.assertj:assertj-core")
-  testImplementation("com.diffplug.durian:durian-testlib")
+    testImplementation(project(":testlib"))
+    testImplementation("org.assertj:assertj-core")
+    testImplementation("com.diffplug.durian:durian-testlib")
 }
 
 /////////////////////
@@ -30,42 +30,42 @@ dependencies {
 //}
 
 tasks.named<Test>("test") {
-  useJUnit {
-    excludeCategories("com.diffplug.spotless.category.NpmTest")
-  }
+    useJUnit {
+        excludeCategories("com.github.autostyle.category.NpmTest")
+    }
 }
 
 val npmTest by tasks.registering(Test::class) {
-  useJUnit {
-    includeCategories("com.diffplug.spotless.category.NpmTest")
-  }
+    useJUnit {
+        includeCategories("com.github.autostyle.category.NpmTest")
+    }
 }
 
 //////////////////////////
 // GRADLE PLUGIN PORTAL //
 //////////////////////////
 pluginBundle {
-  // These settings are set for the whole plugin bundle
-  website = "https://github.com/autostyle/autostyle"
-  vcsUrl = "https://github.com/autostyle/autostyle"
-  description = project.description
+    // These settings are set for the whole plugin bundle
+    website = "https://github.com/autostyle/autostyle"
+    vcsUrl = "https://github.com/autostyle/autostyle"
+    description = project.description
 
-  plugins {
-    create("autostylePlugin") {
-      id = "com.github.vlsi.autostyle"
-      displayName = "Autostyle formatting plugin"
-      tags = listOf(
-        "format",
-        "style",
-        "license",
-        "header"
-      )
+    plugins {
+        create("autostylePlugin") {
+            id = "com.github.vlsi.autostyle"
+            displayName = "Autostyle formatting plugin"
+            tags = listOf(
+                    "format",
+                    "style",
+                    "license",
+                    "header"
+            )
+        }
     }
-  }
 
-  mavenCoordinates {
-    groupId = project.group.toString()
-    artifactId = project.name
-    version = project.version.toString()
-  }
+    mavenCoordinates {
+        groupId = project.group.toString()
+        artifactId = project.name
+        version = project.version.toString()
+    }
 }

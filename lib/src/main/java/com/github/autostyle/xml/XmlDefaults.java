@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 /**
  * Common utilities for XML
- * <br/>
+ *
  * The XML extension is discontinued.
  */
 @Deprecated

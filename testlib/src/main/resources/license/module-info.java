@@ -1,6 +1,6 @@
-module com.diffplug.spotless {
+module com.github.autostyle {
 
     requires com.diffplug.durian;
 
-    exports com.diffplug.spotless;
+    exports com.github.autostyle;
 }

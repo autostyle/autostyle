@@ -143,7 +143,7 @@ public class SpotlessExtension {
 
   /**
    * Configures the special css-specific extension for CSS files.
-   * <br/>
+   *
    * The CSS extension is discontinued. CSS formatters are now part of
    * the generic {@link FormatExtension}.
    */
@@ -154,7 +154,7 @@ public class SpotlessExtension {
 
   /**
    * Configures the special xml-specific extension for XML/XSL/... files (XHTML is excluded).
-   * <br/>
+   *
    * The XML extension is discontinued. XML formatters are now part of
    * the generic {@link FormatExtension}.
    */

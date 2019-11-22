@@ -21,7 +21,7 @@ import java.util.List;
 
 /**
  * Common utilities for CSS
- * <br/>
+ *
  * The CSS extension is discontinued.
  */
 @Deprecated

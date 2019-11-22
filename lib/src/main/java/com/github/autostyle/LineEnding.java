@@ -54,11 +54,11 @@ public enum LineEnding {
     } else {
       if (gitAttributesPolicyCreator == null) {
         try {
-          Class<?> clazz = Class.forName("com.diffplug.spotless.extra.GitAttributesLineEndings");
+          Class<?> clazz = Class.forName("com.github.autostyle.extra.GitAttributesLineEndings");
           Method method = clazz.getMethod("create", File.class, Supplier.class);
           gitAttributesPolicyCreator = (proj, target) -> ThrowingEx.get(() -> (Policy) method.invoke(null, proj, target));
         } catch (ClassNotFoundException | NoSuchMethodException | SecurityException e) {
-          throw new IllegalStateException("LineEnding.GIT_ATTRIBUTES requires the spotless-lib-extra library, but it is not on the classpath", e);
+          throw new IllegalStateException("LineEnding.GIT_ATTRIBUTES requires the autostyle-lib-extra library, but it is not on the classpath", e);
         }
       }
       // gitAttributesPolicyCreator will always be nonnull at this point

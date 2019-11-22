@@ -2,7 +2,6 @@ root = true
 
 [*]
 indent_style = space
-indent_size = 2
 insert_final_newline = true
 trim_trailing_whitespace = true
 charset = utf-8
@@ -12,7 +11,16 @@ charset = utf-8
 indent_style = space
 indent_size = 2
 
+[{*.kts,*.kt}]
+ij_kotlin_code_style_defaults = KOTLIN_OFFICIAL
+ij_kotlin_name_count_to_use_star_import = 99
+ij_kotlin_name_count_to_use_star_import_for_members = 99
+ij_java_use_single_class_imports = true
+max_line_length = 100
+ij_any_wrap_long_lines = true
+
 [*.java]
 # Doc: https://youtrack.jetbrains.com/issue/IDEA-170643#focus=streamItem-27-3708697.0-0
 ij_java_imports_layout = java.**,|,javax.**,|,org.**,|,com.**,|,com.github.autostyle.**,|,*
 ij_java_use_single_class_imports = true
+indent_size = 2

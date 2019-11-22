@@ -541,7 +541,7 @@ public class FormatExtension {
           GradleProvisioner.fromProject(project),
           project.getBuildDir(),
           npmFileOrNull(),
-          new com.diffplug.spotless.npm.PrettierConfig(
+          new com.github.autostyle.npm.PrettierConfig(
               this.prettierConfigFile != null ? project.file(this.prettierConfigFile) : null,
               this.prettierConfig));
     }
