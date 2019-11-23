@@ -26,7 +26,7 @@ public class UpToDateTest extends GradleIntegrationTest {
         "plugins {",
         "    id 'com.github.autostyle.gradle'",
         "}",
-        "spotless {",
+        "autostyle {",
         "    format 'misc', {",
         "        target file('README.md')",
         "        customLazyGroovy('lowercase') {",
@@ -44,7 +44,7 @@ public class UpToDateTest extends GradleIntegrationTest {
     // first time, the task runs as expected
     applyIsUpToDate(false);
     assertFile("README.md").hasContent("abc");
-    // because a file was changed (by spotless),
+    // because a file was changed (by Autostyle),
     // up-to-date is false, even though nothing is
     // going to change during this run.  This second
     // run is very fast though, because it will

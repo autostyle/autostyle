@@ -30,7 +30,7 @@ import com.github.autostyle.xml.XmlDefaults;
 public class XmlExtension extends FormatExtension implements HasBuiltinDelimiterForLicense {
   static final String NAME = "xml";
 
-  public XmlExtension(SpotlessExtension rootExtension) {
+  public XmlExtension(AutostyleExtension rootExtension) {
     super(rootExtension);
   }
 

@@ -48,11 +48,11 @@ import com.github.autostyle.npm.PrettierFormatterStep;
 
 import groovy.lang.Closure;
 
-/** Adds a `spotless{Name}Check` and `spotless{Name}Apply` task. */
+/** Adds a `autostyle{Name}Check` and `autostyle{Name}Apply` task. */
 public class FormatExtension {
-  final SpotlessExtension root;
+  final AutostyleExtension root;
 
-  public FormatExtension(SpotlessExtension root) {
+  public FormatExtension(AutostyleExtension root) {
     this.root = Objects.requireNonNull(root);
   }
 
@@ -62,7 +62,7 @@ public class FormatExtension {
         return entry.getKey();
       }
     }
-    throw new IllegalStateException("This format is not contained by any SpotlessExtension.");
+    throw new IllegalStateException("This format is not contained by any AutostyleExtension.");
   }
 
   boolean paddedCell = false;
@@ -79,29 +79,29 @@ public class FormatExtension {
 
   LineEnding lineEndings;
 
-  /** Returns the line endings to use (defaults to {@link SpotlessExtension#getLineEndings()}. */
+  /** Returns the line endings to use (defaults to {@link AutostyleExtension#getLineEndings()}. */
   public LineEnding getLineEndings() {
     return lineEndings == null ? root.getLineEndings() : lineEndings;
   }
 
-  /** Sets the line endings to use (defaults to {@link SpotlessExtension#getLineEndings()}. */
+  /** Sets the line endings to use (defaults to {@link AutostyleExtension#getLineEndings()}. */
   public void setLineEndings(LineEnding lineEndings) {
     this.lineEndings = Objects.requireNonNull(lineEndings);
   }
 
   Charset encoding;
 
-  /** Returns the encoding to use (defaults to {@link SpotlessExtension#getEncoding()}. */
+  /** Returns the encoding to use (defaults to {@link AutostyleExtension#getEncoding()}. */
   public Charset getEncoding() {
     return encoding == null ? root.getEncoding() : encoding;
   }
 
-  /** Sets the encoding to use (defaults to {@link SpotlessExtension#getEncoding()}. */
+  /** Sets the encoding to use (defaults to {@link AutostyleExtension#getEncoding()}. */
   public void setEncoding(String name) {
     setEncoding(Charset.forName(Objects.requireNonNull(name)));
   }
 
-  /** Sets the encoding to use (defaults to {@link SpotlessExtension#getEncoding()}. */
+  /** Sets the encoding to use (defaults to {@link AutostyleExtension#getEncoding()}. */
   public void setEncoding(Charset charset) {
     encoding = Objects.requireNonNull(charset);
   }
@@ -118,7 +118,7 @@ public class FormatExtension {
     exceptionPolicy.excludePath(Objects.requireNonNull(relativePath));
   }
 
-  /** Sets encoding to use (defaults to {@link SpotlessExtension#getEncoding()}). */
+  /** Sets encoding to use (defaults to {@link AutostyleExtension#getEncoding()}). */
   public void encoding(String charset) {
     setEncoding(charset);
   }
@@ -262,7 +262,7 @@ public class FormatExtension {
     Objects.requireNonNull(newStep);
     int existingIdx = getExistingStepIdx(newStep.getName());
     if (existingIdx != -1) {
-      throw new GradleException("Multiple steps with name '" + newStep.getName() + "' for spotless format '" + formatName() + "'");
+      throw new GradleException("Multiple steps with name '" + newStep.getName() + "' for Autostyle format '" + formatName() + "'");
     }
     steps.add(newStep);
   }
@@ -290,7 +290,7 @@ public class FormatExtension {
   protected void replaceStep(FormatterStep replacementStep) {
     int existingIdx = getExistingStepIdx(replacementStep.getName());
     if (existingIdx == -1) {
-      throw new GradleException("Cannot replace step '" + replacementStep.getName() + "' for spotless format '" + formatName() + "' because it hasn't been added yet.");
+      throw new GradleException("Cannot replace step '" + replacementStep.getName() + "' for Autostyle format '" + formatName() + "' because it hasn't been added yet.");
     }
     steps.set(existingIdx, replacementStep);
   }
@@ -305,15 +305,15 @@ public class FormatExtension {
    * methods.  If you aren't explicitly calling `custom` or `customLazy`, then this method
    * has no effect.
    *
-   * Spotless tracks what files have changed from run to run, so that it can run faster
+   * Autostyle tracks what files have changed from run to run, so that it can run faster
    * by only checking files which have changed, or whose formatting steps have changed.
-   * If you use either the `custom` or `customLazy` methods, then gradle can never mark
+   * If you use either the `custom` or `customLazy` methods, then Gradle can never mark
    * your files as `up-to-date`, because it can't know if perhaps the behavior of your
    * custom function has changed.
    *
-   * If you set `bumpThisNumberIfACustomStepChanges( <some number> )`, then spotless will
+   * If you set `bumpThisNumberIfACustomStepChanges( <some number> )`, then Autostyle will
    * assume that the custom rules have not changed if the number has not changed.  If a
-   * custom rule does change, then you must bump the number so that spotless will know
+   * custom rule does change, then you must bump the number so that Autostyle will know
    * that it must recheck the files it has already checked.
    */
   public void bumpThisNumberIfACustomStepChanges(int number) {
@@ -414,7 +414,7 @@ public class FormatExtension {
 
     /**
      * @param delimiter
-     *            Spotless will look for a line that starts with this regular expression pattern to know what the "top" is.
+     *            Autostyle will look for a line that starts with this regular expression pattern to know what the "top" is.
      */
     public LicenseHeaderConfig delimiter(String delimiter) {
       this.delimiter = Objects.requireNonNull(delimiter, "delimiter");
@@ -469,7 +469,7 @@ public class FormatExtension {
    * @param licenseHeader
    *            Content that should be at the top of every file.
    * @param delimiter
-   *            Spotless will look for a line that starts with this regular expression pattern to know what the "top" is.
+   *            Autostyle will look for a line that starts with this regular expression pattern to know what the "top" is.
    */
   public LicenseHeaderConfig licenseHeader(String licenseHeader, String delimiter) {
     LicenseHeaderConfig config = new LicenseStringHeaderConfig(delimiter, licenseHeader);
@@ -481,7 +481,7 @@ public class FormatExtension {
    * @param licenseHeaderFile
    *            Content that should be at the top of every file.
    * @param delimiter
-   *            Spotless will look for a line that starts with this regular expression pattern to know what the "top" is.
+   *            Autostyle will look for a line that starts with this regular expression pattern to know what the "top" is.
    */
   public LicenseHeaderConfig licenseHeaderFile(Object licenseHeaderFile, String delimiter) {
     LicenseHeaderConfig config = new LicenseFileHeaderConfig(delimiter, licenseHeaderFile);

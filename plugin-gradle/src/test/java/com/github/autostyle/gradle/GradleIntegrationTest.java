@@ -43,11 +43,11 @@ public class GradleIntegrationTest extends ResourceHarness {
    *
    * Because those test folders don't have a .gitattributes file,
    * git (on windows) will default to \r\n. So now if you read a
-   * test file from the spotless test resources, and compare it
+   * test file from the Autostyle test resources, and compare it
    * to a build result, the line endings won't match.
    *
    * By sticking this .gitattributes file into the test directory,
-   * we ensure that the default Spotless line endings policy of
+   * we ensure that the default Autostyle line endings policy of
    * GIT_ATTRIBUTES will use \n, so that tests match the test
    * resources on win and linux.
    */
@@ -96,11 +96,11 @@ public class GradleIntegrationTest extends ResourceHarness {
   }
 
   protected void applyIsUpToDate(boolean upToDate) throws IOException {
-    taskIsUpToDate("spotlessApply", upToDate);
+    taskIsUpToDate("autostyleApply", upToDate);
   }
 
   protected void checkIsUpToDate(boolean upToDate) throws IOException {
-    taskIsUpToDate("spotlessCheck", upToDate);
+    taskIsUpToDate("autostyleCheck", upToDate);
   }
 
   private static final boolean IS_UNIX = LineEnding.PLATFORM_NATIVE.str().equals("\n");

@@ -26,7 +26,7 @@ public class CustomLazyGroovyTest extends GradleIntegrationTest {
         "plugins {",
         "    id 'com.github.autostyle.gradle'",
         "}",
-        "spotless {",
+        "autostyle {",
         "    format 'misc', {",
         "        target file('README.md')",
         "        customLazyGroovy('lowercase') {",
@@ -35,7 +35,7 @@ public class CustomLazyGroovyTest extends GradleIntegrationTest {
         "    }",
         "}");
     setFile("README.md").toContent("ABC");
-    gradleRunner().withArguments("spotlessApply").build();
+    gradleRunner().withArguments("autostyleApply").build();
     assertFile("README.md").hasContent("abc");
   }
 }

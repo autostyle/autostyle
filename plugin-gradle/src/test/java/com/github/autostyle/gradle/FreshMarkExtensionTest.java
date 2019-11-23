@@ -28,7 +28,7 @@ public class FreshMarkExtensionTest extends GradleIntegrationTest {
         "    id 'java'",
         "    id 'com.github.autostyle.gradle'",
         "}",
-        "spotless {",
+        "autostyle {",
         "    freshmark {",
         "        properties {",
         "            it.put('lib', 'MyLib')",
@@ -37,7 +37,7 @@ public class FreshMarkExtensionTest extends GradleIntegrationTest {
         "    }",
         "}");
     setFile("README.md").toResource("freshmark/FreshMarkUnformatted.test");
-    gradleRunner().withArguments("spotlessApply").build();
+    gradleRunner().withArguments("autostyleApply").build();
     assertFile("README.md").sameAsResource("freshmark/FreshMarkFormatted.test");
   }
 }

@@ -34,14 +34,14 @@ public class TypescriptExtensionTest extends GradleIntegrationTest {
         "def tsfmtconfig = [:]",
         "tsfmtconfig['indentSize'] = 1",
         "tsfmtconfig['convertTabsToSpaces'] = true",
-        "spotless {",
+        "autostyle {",
         "    typescript {",
         "        target 'test.ts'",
         "        tsfmt('7.2.1').config(tsfmtconfig)",
         "    }",
         "}");
     setFile("test.ts").toResource("npm/tsfmt/tsfmt/tsfmt.dirty");
-    gradleRunner().withArguments("--stacktrace", "spotlessApply").build();
+    gradleRunner().withArguments("--stacktrace", "autostyleApply").build();
     assertFile("test.ts").sameAsResource("npm/tsfmt/tsfmt/tsfmt.clean");
   }
 
@@ -55,14 +55,14 @@ public class TypescriptExtensionTest extends GradleIntegrationTest {
         "def tsfmtconfig = [:]",
         "tsfmtconfig['indentSize'] = 1",
         "tsfmtconfig['convertTabsToSpaces'] = true",
-        "spotless {",
+        "autostyle {",
         "    typescript {",
         "        target 'test.ts'",
         "        tsfmt(['typescript-formatter': '7.2.1', 'tslint': '5.1.0', 'typescript': '2.9.2']).config(tsfmtconfig)",
         "    }",
         "}");
     setFile("test.ts").toResource("npm/tsfmt/tsfmt/tsfmt.dirty");
-    gradleRunner().withArguments("--stacktrace", "spotlessApply").build();
+    gradleRunner().withArguments("--stacktrace", "autostyleApply").build();
     assertFile("test.ts").sameAsResource("npm/tsfmt/tsfmt/tsfmt.clean");
   }
 
@@ -76,14 +76,14 @@ public class TypescriptExtensionTest extends GradleIntegrationTest {
         "def tsfmtconfig = [:]",
         "tsfmtconfig['indentSize'] = 1",
         "tsfmtconfig['convertTabsToSpaces'] = true",
-        "spotless {",
+        "autostyle {",
         "    typescript {",
         "        target 'test.ts'",
         "        tsfmt().config(tsfmtconfig)",
         "    }",
         "}");
     setFile("test.ts").toResource("npm/tsfmt/tsfmt/tsfmt.dirty");
-    gradleRunner().withArguments("--stacktrace", "spotlessApply").build();
+    gradleRunner().withArguments("--stacktrace", "autostyleApply").build();
     assertFile("test.ts").sameAsResource("npm/tsfmt/tsfmt/tsfmt.clean");
   }
 
@@ -99,14 +99,14 @@ public class TypescriptExtensionTest extends GradleIntegrationTest {
         "plugins {",
         "    id 'com.github.autostyle.gradle'",
         "}",
-        "spotless {",
+        "autostyle {",
         "    typescript {",
         "        target 'test.ts'",
         "        tsfmt().tsfmtFile('tsfmt.json')",
         "    }",
         "}");
     setFile("test.ts").toResource("npm/tsfmt/tsfmt/tsfmt.dirty");
-    gradleRunner().withArguments("--stacktrace", "spotlessApply").build();
+    gradleRunner().withArguments("--stacktrace", "autostyleApply").build();
     assertFile("test.ts").sameAsResource("npm/tsfmt/tsfmt/tsfmt.clean");
   }
 
@@ -117,14 +117,14 @@ public class TypescriptExtensionTest extends GradleIntegrationTest {
         "plugins {",
         "    id 'com.github.autostyle.gradle'",
         "}",
-        "spotless {",
+        "autostyle {",
         "    typescript {",
         "        target 'test.ts'",
         "        prettier()",
         "    }",
         "}");
     setFile("test.ts").toResource("npm/prettier/filetypes/typescript/typescript.dirty");
-    gradleRunner().withArguments("--stacktrace", "spotlessApply").build();
+    gradleRunner().withArguments("--stacktrace", "autostyleApply").build();
     assertFile("test.ts").sameAsResource("npm/prettier/filetypes/typescript/typescript.clean");
   }
 }

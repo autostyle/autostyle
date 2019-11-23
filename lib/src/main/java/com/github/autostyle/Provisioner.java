@@ -21,8 +21,8 @@ import java.util.Collection;
 import java.util.Set;
 
 /**
- * Many spotless steps require third-party libraries, but we want to keep
- * Spotless' dependencies minimal.
+ * Many Autostyle steps require third-party libraries, but we want to keep
+ * Autostyle dependencies minimal.
  */
 public interface Provisioner {
 

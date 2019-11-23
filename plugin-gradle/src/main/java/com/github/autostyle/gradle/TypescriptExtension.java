@@ -36,7 +36,7 @@ public class TypescriptExtension extends FormatExtension {
 
   static final String NAME = "typescript";
 
-  public TypescriptExtension(SpotlessExtension root) {
+  public TypescriptExtension(AutostyleExtension root) {
     super(root);
   }
 

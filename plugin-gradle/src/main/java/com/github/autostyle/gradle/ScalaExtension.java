@@ -31,7 +31,7 @@ import com.github.autostyle.scala.ScalaFmtStep;
 public class ScalaExtension extends FormatExtension {
   static final String NAME = "scala";
 
-  public ScalaExtension(SpotlessExtension rootExtension) {
+  public ScalaExtension(AutostyleExtension rootExtension) {
     super(rootExtension);
   }
 

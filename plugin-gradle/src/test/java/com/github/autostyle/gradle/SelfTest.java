@@ -29,7 +29,7 @@ import com.diffplug.common.base.StandardSystemProperty;
 import com.github.autostyle.TestProvisioner;
 
 /**
- * If you'd like to step through the full spotless plugin,
+ * If you'd like to step through the full Autostyle plugin,
  * these tests make that easier. Uncomment ignore to do it.
  */
 @Ignore
@@ -78,12 +78,12 @@ public class SelfTest {
   }
 
   @Test
-  public void spotlessApply() throws Exception {
+  public void autostyleApply() throws Exception {
     runTasksManually(Type.APPLY);
   }
 
   @Test
-  public void spotlessCheck() throws Exception {
+  public void autostyleCheck() throws Exception {
     runTasksManually(Type.CHECK);
   }
 
@@ -92,9 +92,9 @@ public class SelfTest {
     Project project = createProject(extension -> {
       extension.java(java -> {
         java.target("**/*.java");
-        java.licenseHeaderFile("spotless.license.java");
-        java.importOrderFile("spotless.importorder");
-        java.eclipse().configFile("spotless.eclipseformat.xml");
+        java.licenseHeaderFile("autostyle.license.java");
+        java.importOrderFile("autostyle.importorder");
+        java.eclipse().configFile("autostyle.eclipseformat.xml");
         java.trimTrailingWhitespace();
         java.customLazy("Lambda fix", () -> raw -> {
           if (!raw.contains("public class SelfTest ")) {
@@ -115,26 +115,26 @@ public class SelfTest {
     type.runAllTasks(project);
   }
 
-  /** Creates a Project which has had the SpotlessExtension setup. */
-  private static Project createProject(Consumer<SpotlessExtension> test) throws Exception {
+  /** Creates a Project which has had the AutostyleExtension setup. */
+  private static Project createProject(Consumer<AutostyleExtension> test) throws Exception {
     Project project = TestProvisioner.gradleProject(new File("").getAbsoluteFile());
-    // create the spotless plugin
-    SpotlessPlugin plugin = project.getPlugins().apply(SpotlessPlugin.class);
+    // create the Autostyle plugin
+    AutostylePlugin plugin = project.getPlugins().apply(AutostylePlugin.class);
     // setup the plugin
     test.accept(plugin.getExtension());
     // return the configured plugin
     return project;
   }
 
-  /** Runs against the `spotlessSelfApply.gradle` file. */
+  /** Runs against the `autostyleSelfApply.gradle` file. */
   static void runWithTestKit(Type type) throws Exception {
     GradleRunner.create()
         .withPluginClasspath()
         .withProjectDir(new File(StandardSystemProperty.USER_DIR.value()).getParentFile())
         .withArguments(
-            "--build-file", "spotlessSelf.gradle",
+            "--build-file", "autostyleSelf.gradle",
             "--project-cache-dir", ".gradle-selfapply",
-            "spotless" + type.checkApply("Check", "Apply"),
+            "autostyle" + type.checkApply("Check", "Apply"),
             "--stacktrace")
         .forwardOutput()
         .build();

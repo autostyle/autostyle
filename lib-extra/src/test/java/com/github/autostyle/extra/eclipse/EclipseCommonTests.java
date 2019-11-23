@@ -26,11 +26,11 @@ import com.github.autostyle.LineEnding;
 import com.github.autostyle.ResourceHarness;
 
 /**
- * Provides a common set of tests for all Spotless Eclipse Formatter steps provided by
+ * Provides a common set of tests for all Autostyle Eclipse Formatter steps provided by
  * lib-extra.
  * <p>
- * The external Spotless Eclipse Formatter Step implementations are responsible
- * to test the functionality of the Spotless adaptations for the Eclipse formatter.
+ * The external Autostyle Eclipse Formatter Step implementations are responsible
+ * to test the functionality of the Autostyle adaptations for the Eclipse formatter.
  * This explicitly includes a check of various forms of valid and invalid input
  * to cover all relevant execution paths during the code formatting and internal
  * exception handling.
@@ -38,7 +38,7 @@ import com.github.autostyle.ResourceHarness;
  * <p>
  * The lib-extra users, like plugin-gradle and plugin-maven are responsible
  * to test the correct provision of user settings to the generic
- * Spotless Eclipse Formatter steps provided by lib-extra.
+ * Autostyle Eclipse Formatter steps provided by lib-extra.
  * </p>
  */
 public abstract class EclipseCommonTests extends ResourceHarness {

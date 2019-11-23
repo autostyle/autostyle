@@ -36,11 +36,11 @@ import com.github.autostyle.LineEnding;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import groovy.lang.Closure;
 
-public class SpotlessExtension {
+public class AutostyleExtension {
   final Project project;
   final Task rootCheckTask, rootApplyTask;
 
-  static final String EXTENSION = "spotless";
+  static final String EXTENSION = "autostyle";
   static final String CHECK = "Check";
   static final String APPLY = "Apply";
 
@@ -48,9 +48,9 @@ public class SpotlessExtension {
   private static final String CHECK_DESCRIPTION = "Checks that sourcecode satisfies formatting steps.";
   private static final String APPLY_DESCRIPTION = "Applies code formatting steps to sourcecode in-place.";
 
-  private static final String FILES_PROPERTY = "spotlessFiles";
+  private static final String FILES_PROPERTY = "autostyleFiles";
 
-  public SpotlessExtension(Project project) {
+  public AutostyleExtension(Project project) {
     this.project = requireNonNull(project);
     rootCheckTask = project.task(EXTENSION + CHECK);
     rootCheckTask.setGroup(TASK_GROUP);
@@ -191,13 +191,13 @@ public class SpotlessExtension {
 
   boolean enforceCheck = true;
 
-  /** Returns `true` if Gradle's `check` task should run `spotlessCheck`; `false` otherwise. */
+  /** Returns `true` if Gradle's `check` task should run `autostyleCheck`; `false` otherwise. */
   public boolean isEnforceCheck() {
     return enforceCheck;
   }
 
   /**
-   * Configures Gradle's `check` task to run `spotlessCheck` if `true`,
+   * Configures Gradle's `check` task to run `autostyleCheck` if `true`,
    * but to not do so if `false`.
    *
    * `true` by default.
@@ -223,13 +223,13 @@ public class SpotlessExtension {
       }
     } else {
       try {
-        Constructor<T> constructor = clazz.getConstructor(SpotlessExtension.class);
+        Constructor<T> constructor = clazz.getConstructor(AutostyleExtension.class);
         T formatExtension = constructor.newInstance(this);
         formats.put(name, formatExtension);
         createFormatTask(name, formatExtension);
         return formatExtension;
       } catch (NoSuchMethodException e) {
-        throw new GradleException("Must have a constructor " + clazz.getSimpleName() + "(SpotlessExtension root)", e);
+        throw new GradleException("Must have a constructor " + clazz.getSimpleName() + "(AutostyleExtension root)", e);
       } catch (Exception e) {
         throw Errors.asRuntime(e);
       }
@@ -238,12 +238,12 @@ public class SpotlessExtension {
 
   @SuppressWarnings("rawtypes")
   private void createFormatTask(String name, FormatExtension formatExtension) {
-    // create the SpotlessTask
-    String taskName = EXTENSION + SpotlessPlugin.capitalize(name);
+    // create the AutostyleTask
+    String taskName = EXTENSION + AutostylePlugin.capitalize(name);
     AutostyleTask autostyleTask = project.getTasks().create(taskName, AutostyleTask.class);
     project.afterEvaluate(unused -> formatExtension.setupTask(autostyleTask));
 
-    // clean removes the SpotlessCache, so we have to run after clean
+    // clean removes the AutostyleCache, so we have to run after clean
     Task clean = project.getTasks().getByName(BasePlugin.CLEAN_TASK_NAME);
     autostyleTask.mustRunAfter(clean);
 
@@ -253,7 +253,7 @@ public class SpotlessExtension {
 
     checkTask.dependsOn(autostyleTask);
     applyTask.dependsOn(autostyleTask);
-    // when the task graph is ready, we'll configure the spotlessTask appropriately
+    // when the task graph is ready, we'll configure the autostyleTask appropriately
     project.getGradle().getTaskGraph().whenReady(new Closure(null) {
       private static final long serialVersionUID = 1L;
 

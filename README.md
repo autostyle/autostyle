@@ -16,7 +16,7 @@ Autostyle can format &lt;java | kotlin | scala | sql | groovy | javascript | flo
 
 Ideally, a code formatter can do more than just find formatting errors - it should fix them as well. Such a formatter is really just a `Function<String, String>`, which returns a formatted version of its potentially unformatted input.
 
-It's easy to build such a function, but there are some gotchas and lots of integration work (newlines, character encodings, idempotency, and build-system integration). Spotless tackles those for you so you can focus on just a simple `Function<String, String>` which can compose with any of the other formatters and build tools in Spotless' arsenal.
+It's easy to build such a function, but there are some gotchas and lots of integration work (newlines, character encodings, idempotency, and build-system integration). Autostyle tackles those for you so you can focus on just a simple `Function<String, String>` which can compose with any of the other formatters and build tools in Autostyle' arsenal.
 
 ## Current feature matrix
 
@@ -79,12 +79,12 @@ extra('wtp.EclipseWtpFormatterStep')             +'{{yes}}       | {{no}}  |',
 | Automatic idempotency safeguard               | :+1:       | :white_large_square:       | :white_large_square:  |
 <!---freshmark /matrix -->
 
-*Why are there empty squares?* Many projects get harder to work on as they get bigger. Spotless is easier to work on than ever, and one of the reasons why is that we don't require contributors to "fill the matrix". If you want to [add Bazel support](https://github.com/github/autostyle/issues/76), we'd happily accept the PR even if it only supports the one formatter you use. And if you want to add FooFormatter support, we'll happily accept the PR even if it only supports the one build system you use.
+*Why are there empty squares?* Many projects get harder to work on as they get bigger. Autostyle is easier to work on than ever, and one of the reasons why is that we don't require contributors to "fill the matrix". If you want to [add Bazel support](https://github.com/github/autostyle/issues/76), we'd happily accept the PR even if it only supports the one formatter you use. And if you want to add FooFormatter support, we'll happily accept the PR even if it only supports the one build system you use.
 
 Once someone has filled in one square of the formatter/build system matrix, it's easy for interested parties to fill in any empty squares, since you'll now have a working example for every piece needed.
 
 ## Acknowledgements
-- Thanks to contributors of [Spotless](https://github.com/github/autostyle).
+- Thanks to contributors of [Spotless](https://github.com/diffplug/spotless).
 - Built by [Gradle](https://gradle.org/).
 - Tested by [JUnit](https://junit.org/).
 - Maintained by [Vladimir Sitnikov](https://github.com/vlsi).

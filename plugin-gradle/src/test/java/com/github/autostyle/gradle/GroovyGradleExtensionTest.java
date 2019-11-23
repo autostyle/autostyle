@@ -40,7 +40,7 @@ public class GroovyGradleExtensionTest extends GradleIntegrationTest {
         "plugins {",
         "    id 'com.github.autostyle.gradle'",
         "}",
-        "spotless {",
+        "autostyle {",
         "    groovyGradle {",
         target,
         "        licenseHeader('" + HEADER + "', 'plugins')",
@@ -48,7 +48,7 @@ public class GroovyGradleExtensionTest extends GradleIntegrationTest {
         "}");
     setFile("build.gradle").toContent(buildContent);
 
-    gradleRunner().withArguments("spotlessApply").build();
+    gradleRunner().withArguments("autostyleApply").build();
 
     if (useDefaultTarget) {
       assertFile("build.gradle").hasContent(HEADER + "\n" + buildContent);

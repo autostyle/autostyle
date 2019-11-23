@@ -46,12 +46,12 @@ public class EclipseBasedStepBuilder {
   private final Provisioner jarProvisioner;
 
   /**
-   * Resource location of Spotless Eclipse Formatter Maven coordinate lists.
+   * Resource location of Autostyle Eclipse Formatter Maven coordinate lists.
    * <p>
-   * Spotless Eclipse Formatter dependencies have fixed transitive versions, since Spotless Eclipse Formatter
+   * Autostyle Eclipse Formatter dependencies have fixed transitive versions, since Autostyle Eclipse Formatter
    * implementations access internal methods of the Eclipse plugins, which may change with every
    * version change, including minor and patch version changes.
-   * At the resource location for each supported Spotless Eclipse Formatter, a text file is provided, containing
+   * At the resource location for each supported Autostyle Eclipse Formatter, a text file is provided, containing
    * the fixed versions for the formatter and its transitive dependencies.
    * Each line is either a comment starting with {@code #} or corresponds to the format
    * {@code <groupId>:<artifactId>[:packaging][:classifier]:<versionRestriction>}

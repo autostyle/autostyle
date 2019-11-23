@@ -90,8 +90,8 @@ public class TestProvisioner {
   /** Creates a Provisioner which will cache the result of previous calls. */
   @SuppressWarnings("unchecked")
   private static Provisioner caching(String name, Supplier<Provisioner> input) {
-    File spotlessDir = new File(StandardSystemProperty.USER_DIR.value()).getParentFile();
-    File testlib = new File(spotlessDir, "testlib");
+    File autostyleDir = new File(StandardSystemProperty.USER_DIR.value()).getParentFile();
+    File testlib = new File(autostyleDir, "testlib");
     File cacheFile = new File(testlib, "build/tmp/testprovisioner." + name + ".cache");
 
     Map<ImmutableSet<String>, ImmutableSet<File>> cached;

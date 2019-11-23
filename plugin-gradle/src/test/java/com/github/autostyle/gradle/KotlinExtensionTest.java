@@ -35,13 +35,13 @@ public class KotlinExtensionTest extends GradleIntegrationTest {
         "    id 'com.github.autostyle.gradle'",
         "}",
         "repositories { mavenCentral() }",
-        "spotless {",
+        "autostyle {",
         "    kotlin {",
         "        ktlint()",
         "    }",
         "}");
     setFile("src/main/kotlin/basic.kt").toResource("kotlin/ktlint/basic.dirty");
-    gradleRunner().withArguments("spotlessApply").build();
+    gradleRunner().withArguments("autostyleApply").build();
     assertFile("src/main/kotlin/basic.kt").sameAsResource("kotlin/ktlint/basic.clean");
   }
 
@@ -53,13 +53,13 @@ public class KotlinExtensionTest extends GradleIntegrationTest {
         "    id 'com.github.autostyle.gradle'",
         "}",
         "repositories { mavenCentral() }",
-        "spotless {",
+        "autostyle {",
         "    kotlin {",
         "        ktlint('0.21.0').userData(['indent_size': '6'])",
         "    }",
         "}");
     setFile("src/main/kotlin/basic.kt").toResource("kotlin/ktlint/basic.dirty");
-    BuildResult result = gradleRunner().withArguments("spotlessApply").buildAndFail();
+    BuildResult result = gradleRunner().withArguments("autostyleApply").buildAndFail();
     assertThat(result.getOutput()).contains("Unexpected indentation (4) (it should be 6)");
   }
 
@@ -71,14 +71,14 @@ public class KotlinExtensionTest extends GradleIntegrationTest {
         "    id 'com.github.autostyle.gradle'",
         "}",
         "repositories { mavenCentral() }",
-        "spotless {",
+        "autostyle {",
         "    kotlin {",
         "        licenseHeader('" + HEADER + "')",
         "        ktlint()",
         "    }",
         "}");
     setFile("src/main/kotlin/test.kt").toResource("kotlin/licenseheader/KotlinCodeWithoutHeader.test");
-    gradleRunner().withArguments("spotlessApply").build();
+    gradleRunner().withArguments("autostyleApply").build();
     assertFile("src/main/kotlin/test.kt").hasContent(HEADER + "\n" + getTestResource("kotlin/licenseheader/KotlinCodeWithoutHeader.test"));
   }
 
@@ -90,14 +90,14 @@ public class KotlinExtensionTest extends GradleIntegrationTest {
         "    id 'com.github.autostyle.gradle'",
         "}",
         "repositories { mavenCentral() }",
-        "spotless {",
+        "autostyle {",
         "    kotlin {",
         "        licenseHeader ('" + HEADER + "', '@file')",
         "        ktlint()",
         "    }",
         "}");
     setFile("src/main/kotlin/test.kt").toResource("kotlin/licenseheader/KotlinCodeWithoutHeader.test");
-    gradleRunner().withArguments("spotlessApply").build();
+    gradleRunner().withArguments("autostyleApply").build();
     assertFile("src/main/kotlin/test.kt").hasContent(HEADER + "\n" + getTestResource("kotlin/licenseheader/KotlinCodeWithoutHeader.test"));
   }
 
@@ -109,7 +109,7 @@ public class KotlinExtensionTest extends GradleIntegrationTest {
         "    id 'com.github.autostyle.gradle'",
         "}",
         "repositories { mavenCentral() }",
-        "spotless {",
+        "autostyle {",
         "    kotlin {",
         "        licenseHeader('" + HEADER_WITH_YEAR + "').yearSeparator(', ')",
         "        ktlint()",
@@ -118,7 +118,7 @@ public class KotlinExtensionTest extends GradleIntegrationTest {
 
     setFile("src/main/kotlin/test.kt").toResource("kotlin/licenseheader/KotlinCodeWithMultiYearHeader.test");
     setFile("src/main/kotlin/test2.kt").toResource("kotlin/licenseheader/KotlinCodeWithMultiYearHeader2.test");
-    gradleRunner().withArguments("spotlessApply").build();
+    gradleRunner().withArguments("autostyleApply").build();
     assertFile("src/main/kotlin/test.kt").matches(matcher -> {
       matcher.startsWith("// License Header 2012, 2014");
     });

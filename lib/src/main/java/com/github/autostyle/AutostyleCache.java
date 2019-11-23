@@ -28,10 +28,10 @@ import java.util.Objects;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
- * Spotless' global cache. {@link SpotlessCache#clear()} should be called
- * when Spotless is no longer in use to release any resources it has grabbed.
+ * Autostyle global cache. {@link AutostyleCache#clear()} should be called
+ * when Autostyle is no longer in use to release any resources it has grabbed.
  */
-public final class SpotlessCache {
+public final class AutostyleCache {
   /** Allows comparing keys based on their serialization. */
   static final class SerializedKey {
     final byte[] serialized;
@@ -69,7 +69,7 @@ public final class SpotlessCache {
         .computeIfAbsent(serializedKey, k -> new FeatureClassLoader(state.jarUrls(), this.getClass().getClassLoader()));
   }
 
-  static SpotlessCache instance() {
+  static AutostyleCache instance() {
     return instance;
   }
 
@@ -89,5 +89,5 @@ public final class SpotlessCache {
     }
   }
 
-  private static final SpotlessCache instance = new SpotlessCache();
+  private static final AutostyleCache instance = new AutostyleCache();
 }

@@ -43,7 +43,7 @@ public class GroovyExtensionTest extends GradleIntegrationTest {
         "}",
         "apply plugin: 'groovy'",
         "",
-        "spotless {",
+        "autostyle {",
         "    groovy {",
         excludeStatement,
         "        licenseHeader('" + HEADER + "')",
@@ -56,7 +56,7 @@ public class GroovyExtensionTest extends GradleIntegrationTest {
     setFile("src/main/groovy/test.java").toContent(withoutHeader);
     setFile("src/main/groovy/test.groovy").toContent(withoutHeader);
 
-    gradleRunner().withArguments("spotlessApply").build();
+    gradleRunner().withArguments("autostyleApply").build();
 
     assertFile("src/main/java/test.java").hasContent(withoutHeader);
     assertFile("src/main/groovy/test.groovy").hasContent(HEADER + "\n" + withoutHeader);
@@ -75,7 +75,7 @@ public class GroovyExtensionTest extends GradleIntegrationTest {
         "}",
         "apply plugin: 'groovy'",
         "",
-        "spotless {",
+        "autostyle {",
         "    groovy {",
         "        excludeJava()",
         "        target '**/*.java', '**/*.groovy'",
@@ -83,7 +83,7 @@ public class GroovyExtensionTest extends GradleIntegrationTest {
         "}");
 
     try {
-      gradleRunner().withArguments("spotlessApply").build();
+      gradleRunner().withArguments("autostyleApply").build();
       Assert.fail("Exception expected when running 'excludeJava' in combination with 'target'.");
     } catch (Throwable t) {
       Assertions.assertThat(t).hasMessageContaining("'excludeJava' is not supported");
@@ -98,13 +98,13 @@ public class GroovyExtensionTest extends GradleIntegrationTest {
         "}",
         "apply plugin: 'java'",
         "",
-        "spotless {",
+        "autostyle {",
         "    groovy {",
         "    }",
         "}");
 
     try {
-      gradleRunner().withArguments("spotlessApply").build();
+      gradleRunner().withArguments("autostyleApply").build();
       Assert.fail("Exception expected when using 'groovy' without 'target' if groovy-plugin is not applied.");
     } catch (Throwable t) {
       Assertions.assertThat(t).hasMessageContaining("must apply the groovy plugin before");

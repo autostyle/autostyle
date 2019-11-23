@@ -31,7 +31,7 @@ public class HasBuiltinDelimiterForLicenseTest extends GradleIntegrationTest {
         "    id(\"com.github.autostyle.gradle\")",
         "}",
         "repositories { mavenCentral() }",
-        "spotless {",
+        "autostyle {",
         "    kotlin {",
         "        assert (it instanceof HasBuiltinDelimiterForLicense) : \"Was `$it`\"",
         "    }",
@@ -50,7 +50,7 @@ public class HasBuiltinDelimiterForLicenseTest extends GradleIntegrationTest {
         "}");
     gradleRunner()
         .withGradleVersion("4.6")
-        .withArguments("spotlessApply")
+        .withArguments("autostyleApply")
         .forwardOutput()
         .build();
   }

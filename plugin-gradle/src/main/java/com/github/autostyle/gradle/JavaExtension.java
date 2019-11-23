@@ -40,12 +40,12 @@ import com.github.autostyle.java.RemoveUnusedImportsStep;
 public class JavaExtension extends FormatExtension implements HasBuiltinDelimiterForLicense {
   static final String NAME = "java";
 
-  public JavaExtension(SpotlessExtension rootExtension) {
+  public JavaExtension(AutostyleExtension rootExtension) {
     super(rootExtension);
   }
 
   // If this constant changes, don't forget to change the similarly-named one in
-  // testlib/src/test/java/com/diffplug/spotless/generic/LicenseHeaderStepTest.java as well
+  // testlib/src/test/java/com/github/autostyle/generic/LicenseHeaderStepTest.java as well
   static final String LICENSE_HEADER_DELIMITER = "package ";
 
   @Override
@@ -178,7 +178,7 @@ public class JavaExtension extends FormatExtension implements HasBuiltinDelimite
     if (target == null) {
       JavaPluginConvention javaPlugin = getProject().getConvention().findPlugin(JavaPluginConvention.class);
       if (javaPlugin == null) {
-        throw new GradleException("You must apply the java plugin before the spotless plugin if you are using the java extension.");
+        throw new GradleException("You must apply the java plugin before the Autostyle plugin if you are using the java extension.");
       }
       FileCollection union = getProject().files();
       for (SourceSet sourceSet : javaPlugin.getSourceSets()) {

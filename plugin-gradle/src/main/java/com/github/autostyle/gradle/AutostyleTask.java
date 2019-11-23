@@ -52,7 +52,7 @@ import com.github.autostyle.PaddedCellBulk;
 import com.github.autostyle.extra.integration.DiffMessageFormatter;
 
 public class AutostyleTask extends DefaultTask {
-  // set by SpotlessExtension, but possibly overridden by FormatExtension
+  // set by AutostyleExtension, but possibly overridden by FormatExtension
   protected String encoding = "UTF-8";
 
   @Input
@@ -172,8 +172,8 @@ public class AutostyleTask extends DefaultTask {
   /** Returns the name of this format. */
   String formatName() {
     String name = getName();
-    if (name.startsWith(SpotlessExtension.EXTENSION)) {
-      return name.substring(SpotlessExtension.EXTENSION.length()).toLowerCase(Locale.ROOT);
+    if (name.startsWith(AutostyleExtension.EXTENSION)) {
+      return name.substring(AutostyleExtension.EXTENSION.length()).toLowerCase(Locale.ROOT);
     } else {
       return name;
     }
@@ -185,7 +185,7 @@ public class AutostyleTask extends DefaultTask {
       throw new GradleException("You must specify 'Iterable<File> target'");
     }
     if (!check && !apply) {
-      throw new GradleException("Don't call " + getName() + " directly, call " + getName() + SpotlessExtension.CHECK + " or " + getName() + SpotlessExtension.APPLY);
+      throw new GradleException("Don't call " + getName() + " directly, call " + getName() + AutostyleExtension.CHECK + " or " + getName() + AutostyleExtension.APPLY);
     }
 
     Predicate<File> shouldInclude;

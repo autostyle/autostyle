@@ -25,7 +25,7 @@ import java.util.Objects;
 import javax.annotation.Nullable;
 
 /**
- * This class loader is used to load classes of Spotless features from a search
+ * This class loader is used to load classes of Autostyle features from a search
  * path of URLs.<br/>
  * Features shall be independent from build tools. Hence the class loader of the
  * underlying build tool is e.g. skipped during the the search for classes.<br/>
@@ -39,7 +39,7 @@ class FeatureClassLoader extends URLClassLoader {
   }
 
   /**
-   * The following packages must be provided by the build tool or the corresponding Spotless plugin:
+   * The following packages must be provided by the build tool or the corresponding Autostyle plugin:
    * <ul>
    *   <li>org.slf4j - SLF4J API must be provided. If no SLF4J binding is provided, log messages are dropped.</li>
    * </ul>
@@ -77,7 +77,7 @@ class FeatureClassLoader extends URLClassLoader {
   }
 
   /**
-   * Making spotless Java 9+ compatible. In Java 8 (and minor) the bootstrap
+   * Making Autostyle Java 9+ compatible. In Java 8 (and minor) the bootstrap
    * class loader saw every platform class. In Java 9+ it was changed so the
    * bootstrap class loader does not see all classes anymore. This might lead
    * to ClassNotFoundException in formatters (e.g. freshmark).

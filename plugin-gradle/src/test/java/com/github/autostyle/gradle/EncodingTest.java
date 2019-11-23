@@ -26,14 +26,14 @@ public class EncodingTest extends GradleIntegrationTest {
         "plugins {",
         "    id 'com.github.autostyle.gradle'",
         "}",
-        "spotless {",
+        "autostyle {",
         "    java {",
         "        target file('test.java')",
         "        custom 'replaceMicro', { it.replace('µ', 'A') }",
         "    }",
         "}");
     setFile("test.java").toContent("µ");
-    gradleRunner().withArguments("spotlessApply").build();
+    gradleRunner().withArguments("autostyleApply").build();
     assertFile("test.java").hasContent("A");
   }
 
@@ -43,7 +43,7 @@ public class EncodingTest extends GradleIntegrationTest {
         "plugins {",
         "    id 'com.github.autostyle.gradle'",
         "}",
-        "spotless {",
+        "autostyle {",
         "    java {",
         "        target file('test.java')",
         "        custom 'replaceMicro', { it.replace('µ', 'A') }",
@@ -51,7 +51,7 @@ public class EncodingTest extends GradleIntegrationTest {
         "    encoding 'US-ASCII'",
         "}");
     setFile("test.java").toContent("µ");
-    gradleRunner().withArguments("spotlessApply").build();
+    gradleRunner().withArguments("autostyleApply").build();
     assertFile("test.java").hasContent("??");
   }
 
@@ -61,7 +61,7 @@ public class EncodingTest extends GradleIntegrationTest {
         "plugins {",
         "    id 'com.github.autostyle.gradle'",
         "}",
-        "spotless {",
+        "autostyle {",
         "    java {",
         "        target file('test.java')",
         "        custom 'replaceMicro', { it.replace('µ', 'A') }",
@@ -75,7 +75,7 @@ public class EncodingTest extends GradleIntegrationTest {
         "}");
     setFile("test.java").toContent("µ");
     setFile("utf32.encoded").toContent("µ", Charset.forName("UTF-32"));
-    gradleRunner().withArguments("spotlessApply").build();
+    gradleRunner().withArguments("autostyleApply").build();
     assertFile("test.java").hasContent("??");
     assertFile("utf32.encoded").hasContent("A", Charset.forName("UTF-32"));
   }

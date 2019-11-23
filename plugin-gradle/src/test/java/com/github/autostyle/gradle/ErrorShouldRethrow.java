@@ -38,7 +38,7 @@ public class ErrorShouldRethrow extends GradleIntegrationTest {
     lines.add("    id 'com.github.autostyle.gradle'");
     lines.add("    id 'java'");
     lines.add("}");
-    lines.add("spotless {");
+    lines.add("autostyle {");
     lines.add("    format 'misc', {");
     lines.add("        lineEndings 'UNIX'");
     lines.add("        target file('README.md')");
@@ -55,19 +55,19 @@ public class ErrorShouldRethrow extends GradleIntegrationTest {
   public void passesIfNoException() throws Exception {
     writeBuild(
         "    } // format",
-        "}     // spotless");
+        "}     // autostyle");
     setFile("README.md").toContent("This code is fun.");
-    runWithSuccess(":spotlessMisc");
+    runWithSuccess(":autostyleMisc");
   }
 
   @Test
   public void anyExceptionShouldFail() throws Exception {
     writeBuild(
         "    } // format",
-        "}     // spotless");
+        "}     // autostyle");
     setFile("README.md").toContent("This code is fubar.");
     runWithFailure(
-        ":spotlessMiscStep 'no swearing' found problem in 'README.md':",
+        ":autostyleMiscStep 'no swearing' found problem in 'README.md':",
         "No swearing!",
         "java.lang.RuntimeException: No swearing!");
   }
@@ -77,7 +77,7 @@ public class ErrorShouldRethrow extends GradleIntegrationTest {
     writeBuild(
         "    } // format",
         "    enforceCheck false",
-        "}     // spotless");
+        "}     // autostyle");
     setFile("README.md").toContent("This code is fubar.");
     runWithSuccess(":compileJava UP-TO-DATE");
   }
@@ -87,9 +87,9 @@ public class ErrorShouldRethrow extends GradleIntegrationTest {
     writeBuild(
         "        ignoreErrorForStep 'no swearing'",
         "    } // format",
-        "}     // spotless");
+        "}     // autostyle");
     setFile("README.md").toContent("This code is fubar.");
-    runWithSuccess(":spotlessMisc",
+    runWithSuccess(":autostyleMisc",
         "Unable to apply step 'no swearing' to 'README.md'");
   }
 
@@ -98,9 +98,9 @@ public class ErrorShouldRethrow extends GradleIntegrationTest {
     writeBuild(
         "        ignoreErrorForPath 'README.md'",
         "    } // format",
-        "}     // spotless");
+        "}     // autostyle");
     setFile("README.md").toContent("This code is fubar.");
-    runWithSuccess(":spotlessMisc",
+    runWithSuccess(":autostyleMisc",
         "Unable to apply step 'no swearing' to 'README.md'");
   }
 
@@ -110,10 +110,10 @@ public class ErrorShouldRethrow extends GradleIntegrationTest {
         "        ignoreErrorForStep 'nope'",
         "        ignoreErrorForPath 'nope'",
         "    } // format",
-        "}     // spotless");
+        "}     // autostyle");
     setFile("README.md").toContent("This code is fubar.");
     runWithFailure(
-        ":spotlessMiscStep 'no swearing' found problem in 'README.md':",
+        ":autostyleMiscStep 'no swearing' found problem in 'README.md':",
         "No swearing!",
         "java.lang.RuntimeException: No swearing!");
   }

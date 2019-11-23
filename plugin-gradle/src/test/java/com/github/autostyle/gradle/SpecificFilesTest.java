@@ -46,7 +46,7 @@ public class SpecificFilesTest extends GradleIntegrationTest {
         "    id 'com.github.autostyle.gradle'",
         "}",
         "apply plugin: 'java'",
-        "spotless {",
+        "autostyle {",
         "    java {",
         "        googleJavaFormat('1.2')",
         "    }",
@@ -57,7 +57,7 @@ public class SpecificFilesTest extends GradleIntegrationTest {
     setFile(testFile(3)).toResource(fixture(false));
 
     gradleRunner()
-        .withArguments("spotlessApply", "-PspotlessFiles=" + patterns)
+        .withArguments("autostyleApply", "-PautostyleFiles=" + patterns)
         .build();
 
     assertFile(testFile(1)).sameAsResource(fixture(firstFormatted));

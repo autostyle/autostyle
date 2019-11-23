@@ -20,10 +20,10 @@ import org.gradle.api.Task;
 import org.gradle.api.plugins.JavaBasePlugin;
 import org.gradle.util.GradleVersion;
 
-class SpotlessPluginLegacy {
+class AutostylePluginLegacy {
   static final GradleVersion CONFIG_AVOIDANCE_INTRODUCED = GradleVersion.version("4.9");
 
-  static void enforceCheck(SpotlessExtension extension, Project project) {
+  static void enforceCheck(AutostyleExtension extension, Project project) {
     Task check = project.getTasks().getByName(JavaBasePlugin.CHECK_TASK_NAME);
     check.dependsOn(extension.rootCheckTask);
   }

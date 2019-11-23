@@ -120,7 +120,7 @@ public class TsFmtFormatterStep {
         // function processString(fileName: string, content: string, opts: Options): Promise<Result> {
 
         try (
-            V8ArrayWrapper processStringArgs = nodeJSWrapper.createNewArray("spotless-format-string.ts", input, formatterOptions);
+            V8ArrayWrapper processStringArgs = nodeJSWrapper.createNewArray("autostyle-format-string.ts", input, formatterOptions);
             V8ObjectWrapper promise = tsFmt.executeObjectFunction("processString", processStringArgs);
             V8ArrayWrapper callbacks = nodeJSWrapper.createNewArray(formatResultCallback)) {
 

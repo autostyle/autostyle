@@ -14,5 +14,5 @@ new Bar().bar(foo)
 //within GrEclipse itself. That error message is just a dump of a RAW data report.
 //The whole error handling therefore looks not nicely readable.
 //Since these errors should only occur if the input file is not compile-able,
-//the error format is considered acceptable, since the spotless task runs 
+//the error format is considered acceptable, since the Autostyle task runs
 //in general only after a successful compilation.

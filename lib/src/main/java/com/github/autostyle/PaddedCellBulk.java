@@ -44,15 +44,15 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  *
  * Initially, paddedCell is off.  That's the default, and there's no need for users to know about it.
  *
- * If they encounter a scenario where `spotlessCheck` fails after calling `spotlessApply`, then they would
- * justifiably be frustrated.  Luckily, every time `spotlessCheck` fails, it passes the failed files to
+ * If they encounter a scenario where `autostyleCheck` fails after calling `autostyleApply`, then they would
+ * justifiably be frustrated.  Luckily, every time `autostyleCheck` fails, it passes the failed files to
  * {@link #anyMisbehave(Formatter, List)}, which checks to see if any of the rules are causing a cycle
  * or some other kind of mischief.  If they are, it can give the user a special error message instructing
  * them to turn on paddedCell.
  *
- * ### spotlessCheck with paddedCell on
+ * ### autostyleCheck with paddedCell on
  *
- * Spotless check behaves as normal, finding a list of problem files, but then passes that list
+ * Autostyle check behaves as normal, finding a list of problem files, but then passes that list
  * to {@link #check(File, File, Formatter, List)}.  If there were no problem files, then `paddedCell`
  * is no longer necessary, so users might as well turn it off, so we give that info as a warning.
  */
@@ -64,11 +64,11 @@ public final class PaddedCellBulk {
    *
    * If, after 500ms of searching, none are found that misbehave, it gives the
    * formatter the benefit of the doubt and returns false. The real point of this
-   * check is to handle the case that a user just called spotlessApply, but spotlessCheck
+   * check is to handle the case that a user just called autostyleApply, but autostyleCheck
    * is still failing.  In that case, all of the problemFiles are guaranteed to
    * be misbehaving, so this time limit doesn't hurt correctness.
    *
-   * If you call this method after every failed spotlessCheck, it can help you
+   * If you call this method after every failed autostyleCheck, it can help you
    * tell the user about a misbehaving rule and alert her to how to enable
    * paddedCell mode, with minimal effort.
    */
@@ -102,7 +102,7 @@ public final class PaddedCellBulk {
    * @param diagnoseDir  Directory where problems are described (based on the relative paths determined based on rootDir).
    * @param formatter    The formatter to apply.
    * @param problemFiles  The files with which we have a problem.
-   * @return  A list of files which are failing because of paddedCell problems, but could be fixed. (specifically, the files for which spotlessApply would be effective)
+   * @return  A list of files which are failing because of paddedCell problems, but could be fixed. (specifically, the files for which autostyleApply would be effective)
    */
   @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   public static List<File> check(File rootDir, File diagnoseDir, Formatter formatter, List<File> problemFiles) throws IOException {
@@ -190,12 +190,12 @@ public final class PaddedCellBulk {
     }
   }
 
-  /** Performs the typical spotlessApply, but with PaddedCell handling of misbehaving FormatterSteps. */
+  /** Performs the typical autostyleApply, but with PaddedCell handling of misbehaving FormatterSteps. */
   public static void apply(Formatter formatter, File file) throws IOException {
     applyAnyChanged(formatter, file);
   }
 
-  /** Performs the typical spotlessApply, but with PaddedCell handling of misbehaving FormatterSteps. */
+  /** Performs the typical autostyleApply, but with PaddedCell handling of misbehaving FormatterSteps. */
   public static boolean applyAnyChanged(Formatter formatter, File file) throws IOException {
     Objects.requireNonNull(formatter, "formatter");
     Objects.requireNonNull(file, "file");

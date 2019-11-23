@@ -11,7 +11,7 @@ plugins {
 }
 
 repositories { jcenter() }
-spotless {
+autostyle {
   def noInternalDepsClosure = {
     String text = it
     /*
@@ -31,8 +31,8 @@ spotless {
     }
     custom 'noInternalDeps', noInternalDepsClosure
     bumpThisNumberIfACustomStepChanges(1)
-    licenseHeaderFile 'spotless.license'
-    importOrderFile   'spotless.importorder'
+    licenseHeaderFile 'autostyle.license'
+    importOrderFile   'autostyle.importorder'
     trimTrailingWhitespace()
     removeUnusedImports()
   }
@@ -55,6 +55,6 @@ spotless {
       include '**/*.xml', '**/*.xsd'
       exclude '**/build/**'
     }
-    eclipseWtp('xml').configFile 'spotless.xmlformat.prefs'
+    eclipseWtp('xml').configFile 'autostyle.xmlformat.prefs'
   }
 }

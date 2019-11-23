@@ -29,7 +29,7 @@ import com.github.autostyle.PaddedCellBulk;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
- * Incorporates the PaddedCell machinery into SpotlessTask.apply() and SpotlessTask.check().
+ * Incorporates the PaddedCell machinery into AutostyleTask.apply() and AutostyleTask.check().
  *
  * Here's the general workflow:
  *
@@ -37,15 +37,15 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  *
  * Initially, paddedCell is off.  That's the default, and there's no need for users to know about it.
  *
- * If they encounter a scenario where `spotlessCheck` fails after calling `spotlessApply`, then they would
- * justifiably be frustrated.  Luckily, every time `spotlessCheck` fails, it passes the failed files to
+ * If they encounter a scenario where `autostyleCheck` fails after calling `autostyleApply`, then they would
+ * justifiably be frustrated.  Luckily, every time `autostyleCheck` fails, it passes the failed files to
  * {@link #anyMisbehave(Formatter, List)}, which checks to see if any of the rules are causing a cycle
  * or some other kind of mischief.  If they are, it throws a special error message,
  * {@link #youShouldTurnOnPaddedCell(AutostyleTask)} which tells them to turn on paddedCell.
  *
- * ### spotlessCheck with paddedCell on
+ * ### autostyleCheck with paddedCell on
  *
- * Spotless check behaves as normal, finding a list of problem files, but then passes that list
+ * Autostyle check behaves as normal, finding a list of problem files, but then passes that list
  * to {@link #check(AutostyleTask, Formatter, List)}.  If there were no problem files, then `paddedCell`
  * is no longer necessary, so users might as well turn it off, so we give that info as a warning.
  */
@@ -59,28 +59,28 @@ class PaddedCellGradle {
     Path rootPath = task.getProject().getRootDir().toPath();
     return new GradleException(StringPrinter.buildStringFromLines(
         "You have a misbehaving rule which can't make up its mind.",
-        "This means that spotlessCheck will fail even after spotlessApply has run.",
+        "This means that autostyleCheck will fail even after autostyleApply has run.",
         "",
-        "This is a bug in a formatting rule, not Spotless itself, but Spotless can",
+        "This is a bug in a formatting rule, not Autostyle itself, but Autostyle can",
         "work around this bug and generate helpful bug reports for the broken rule",
         "if you add 'paddedCell()' to your build.gradle as such: ",
         "",
-        "    spotless {",
+        "    autostyle {",
         "        format 'someFormat', {",
         "            ...",
         "            paddedCell()",
         "        }",
         "    }",
         "",
-        "The next time you run spotlessCheck, it will put helpful bug reports into",
-        "'" + rootPath.relativize(diagnoseDir(task).toPath()) + "', and spotlessApply",
-        "and spotlessCheck will be self-consistent from here on out.",
+        "The next time you run autostyleCheck, it will put helpful bug reports into",
+        "'" + rootPath.relativize(diagnoseDir(task).toPath()) + "', and autostyleApply",
+        "and autostyleCheck will be self-consistent from here on out.",
         "",
         "For details see " + URL));
   }
 
   private static File diagnoseDir(AutostyleTask task) {
-    return new File(task.getProject().getBuildDir(), "spotless-diagnose-" + task.formatName());
+    return new File(task.getProject().getBuildDir(), "autostyle-diagnose-" + task.formatName());
   }
 
   @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
@@ -89,7 +89,7 @@ class PaddedCellGradle {
       // if the first pass was successful, then paddedCell() mode is unnecessary
       task.getLogger().info(StringPrinter.buildStringFromLines(
           task.getName() + " is in paddedCell() mode, but it doesn't need to be.",
-          "If you remove that option, spotless will run ~2x faster.",
+          "If you remove that option, Autostyle will run ~2x faster.",
           "For details see " + URL));
     }
 

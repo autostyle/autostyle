@@ -18,13 +18,13 @@ dependencies {
 /////////////////////
 // SPOTLESS (fake) //
 /////////////////////
-//task spotlessCheck(type: JavaExec) {
+//task autostyleCheck(type: JavaExec) {
 //  classpath sourceSets.test.runtimeClasspath
 //  main = "com.github.autostyle.gradle.SelfTestCheck"
 //}
-//check.dependsOn(spotlessCheck)
+//check.dependsOn(autostyleCheck)
 //
-//task spotlessApply(type: JavaExec) {
+//task autostyleApply(type: JavaExec) {
 //  classpath sourceSets.test.runtimeClasspath
 //  main = "com.github.autostyle.gradle.SelfTestApply"
 //}

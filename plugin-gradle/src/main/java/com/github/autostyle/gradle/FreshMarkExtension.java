@@ -33,7 +33,7 @@ public class FreshMarkExtension extends FormatExtension {
 
   public final List<Action<Map<String, Object>>> propertyActions = new ArrayList<>();
 
-  public FreshMarkExtension(SpotlessExtension root) {
+  public FreshMarkExtension(AutostyleExtension root) {
     super(root);
     addStep(FreshMarkStep.create(() -> {
       Map<String, Object> map = new HashMap<>();

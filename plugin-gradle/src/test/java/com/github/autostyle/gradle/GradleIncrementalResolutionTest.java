@@ -35,7 +35,7 @@ public class GradleIncrementalResolutionTest extends GradleIntegrationTest {
         "plugins {",
         "    id 'com.github.autostyle.gradle'",
         "}",
-        "spotless {",
+        "autostyle {",
         "    format 'misc', {",
         "        target '*.md'",
         "        custom 'lowercase', { str ->",
@@ -103,17 +103,17 @@ public class GradleIncrementalResolutionTest extends GradleIntegrationTest {
   }
 
   private void applyRanAgainst(String... ranAgainst) throws IOException {
-    taskRanAgainst("spotlessApply", ranAgainst);
+    taskRanAgainst("autostyleApply", ranAgainst);
   }
 
   private void checkRanAgainst(String... ranAgainst) throws IOException {
-    taskRanAgainst("spotlessCheck", ranAgainst);
+    taskRanAgainst("autostyleCheck", ranAgainst);
   }
 
   private void taskRanAgainst(String task, String... ranAgainst) throws IOException {
     pauseForFilesystem();
     String console = StringPrinter.buildString(Errors.rethrow().wrap(printer -> {
-      boolean expectFailure = task.equals("spotlessCheck") && !isClean();
+      boolean expectFailure = task.equals("autostyleCheck") && !isClean();
       if (expectFailure) {
         gradleRunner().withArguments(task).forwardStdOutput(printer.toWriter()).buildAndFail();
       } else {

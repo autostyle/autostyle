@@ -30,7 +30,7 @@ import com.github.autostyle.extra.wtp.EclipseWtpFormatterStep;
 public class CssExtension extends FormatExtension implements HasBuiltinDelimiterForLicense {
   static final String NAME = "css";
 
-  public CssExtension(SpotlessExtension rootExtension) {
+  public CssExtension(AutostyleExtension rootExtension) {
     super(rootExtension);
   }
 

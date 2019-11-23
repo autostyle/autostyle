@@ -38,7 +38,7 @@ import com.github.autostyle.java.ImportOrderStep;
 public class GroovyExtension extends FormatExtension implements HasBuiltinDelimiterForLicense {
   static final String NAME = "groovy";
 
-  public GroovyExtension(SpotlessExtension rootExtension) {
+  public GroovyExtension(AutostyleExtension rootExtension) {
     super(rootExtension);
   }
 
@@ -118,7 +118,7 @@ public class GroovyExtension extends FormatExtension implements HasBuiltinDelimi
     if (target == null) {
       JavaPluginConvention convention = getProject().getConvention().getPlugin(JavaPluginConvention.class);
       if (convention == null || !getProject().getPlugins().hasPlugin(GroovyBasePlugin.class)) {
-        throw new GradleException("You must apply the groovy plugin before the spotless plugin if you are using the groovy extension.");
+        throw new GradleException("You must apply the groovy plugin before the Autostyle plugin if you are using the groovy extension.");
       }
       //Add all Groovy files (may contain Java files as well)
 

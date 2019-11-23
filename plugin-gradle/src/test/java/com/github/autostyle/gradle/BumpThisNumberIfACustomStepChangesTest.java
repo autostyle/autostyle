@@ -26,7 +26,7 @@ public class BumpThisNumberIfACustomStepChangesTest extends GradleIntegrationTes
         "plugins {",
         "    id 'com.github.autostyle.gradle'",
         "}",
-        "spotless {",
+        "autostyle {",
         "    format 'misc', {",
         "        target file('README.md')",
         "        customLazyGroovy('lowercase') {",

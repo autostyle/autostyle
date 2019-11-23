@@ -22,7 +22,7 @@ import java.util.Arrays;
  * Marker interface to prevent lambda implementations of
  * single-method interfaces that require serializability.
  *
- * In order for Spotless to support up-to-date checks, all
+ * In order for Autostyle to support up-to-date checks, all
  * of its parameters must be {@link Serializable} so that
  * entries can be written to file, and they must implement
  * equals and hashCode correctly.

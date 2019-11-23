@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * were `private`.
  *
  * The user of the API should be warned that it may unexpectedly disappear in future versions of
- * Spotless. Usually the best place to put this warning is in the API's class JavaDoc.
+ * Autostyle. Usually the best place to put this warning is in the API's class JavaDoc.
  */
 @Retention(RetentionPolicy.CLASS)
 @Target({

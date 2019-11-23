@@ -25,7 +25,7 @@ import com.github.autostyle.sql.DBeaverSQLFormatterStep;
 public class SqlExtension extends FormatExtension {
   static final String NAME = "sql";
 
-  public SqlExtension(SpotlessExtension rootExtension) {
+  public SqlExtension(AutostyleExtension rootExtension) {
     super(rootExtension);
   }
 

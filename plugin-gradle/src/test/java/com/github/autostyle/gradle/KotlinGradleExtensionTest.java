@@ -40,7 +40,7 @@ public class KotlinGradleExtensionTest extends GradleIntegrationTest {
         "    id 'com.github.autostyle.gradle'",
         "}",
         "repositories { mavenCentral() }",
-        "spotless {",
+        "autostyle {",
         "    kotlinGradle {",
         "        ktlint()",
         "        target '**/*.gradle.kts'",
@@ -51,7 +51,7 @@ public class KotlinGradleExtensionTest extends GradleIntegrationTest {
       filePath = directory + "/" + filePath;
     }
     setFile(filePath).toResource("kotlin/ktlint/basic.dirty");
-    gradleRunner().withArguments("spotlessApply").build();
+    gradleRunner().withArguments("autostyleApply").build();
     assertFile(filePath).sameAsResource("kotlin/ktlint/basic.clean");
   }
 
@@ -63,13 +63,13 @@ public class KotlinGradleExtensionTest extends GradleIntegrationTest {
         "    id 'com.github.autostyle.gradle'",
         "}",
         "repositories { mavenCentral() }",
-        "spotless {",
+        "autostyle {",
         "    kotlinGradle {",
         "        ktlint()",
         "    }",
         "}");
     setFile("configuration.gradle.kts").toResource("kotlin/ktlint/basic.dirty");
-    gradleRunner().withArguments("spotlessApply").build();
+    gradleRunner().withArguments("autostyleApply").build();
     assertFile("configuration.gradle.kts").sameAsResource("kotlin/ktlint/basic.clean");
   }
 
@@ -81,13 +81,13 @@ public class KotlinGradleExtensionTest extends GradleIntegrationTest {
         "    id 'com.github.autostyle.gradle'",
         "}",
         "repositories { mavenCentral() }",
-        "spotless {",
+        "autostyle {",
         "    kotlinGradle {",
         "        ktlint('0.21.0')",
         "    }",
         "}");
     setFile("configuration.gradle.kts").toResource("kotlin/ktlint/basic.dirty");
-    gradleRunner().withArguments("spotlessApply").build();
+    gradleRunner().withArguments("autostyleApply").build();
     assertFile("configuration.gradle.kts").sameAsResource("kotlin/ktlint/basic.clean");
   }
 
@@ -99,13 +99,13 @@ public class KotlinGradleExtensionTest extends GradleIntegrationTest {
         "    id 'com.github.autostyle.gradle'",
         "}",
         "repositories { mavenCentral() }",
-        "spotless {",
+        "autostyle {",
         "    kotlinGradle {",
         "        ktlint().userData(['indent_size': '6'])",
         "    }",
         "}");
     setFile("configuration.gradle.kts").toResource("kotlin/ktlint/basic.dirty");
-    BuildResult result = gradleRunner().withArguments("spotlessApply").buildAndFail();
+    BuildResult result = gradleRunner().withArguments("autostyleApply").buildAndFail();
     assertThat(result.getOutput()).contains("Unexpected indentation (4) (it should be 6)");
   }
 
@@ -117,13 +117,13 @@ public class KotlinGradleExtensionTest extends GradleIntegrationTest {
         "    id 'com.github.autostyle.gradle'",
         "}",
         "repositories { mavenCentral() }",
-        "spotless {",
+        "autostyle {",
         "    kotlinGradle {",
         "        ktlint()",
         "    }",
         "}");
     setFile("configuration.gradle.kts").toContent("buildscript {}");
-    gradleRunner().withArguments("spotlessApply").build();
+    gradleRunner().withArguments("autostyleApply").build();
     assertFile("configuration.gradle.kts").hasContent("buildscript {}");
   }
 }

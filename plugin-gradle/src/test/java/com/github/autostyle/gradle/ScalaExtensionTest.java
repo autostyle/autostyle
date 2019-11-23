@@ -28,14 +28,14 @@ public class ScalaExtensionTest extends GradleIntegrationTest {
         "    id 'com.github.autostyle.gradle'",
         "}",
         "apply plugin: 'scala'",
-        "spotless {",
+        "autostyle {",
         "    scala {",
         "        scalafmt().configFile('scalafmt.conf')",
         "    }",
         "}");
     setFile("scalafmt.conf").toResource("scala/scalafmt/scalafmt.conf");
     setFile("src/main/scala/basic.scala").toResource("scala/scalafmt/basic.dirty");
-    gradleRunner().withArguments("spotlessApply").build();
+    gradleRunner().withArguments("autostyleApply").build();
     assertFile("src/main/scala/basic.scala").sameAsResource("scala/scalafmt/basic.cleanWithCustomConf_2.0.1");
   }
 }

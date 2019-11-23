@@ -62,7 +62,7 @@ abstract class NpmFormatterStepStateBase implements Serializable {
   }
 
   private File prepareNodeModules(File buildDir, @Nullable File npm) throws IOException {
-    File targetDir = new File(buildDir, "spotless-node-modules-" + stepName);
+    File targetDir = new File(buildDir, "autostyle-node-modules-" + stepName);
     if (!targetDir.exists()) {
       if (!targetDir.mkdirs()) {
         throw new IOException("cannot create temp dir for node modules at " + targetDir);

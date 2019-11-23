@@ -102,10 +102,10 @@ public final class JarState implements Serializable {
    * are not taken from the JarState, but instead redirected to the class loader of this class to enable
    * passthrough logging.
    *
-   * The lifetime of the underlying cacheloader is controlled by {@link SpotlessCache}.
+   * The lifetime of the underlying cacheloader is controlled by {@link AutostyleCache}.
    */
   public ClassLoader getClassLoader() {
-    return SpotlessCache.instance().classloader(this);
+    return AutostyleCache.instance().classloader(this);
   }
 
   /**
@@ -114,10 +114,10 @@ public final class JarState implements Serializable {
    * are not taken from the JarState, but instead redirected to the class loader of this class to enable
    * passthrough logging.
    *
-   * The lifetime of the underlying cacheloader is controlled by {@link SpotlessCache}.
+   * The lifetime of the underlying cacheloader is controlled by {@link AutostyleCache}.
    */
   public ClassLoader getClassLoader(Serializable key) {
-    return SpotlessCache.instance().classloader(key, this);
+    return AutostyleCache.instance().classloader(key, this);
   }
 
   /** Returns unmodifiable view on sorted Maven coordinates */

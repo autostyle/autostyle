@@ -30,7 +30,7 @@ public class JavaDefaultTargetTest extends GradleIntegrationTest {
         "",
         "apply plugin: 'groovy'",
         "",
-        "spotless {",
+        "autostyle {",
         "    java {",
         "        googleJavaFormat('1.2')",
         "    }",
@@ -39,7 +39,7 @@ public class JavaDefaultTargetTest extends GradleIntegrationTest {
     setFile("src/main/groovy/test.java").toResource("java/googlejavaformat/JavaCodeUnformatted.test");
     setFile("src/main/groovy/test.groovy").toResource("java/googlejavaformat/JavaCodeUnformatted.test");
 
-    gradleRunner().withArguments("spotlessApply").build();
+    gradleRunner().withArguments("autostyleApply").build();
 
     assertFile("src/main/java/test.java").sameAsResource("java/googlejavaformat/JavaCodeFormatted.test");
     assertFile("src/main/groovy/test.java").sameAsResource("java/googlejavaformat/JavaCodeFormatted.test");

@@ -57,9 +57,9 @@ public class PaddedCellTaskTest extends ResourceHarness {
     }
 
     private AutostyleTask createCheckTask(String name, FormatterStep step) {
-      // we don't add Check to the end because SpotlessTask normally doesn't have
+      // we don't add Check to the end because AutostyleTask normally doesn't have
       // "Check" or "Apply", and it matters for generating the failure files
-      AutostyleTask task = project.getTasks().create("spotless" + SpotlessPlugin.capitalize(name), AutostyleTask.class);
+      AutostyleTask task = project.getTasks().create("autostyle" + AutostylePlugin.capitalize(name), AutostyleTask.class);
       task.setCheck();
       task.addStep(step);
       task.setLineEndingsPolicy(LineEnding.UNIX.createPolicy());
@@ -68,7 +68,7 @@ public class PaddedCellTaskTest extends ResourceHarness {
     }
 
     private AutostyleTask createApplyTask(String name, FormatterStep step) {
-      AutostyleTask task = project.getTasks().create("spotless" + SpotlessPlugin.capitalize(name) + "Apply", AutostyleTask.class);
+      AutostyleTask task = project.getTasks().create("Autostyle" + AutostylePlugin.capitalize(name) + "Apply", AutostyleTask.class);
       task.setApply();
       task.addStep(step);
       task.setLineEndingsPolicy(LineEnding.UNIX.createPolicy());
@@ -110,7 +110,7 @@ public class PaddedCellTaskTest extends ResourceHarness {
 
   @Test
   public void failsWithoutPaddedCell() throws IOException {
-    Assertions.assertThat(wellbehaved().checkFailureMsg()).startsWith("The following files had format violations");
+    Assertions.assertThat(wellbehaved().checkFailureMsg()).startsWith("The following files have format violations");
     Assertions.assertThat(cycle().checkFailureMsg()).startsWith("You have a misbehaving rule");
     Assertions.assertThat(converge().checkFailureMsg()).startsWith("You have a misbehaving rule");
     Assertions.assertThat(diverge().checkFailureMsg()).startsWith("You have a misbehaving rule");
@@ -147,17 +147,17 @@ public class PaddedCellTaskTest extends ResourceHarness {
     execute(diverge().paddedCell().check);
 
     assertFolderContents("build",
-        "spotless-diagnose-converge",
-        "spotless-diagnose-cycle",
-        "spotless-diagnose-diverge");
-    assertFolderContents("build/spotless-diagnose-cycle/src",
+        "autostyle-diagnose-converge",
+        "autostyle-diagnose-cycle",
+        "autostyle-diagnose-diverge");
+    assertFolderContents("build/autostyle-diagnose-cycle/src",
         "test.cycle.cycle0",
         "test.cycle.cycle1");
-    assertFolderContents("build/spotless-diagnose-converge/src",
+    assertFolderContents("build/autostyle-diagnose-converge/src",
         "test.converge.converge0",
         "test.converge.converge1",
         "test.converge.converge2");
-    assertFolderContents("build/spotless-diagnose-diverge/src",
+    assertFolderContents("build/autostyle-diagnose-diverge/src",
         "test.diverge.diverge0",
         "test.diverge.diverge1",
         "test.diverge.diverge2",
@@ -180,22 +180,22 @@ public class PaddedCellTaskTest extends ResourceHarness {
   @Test
   public void paddedCellCheckCycleFailureMsg() throws IOException {
     assertFailureMessage(cycle().paddedCell(),
-        "The following files had format violations:",
+        "The following files have format violations:",
         slashify("    src/test.cycle"),
         "        @@ -1 +1 @@",
         "        -CCC",
         "        +A",
-        "Run 'gradlew spotlessApply' to fix these violations.");
+        "Run 'gradlew autostyleApply' to fix these violations.");
   }
 
   @Test
   public void paddedCellCheckConvergeFailureMsg() throws IOException {
     assertFailureMessage(converge().paddedCell(),
-        "The following files had format violations:",
+        "The following files have format violations:",
         slashify("    src/test.converge"),
         "        @@ -1 +0,0 @@",
         "        -CCC",
-        "Run 'gradlew spotlessApply' to fix these violations.");
+        "Run 'gradlew autostyleApply' to fix these violations.");
   }
 
   private void assertFailureMessage(Bundle bundle, String... expectedOutput) {

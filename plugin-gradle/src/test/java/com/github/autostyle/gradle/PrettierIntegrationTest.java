@@ -34,14 +34,14 @@ public class PrettierIntegrationTest extends GradleIntegrationTest {
         "def prettierConfig = [:]",
         "prettierConfig['printWidth'] = 50",
         "prettierConfig['parser'] = 'typescript'",
-        "spotless {",
+        "autostyle {",
         "    format 'mytypescript', {",
         "        target 'test.ts'",
         "        prettier().config(prettierConfig)",
         "    }",
         "}");
     setFile("test.ts").toResource("npm/prettier/config/typescript.dirty");
-    gradleRunner().withArguments("--stacktrace", "spotlessApply").build();
+    gradleRunner().withArguments("--stacktrace", "autostyleApply").build();
     assertFile("test.ts").sameAsResource("npm/prettier/config/typescript.configfile.clean");
   }
 
@@ -53,14 +53,14 @@ public class PrettierIntegrationTest extends GradleIntegrationTest {
         "plugins {",
         "    id 'com.github.autostyle.gradle'",
         "}",
-        "spotless {",
+        "autostyle {",
         "    format 'mytypescript', {",
         "        target 'test.ts'",
         "        prettier().configFile('.prettierrc.yml')",
         "    }",
         "}");
     setFile("test.ts").toResource("npm/prettier/config/typescript.dirty");
-    gradleRunner().withArguments("--stacktrace", "spotlessApply").build();
+    gradleRunner().withArguments("--stacktrace", "autostyleApply").build();
     assertFile("test.ts").sameAsResource("npm/prettier/config/typescript.configfile.clean");
   }
 

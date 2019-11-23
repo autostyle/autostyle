@@ -26,7 +26,7 @@ import com.github.autostyle.extra.cpp.EclipseCdtFormatterStep;
 public class CppExtension extends FormatExtension implements HasBuiltinDelimiterForLicense {
   static final String NAME = "cpp";
 
-  public CppExtension(SpotlessExtension rootExtension) {
+  public CppExtension(AutostyleExtension rootExtension) {
     super(rootExtension);
   }
 

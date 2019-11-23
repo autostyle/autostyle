@@ -46,7 +46,7 @@ public class EclipseFormatterStepTest extends ResourceHarness {
   @Test
   public void longLiteralProblem() throws Throwable {
     String folder = "java/eclipse/long_literals/";
-    List<File> eclipseFormatFile = createTestFiles(folder + "spotless.eclipseformat.xml");
+    List<File> eclipseFormatFile = createTestFiles(folder + "autostyle.eclipseformat.xml");
     StepHarness.forStep(EclipseFormatterStep.create(eclipseFormatFile, TestProvisioner.mavenCentral()))
         .testResourceUnaffected(folder + "Example1.test")
         .testResourceUnaffected(folder + "Example2.test");

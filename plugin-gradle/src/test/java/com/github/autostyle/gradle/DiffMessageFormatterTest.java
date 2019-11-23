@@ -453,7 +453,7 @@ public class DiffMessageFormatterTest extends ResourceHarness {
 
   @Test
   public void oneMoreLineThatDidntFit() throws Exception {
-    // com.diffplug.spotless.extra.integration.DiffMessageFormatter.MAX_CHECK_MESSAGE_LINES
+    // com.github.autostyle.extra.integration.DiffMessageFormatter.MAX_CHECK_MESSAGE_LINES
     // defaults to 50, so we create a diff that would be exactly 50 lines long
     // The test is to ensure diff does not contain "1 more lines that didn't fit"
     StringBuilder builder = new StringBuilder();

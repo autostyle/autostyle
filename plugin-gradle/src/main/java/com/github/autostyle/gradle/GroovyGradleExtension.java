@@ -24,7 +24,7 @@ public class GroovyGradleExtension extends FormatExtension {
   private static final String GRADLE_FILE_EXTENSION = "*.gradle";
   static final String NAME = "groovyGradle";
 
-  public GroovyGradleExtension(SpotlessExtension rootExtension) {
+  public GroovyGradleExtension(AutostyleExtension rootExtension) {
     super(rootExtension);
   }
 

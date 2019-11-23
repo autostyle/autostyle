@@ -28,7 +28,7 @@ public class GoogleJavaFormatIntegrationTest extends GradleIntegrationTest {
         "    id 'com.github.autostyle.gradle'",
         "}",
         "",
-        "spotless {",
+        "autostyle {",
         "    java {",
         "        target file('test.java')",
         "        googleJavaFormat('1.2')",
@@ -36,7 +36,7 @@ public class GoogleJavaFormatIntegrationTest extends GradleIntegrationTest {
         "}");
 
     setFile("test.java").toResource("java/googlejavaformat/JavaCodeUnformatted.test");
-    gradleRunner().withArguments("spotlessApply").build();
+    gradleRunner().withArguments("autostyleApply").build();
     assertFile("test.java").sameAsResource("java/googlejavaformat/JavaCodeFormatted.test");
 
     checkRunsThenUpToDate();

@@ -21,10 +21,10 @@ import org.gradle.api.Task;
 import org.gradle.api.plugins.BasePlugin;
 import org.gradle.util.GradleVersion;
 
-import com.github.autostyle.SpotlessCache;
+import com.github.autostyle.AutostyleCache;
 
-public class SpotlessPlugin implements Plugin<Project> {
-  SpotlessExtension spotlessExtension;
+public class AutostylePlugin implements Plugin<Project> {
+  AutostyleExtension autostyleExtension;
 
   @Override
   public void apply(Project project) {
@@ -32,29 +32,29 @@ public class SpotlessPlugin implements Plugin<Project> {
     project.getPlugins().apply(BasePlugin.class);
 
     // setup the extension
-    spotlessExtension = project.getExtensions().create(SpotlessExtension.EXTENSION, SpotlessExtension.class, project);
+    autostyleExtension = project.getExtensions().create(AutostyleExtension.EXTENSION, AutostyleExtension.class, project);
 
-    // clear spotless' cache when the user does a clean
+    // clear Autostyle cache when the user does a clean
     Task clean = project.getTasks().getByName(BasePlugin.CLEAN_TASK_NAME);
-    clean.doLast(unused -> SpotlessCache.clear());
+    clean.doLast(unused -> AutostyleCache.clear());
 
     project.afterEvaluate(unused -> {
       // Add our check task as a dependency on the global check task
       // getTasks() returns a "live" collection, so this works even if the
       // task doesn't exist at the time this call is made
-      if (spotlessExtension.enforceCheck) {
-        if (GradleVersion.current().compareTo(SpotlessPluginLegacy.CONFIG_AVOIDANCE_INTRODUCED) >= 0) {
-          SpotlessPluginConfigAvoidance.enforceCheck(spotlessExtension, project);
+      if (autostyleExtension.enforceCheck) {
+        if (GradleVersion.current().compareTo(AutostylePluginLegacy.CONFIG_AVOIDANCE_INTRODUCED) >= 0) {
+          AutostylePluginConfigAvoidance.enforceCheck(autostyleExtension, project);
         } else {
-          SpotlessPluginLegacy.enforceCheck(spotlessExtension, project);
+          AutostylePluginLegacy.enforceCheck(autostyleExtension, project);
         }
       }
     });
   }
 
   /** The extension for this plugin. */
-  public SpotlessExtension getExtension() {
-    return spotlessExtension;
+  public AutostyleExtension getExtension() {
+    return autostyleExtension;
   }
 
   static String capitalize(String input) {

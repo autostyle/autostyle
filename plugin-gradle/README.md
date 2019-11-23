@@ -1,9 +1,9 @@
-# <img align="left" src="../_images/spotless_logo.png"> Autostyle: Keep your code spotless with Gradle
+# Autostyle: format your code automatically with Gradle
 
 <!---freshmark shields
 output = [
   link(shield('Gradle plugin', 'plugins.gradle.org', 'com.github.autostyle.gradle', 'blue'), 'https://plugins.gradle.org/plugin/com.github.autostyle.gradle'),
-  link(shield('Maven central', 'mavencentral', 'com.github.autostyle.gradle:spotless', 'blue'), 'https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.github.autostyle%22%20AND%20a%3A%22autostyle-plugin-gradle%22'),
+  link(shield('Maven central', 'mavencentral', 'com.github.autostyle.gradle:autostyle', 'blue'), 'https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.github.autostyle%22%20AND%20a%3A%22autostyle-plugin-gradle%22'),
   link(shield('Javadoc', 'javadoc', '{{stableGradle}}', 'blue'), 'https://{{org}}.github.io/{{name}}/javadoc/autostyle-plugin-gradle/{{stableGradle}}/'),
   '',
   link(shield('Changelog', 'changelog', '{{versionGradle}}', 'brightgreen'), 'CHANGES.md'),
@@ -13,8 +13,8 @@ output = [
   ].join('\n');
 -->
 [![Gradle plugin](https://img.shields.io/badge/plugins.gradle.org-com.github.autostyle.gradle-blue.svg)](https://plugins.gradle.org/plugin/com.github.autostyle.gradle)
-[![Maven central](https://img.shields.io/badge/mavencentral-com.github.autostyle.gradle%3Aspotless-blue.svg)](https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.github.autostyle%22%20AND%20a%3A%22autostyle-plugin-gradle%22)
-[![Javadoc](https://img.shields.io/badge/javadoc-3.26.0-blue.svg)](https://autostyle.github.io/spotless/javadoc/autostyle-plugin-gradle/3.26.0/)
+[![Maven central](https://img.shields.io/badge/mavencentral-com.github.autostyle.gradle%3Aautostyle-blue.svg)](https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.github.autostyle%22%20AND%20a%3A%22autostyle-plugin-gradle%22)
+[![Javadoc](https://img.shields.io/badge/javadoc-3.26.0-blue.svg)](https://autostyle.github.io/autostyle/javadoc/autostyle-plugin-gradle/3.26.0/)
 
 [![Changelog](https://img.shields.io/badge/changelog-3.27.0--SNAPSHOT-brightgreen.svg)](CHANGES.md)
 [![Travis CI](https://travis-ci.org/autostyle/autostyle.svg?branch=master)](https://travis-ci.org/autostyle/autostyle)
@@ -33,18 +33,18 @@ To people who use your build, it looks like this:
 ```
 cmd> gradlew build
 ...
-:spotlessJavaCheck FAILED
-> The following files had format violations:
+:autostyleJavaCheck FAILED
+> The following files have format violations:
   src\main\java\com\github\autostyle\gradle\FormatExtension.java
     @@ -109,7 +109,7 @@
     ...
     -\t\t····if·(targets.length·==·0)·{
     +\t\tif·(targets.length·==·0)·{
     ...
-  Run 'gradlew spotlessApply' to fix these violations.
+  Run 'gradlew autostyleApply' to fix these violations.
 
-cmd> gradlew spotlessApply
-:spotlessApply
+cmd> gradlew autostyleApply
+:autostyleApply
 BUILD SUCCESSFUL
 
 cmd> gradlew build
@@ -75,7 +75,7 @@ autostyle {
 }
 ```
 
-Autostyle can check and apply formatting to any plain-text file, using simple rules ([javadoc](https://autostyle.github.io/spotless/javadoc/autostyle-plugin-gradle/3.26.0/com/github/autostyle/gradle/FormatExtension.html)) like those above.  It also supports more powerful formatters:
+Autostyle can check and apply formatting to any plain-text file, using simple rules ([javadoc](https://autostyle.github.io/autostyle/javadoc/autostyle-plugin-gradle/3.26.0/com/github/autostyle/gradle/FormatExtension.html)) like those above.  It also supports more powerful formatters:
 
 * Eclipse's [CDT](#eclipse-cdt) C/C++ code formatter
 * Eclipse's java code formatter (including style and import ordering)
@@ -132,7 +132,7 @@ See [ECLIPSE_SCREENSHOTS](../ECLIPSE_SCREENSHOTS.md) for screenshots that demons
 <a name="android"></a>
 
 ### Applying to Android Java source
-Be sure to add `target '**/*.java'` otherwise spotless will not detect Java code inside Android modules.
+Be sure to add `target '**/*.java'` otherwise Autostyle will not detect Java code inside Android modules.
 
 ```gradle
 autostyle {
@@ -356,7 +356,7 @@ Supported config file types are `tsconfigFile`, `tslintFile`, `vscodeFile` and `
 [tsfmt-parameters](https://github.com/vvakame/typescript-formatter/blob/7764258ad42ac65071399840d1b8701868510ca7/lib/index.ts#L27L34).
 
 *Please note:*
-The auto-discovery of config files (up the file tree) will not work when using tsfmt within spotless,
+The auto-discovery of config files (up the file tree) will not work when using tsfmt within Autostyle,
   hence you are required to provide resolvable file paths for config files.
 
 ... or alternatively provide the configuration inline ...
@@ -569,7 +569,7 @@ Autostyle is a generic system for specifying a sequence of steps which are appli
 
 ```gradle
 autostyle {
-  // this will create two tasks: spotlessMiscCheck and spotlessMiscApply
+  // this will create two tasks: autostyleMiscCheck and autostyleMiscApply
   format 'misc', {
     // target determines which files this format will apply to
     // - if you pass a string or a list of strings, they will be treated
@@ -584,7 +584,7 @@ autostyle {
     // NOTE: if target or targetExclude is called multiple times, only the
     // last call is effective
 
-    // spotless has built-in rules for the most basic formatting tasks
+    // Autostyle has built-in rules for the most basic formatting tasks
     trimTrailingWhitespace()
     indentWithTabs() // or spaces. Takes an integer argument if you don't like 4
     endWithNewline()
@@ -607,7 +607,7 @@ autostyle {
 }
 ```
 
-If you use `custom` or `customLazy`, you might want to take a look at [this javadoc](https://autostyle.github.io/spotless/javadoc/autostyle-plugin-gradle/3.26.0/com/github/autostyle/gradle/FormatExtension.html#bumpThisNumberIfACustomStepChanges-int-) for a big performance win.
+If you use `custom` or `customLazy`, you might want to take a look at [this javadoc](https://autostyle.github.io/autostyle/javadoc/autostyle-plugin-gradle/3.26.0/com/github/autostyle/gradle/FormatExtension.html#bumpThisNumberIfACustomStepChanges-int-) for a big performance win.
 
 See [`JavaExtension.java`](src/main/java/com/github/autostyle/gradle/JavaExtension.java) if you'd like to see how a language-specific set of custom rules is implemented.  We'd love PR's which add support for other languages.
 
@@ -635,7 +635,7 @@ You can easily set the line endings of different files using [a `.gitattributes`
 
 ## Disabling warnings and error messages
 
-The `check` task is Gradle's built-in task for grouping all verification tasks - unit tests, static analysis, etc.  By default, `spotlessCheck` is added as a dependency to `check`.
+The `check` task is Gradle's built-in task for grouping all verification tasks - unit tests, static analysis, etc.  By default, `autostyleCheck` is added as a dependency to `check`.
 
 You might want to disable this behavior.  We [recommend against this](https://github.com/autostyle/autostyle/issues/79#issuecomment-290844602), but it's easy to do if you'd like:
 
@@ -666,10 +666,10 @@ autostyle {
 
 <a name="preview"></a>
 
-## How do I preview what `spotlessApply` will do?
+## How do I preview what `autostyleApply` will do?
 
 - Save your working tree with `git add -A`, then `git commit -m "Checkpoint before Autostyle"`
-- Run `gradlew spotlessApply`
+- Run `gradlew autostyleApply`
 - View the changes with `git diff`
 - If you don't like what Autostyle did, `git reset --hard`
 - If you'd like to remove the "checkpoint" commit, `git reset --soft head~1` will make the checkpoint commit "disappear" from history, but keeps the changes in your working directory.
@@ -678,10 +678,10 @@ autostyle {
 
 ## Can I apply Autostyle to specific files?
 
-You can target specific files by setting the `spotlessFiles` project property to a comma-separated list of file patterns:
+You can target specific files by setting the `autostyleFiles` project property to a comma-separated list of file patterns:
 
 ```
-cmd> gradlew spotlessApply -PspotlessFiles=my/file/pattern.java,more/generic/.*-pattern.java
+cmd> gradlew autostyleApply -PautostyleFiles=my/file/pattern.java,more/generic/.*-pattern.java
 ```
 
 The patterns are matched using `String#matches(String)` against the absolute file path.

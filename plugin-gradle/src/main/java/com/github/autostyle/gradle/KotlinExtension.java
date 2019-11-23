@@ -32,7 +32,7 @@ import com.github.autostyle.kotlin.KtLintStep;
 public class KotlinExtension extends FormatExtension implements HasBuiltinDelimiterForLicense {
   static final String NAME = "kotlin";
 
-  public KotlinExtension(SpotlessExtension rootExtension) {
+  public KotlinExtension(AutostyleExtension rootExtension) {
     super(rootExtension);
   }
 

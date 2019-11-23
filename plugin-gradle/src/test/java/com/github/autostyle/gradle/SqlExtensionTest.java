@@ -27,14 +27,14 @@ public class SqlExtensionTest extends GradleIntegrationTest {
         "plugins {",
         "    id 'com.github.autostyle.gradle'",
         "}",
-        "spotless {",
+        "autostyle {",
         "    sql {",
         "       dbeaver()",
         "    }",
         "}");
 
     setFile("src/main/resources/aFolder/create.sql").toResource("sql/dbeaver/create.dirty");
-    gradleRunner().withArguments("spotlessApply").build();
+    gradleRunner().withArguments("autostyleApply").build();
     assertFile("src/main/resources/aFolder/create.sql").sameAsResource("sql/dbeaver/create.clean");
   }
 
@@ -44,7 +44,7 @@ public class SqlExtensionTest extends GradleIntegrationTest {
         "plugins {",
         "    id 'com.github.autostyle.gradle'",
         "}",
-        "spotless {",
+        "autostyle {",
         "    sql {",
         "       dbeaver().configFile 'myConfig.properties'",
         "    }",
@@ -52,7 +52,7 @@ public class SqlExtensionTest extends GradleIntegrationTest {
     setFile("myConfig.properties").toResource("sql/dbeaver/sqlConfig2.properties");
 
     setFile("src/main/resources/aFolder/create.sql").toResource("sql/dbeaver/create.dirty");
-    gradleRunner().withArguments("spotlessApply").build();
+    gradleRunner().withArguments("autostyleApply").build();
     assertFile("src/main/resources/aFolder/create.sql").sameAsResource("sql/dbeaver/create.clean.alternative");
   }
 }
