@@ -1,4 +1,4 @@
-# <img align="left" src="../_images/spotless_logo.png"> Spotless: Keep your code spotless with Gradle
+# <img align="left" src="../_images/spotless_logo.png"> Autostyle: Keep your code spotless with Gradle
 
 <!---freshmark shields
 output = [
@@ -26,7 +26,7 @@ output = [
 output = prefixDelimiterReplace(input, 'https://{{org}}.github.io/{{name}}/javadoc/autostyle-plugin-gradle/', '/', stableGradle)
 -->
 
-Spotless is a general-purpose formatting plugin used by [a thousand projects on GitHub](https://github.com/search?l=gradle&q=spotless&type=Code).  It is completely à la carte, but also includes powerful "batteries-included" if you opt-in.
+Autostyle is a general-purpose formatting plugin.  It is completely à la carte, but also includes powerful "batteries-included" if you opt-in.
 
 To people who use your build, it looks like this:
 
@@ -51,10 +51,10 @@ cmd> gradlew build
 BUILD SUCCESSFUL
 ```
 
-To use it in your buildscript, just [add the Spotless dependency](https://plugins.gradle.org/plugin/com.github.autostyle.gradle), and configure it like so:
+To use it in your buildscript, just [add the Autostyle dependency](https://plugins.gradle.org/plugin/com.github.autostyle.gradle), and configure it like so:
 
 ```gradle
-spotless {
+autostyle {
   format 'misc', {
     target '**/*.gradle', '**/*.md', '**/.gitignore'
 
@@ -69,13 +69,13 @@ spotless {
     replaceRegex 'Too much space after if', 'if +\\(', 'if ('
 
     // Everything before the first #include or #pragma will
-    // be replaced with whatever is in `spotless.license.cpp`
-    licenseHeaderFile 'spotless.license.cpp', '#'
+    // be replaced with whatever is in `autostyle.license.cpp`
+    licenseHeaderFile 'autostyle.license.cpp', '#'
   }
 }
 ```
 
-Spotless can check and apply formatting to any plain-text file, using simple rules ([javadoc](https://autostyle.github.io/spotless/javadoc/autostyle-plugin-gradle/3.26.0/com/github/autostyle/gradle/FormatExtension.html)) like those above.  It also supports more powerful formatters:
+Autostyle can check and apply formatting to any plain-text file, using simple rules ([javadoc](https://autostyle.github.io/spotless/javadoc/autostyle-plugin-gradle/3.26.0/com/github/autostyle/gradle/FormatExtension.html)) like those above.  It also supports more powerful formatters:
 
 * Eclipse's [CDT](#eclipse-cdt) C/C++ code formatter
 * Eclipse's java code formatter (including style and import ordering)
@@ -92,7 +92,7 @@ Spotless can check and apply formatting to any plain-text file, using simple rul
 
 Contributions are welcome, see [the contributing guide](../CONTRIBUTING.md) for development info.
 
-Spotless requires Gradle to be running on JRE 8+.<sup>See [issue #7](https://github.com/autostyle/autostyle/issues/7) for details.</sup>
+Autostyle requires Gradle to be running on JRE 8+.<sup>See [issue #7](https://github.com/autostyle/autostyle/issues/7) for details.</sup>
 
 <a name="java"></a>
 
@@ -105,21 +105,21 @@ set the `target` parameter as described in the [Custom rules](#custom) section.
 apply plugin: 'java'
 ...
 
-spotless {
+autostyle {
   java {
     licenseHeader '/* Licensed under Apache-2.0 */'  // License header
-    licenseHeaderFile 'spotless.license.java'    // License header file
+    licenseHeaderFile 'autostyle.license.java'    // License header file
     // Obviously, you can't specify both licenseHeader and licenseHeaderFile at the same time
 
     importOrder 'java', 'javax', 'org', 'com', 'com.diffplug', ''  // A sequence of package names
-    importOrderFile 'spotless.importorder'        // An import ordering file, exported from Eclipse
+    importOrderFile 'autostyle.importorder'        // An import ordering file, exported from Eclipse
     // As before, you can't specify both importOrder and importOrderFile at the same time
     // You probably want an empty string at the end - all of the imports you didn't specify
     // explicitly will go there.
 
     removeUnusedImports() // removes any unused imports
 
-    eclipse().configFile 'spotless.eclipseformat.xml'  // XML file dumped out by the Eclipse formatter
+    eclipse().configFile 'autostyle.eclipseformat.xml'  // XML file dumped out by the Eclipse formatter
     // If you have Eclipse preference or property files, you can use them too.
     // eclipse('4.7.1') to specify a specific version of eclipse,
     // available versions are: https://github.com/autostyle/autostyle/tree/master/lib-extra/src/main/resources/com/github/autostyle/autostyle/extra/eclipse_jdt_formatter
@@ -135,7 +135,7 @@ See [ECLIPSE_SCREENSHOTS](../ECLIPSE_SCREENSHOTS.md) for screenshots that demons
 Be sure to add `target '**/*.java'` otherwise spotless will not detect Java code inside Android modules.
 
 ```gradle
-spotless {
+autostyle {
   java {
     // ...
     target '**/*.java'
@@ -149,13 +149,13 @@ spotless {
 ### Applying to Java source with [google-java-format](https://github.com/google/google-java-format)
 
 ```gradle
-spotless {
+autostyle {
   java {
     googleJavaFormat()
     // optional: you can specify a specific version and/or switch to AOSP style
     googleJavaFormat('1.1').aosp()
     // you can then layer other format steps, such as
-    licenseHeaderFile 'spotless.license.java'
+    licenseHeaderFile 'autostyle.license.java'
   }
 }
 ```
@@ -174,13 +174,13 @@ Due to cyclic ambiguities of groovy formatter results, e.g. for nested closures,
 apply plugin: 'groovy'
 ...
 
-spotless {
+autostyle {
   java {
-    licenseHeaderFile 'spotless.license.java'
+    licenseHeaderFile 'autostyle.license.java'
     googleJavaFormat() // use a specific formatter for Java files
   }
   groovy {
-    licenseHeaderFile 'spotless.license.java'
+    licenseHeaderFile 'autostyle.license.java'
     excludeJava() // excludes all Java sources within the Groovy source dirs from formatting
     paddedCell() // Avoid cyclic ambiguities
     // the Groovy Eclipse formatter extends the Java Eclipse formatter,
@@ -202,13 +202,13 @@ The Groovy formatter uses some of the Eclipse [Java formatter](#java) configurat
 
 
 ```gradle
-spotless {
+autostyle {
   groovy {
     // Use the default version and Groovy-Eclipse default configuration
     greclipse()
     // optional: you can specify a specific version or config file(s)
     // available versions: https://github.com/autostyle/autostyle/tree/master/lib-extra/src/main/resources/com/github/autostyle/autostyle/extra/groovy_eclipse_formatter
-    greclipse('2.3.0').configFile('spotless.eclipseformat.xml', 'org.codehaus.groovy.eclipse.ui.prefs')
+    greclipse('2.3.0').configFile('autostyle.eclipseformat.xml', 'org.codehaus.groovy.eclipse.ui.prefs')
   }
 }
 ```
@@ -225,7 +225,7 @@ also be helpful for generating complex tables (see the source for [the parent re
 To apply freshmark to all of the `.md` files in your project, with all of your project's properties available for templating, use this snippet:
 
 ```gradle
-spotless {
+autostyle {
   freshmark {
     target 'README.md', 'CONTRIBUTING.md'  // defaults to '**/*.md'
     propertiesFile('gradle.properties')    // loads all the properties in the given file
@@ -241,7 +241,7 @@ spotless {
 ## Applying [scalafmt](https://olafurpg.github.io/scalafmt/#Scalafmt-codeformatterforScala) to Scala files
 
 ```gradle
-spotless {
+autostyle {
   scala {
     scalafmt()
     // optional: you can specify a specific version or config file
@@ -255,7 +255,7 @@ spotless {
 ## Applying [ktlint](https://github.com/pinterest/ktlint) to Kotlin files
 
 ```gradle
-spotless {
+autostyle {
   kotlin {
     // optionally takes a version
     ktlint()
@@ -286,7 +286,7 @@ spotless {
 ## Applying [DBeaver](https://dbeaver.jkiss.org/) to SQL scripts
 
 ```gradle
-spotless {
+autostyle {
   sql {
     // default value for target files
     target '**/*.sql'
@@ -313,10 +313,10 @@ sql.formatter.indent.size=4
 ## Applying to C/C++ sources
 
 ```gradle
-spotless {
+autostyle {
   cpp {
     target '**/*.CPP' // Change file filter. By default files with 'c', 'h', 'C', 'cpp', 'cxx', 'cc', 'c++', 'h', 'hpp', 'hh', 'hxx' and 'inc' extension are supported
-    eclipse().configFile 'spotless.eclipseformat.xml'  // XML file dumped out by the Eclipse formatter
+    eclipse().configFile 'autostyle.eclipseformat.xml'  // XML file dumped out by the Eclipse formatter
     // If you have Eclipse preference or property files, you can use them too.
     // eclipse('4.7.1') to specify a specific version of Eclipse,
     // available versions are: https://github.com/autostyle/autostyle/tree/master/lib-extra/src/main/resources/com/github/autostyle/autostyle/extra/eclipse_cdt_formatter
@@ -343,7 +343,7 @@ By default, all typescript source sets will be formatted. To change this,
 set the `target` parameter as described in the [Custom rules](#custom) section.
 
 ```gradle
-spotless {
+autostyle {
   typescript {
     // using existing config files
     tsfmt().tslintFile('/path/to/repo/tslint.json')
@@ -362,7 +362,7 @@ The auto-discovery of config files (up the file tree) will not work when using t
 ... or alternatively provide the configuration inline ...
 
 ```gradle
-spotless {
+autostyle {
   typescript {
     // custom file-set
     target 'src/main/resources/**/*.ts'
@@ -378,18 +378,18 @@ See [tsfmt's default config settings](https://github.com/vvakame/typescript-form
 
 ### Prerequisite: tsfmt requires a working NodeJS version
 
-tsfmt is based on NodeJS, so to use it, a working NodeJS installation (especially npm) is required on the host running spotless.
-Spotless will try to auto-discover an npm installation. If that is not working for you, it is possible to directly configure the npm binary to use.
+tsfmt is based on NodeJS, so to use it, a working NodeJS installation (especially npm) is required on the host running autostyle.
+Autostyle will try to auto-discover an npm installation. If that is not working for you, it is possible to directly configure the npm binary to use.
 
 ```gradle
-spotless {
+autostyle {
   typescript {
     tsfmt().npmExecutable('/usr/bin/npm').config(...)
   }
 }
 ```
 
-Spotless uses npm to install necessary packages locally. It runs tsfmt using [J2V8](https://github.com/eclipsesource/J2V8) internally after that.
+Autostyle uses npm to install necessary packages locally. It runs tsfmt using [J2V8](https://github.com/eclipsesource/J2V8) internally after that.
 
 <a name="prettier"></a>
 
@@ -400,7 +400,7 @@ Prettier is a formatter that can format [multiple file types](https://prettier.i
 To use prettier, you first have to specify the files that you want it to apply to.  Then you specify prettier, and how you want to apply it.
 
 ```gradle
-spotless {
+autostyle {
   format 'styling', {
     target '**/*.css', '**/*.scss'
 
@@ -420,7 +420,7 @@ Supported config options are documented on [prettier.io](https://prettier.io/doc
 It is also possible to specify the config via file:
 
 ```gradle
-spotless {
+autostyle {
   format 'styling', {
     target '**/*.css', '**/*.scss'
 
@@ -434,13 +434,13 @@ spotless {
 
 Supported config file variants are documented on [prettier.io](https://prettier.io/docs/en/configuration.html).
 *Please note:*
-- The auto-discovery of config files (up the file tree) will not work when using prettier within spotless.
-- Prettier's override syntax is not supported when using prettier within spotless.
+- The auto-discovery of config files (up the file tree) will not work when using prettier within autostyle.
+- Prettier's override syntax is not supported when using prettier within autostyle.
 
 To apply prettier to more kinds of files, just add more formats
 
 ```gradle
-spotless {
+autostyle {
   format 'javascript', {
     target 'src/main/resources/**/*.js'
     prettier().config(['filepath': 'file.js'])
@@ -452,7 +452,7 @@ spotless {
 Prettier can also be applied from within the [typescript config block](#typescript-formatter):
 
 ```gradle
-spotless {
+autostyle {
   typescript {
     // no parser or filepath needed
     // -> will default to 'typescript' parser when used in the typescript block
@@ -463,18 +463,18 @@ spotless {
 
 ### Prerequisite: prettier requires a working NodeJS version
 
-Prettier, like tsfmt, is based on NodeJS, so to use it, a working NodeJS installation (especially npm) is required on the host running spotless.
-Spotless will try to auto-discover an npm installation. If that is not working for you, it is possible to directly configure the npm binary to use.
+Prettier, like tsfmt, is based on NodeJS, so to use it, a working NodeJS installation (especially npm) is required on the host running autostyle.
+Autostyle will try to auto-discover an npm installation. If that is not working for you, it is possible to directly configure the npm binary to use.
 
 ```gradle
-spotless {
+autostyle {
   format 'javascript', {
     prettier().npmExecutable('/usr/bin/npm').config(...)
   }
 }
 ```
 
-Spotless uses npm to install necessary packages locally. It runs prettier using [J2V8](https://github.com/eclipsesource/J2V8) internally after that.
+Autostyle uses npm to install necessary packages locally. It runs prettier using [J2V8](https://github.com/eclipsesource/J2V8) internally after that.
 
 <a name="eclipse-wtp"></a>
 
@@ -483,7 +483,7 @@ Spotless uses npm to install necessary packages locally. It runs prettier using 
 The Eclipse [WTP](https://www.eclipse.org/webtools/) formatter can be applied as follows:
 
 ```gradle
-spotless {
+autostyle {
   format 'xml', {
     target fileTree('.') {
       include '**/*.xml', '**/*.xsd'
@@ -491,7 +491,7 @@ spotless {
     }
     // Use for example eclipseWtp('xml', '4.7.3a') to specify a specific version of Eclipse,
     // available versions are: https://github.com/autostyle/autostyle/tree/master/lib-extra/src/main/resources/com/github/autostyle/autostyle/extra/eclipse_wtp_formatters
-    eclipseWtp('xml').configFile 'spotless.xml.prefs', 'spotless.common.properties'
+    eclipseWtp('xml').configFile 'autostyle.xml.prefs', 'autostyle.common.properties'
   }
 }
 ```
@@ -511,11 +511,11 @@ The WTP formatter accept multiple configuration files. All Eclipse configuration
 
 Note that `HTML` should be used for `X-HTML` sources instead of `XML`.
 
-The Eclipse XML catalog cannot be configured for the Spotless WTP formatter, instead a
+The Eclipse XML catalog cannot be configured for the Autostyle WTP formatter, instead a
 user defined catalog file can be specified using the property `userCatalog`. Catalog versions
-1.0 and 1.1 are supported by Spotless.
+1.0 and 1.1 are supported by Autostyle.
 
-Unlike Eclipse, Spotless WTP ignores per default external URIs in schema location hints and
+Unlike Eclipse, Autostyle WTP ignores per default external URIs in schema location hints and
 external entities. To allow the access of external URIs, set the property `resolveExternalURI`
 to true.
 
@@ -535,7 +535,7 @@ will produce
 ```
 /* Licensed under Apache-2.0 2017. */
 ```
-if Spotless is launched in 2017
+if Autostyle is launched in 2017
 
 
 The `licenseHeader` and `licenseHeaderFile` steps will generate license headers with automatic years from the base license header according to the following rules:
@@ -554,7 +554,7 @@ The separator for the year range defaults to the hyphen character, e.g `1990-200
 For instance, the following configuration treats `1990, 2003` as a valid year range.
 
 ```gradle
-spotless {
+autostyle {
   java {
     licenseHeader('Licensed under Apache-2.0 $YEAR').yearSeparator(', ')
   }
@@ -565,10 +565,10 @@ spotless {
 
 ## Custom rules
 
-Spotless is a generic system for specifying a sequence of steps which are applied to a set of files.
+Autostyle is a generic system for specifying a sequence of steps which are applied to a set of files.
 
 ```gradle
-spotless {
+autostyle {
   // this will create two tasks: spotlessMiscCheck and spotlessMiscApply
   format 'misc', {
     // target determines which files this format will apply to
@@ -615,10 +615,10 @@ See [`JavaExtension.java`](src/main/java/com/github/autostyle/gradle/JavaExtensi
 
 ## Line endings and encodings (invisible stuff)
 
-Spotless uses UTF-8 by default, but you can use [any encoding which Java supports](https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html).  You can set it globally, and you can also set it per-format.
+Autostyle uses UTF-8 by default, but you can use [any encoding which Java supports](https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html).  You can set it globally, and you can also set it per-format.
 
 ```gradle
-spotless {
+autostyle {
   java {
     ...
     encoding 'Cp1252' // java will have Cp1252
@@ -627,7 +627,7 @@ spotless {
 }
 ```
 
-Line endings can also be set globally or per-format using the `lineEndings` property.  Spotless supports four line ending modes: `UNIX`, `WINDOWS`, `PLATFORM_NATIVE`, and `GIT_ATTRIBUTES`.  The default value is `GIT_ATTRIBUTES`, and *we highly recommend that you* ***do not change*** *this value*.  Git has opinions about line endings, and if Spotless and git disagree, then you're going to have a bad time.
+Line endings can also be set globally or per-format using the `lineEndings` property.  Autostyle supports four line ending modes: `UNIX`, `WINDOWS`, `PLATFORM_NATIVE`, and `GIT_ATTRIBUTES`.  The default value is `GIT_ATTRIBUTES`, and *we highly recommend that you* ***do not change*** *this value*.  Git has opinions about line endings, and if Autostyle and git disagree, then you're going to have a bad time.
 
 You can easily set the line endings of different files using [a `.gitattributes` file](https://help.github.com/articles/dealing-with-line-endings/).  Here's an example `.gitattributes` which sets all files to unix newlines: `* text eol=lf`.
 
@@ -640,20 +640,20 @@ The `check` task is Gradle's built-in task for grouping all verification tasks -
 You might want to disable this behavior.  We [recommend against this](https://github.com/autostyle/autostyle/issues/79#issuecomment-290844602), but it's easy to do if you'd like:
 
 ```gradle
-spotless {
+autostyle {
   enforceCheck false
 }
 ```
 
 When a misformatted file throws an exception, it will be for one of two reasons:
 
-1) Spotless calculated the properly formatted version, and it is different than the current contents.
+1) Autostyle calculated the properly formatted version, and it is different than the current contents.
 2) One of the formatters threw an exception while attempting to calculate the properly formatted version.
 
 You can fix (1) by excluding the file from formatting using the `targetExclude` method, see the [custom rules](#custom) section for details.  You can fix (2) and turn these exceptions into warnings like this:
 
 ```gradle
-spotless {
+autostyle {
   java {
     googleJavaFormat()
     custom 'my-glitchy-step', { }
@@ -668,15 +668,15 @@ spotless {
 
 ## How do I preview what `spotlessApply` will do?
 
-- Save your working tree with `git add -A`, then `git commit -m "Checkpoint before spotless."`
+- Save your working tree with `git add -A`, then `git commit -m "Checkpoint before Autostyle"`
 - Run `gradlew spotlessApply`
 - View the changes with `git diff`
-- If you don't like what spotless did, `git reset --hard`
+- If you don't like what Autostyle did, `git reset --hard`
 - If you'd like to remove the "checkpoint" commit, `git reset --soft head~1` will make the checkpoint commit "disappear" from history, but keeps the changes in your working directory.
 
 <a name="examples"></a>
 
-## Can I apply Spotless to specific files?
+## Can I apply Autostyle to specific files?
 
 You can target specific files by setting the `spotlessFiles` project property to a comma-separated list of file patterns:
 
@@ -688,20 +688,9 @@ The patterns are matched using `String#matches(String)` against the absolute fil
 
 ## Example configurations (from real-world projects)
 
-Spotless is hosted on jcenter and at plugins.gradle.org. [Go here](https://plugins.gradle.org/plugin/com.github.autostyle.gradle) if you're not sure how to import the plugin.
+Autostyle is hosted on jcenter and at plugins.gradle.org. [Go here](https://plugins.gradle.org/plugin/com.github.autostyle) if you're not sure how to import the plugin.
 
-* [One thousand github projects](https://github.com/search?l=gradle&q=spotless&type=Code)
-* [JUnit 5](https://github.com/junit-team/junit-lambda/blob/151d52ffab07881de71a8396a9620f18072c65ec/build.gradle#L86-L101) (aka JUnit Lambda)
-* [Apache Beam](https://beam.apache.org/) ([direct link to spotless section in its build.gradle](https://github.com/apache/beam/blob/1d9daf1aca101fa5a194cbbba969886734e08902/buildSrc/src/main/groovy/org/apache/beam/gradle/BeamModulePlugin.groovy#L776-L789))
-* [opentest4j](https://github.com/ota4j-team/opentest4j/blob/aab8c204be05609e9f76c2c964c3d6845cd0de14/build.gradle#L63-L80)
-* [Durian](https://github.com/diffplug/durian) ([direct link to spotless section in its build.gradle](https://github.com/diffplug/durian/blob/v3.2.0/build.gradle#L65-L85))
-* [DurianRx](https://github.com/diffplug/durian-rx) ([direct link to spotless section in its build.gradle](https://github.com/diffplug/durian-rx/blob/v1.1.0/build.gradle#L92-L113))
-* [DurianSwt](https://github.com/diffplug/durian-swt) ([direct link to spotless section in its build.gradle](https://github.com/diffplug/durian-swt/blob/v1.3.0/build.gradle#L137-L158))
-* [MatConsoleCtl](https://github.com/diffplug/matconsolectl) ([direct link to spotless section in its build.gradle](https://github.com/diffplug/matconsolectl/blob/v4.4.1/build.gradle#L169-L189))
-* [MatFileRW](https://github.com/diffplug/matfilerw) ([direct link to spotless section in its build.gradle](https://github.com/diffplug/matfilerw/blob/v1.3.1/build.gradle#L129-L149))
-* [Goomph](https://github.com/diffplug/goomph) ([direct link to spotless section in its build.gradle](https://github.com/diffplug/goomph/blob/v1.0.0/build.gradle#L78-L99))
-* [FreshMark](https://github.com/diffplug/freshmark) ([direct link to spotless section in its build.gradle](https://github.com/diffplug/freshmark/blob/v1.3.0/build.gradle#L52-L73))
-* [JScriptBox](https://github.com/diffplug/jscriptbox) ([direct link to spotless section in its build.gradle](https://github.com/diffplug/jscriptbox/blob/v3.0.0/build.gradle#L45-L65))
+* [GitHub search for Autostyle](https://github.com/search?l=gradle&q=autostyle&type=Code)
 * (Your project here)
 
 <!---freshmark /javadoc -->

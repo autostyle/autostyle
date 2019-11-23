@@ -69,7 +69,7 @@ public class PrettierFormatterStep {
           provisioner,
           new NpmConfig(
               replaceDevDependencies(
-                  readFileFromClasspath(PrettierFormatterStep.class, "/com/github/autostyle/npm/prettier-package.json"),
+                  readFileFromClasspath(PrettierFormatterStep.class, "/com/github/autostyle/autostyle/npm/prettier-package.json"),
                   new TreeMap<>(devDependencies)),
               "prettier"),
           buildDir,

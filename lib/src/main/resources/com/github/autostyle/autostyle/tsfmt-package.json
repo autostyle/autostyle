@@ -1,5 +1,5 @@
 {
-  "name": "spotless-tsfmt-formatter-step",
+  "name": "autostyle-tsfmt-formatter-step",
   "version": "1.0.0",
   "devDependencies": {
 ${devDependencies}

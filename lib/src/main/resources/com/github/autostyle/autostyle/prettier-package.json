@@ -1,5 +1,5 @@
 {
-  "name": "spotless-prettier-formatter-step",
+  "name": "autostyle-prettier-formatter-step",
   "version": "1.0.0",
   "devDependencies": {
 ${devDependencies}
