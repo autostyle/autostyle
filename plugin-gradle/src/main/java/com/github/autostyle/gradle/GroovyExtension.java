@@ -114,7 +114,7 @@ public class GroovyExtension extends FormatExtension implements HasBuiltinDelimi
 
   /** If the user hasn't specified the files yet, we'll assume he/she means all of the groovy files. */
   @Override
-  protected void setupTask(SpotlessTask task) {
+  protected void setupTask(AutostyleTask task) {
     if (target == null) {
       JavaPluginConvention convention = getProject().getConvention().getPlugin(JavaPluginConvention.class);
       if (convention == null || !getProject().getPlugins().hasPlugin(GroovyBasePlugin.class)) {

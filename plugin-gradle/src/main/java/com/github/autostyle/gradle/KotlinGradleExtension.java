@@ -66,7 +66,7 @@ public class KotlinGradleExtension extends FormatExtension {
   }
 
   @Override
-  protected void setupTask(SpotlessTask task) {
+  protected void setupTask(AutostyleTask task) {
     if (target == null) {
       target = parseTarget(GRADLE_KOTLIN_DSL_FILE_EXTENSION);
     }

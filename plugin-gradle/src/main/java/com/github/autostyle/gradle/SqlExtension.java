@@ -54,7 +54,7 @@ public class SqlExtension extends FormatExtension {
 
   /** If the user hasn't specified the files yet, we'll assume he/she means all of the sql files. */
   @Override
-  protected void setupTask(SpotlessTask task) {
+  protected void setupTask(AutostyleTask task) {
     if (target == null) {
       target("**/*.sql");
     }

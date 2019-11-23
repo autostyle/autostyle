@@ -28,16 +28,16 @@ val String.v: String get() = rootProject.extra["$this.version"] as String
 // See https://github.com/gradle/gradle/issues/9866
 
 fun DependencyConstraintHandlerScope.apiv(
-        notation: String,
-        versionProp: String = notation.substringAfterLast(':')
+    notation: String,
+    versionProp: String = notation.substringAfterLast(':')
 ) =
-        "api"(notation + ":" + versionProp.v)
+    "api"(notation + ":" + versionProp.v)
 
 fun DependencyConstraintHandlerScope.runtimev(
-        notation: String,
-        versionProp: String = notation.substringAfterLast(':')
+    notation: String,
+    versionProp: String = notation.substringAfterLast(':')
 ) =
-        "runtime"(notation + ":" + versionProp.v)
+    "runtime"(notation + ":" + versionProp.v)
 
 dependencies {
     // Parenthesis are needed here: https://github.com/gradle/gradle/issues/9248

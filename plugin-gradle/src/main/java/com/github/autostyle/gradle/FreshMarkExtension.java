@@ -59,7 +59,7 @@ public class FreshMarkExtension extends FormatExtension {
   }
 
   @Override
-  protected void setupTask(SpotlessTask task) {
+  protected void setupTask(AutostyleTask task) {
     // defaults to all markdown files
     if (target == null) {
       target = parseTarget("**/*.md");

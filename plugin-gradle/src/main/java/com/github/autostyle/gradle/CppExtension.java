@@ -57,7 +57,7 @@ public class CppExtension extends FormatExtension implements HasBuiltinDelimiter
   }
 
   @Override
-  protected void setupTask(SpotlessTask task) {
+  protected void setupTask(AutostyleTask task) {
     if (target == null) {
       /*
        * The org.gradle.language.c and org.gradle.language.cpp source sets are seldom used.

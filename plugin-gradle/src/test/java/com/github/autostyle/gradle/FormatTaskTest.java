@@ -33,15 +33,15 @@ import com.github.autostyle.ResourceHarness;
 import com.github.autostyle.TestProvisioner;
 
 public class FormatTaskTest extends ResourceHarness {
-  private SpotlessTask checkTask;
-  private SpotlessTask applyTask;
+  private AutostyleTask checkTask;
+  private AutostyleTask applyTask;
 
   @Before
   public void createTask() throws IOException {
     Project project = TestProvisioner.gradleProject(rootFolder());
-    checkTask = project.getTasks().create("checkTaskUnderTest", SpotlessTask.class);
+    checkTask = project.getTasks().create("checkTaskUnderTest", AutostyleTask.class);
     checkTask.setCheck();
-    applyTask = project.getTasks().create("applyTaskUnderTest", SpotlessTask.class);
+    applyTask = project.getTasks().create("applyTaskUnderTest", AutostyleTask.class);
     applyTask.setApply();
   }
 

@@ -39,8 +39,8 @@ public class SelfTest {
       @Override
       public void runAllTasks(Project project) {
         project.getTasks().stream()
-            .filter(task -> task instanceof SpotlessTask)
-            .map(task -> (SpotlessTask) task)
+            .filter(task -> task instanceof AutostyleTask)
+            .map(task -> (AutostyleTask) task)
             .forEach(task -> Errors.rethrow().run(() -> {
               IncrementalTaskInputs inputs = Mocks.mockIncrementalTaskInputs(task.getTarget());
               task.setCheck();
@@ -57,8 +57,8 @@ public class SelfTest {
       @Override
       public void runAllTasks(Project project) {
         project.getTasks().stream()
-            .filter(task -> task instanceof SpotlessTask)
-            .map(task -> (SpotlessTask) task)
+            .filter(task -> task instanceof AutostyleTask)
+            .map(task -> (AutostyleTask) task)
             .forEach(task -> Errors.rethrow().run(() -> {
               IncrementalTaskInputs inputs = Mocks.mockIncrementalTaskInputs(task.getTarget());
               task.setApply();

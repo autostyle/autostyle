@@ -174,7 +174,7 @@ public class JavaExtension extends FormatExtension implements HasBuiltinDelimite
 
   /** If the user hasn't specified the files yet, we'll assume he/she means all of the java files. */
   @Override
-  protected void setupTask(SpotlessTask task) {
+  protected void setupTask(AutostyleTask task) {
     if (target == null) {
       JavaPluginConvention javaPlugin = getProject().getConvention().findPlugin(JavaPluginConvention.class);
       if (javaPlugin == null) {

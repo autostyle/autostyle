@@ -240,19 +240,19 @@ public class SpotlessExtension {
   private void createFormatTask(String name, FormatExtension formatExtension) {
     // create the SpotlessTask
     String taskName = EXTENSION + SpotlessPlugin.capitalize(name);
-    SpotlessTask spotlessTask = project.getTasks().create(taskName, SpotlessTask.class);
-    project.afterEvaluate(unused -> formatExtension.setupTask(spotlessTask));
+    AutostyleTask autostyleTask = project.getTasks().create(taskName, AutostyleTask.class);
+    project.afterEvaluate(unused -> formatExtension.setupTask(autostyleTask));
 
     // clean removes the SpotlessCache, so we have to run after clean
     Task clean = project.getTasks().getByName(BasePlugin.CLEAN_TASK_NAME);
-    spotlessTask.mustRunAfter(clean);
+    autostyleTask.mustRunAfter(clean);
 
     // create the check and apply control tasks
     Task checkTask = project.getTasks().create(taskName + CHECK);
     Task applyTask = project.getTasks().create(taskName + APPLY);
 
-    checkTask.dependsOn(spotlessTask);
-    applyTask.dependsOn(spotlessTask);
+    checkTask.dependsOn(autostyleTask);
+    applyTask.dependsOn(autostyleTask);
     // when the task graph is ready, we'll configure the spotlessTask appropriately
     project.getGradle().getTaskGraph().whenReady(new Closure(null) {
       private static final long serialVersionUID = 1L;
@@ -261,10 +261,10 @@ public class SpotlessExtension {
       @SuppressFBWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS")
       public Object doCall(TaskExecutionGraph graph) {
         if (graph.hasTask(checkTask)) {
-          spotlessTask.setCheck();
+          autostyleTask.setCheck();
         }
         if (graph.hasTask(applyTask)) {
-          spotlessTask.setApply();
+          autostyleTask.setApply();
         }
         return Closure.DONE;
       }
@@ -279,7 +279,7 @@ public class SpotlessExtension {
         // needs to be non-null since it is an @Input property of the task
         filePatterns = "";
       }
-      spotlessTask.setFilePatterns(filePatterns);
+      autostyleTask.setFilePatterns(filePatterns);
     });
 
     // the root tasks depend on the control tasks

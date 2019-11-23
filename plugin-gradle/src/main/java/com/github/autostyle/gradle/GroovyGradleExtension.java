@@ -46,7 +46,7 @@ public class GroovyGradleExtension extends FormatExtension {
   }
 
   @Override
-  protected void setupTask(SpotlessTask task) {
+  protected void setupTask(AutostyleTask task) {
     if (target == null) {
       target = parseTarget(GRADLE_FILE_EXTENSION);
     }

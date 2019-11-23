@@ -590,7 +590,7 @@ public class FormatExtension {
   }
 
   /** Sets up a format task according to the values in this extension. */
-  protected void setupTask(SpotlessTask task) {
+  protected void setupTask(AutostyleTask task) {
     task.setPaddedCell(paddedCell);
     task.setEncoding(getEncoding().name());
     task.setExceptionPolicy(exceptionPolicy);

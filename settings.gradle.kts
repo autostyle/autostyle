@@ -18,11 +18,11 @@ pluginManagement {
 }
 
 include(
-        "bom",
-        "testlib",
-        "lib",
-        "lib-extra",
-        "plugin-gradle"
+    "bom",
+    "testlib",
+    "lib",
+    "lib-extra",
+    "plugin-gradle"
 )
 
 // See https://github.com/gradle/gradle/issues/1348#issuecomment-284758705 and
@@ -32,10 +32,10 @@ org.apache.tools.ant.DirectoryScanner.removeDefaultExclude("**/.gitattributes")
 org.apache.tools.ant.DirectoryScanner.removeDefaultExclude("**/.gitignore")
 
 fun property(name: String) =
-        when (extra.has(name)) {
-            true -> extra.get(name) as? String
-            else -> null
-        }
+    when (extra.has(name)) {
+        true -> extra.get(name) as? String
+        else -> null
+    }
 
 // This enables to use local clone of vlsi-release-plugins for debugging purposes
 property("localReleasePlugins")?.ifBlank { "../vlsi-release-plugins" }?.let {

@@ -81,7 +81,7 @@ public class KotlinExtension extends FormatExtension implements HasBuiltinDelimi
 
   /** If the user hasn't specified the files yet, we'll assume he/she means all of the kotlin files. */
   @Override
-  protected void setupTask(SpotlessTask task) {
+  protected void setupTask(AutostyleTask task) {
     if (target == null) {
       JavaPluginConvention javaPlugin = getProject().getConvention().findPlugin(JavaPluginConvention.class);
       if (javaPlugin == null) {

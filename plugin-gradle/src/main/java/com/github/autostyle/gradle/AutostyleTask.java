@@ -41,6 +41,7 @@ import org.gradle.api.tasks.incremental.IncrementalTaskInputs;
 
 import com.diffplug.common.collect.ImmutableList;
 import com.diffplug.common.collect.Iterables;
+
 import com.github.autostyle.FormatExceptionPolicy;
 import com.github.autostyle.FormatExceptionPolicyStrict;
 import com.github.autostyle.Formatter;
@@ -50,7 +51,7 @@ import com.github.autostyle.PaddedCell;
 import com.github.autostyle.PaddedCellBulk;
 import com.github.autostyle.extra.integration.DiffMessageFormatter;
 
-public class SpotlessTask extends DefaultTask {
+public class AutostyleTask extends DefaultTask {
   // set by SpotlessExtension, but possibly overridden by FormatExtension
   protected String encoding = "UTF-8";
 
@@ -328,11 +329,12 @@ public class SpotlessTask extends DefaultTask {
 
   /** Returns an exception which indicates problem files nicely. */
   GradleException formatViolationsFor(Formatter formatter, List<File> problemFiles) {
-    return new GradleException(DiffMessageFormatter.builder()
-        .runToFix("Run 'gradlew spotlessApply' to fix these violations.")
-        .isPaddedCell(paddedCell)
-        .formatter(formatter)
-        .problemFiles(problemFiles)
-        .getMessage());
+    return new GradleException(
+      "The following files have format violations:\n" +
+        new DiffMessageFormatter(formatter)
+          .diff(problemFiles, paddedCell)
+          .append("Run 'gradlew autostyleApply' to fix these violations.")
+          .toString()
+    );
   }
 }

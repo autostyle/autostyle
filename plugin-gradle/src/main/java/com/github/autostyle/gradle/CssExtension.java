@@ -65,7 +65,7 @@ public class CssExtension extends FormatExtension implements HasBuiltinDelimiter
   }
 
   @Override
-  protected void setupTask(SpotlessTask task) {
+  protected void setupTask(AutostyleTask task) {
     if (target == null) {
       target(CssDefaults.FILE_FILTER.toArray());
     }

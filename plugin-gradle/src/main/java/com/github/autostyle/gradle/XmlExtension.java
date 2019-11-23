@@ -61,7 +61,7 @@ public class XmlExtension extends FormatExtension implements HasBuiltinDelimiter
   }
 
   @Override
-  protected void setupTask(SpotlessTask task) {
+  protected void setupTask(AutostyleTask task) {
     if (target == null) {
       target(XmlDefaults.FILE_FILTER.toArray());
     }

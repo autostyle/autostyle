@@ -5,6 +5,7 @@ plugins {
     id("com.gradle.plugin-publish") apply false
     id("com.jfrog.bintray") apply false
     id("org.jdrupes.mdoclet") apply false
+    kotlin("jvm") apply false
 }
 
 val String.v: String get() = rootProject.extra["$this.version"] as String
@@ -12,26 +13,39 @@ val String.v: String get() = rootProject.extra["$this.version"] as String
 val buildVersion = "autostyle".v + "-SNAPSHOT"
 
 fun Project.boolProp(name: String) =
-        findProperty(name)
-                // Project properties include tasks, extensions, etc, and we want only String properties
-                // We don't want to use "task" as a boolean property
-                ?.let { it as? String }
-                ?.equals("false", ignoreCase = true)?.not()
+    findProperty(name)
+        // Project properties include tasks, extensions, etc, and we want only String properties
+        // We don't want to use "task" as a boolean property
+        ?.let { it as? String }
+        ?.equals("false", ignoreCase = true)?.not()
 
 allprojects {
     group = "com.github.vlsi.autostyle"
     version = buildVersion
 
     val javaUsed = file("src/main/java").isDirectory
+    val kotlinUsed = file("src/main/kotlin").isDirectory || file("src/test/kotlin").isDirectory
     if (javaUsed) {
         apply(plugin = "java-library")
         apply(plugin = "org.jdrupes.mdoclet")
         dependencies {
             val compileOnly by configurations
-            val implementation by configurations
             compileOnly("net.jcip:jcip-annotations:1.0")
             compileOnly("com.github.spotbugs:spotbugs-annotations:3.1.6")
             compileOnly("com.google.code.findbugs:jsr305:3.0.2")
+        }
+    }
+    if (kotlinUsed) {
+        apply(plugin = "java-library")
+        apply(plugin = "org.jetbrains.kotlin.jvm")
+        dependencies {
+            val implementation by configurations
+            implementation(kotlin("stdlib"))
+        }
+    }
+    if (javaUsed || kotlinUsed) {
+        dependencies {
+            val implementation by configurations
             implementation(platform(project(":bom")))
         }
     }
@@ -144,11 +158,11 @@ allprojects {
                                 s = s.replace("<scope>compile</scope>", "")
                                 // Cut <dependencyManagement> because all dependencies have the resolved versions
                                 s = s.replace(
-                                        Regex(
-                                                "<dependencyManagement>.*?</dependencyManagement>",
-                                                RegexOption.DOT_MATCHES_ALL
-                                        ),
-                                        ""
+                                    Regex(
+                                        "<dependencyManagement>.*?</dependencyManagement>",
+                                        RegexOption.DOT_MATCHES_ALL
+                                    ),
+                                    ""
                                 )
                                 sb.setLength(0)
                                 sb.append(s)
@@ -156,11 +170,13 @@ allprojects {
                                 asNode()
                             }
                             name.set(
-                                    (project.findProperty("artifact.name") as? String)
-                                            ?: "Autostyle ${project.name.capitalize()}"
+                                (project.findProperty("artifact.name") as? String)
+                                    ?: "Autostyle ${project.name.capitalize()}"
                             )
-                            description.set(project.description
-                                    ?: "Autostyle ${project.name.capitalize()}")
+                            description.set(
+                                project.description
+                                    ?: "Autostyle ${project.name.capitalize()}"
+                            )
                             inceptionYear.set("2019")
                             url.set("https://github.com/autostyle/autostyle")
                             licenses {

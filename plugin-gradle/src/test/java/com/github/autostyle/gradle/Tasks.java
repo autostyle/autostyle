@@ -18,7 +18,7 @@ package com.github.autostyle.gradle;
 final class Tasks {
   private Tasks() {}
 
-  static void execute(SpotlessTask task) throws Exception {
+  static void execute(AutostyleTask task) throws Exception {
     task.performAction(Mocks.mockIncrementalTaskInputs(task.getTarget()));
   }
 }

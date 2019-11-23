@@ -55,10 +55,10 @@ pluginBundle {
             id = "com.github.vlsi.autostyle"
             displayName = "Autostyle formatting plugin"
             tags = listOf(
-                    "format",
-                    "style",
-                    "license",
-                    "header"
+                "format",
+                "style",
+                "license",
+                "header"
             )
         }
     }

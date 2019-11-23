@@ -167,7 +167,7 @@ public class TypescriptExtension extends FormatExtension {
   }
 
   @Override
-  protected void setupTask(SpotlessTask task) {
+  protected void setupTask(AutostyleTask task) {
     // defaults to all typescript files
     if (target == null) {
       target = parseTarget("**/*.ts");

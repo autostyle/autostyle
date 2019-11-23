@@ -46,8 +46,8 @@ public class PaddedCellTaskTest extends ResourceHarness {
   private class Bundle {
     Project project = TestProvisioner.gradleProject(rootFolder());
     File file;
-    SpotlessTask check;
-    SpotlessTask apply;
+    AutostyleTask check;
+    AutostyleTask apply;
 
     Bundle(String name, FormatterFunc function) throws IOException {
       file = setFile("src/test." + name).toContent("CCC");
@@ -56,10 +56,10 @@ public class PaddedCellTaskTest extends ResourceHarness {
       apply = createApplyTask(name, step);
     }
 
-    private SpotlessTask createCheckTask(String name, FormatterStep step) {
+    private AutostyleTask createCheckTask(String name, FormatterStep step) {
       // we don't add Check to the end because SpotlessTask normally doesn't have
       // "Check" or "Apply", and it matters for generating the failure files
-      SpotlessTask task = project.getTasks().create("spotless" + SpotlessPlugin.capitalize(name), SpotlessTask.class);
+      AutostyleTask task = project.getTasks().create("spotless" + SpotlessPlugin.capitalize(name), AutostyleTask.class);
       task.setCheck();
       task.addStep(step);
       task.setLineEndingsPolicy(LineEnding.UNIX.createPolicy());
@@ -67,8 +67,8 @@ public class PaddedCellTaskTest extends ResourceHarness {
       return task;
     }
 
-    private SpotlessTask createApplyTask(String name, FormatterStep step) {
-      SpotlessTask task = project.getTasks().create("spotless" + SpotlessPlugin.capitalize(name) + "Apply", SpotlessTask.class);
+    private AutostyleTask createApplyTask(String name, FormatterStep step) {
+      AutostyleTask task = project.getTasks().create("spotless" + SpotlessPlugin.capitalize(name) + "Apply", AutostyleTask.class);
       task.setApply();
       task.addStep(step);
       task.setLineEndingsPolicy(LineEnding.UNIX.createPolicy());
