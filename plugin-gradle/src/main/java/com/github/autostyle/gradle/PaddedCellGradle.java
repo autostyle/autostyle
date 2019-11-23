@@ -53,7 +53,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 // is out-of-date (like the link to #anyMisbehave(Formatter, List))
 class PaddedCellGradle {
   /** URL to a page which describes the padded cell thing. */
-  private static final String URL = "https://github.com/diffplug/spotless/blob/master/PADDEDCELL.md";
+  private static final String URL = "https://github.com/autostyle/autostyle/blob/master/PADDEDCELL.md";
 
   static GradleException youShouldTurnOnPaddedCell(SpotlessTask task) {
     Path rootPath = task.getProject().getRootDir().toPath();

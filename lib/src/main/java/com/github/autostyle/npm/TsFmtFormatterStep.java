@@ -79,7 +79,7 @@ public class TsFmtFormatterStep {
       super(stepName,
           provisioner,
           new NpmConfig(
-              replaceDevDependencies(readFileFromClasspath(TsFmtFormatterStep.class, "/com/diffplug/spotless/npm/tsfmt-package.json"), new TreeMap<>(versions)),
+              replaceDevDependencies(readFileFromClasspath(TsFmtFormatterStep.class, "/com/github/autostyle/autostyle/npm/tsfmt-package.json"), new TreeMap<>(versions)),
               "typescript-formatter"),
           buildDir,
           npm);

@@ -91,7 +91,7 @@ FormatterStep create    (String name, State state                  , Function<St
 FormatterStep createLazy(String name, Supplier<State> stateSupplier, Function<State, FormatterFunc> stateToFormatter)
 ```
 
-If your formatting step only needs to call one or two methods of the external dependency, you can pull it in at runtime and call it via reflection.  See the logic for [`EclipseFormatterStep`](lib-extra/src/main/java/com/autostyle/autostyle/extra/java/EclipseFormatterStep.java) or [`GoogleJavaFormatStep`](lib/src/main/java/com/autostyle/autostyle/java/GoogleJavaFormatStep.java).
+If your formatting step only needs to call one or two methods of the external dependency, you can pull it in at runtime and call it via reflection.  See the logic for [`EclipseFormatterStep`](lib-extra/src/main/java/com/github/autostyle/autostyle/extra/java/EclipseFormatterStep.java) or [`GoogleJavaFormatStep`](lib/src/main/java/com/github/autostyle/autostyle/java/GoogleJavaFormatStep.java).
 
 Here's a checklist for creating a new step for Autostyle:
 

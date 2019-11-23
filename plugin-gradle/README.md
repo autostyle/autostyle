@@ -122,7 +122,7 @@ spotless {
     eclipse().configFile 'spotless.eclipseformat.xml'  // XML file dumped out by the Eclipse formatter
     // If you have Eclipse preference or property files, you can use them too.
     // eclipse('4.7.1') to specify a specific version of eclipse,
-    // available versions are: https://github.com/autostyle/autostyle/tree/master/lib-extra/src/main/resources/com/autostyle/autostyle/extra/eclipse_jdt_formatter
+    // available versions are: https://github.com/autostyle/autostyle/tree/master/lib-extra/src/main/resources/com/github/autostyle/autostyle/extra/eclipse_jdt_formatter
   }
 }
 ```
@@ -207,7 +207,7 @@ spotless {
     // Use the default version and Groovy-Eclipse default configuration
     greclipse()
     // optional: you can specify a specific version or config file(s)
-    // available versions: https://github.com/autostyle/autostyle/tree/master/lib-extra/src/main/resources/com/autostyle/autostyle/extra/groovy_eclipse_formatter
+    // available versions: https://github.com/autostyle/autostyle/tree/master/lib-extra/src/main/resources/com/github/autostyle/autostyle/extra/groovy_eclipse_formatter
     greclipse('2.3.0').configFile('spotless.eclipseformat.xml', 'org.codehaus.groovy.eclipse.ui.prefs')
   }
 }
@@ -290,7 +290,7 @@ spotless {
   sql {
     // default value for target files
     target '**/*.sql'
-    // configFile is optional, arguments available here: https://github.com/autostyle/autostyle/blob/master/lib/src/main/java/com/autostyle/autostyle/sql/dbeaver/DBeaverSQLFormatterConfiguration.java
+    // configFile is optional, arguments available here: https://github.com/autostyle/autostyle/blob/master/lib/src/main/java/com/github/autostyle/autostyle/sql/dbeaver/DBeaverSQLFormatterConfiguration.java
     dbeaver().configFile('dbeaver.props')
   }
 }
@@ -319,7 +319,7 @@ spotless {
     eclipse().configFile 'spotless.eclipseformat.xml'  // XML file dumped out by the Eclipse formatter
     // If you have Eclipse preference or property files, you can use them too.
     // eclipse('4.7.1') to specify a specific version of Eclipse,
-    // available versions are: https://github.com/autostyle/autostyle/tree/master/lib-extra/src/main/resources/com/autostyle/autostyle/extra/eclipse_cdt_formatter
+    // available versions are: https://github.com/autostyle/autostyle/tree/master/lib-extra/src/main/resources/com/github/autostyle/autostyle/extra/eclipse_cdt_formatter
     licenseHeader '// Licensed under Apache'  // License header
     licenseHeaderFile './license.txt'  // License header file
   }
@@ -490,7 +490,7 @@ spotless {
       exclude '**/build/**'
     }
     // Use for example eclipseWtp('xml', '4.7.3a') to specify a specific version of Eclipse,
-    // available versions are: https://github.com/autostyle/autostyle/tree/master/lib-extra/src/main/resources/com/autostyle/autostyle/extra/eclipse_wtp_formatters
+    // available versions are: https://github.com/autostyle/autostyle/tree/master/lib-extra/src/main/resources/com/github/autostyle/autostyle/extra/eclipse_wtp_formatters
     eclipseWtp('xml').configFile 'spotless.xml.prefs', 'spotless.common.properties'
   }
 }
