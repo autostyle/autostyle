@@ -11,7 +11,8 @@ workspace/
 ### Gradle ###
 .gradle
 .gradle-selfapply
-build/
+/build/
+/*/build/
 
 # Ignore Gradle GUI config
 gradle-app.setting
@@ -25,9 +26,10 @@ _ext/*/gradle/dependency-locks/compileClasspath.lockfile
 ### Eclipse ###
 *.pydevproject
 .metadata
-.gradle
-bin/
-tmp/
+/bin/
+/tmp/
+/*/bin/
+/*/tmp/
 *.tmp
 *.bak
 *.swp
@@ -99,7 +101,8 @@ local.properties
 ## Plugin-specific files:
 
 # IntelliJ
-out/
+/out/
+/*/out/
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
@@ -114,11 +117,11 @@ crashlytics-build.properties
 
 
 ### NetBeans ###
-nbproject/private/
-build/
-nbbuild/
-dist/
-nbdist/
+/nbproject/private/
+/nbbuild/
+/*/nbbuild/
+/dist/
+/nbdist/
 nbactions.xml
 nb-configuration.xml
 .nb-gradle/

@@ -29,7 +29,7 @@ public class TypescriptExtensionTest extends GradleIntegrationTest {
     setFile("build.gradle").toLines(
         "buildscript { repositories { mavenCentral() } }",
         "plugins {",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
         "def tsfmtconfig = [:]",
         "tsfmtconfig['indentSize'] = 1",
@@ -50,7 +50,7 @@ public class TypescriptExtensionTest extends GradleIntegrationTest {
     setFile("build.gradle").toLines(
         "buildscript { repositories { mavenCentral() } }",
         "plugins {",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
         "def tsfmtconfig = [:]",
         "tsfmtconfig['indentSize'] = 1",
@@ -71,7 +71,7 @@ public class TypescriptExtensionTest extends GradleIntegrationTest {
     setFile("build.gradle").toLines(
         "buildscript { repositories { mavenCentral() } }",
         "plugins {",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
         "def tsfmtconfig = [:]",
         "tsfmtconfig['indentSize'] = 1",
@@ -97,7 +97,7 @@ public class TypescriptExtensionTest extends GradleIntegrationTest {
     setFile("build.gradle").toLines(
         "buildscript { repositories { mavenCentral() } }",
         "plugins {",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
         "autostyle {",
         "    typescript {",
@@ -115,7 +115,7 @@ public class TypescriptExtensionTest extends GradleIntegrationTest {
     setFile("build.gradle").toLines(
         "buildscript { repositories { mavenCentral() } }",
         "plugins {",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
         "autostyle {",
         "    typescript {",

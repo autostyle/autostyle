@@ -24,12 +24,12 @@ public class EncodingTest extends GradleIntegrationTest {
   public void defaultIsUtf8() throws Exception {
     setFile("build.gradle").toLines(
         "plugins {",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
         "autostyle {",
         "    java {",
         "        target file('test.java')",
-        "        custom 'replaceMicro', { it.replace('µ', 'A') }",
+        "        custom 'replaceMicro', 1, { it.replace('µ', 'A') }",
         "    }",
         "}");
     setFile("test.java").toContent("µ");
@@ -41,12 +41,12 @@ public class EncodingTest extends GradleIntegrationTest {
   public void globalIsRespected() throws Exception {
     setFile("build.gradle").toLines(
         "plugins {",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
         "autostyle {",
         "    java {",
         "        target file('test.java')",
-        "        custom 'replaceMicro', { it.replace('µ', 'A') }",
+        "        custom 'replaceMicro', 1, { it.replace('µ', 'A') }",
         "    }",
         "    encoding 'US-ASCII'",
         "}");
@@ -59,16 +59,16 @@ public class EncodingTest extends GradleIntegrationTest {
   public void globalIsRespectedButCanBeOverridden() throws Exception {
     setFile("build.gradle").toLines(
         "plugins {",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
         "autostyle {",
         "    java {",
         "        target file('test.java')",
-        "        custom 'replaceMicro', { it.replace('µ', 'A') }",
+        "        custom 'replaceMicro', 1, { it.replace('µ', 'A') }",
         "    }",
         "    format 'utf32', {",
         "        target file('utf32.encoded')",
-        "        custom 'replaceMicro', { it.replace('µ', 'A') }",
+        "        custom 'replaceMicro', 1, { it.replace('µ', 'A') }",
         "        encoding 'UTF-32'",
         "    }",
         "    encoding 'US-ASCII'",

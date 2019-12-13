@@ -1,3 +1,4 @@
+import com.github.vlsi.gradle.properties.dsl.props
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
 plugins {
@@ -5,19 +6,13 @@ plugins {
     id("com.gradle.plugin-publish") apply false
     id("com.jfrog.bintray") apply false
     id("org.jdrupes.mdoclet") apply false
+    id("com.github.vlsi.gradle-extensions")
     kotlin("jvm") apply false
 }
 
 val String.v: String get() = rootProject.extra["$this.version"] as String
 
 val buildVersion = "autostyle".v + "-SNAPSHOT"
-
-fun Project.boolProp(name: String) =
-    findProperty(name)
-        // Project properties include tasks, extensions, etc, and we want only String properties
-        // We don't want to use "task" as a boolean property
-        ?.let { it as? String }
-        ?.equals("false", ignoreCase = true)?.not()
 
 allprojects {
     group = "com.github.vlsi.autostyle"
@@ -60,7 +55,7 @@ allprojects {
             testImplementation("org.junit.jupiter:junit-jupiter-params")
             testImplementation("org.hamcrest:hamcrest")
             testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
-            if (project.boolProp("junit4") ?: true) {
+            if (props.bool("junit4", default = true)) {
                 // Allow projects to opt-out of junit dependency, so they can be JUnit5-only
                 testImplementation("junit:junit")
                 testRuntimeOnly("org.junit.vintage:junit-vintage-engine")
@@ -76,6 +71,13 @@ allprojects {
         fileMode = "664".toInt(8)
     }
 
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        sourceCompatibility = "unused"
+        targetCompatibility = "unused"
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
+    }
 
     plugins.withType<JavaPlugin> {
         configure<JavaPluginConvention> {

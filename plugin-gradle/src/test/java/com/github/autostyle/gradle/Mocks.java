@@ -18,8 +18,17 @@ package com.github.autostyle.gradle;
 import java.io.File;
 
 import org.gradle.api.Action;
+import org.gradle.api.file.FileCollection;
+import org.gradle.api.file.FileSystemLocation;
+import org.gradle.api.provider.Provider;
 import org.gradle.api.tasks.incremental.IncrementalTaskInputs;
 import org.gradle.api.tasks.incremental.InputFileDetails;
+import org.gradle.internal.execution.history.changes.DefaultFileChange;
+import org.gradle.internal.file.FileType;
+import org.gradle.work.FileChange;
+import org.gradle.work.InputChanges;
+
+import com.diffplug.common.collect.Iterables;
 
 final class Mocks {
   private Mocks() {}
@@ -65,6 +74,30 @@ final class Mocks {
       @Override
       public File getFile() {
         return file;
+      }
+    };
+  }
+
+  static InputChanges mockInputChanges() {
+    return new InputChanges() {
+      @Override
+      public boolean isIncremental() {
+        return false;
+      }
+
+      @Override
+      public Iterable<FileChange> getFileChanges(FileCollection parameter) {
+        return Iterables.transform(parameter,
+          x -> DefaultFileChange.added(
+            x.getPath(),
+            x.getName(),
+            x.isDirectory() ? FileType.Directory : FileType.RegularFile,
+            x.getPath()));
+      }
+
+      @Override
+      public Iterable<FileChange> getFileChanges(Provider<? extends FileSystemLocation> parameter) {
+        return null;
       }
     };
   }

@@ -29,7 +29,7 @@ public class PrettierIntegrationTest extends GradleIntegrationTest {
     setFile("build.gradle").toLines(
         "buildscript { repositories { mavenCentral() } }",
         "plugins {",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
         "def prettierConfig = [:]",
         "prettierConfig['printWidth'] = 50",
@@ -51,7 +51,7 @@ public class PrettierIntegrationTest extends GradleIntegrationTest {
     setFile("build.gradle").toLines(
         "buildscript { repositories { mavenCentral() } }",
         "plugins {",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
         "autostyle {",
         "    format 'mytypescript', {",

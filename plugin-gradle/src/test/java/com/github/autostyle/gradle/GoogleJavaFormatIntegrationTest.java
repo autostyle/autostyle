@@ -23,10 +23,10 @@ public class GoogleJavaFormatIntegrationTest extends GradleIntegrationTest {
   @Test
   public void integration() throws IOException {
     setFile("build.gradle").toLines(
-        "buildscript { repositories { mavenCentral() } }",
         "plugins {",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
+        "repositories { mavenCentral() }",
         "",
         "autostyle {",
         "    java {",

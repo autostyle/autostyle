@@ -43,6 +43,10 @@ public class PaddedCellTaskTest extends ResourceHarness {
     return IS_WIN ? input.replace('/', '\\') : input;
   }
 
+  private static String capitalize(String name) {
+    return Character.toUpperCase(name.charAt(0)) + name.substring(1);
+  }
+
   private class Bundle {
     Project project = TestProvisioner.gradleProject(rootFolder());
     File file;
@@ -59,26 +63,24 @@ public class PaddedCellTaskTest extends ResourceHarness {
     private AutostyleTask createCheckTask(String name, FormatterStep step) {
       // we don't add Check to the end because AutostyleTask normally doesn't have
       // "Check" or "Apply", and it matters for generating the failure files
-      AutostyleTask task = project.getTasks().create("autostyle" + AutostylePlugin.capitalize(name), AutostyleTask.class);
-      task.setCheck();
+      AutostyleTask task = project.getTasks().create("autostyle" + capitalize(name), AutostyleCheckTask.class);
       task.addStep(step);
-      task.setLineEndingsPolicy(LineEnding.UNIX.createPolicy());
-      task.setTarget(Collections.singletonList(file));
+      task.getLineEndingsPolicy().set(LineEnding.UNIX.createPolicy());
+      task.getSourceFiles().from(Collections.singletonList(file));
       return task;
     }
 
     private AutostyleTask createApplyTask(String name, FormatterStep step) {
-      AutostyleTask task = project.getTasks().create("Autostyle" + AutostylePlugin.capitalize(name) + "Apply", AutostyleTask.class);
-      task.setApply();
+      AutostyleTask task = project.getTasks().create("Autostyle" + capitalize(name) + "Apply", AutostyleApplyTask.class);
       task.addStep(step);
-      task.setLineEndingsPolicy(LineEnding.UNIX.createPolicy());
-      task.setTarget(Collections.singletonList(file));
+      task.getLineEndingsPolicy().set(LineEnding.UNIX.createPolicy());
+      task.getSourceFiles().from(Collections.singletonList(file));
       return task;
     }
 
     private Bundle paddedCell() {
-      check.setPaddedCell(true);
-      apply.setPaddedCell(true);
+      check.getPaddedCell().set(true);
+      apply.getPaddedCell().set(true);
       return this;
     }
 

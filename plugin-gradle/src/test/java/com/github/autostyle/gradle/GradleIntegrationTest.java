@@ -57,11 +57,11 @@ public class GradleIntegrationTest extends ResourceHarness {
   }
 
   protected final GradleRunner gradleRunner() throws IOException {
+    // Minimal supported version is 4.8
     return GradleRunner.create()
-        // Test against Gradle 2.14.1 in order to maintain backwards compatibility.
-        // https://github.com/diffplug/spotless/issues/161
-        .withGradleVersion("2.14.1")
+        .withGradleVersion("5.4") // InputChanges
         .withProjectDir(rootFolder())
+        // .forwardOutput()
         .withPluginClasspath();
   }
 

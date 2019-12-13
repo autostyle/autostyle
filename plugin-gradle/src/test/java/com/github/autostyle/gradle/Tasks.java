@@ -19,6 +19,6 @@ final class Tasks {
   private Tasks() {}
 
   static void execute(AutostyleTask task) throws Exception {
-    task.performAction(Mocks.mockIncrementalTaskInputs(task.getTarget()));
+    task.performAction(Mocks.mockInputChanges());
   }
 }

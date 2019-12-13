@@ -52,7 +52,7 @@ abstract class FormatterStepImpl<State extends Serializable> extends Strict<Stat
   }
 
   @Override
-  protected State calculateState() throws Exception {
+  protected State calculateState() throws Throwable {
     return stateSupplier.get();
   }
 
@@ -68,7 +68,7 @@ abstract class FormatterStepImpl<State extends Serializable> extends Strict<Stat
     }
 
     @Override
-    protected String format(State state, String rawUnix, File file) throws Exception {
+    protected String format(State state, String rawUnix, File file) throws Throwable {
       Objects.requireNonNull(state, "state");
       Objects.requireNonNull(rawUnix, "rawUnix");
       Objects.requireNonNull(file, "file");
@@ -100,7 +100,7 @@ abstract class FormatterStepImpl<State extends Serializable> extends Strict<Stat
     }
 
     @Override
-    protected String format(Integer state, String rawUnix, File file) throws Exception {
+    protected String format(Integer state, String rawUnix, File file) throws Throwable {
       if (formatter == null) {
         formatter = formatterSupplier.get();
         if (formatter instanceof FormatterFunc.Closeable) {

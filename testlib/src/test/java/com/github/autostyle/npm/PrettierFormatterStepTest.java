@@ -45,7 +45,7 @@ public class PrettierFormatterStepTest {
     }
 
     @Test
-    public void formattingUsingConfigFile() throws Exception {
+    public void formattingUsingConfigFile() throws Throwable {
       String filedir = "npm/prettier/filetypes/" + fileType + "/";
 
       final File prettierRc = createTestFile(filedir + ".prettierrc.yml");
@@ -69,7 +69,7 @@ public class PrettierFormatterStepTest {
   public static class SpecificPrettierFormatterStepTests extends NpmFormatterStepCommonTests {
 
     @Test
-    public void parserInferenceIsWorking() throws Exception {
+    public void parserInferenceIsWorking() throws Throwable {
       String filedir = "npm/prettier/filetypes/json/";
 
       final String dirtyFile = filedir + "json.dirty";
@@ -93,7 +93,7 @@ public class PrettierFormatterStepTest {
 
     private static final String FILEDIR = "npm/prettier/config/";
 
-    public void runFormatTest(PrettierConfig config, String cleanFileNameSuffix) throws Exception {
+    public void runFormatTest(PrettierConfig config, String cleanFileNameSuffix) throws Throwable {
 
       final String dirtyFile = FILEDIR + "typescript.dirty";
       final String cleanFile = FILEDIR + "typescript." + cleanFileNameSuffix + ".clean";
@@ -111,17 +111,17 @@ public class PrettierFormatterStepTest {
     }
 
     @Test
-    public void defaultsAreApplied() throws Exception {
+    public void defaultsAreApplied() throws Throwable {
       runFormatTest(new PrettierConfig(null, ImmutableMap.of("parser", "typescript")), "defaults");
     }
 
     @Test
-    public void configFileOptionsAreApplied() throws Exception {
+    public void configFileOptionsAreApplied() throws Throwable {
       runFormatTest(new PrettierConfig(createTestFile(FILEDIR + ".prettierrc.yml"), null), "configfile");
     }
 
     @Test
-    public void configFileOptionsCanBeOverriden() throws Exception {
+    public void configFileOptionsCanBeOverriden() throws Throwable {
       runFormatTest(new PrettierConfig(createTestFile(FILEDIR + ".prettierrc.yml"), ImmutableMap.of("printWidth", 300)), "override");
     }
 

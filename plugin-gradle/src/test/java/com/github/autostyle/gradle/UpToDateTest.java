@@ -24,15 +24,12 @@ public class UpToDateTest extends GradleIntegrationTest {
   private void writeBuildFile() throws IOException {
     setFile("build.gradle").toLines(
         "plugins {",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
         "autostyle {",
         "    format 'misc', {",
         "        target file('README.md')",
-        "        customLazyGroovy('lowercase') {",
-        "             return { str -> str.toLowerCase(Locale.ROOT) }",
-        "        }",
-        "        bumpThisNumberIfACustomStepChanges(1)",
+        "        custom('lowercase', 1) { str -> str.toLowerCase(Locale.ROOT) }",
         "    }",
         "}");
   }
@@ -82,6 +79,12 @@ public class UpToDateTest extends GradleIntegrationTest {
     assertFile("README.md").hasContent("abc");
 
     // now we'll change the file back to EXACTLY its original content
+    setFile("README.md").toContent("ABC");
+    // The state is as follows: the task was previously using ABC input, and the task
+    // succeeded. So Gradle would assume the task is up to date
+    // However, our "apply" task must run again, so it needs a way to re-run somehow
+    applyIsUpToDate(false);
+    // Let's repeat. The task has just passed, and we
     setFile("README.md").toContent("ABC");
     // the task should run again, but instead the next line will
     // fail an assertion, because the task is actually reported as up-to-date

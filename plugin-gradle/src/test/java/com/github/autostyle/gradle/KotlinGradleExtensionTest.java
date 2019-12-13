@@ -37,13 +37,12 @@ public class KotlinGradleExtensionTest extends GradleIntegrationTest {
     setFile("build.gradle").toLines(
         "plugins {",
         "    id 'nebula.kotlin' version '1.0.6'",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
         "repositories { mavenCentral() }",
         "autostyle {",
         "    kotlinGradle {",
         "        ktlint()",
-        "        target '**/*.gradle.kts'",
         "    }",
         "}");
     String filePath = "configuration.gradle.kts";
@@ -60,7 +59,7 @@ public class KotlinGradleExtensionTest extends GradleIntegrationTest {
     setFile("build.gradle").toLines(
         "plugins {",
         "    id 'nebula.kotlin' version '1.0.6'",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
         "repositories { mavenCentral() }",
         "autostyle {",
@@ -78,9 +77,9 @@ public class KotlinGradleExtensionTest extends GradleIntegrationTest {
     setFile("build.gradle").toLines(
         "plugins {",
         "    id 'nebula.kotlin' version '1.0.6'",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
-        "repositories { mavenCentral() }",
+        "repositories { gradlePluginPortal() }",
         "autostyle {",
         "    kotlinGradle {",
         "        ktlint('0.21.0')",
@@ -96,12 +95,14 @@ public class KotlinGradleExtensionTest extends GradleIntegrationTest {
     setFile("build.gradle").toLines(
         "plugins {",
         "    id 'nebula.kotlin' version '1.0.6'",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
         "repositories { mavenCentral() }",
         "autostyle {",
         "    kotlinGradle {",
-        "        ktlint().userData(['indent_size': '6'])",
+        "        ktlint {",
+        "            userData(['indent_size': '6'])",
+        "        }",
         "    }",
         "}");
     setFile("configuration.gradle.kts").toResource("kotlin/ktlint/basic.dirty");
@@ -114,7 +115,7 @@ public class KotlinGradleExtensionTest extends GradleIntegrationTest {
     setFile("build.gradle").toLines(
         "plugins {",
         "    id 'nebula.kotlin' version '1.0.6'",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
         "repositories { mavenCentral() }",
         "autostyle {",

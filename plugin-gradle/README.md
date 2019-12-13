@@ -2,7 +2,7 @@
 
 <!---freshmark shields
 output = [
-  link(shield('Gradle plugin', 'plugins.gradle.org', 'com.github.autostyle.gradle', 'blue'), 'https://plugins.gradle.org/plugin/com.github.autostyle.gradle'),
+  link(shield('Gradle plugin', 'plugins.gradle.org', 'com.github.autostyle', 'blue'), 'https://plugins.gradle.org/plugin/com.github.autostyle.gradle'),
   link(shield('Maven central', 'mavencentral', 'com.github.autostyle.gradle:autostyle', 'blue'), 'https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.github.autostyle%22%20AND%20a%3A%22autostyle-plugin-gradle%22'),
   link(shield('Javadoc', 'javadoc', '{{stableGradle}}', 'blue'), 'https://{{org}}.github.io/{{name}}/javadoc/autostyle-plugin-gradle/{{stableGradle}}/'),
   '',
@@ -657,9 +657,6 @@ autostyle {
   java {
     googleJavaFormat()
     custom 'my-glitchy-step', { }
-
-    ignoreErrorForStep('my-glitchy-step')   // ignore errors on all files thrown by a specific step
-    ignoreErrorForPath('path/to/file.java') // ignore errors by all steps on this specific file
   }
 }
 ```

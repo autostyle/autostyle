@@ -33,17 +33,16 @@ public class GradleIncrementalResolutionTest extends GradleIntegrationTest {
   public void failureDoesntTriggerAll() throws IOException {
     setFile("build.gradle").toLines(
         "plugins {",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
         "autostyle {",
         "    format 'misc', {",
-        "        target '*.md'",
-        "        custom 'lowercase', { str ->",
+        "        patterns.include '*.md'",
+        "        custom 'lowercase', 1, { str ->",
         "            String result = str.toLowerCase(Locale.ROOT)",
         "            println(\"<${result.trim()}>\")",
         "            return result",
         "        }",
-        "        bumpThisNumberIfACustomStepChanges(1)",
         "    }",
         "}");
     // test our harness (build makes things lower case)
@@ -61,14 +60,16 @@ public class GradleIncrementalResolutionTest extends GradleIntegrationTest {
     applyRanAgainst("b");
     // and nobody the last time
     applyRanAgainst("");
+    // TODO: check does not co-operate with apply, so it is executed against all the files
+    //   So it is executed, and caches that the files are OK
+    checkRanAgainst("abc");
 
     // if we change just one file
     writeState("Abc");
-    // then check runs against just the changed file
-    // and also (because #144) the last files to be changed
-    checkRanAgainst("a", "b");
+    // Only A is changed, so check is executed against a only
+    checkRanAgainst("a");
     // even after failing, still just the one
-    checkRanAgainst("a", "b");
+    checkRanAgainst("a");
     // and so does apply
     applyRanAgainst("a", "b");
     applyRanAgainst("a");

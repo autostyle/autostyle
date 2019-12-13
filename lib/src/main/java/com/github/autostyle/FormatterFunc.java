@@ -27,7 +27,7 @@ public interface FormatterFunc
     extends ThrowingEx.Function<String, String>, ThrowingEx.BiFunction<String, File, String> {
 
   @Override
-  default String apply(String input, File source) throws Exception {
+  default String apply(String input, File source) throws Throwable {
     return apply(input);
   }
 
@@ -40,7 +40,7 @@ public interface FormatterFunc
     void close();
 
     /** Creates a {@link Closeable} from an AutoCloseable and a function. */
-    public static Closeable of(AutoCloseable closeable, FormatterFunc function) {
+    static Closeable of(AutoCloseable closeable, FormatterFunc function) {
       Objects.requireNonNull(closeable, "closeable");
       Objects.requireNonNull(function, "function");
       return new Closeable() {
@@ -50,12 +50,12 @@ public interface FormatterFunc
         }
 
         @Override
-        public String apply(String input, File source) throws Exception {
+        public String apply(String input, File source) throws Throwable {
           return function.apply(Objects.requireNonNull(input), Objects.requireNonNull(source));
         }
 
         @Override
-        public String apply(String input) throws Exception {
+        public String apply(String input) throws Throwable {
           return function.apply(Objects.requireNonNull(input));
         }
       };

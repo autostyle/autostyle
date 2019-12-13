@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
  */
 public interface FormatterStep extends Serializable {
   /** The name of the step, for debugging purposes. */
-  public String getName();
+  String getName();
 
   /**
    * Returns a formatted version of the given content.
@@ -43,7 +43,7 @@ public interface FormatterStep extends Serializable {
    *         if the formatter step doesn't have any changes to make
    * @throws Exception if the formatter step experiences a problem
    */
-  public @Nullable String format(String rawUnix, File file) throws Exception;
+  @Nullable String format(String rawUnix, File file) throws Throwable;
 
   /**
    * Returns a new FormatterStep which will only apply its changes
@@ -51,7 +51,7 @@ public interface FormatterStep extends Serializable {
    *
    * The provided filter must be serializable.
    */
-  public default FormatterStep filterByFile(SerializableFileFilter filter) {
+  default FormatterStep filterByFile(SerializableFileFilter filter) {
     return new FilterByFileFormatterStep(this, filter);
   }
 
@@ -69,10 +69,10 @@ public interface FormatterStep extends Serializable {
      * Implements the formatting function strictly in terms
      * of the input data and the result of {@link #calculateState()}.
      */
-    protected abstract String format(State state, String rawUnix, File file) throws Exception;
+    protected abstract String format(State state, String rawUnix, File file) throws Throwable;
 
     @Override
-    public final String format(String rawUnix, File file) throws Exception {
+    public final String format(String rawUnix, File file) throws Throwable {
       return format(state(), rawUnix, file);
     }
   }
@@ -88,7 +88,7 @@ public interface FormatterStep extends Serializable {
    *             only the state supplied by state and nowhere else.
    * @return A FormatterStep
    */
-  public static <State extends Serializable> FormatterStep createLazy(
+  static <State extends Serializable> FormatterStep createLazy(
       String name,
       ThrowingEx.Supplier<State> stateSupplier,
       ThrowingEx.Function<State, FormatterFunc> stateToFormatter) {
@@ -105,7 +105,7 @@ public interface FormatterStep extends Serializable {
    *             only the state supplied by state and nowhere else.
    * @return A FormatterStep
    */
-  public static <State extends Serializable> FormatterStep create(
+  static <State extends Serializable> FormatterStep create(
       String name,
       State state,
       ThrowingEx.Function<State, FormatterFunc> stateToFormatter) {
@@ -122,7 +122,7 @@ public interface FormatterStep extends Serializable {
    * @return A FormatterStep which will never report that it is up-to-date, because
    *         it is not equal to the serialized representation of itself.
    */
-  public static FormatterStep createNeverUpToDateLazy(
+  static FormatterStep createNeverUpToDateLazy(
       String name,
       ThrowingEx.Supplier<FormatterFunc> functionSupplier) {
     return new FormatterStepImpl.NeverUpToDate(name, functionSupplier);
@@ -136,7 +136,7 @@ public interface FormatterStep extends Serializable {
    * @return A FormatterStep which will never report that it is up-to-date, because
    *         it is not equal to the serialized representation of itself.
    */
-  public static FormatterStep createNeverUpToDate(
+  static FormatterStep createNeverUpToDate(
       String name,
       FormatterFunc function) {
     Objects.requireNonNull(function, "function");

@@ -6,7 +6,7 @@ buildscript {
 
 // applied by SelfTest
 plugins {
-  id 'com.github.autostyle.gradle'
+  id 'com.github.autostyle'
   id 'java'
 }
 

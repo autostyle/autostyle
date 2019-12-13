@@ -27,7 +27,7 @@ import com.github.autostyle.TestProvisioner;
 
 public class GoogleJavaFormatStepTest extends ResourceHarness {
   @Test
-  public void behavior() throws Exception {
+  public void behavior() throws Throwable {
     FormatterStep step = GoogleJavaFormatStep.create("1.2", TestProvisioner.mavenCentral());
     StepHarness.forStep(step)
         .testResource("java/googlejavaformat/JavaCodeUnformatted.test", "java/googlejavaformat/JavaCodeFormatted.test")
@@ -37,7 +37,7 @@ public class GoogleJavaFormatStepTest extends ResourceHarness {
   }
 
   @Test
-  public void behaviorWithAospStyle() throws Exception {
+  public void behaviorWithAospStyle() throws Throwable {
     FormatterStep step = GoogleJavaFormatStep.create("1.2", "AOSP", TestProvisioner.mavenCentral());
     StepHarness.forStep(step)
         .testResource("java/googlejavaformat/JavaCodeUnformatted.test", "java/googlejavaformat/JavaCodeFormattedAOSP.test")
@@ -47,7 +47,7 @@ public class GoogleJavaFormatStepTest extends ResourceHarness {
   }
 
   @Test
-  public void equality() throws Exception {
+  public void equality() throws Throwable {
     new SerializableEqualityTester() {
       String version = "1.2";
       String style = "";

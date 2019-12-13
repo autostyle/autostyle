@@ -24,14 +24,12 @@ public class CustomLazyGroovyTest extends GradleIntegrationTest {
   public void integration() throws IOException {
     setFile("build.gradle").toLines(
         "plugins {",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
         "autostyle {",
         "    format 'misc', {",
         "        target file('README.md')",
-        "        customLazyGroovy('lowercase') {",
-        "             return { str -> str.toLowerCase(Locale.ROOT) }",
-        "        }",
+        "        custom('lowercase', 1) { str -> str.toLowerCase(Locale.ROOT) }",
         "    }",
         "}");
     setFile("README.md").toContent("ABC");

@@ -31,7 +31,7 @@ public class FreshMarkStepTest {
     HashMap<String, String> map = new HashMap<>();
     map.put("lib", "MyLib");
     map.put("author", "Me");
-    StepHarness.forStep(FreshMarkStep.create(() -> map, TestProvisioner.mavenCentral()))
+    StepHarness.forStep(FreshMarkStep.create(TestProvisioner.mavenCentral(), () -> map))
         .testResource("freshmark/FreshMarkUnformatted.test", "freshmark/FreshMarkFormatted.test");
   }
 

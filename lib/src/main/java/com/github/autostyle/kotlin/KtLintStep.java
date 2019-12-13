@@ -172,7 +172,7 @@ public class KtLintStep {
                 /* debug */ false);
             return (String) formatterMethod.invoke(ktlint, params);
           } catch (InvocationTargetException e) {
-            throw ThrowingEx.unwrapCause(e);
+            throw e.getCause();
           }
         };
       } else {
@@ -183,7 +183,7 @@ public class KtLintStep {
           try {
             return (String) formatterMethod.invoke(ktlint, input, ruleSets, userData, formatterCallback);
           } catch (InvocationTargetException e) {
-            throw ThrowingEx.unwrapCause(e);
+            throw e.getCause();
           }
         };
       }

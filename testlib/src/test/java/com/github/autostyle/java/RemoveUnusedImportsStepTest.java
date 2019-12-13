@@ -24,7 +24,7 @@ import com.github.autostyle.TestProvisioner;
 
 public class RemoveUnusedImportsStepTest {
   @Test
-  public void behavior() throws Exception {
+  public void behavior() throws Throwable {
     FormatterStep step = RemoveUnusedImportsStep.create(TestProvisioner.mavenCentral());
     StepHarness.forStep(step)
         .testResource("java/removeunusedimports/JavaCodeUnformatted.test", "java/removeunusedimports/JavaCodeFormatted.test")
@@ -34,7 +34,7 @@ public class RemoveUnusedImportsStepTest {
   }
 
   @Test
-  public void equality() throws Exception {
+  public void equality() throws Throwable {
     new SerializableEqualityTester() {
       @Override
       protected void setupTest(API api) {

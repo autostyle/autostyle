@@ -116,7 +116,7 @@ public enum LineEnding {
     String getEndingFor(File file);
 
     /** Returns true iff this file has unix line endings. */
-    public default boolean isUnix(File file) {
+    default boolean isUnix(File file) {
       Objects.requireNonNull(file);
       String ending = getEndingFor(file);
       return ending.equals(UNIX.str());

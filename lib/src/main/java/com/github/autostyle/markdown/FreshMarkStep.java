@@ -18,6 +18,7 @@ package com.github.autostyle.markdown;
 import static com.github.autostyle.markdown.LibMarkdownPreconditions.requireKeysAndValuesNonNull;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.NavigableMap;
@@ -44,7 +45,7 @@ public class FreshMarkStep {
   private static final String FORMATTER_METHOD = "compile";
 
   /** Creates a formatter step for the given version and settings file. */
-  public static FormatterStep create(Supplier<Map<String, ?>> properties, Provisioner provisioner) {
+  public static FormatterStep create(Provisioner provisioner, Supplier<Map<String, ?>> properties) {
     return create(defaultVersion(), properties, provisioner);
   }
 
@@ -87,7 +88,13 @@ public class FreshMarkStep {
       Class<?> formatterClazz = classLoader.loadClass(FORMATTER_CLASS);
       Object formatter = formatterClazz.getConstructor(Map.class, Consumer.class).newInstance(properties, loggingStream);
       Method method = formatterClazz.getMethod(FORMATTER_METHOD, String.class);
-      return input -> (String) method.invoke(formatter, input);
+      return input -> {
+        try {
+          return (String) method.invoke(formatter, input);
+        } catch (InvocationTargetException e) {
+          throw e.getCause();
+        }
+      };
     }
   }
 }

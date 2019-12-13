@@ -40,10 +40,10 @@ public interface NoLambda extends Serializable {
    * `SerializableFileFilterImpl.SkipFilesNamed` for an example of how to make a serializable
    * subclass.)
    */
-  public byte[] toBytes();
+  byte[] toBytes();
 
   /** An implementation of NoLambda in which equality is based on the serialized representation of itself. */
-  public static abstract class EqualityBasedOnSerialization implements NoLambda {
+  abstract class EqualityBasedOnSerialization implements NoLambda {
     private static final long serialVersionUID = 1733798699224768949L;
 
     @Override

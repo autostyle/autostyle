@@ -47,7 +47,7 @@ public class TsFmtFormatterStepTest {
     }
 
     @Test
-    public void formattingUsingConfigFile() throws Exception {
+    public void formattingUsingConfigFile() throws Throwable {
       String configFileName = formattingConfigFile.substring(formattingConfigFile.lastIndexOf('/') >= 0 ? formattingConfigFile.lastIndexOf('/') + 1 : 0);
       String configFileNameWithoutExtension = configFileName.substring(0, configFileName.lastIndexOf('.'));
       String filedir = "npm/tsfmt/" + configFileNameWithoutExtension + "/";
@@ -76,7 +76,7 @@ public class TsFmtFormatterStepTest {
   @Category(NpmTest.class)
   public static class TsFmtUsingInlineConfigTest extends NpmFormatterStepCommonTests {
     @Test
-    public void formattingUsingInlineConfigWorks() throws Exception {
+    public void formattingUsingInlineConfigWorks() throws Throwable {
 
       final ImmutableMap<String, Object> inlineConfig = ImmutableMap.of("indentSize", 1, "convertTabsToSpaces", true);
 

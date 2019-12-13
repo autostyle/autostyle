@@ -21,7 +21,7 @@ import java.io.Serializable;
 /** A file filter with full support for serialization. */
 public interface SerializableFileFilter extends FileFilter, Serializable, NoLambda {
   /** Creates a FileFilter which will accept all files except files with the given name(s). */
-  public static SerializableFileFilter skipFilesNamed(String... names) {
+  static SerializableFileFilter skipFilesNamed(String... names) {
     return new SerializableFileFilterImpl.SkipFilesNamed(names);
   }
 }

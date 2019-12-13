@@ -43,14 +43,12 @@ public final class Formatter implements Serializable, AutoCloseable {
   private Charset encoding;
   private Path rootDir;
   private List<FormatterStep> steps;
-  private FormatExceptionPolicy exceptionPolicy;
 
-  private Formatter(LineEnding.Policy lineEndingsPolicy, Charset encoding, Path rootDirectory, List<FormatterStep> steps, FormatExceptionPolicy exceptionPolicy) {
+  private Formatter(LineEnding.Policy lineEndingsPolicy, Charset encoding, Path rootDirectory, List<FormatterStep> steps) {
     this.lineEndingsPolicy = Objects.requireNonNull(lineEndingsPolicy, "lineEndingsPolicy");
     this.encoding = Objects.requireNonNull(encoding, "encoding");
     this.rootDir = Objects.requireNonNull(rootDirectory, "rootDir");
     this.steps = requireElementsNonNull(new ArrayList<>(steps));
-    this.exceptionPolicy = Objects.requireNonNull(exceptionPolicy, "exceptionPolicy");
   }
 
   // override serialize output
@@ -59,7 +57,6 @@ public final class Formatter implements Serializable, AutoCloseable {
     out.writeObject(encoding.name());
     out.writeObject(rootDir.toString());
     out.writeObject(steps);
-    out.writeObject(exceptionPolicy);
   }
 
   // override serialize input
@@ -69,7 +66,6 @@ public final class Formatter implements Serializable, AutoCloseable {
     encoding = Charset.forName((String) in.readObject());
     rootDir = Paths.get((String) in.readObject());
     steps = (List<FormatterStep>) in.readObject();
-    exceptionPolicy = (FormatExceptionPolicy) in.readObject();
   }
 
   // override serialize input
@@ -94,10 +90,6 @@ public final class Formatter implements Serializable, AutoCloseable {
     return steps;
   }
 
-  public FormatExceptionPolicy getExceptionPolicy() {
-    return exceptionPolicy;
-  }
-
   public static Formatter.Builder builder() {
     return new Formatter.Builder();
   }
@@ -108,7 +100,6 @@ public final class Formatter implements Serializable, AutoCloseable {
     private Charset encoding;
     private Path rootDir;
     private List<FormatterStep> steps;
-    private FormatExceptionPolicy exceptionPolicy;
 
     private Builder() {}
 
@@ -132,14 +123,8 @@ public final class Formatter implements Serializable, AutoCloseable {
       return this;
     }
 
-    public Builder exceptionPolicy(FormatExceptionPolicy exceptionPolicy) {
-      this.exceptionPolicy = exceptionPolicy;
-      return this;
-    }
-
     public Formatter build() {
-      return new Formatter(lineEndingsPolicy, encoding, rootDir, steps,
-          exceptionPolicy == null ? FormatExceptionPolicy.failOnlyOnError() : exceptionPolicy);
+      return new Formatter(lineEndingsPolicy, encoding, rootDir, steps);
     }
   }
 
@@ -238,7 +223,7 @@ public final class Formatter implements Serializable, AutoCloseable {
         }
       } catch (Throwable e) {
         String relativePath = rootDir.relativize(file.toPath()).toString();
-        exceptionPolicy.handleError(e, step, relativePath);
+        throw new FormatterException(step.getName(), relativePath, file, e);
       }
     }
     return unix;
@@ -252,7 +237,6 @@ public final class Formatter implements Serializable, AutoCloseable {
     result = prime * result + lineEndingsPolicy.hashCode();
     result = prime * result + rootDir.hashCode();
     result = prime * result + steps.hashCode();
-    result = prime * result + exceptionPolicy.hashCode();
     return result;
   }
 
@@ -271,8 +255,7 @@ public final class Formatter implements Serializable, AutoCloseable {
     return encoding.equals(other.encoding) &&
         lineEndingsPolicy.equals(other.lineEndingsPolicy) &&
         rootDir.equals(other.rootDir) &&
-        steps.equals(other.steps) &&
-        exceptionPolicy.equals(other.exceptionPolicy);
+        steps.equals(other.steps);
   }
 
   @SuppressWarnings("rawtypes")

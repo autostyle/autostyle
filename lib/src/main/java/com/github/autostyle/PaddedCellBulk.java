@@ -118,7 +118,6 @@ public final class PaddedCellBulk {
         .encoding(formatter.getEncoding())
         .rootDir(formatter.getRootDir())
         .steps(Collections.singletonList(paddedCellStep))
-        .exceptionPolicy(formatter.getExceptionPolicy())
         .build()) {
 
       // empty out the diagnose folder
@@ -175,7 +174,7 @@ public final class PaddedCellBulk {
     }
 
     @Override
-    public String format(String raw, File file) throws Exception {
+    public String format(String raw, File file) {
       if (file.equals(this.file)) {
         this.file = null;
         return Objects.requireNonNull(formatted);

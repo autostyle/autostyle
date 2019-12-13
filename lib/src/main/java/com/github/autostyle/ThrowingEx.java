@@ -28,32 +28,32 @@ public final class ThrowingEx {
   /** A function that can throw any exception. */
   @FunctionalInterface
   public interface Function<T, R> {
-    R apply(T input) throws Exception;
+    R apply(T input) throws Throwable;
   }
 
   /** A bi-function that can throw any exception. */
   @FunctionalInterface
   public interface BiFunction<T1, T2, R> {
-    R apply(T1 input1, T2 input2) throws Exception;
+    R apply(T1 input1, T2 input2) throws Throwable;
   }
 
   /** A supplier that can throw any exception. */
   @FunctionalInterface
   public interface Supplier<T> {
-    T get() throws Exception;
+    T get() throws Throwable;
   }
 
   /** A runnable that can throw any exception. */
   @FunctionalInterface
   public interface Runnable {
-    void run() throws Exception;
+    void run() throws Throwable;
   }
 
   /** Runs the given runnable, rethrowing any exceptions as runtime exceptions. */
   public static void run(ThrowingEx.Runnable runnable) {
     try {
       runnable.run();
-    } catch (Exception t) {
+    } catch (Throwable t) {
       throw asRuntime(t);
     }
   }
@@ -62,7 +62,7 @@ public final class ThrowingEx {
   public static <T> T get(ThrowingEx.Supplier<T> supplier) {
     try {
       return supplier.get();
-    } catch (Exception t) {
+    } catch (Throwable t) {
       throw asRuntime(t);
     }
   }
@@ -72,7 +72,7 @@ public final class ThrowingEx {
     return input -> {
       try {
         return function.apply(input);
-      } catch (Exception t) {
+      } catch (Throwable t) {
         throw asRuntime(t);
       }
     };
@@ -85,7 +85,7 @@ public final class ThrowingEx {
    * cast and returned.  Otherwise, it wrapped in a
    * {@link WrappedAsRuntimeException} and returned.
    */
-  public static RuntimeException asRuntime(Exception e) {
+  public static RuntimeException asRuntime(Throwable e) {
     if (e instanceof RuntimeException) {
       return (RuntimeException) e;
     } else {

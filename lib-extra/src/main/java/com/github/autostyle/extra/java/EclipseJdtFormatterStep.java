@@ -15,6 +15,7 @@
  */
 package com.github.autostyle.extra.java;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Properties;
 
@@ -48,7 +49,13 @@ public final class EclipseJdtFormatterStep {
     Class<?> formatterClazz = getClass(state);
     Object formatter = formatterClazz.getConstructor(Properties.class).newInstance(state.getPreferences());
     Method method = formatterClazz.getMethod(FORMATTER_METHOD, String.class);
-    return input -> (String) method.invoke(formatter, input);
+    return input -> {
+      try {
+        return (String) method.invoke(formatter, input);
+      } catch (InvocationTargetException e) {
+        throw e.getCause();
+      }
+    };
   }
 
   private static Class<?> getClass(State state) {

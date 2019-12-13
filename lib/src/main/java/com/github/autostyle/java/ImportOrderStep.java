@@ -56,11 +56,6 @@ public final class ImportOrderStep {
     return createFrom(() -> importOrderList);
   }
 
-  public FormatterStep createFrom(File importsFile) {
-    Objects.requireNonNull(importsFile);
-    return createFrom(() -> getImportOrder(importsFile));
-  }
-
   private FormatterStep createFrom(Supplier<List<String>> importOrder) {
     return FormatterStep.createLazy("importOrder",
         () -> new State(importOrder.get(), lineFormat),
@@ -81,13 +76,6 @@ public final class ImportOrderStep {
   @Deprecated
   public static FormatterStep createFromOrder(String... importOrder) {
     return forJava().createFrom(importOrder);
-  }
-
-  /** Static method has been replaced by instance method
-   * {@link ImportOrderStep#createFrom(File)}.*/
-  @Deprecated
-  public static FormatterStep createFromFile(File importsFile) {
-    return forJava().createFrom(importsFile);
   }
 
   private static List<String> getImportOrder(File importsFile) {

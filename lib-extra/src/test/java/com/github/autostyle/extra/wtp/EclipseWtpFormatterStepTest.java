@@ -102,7 +102,7 @@ public class EclipseWtpFormatterStepTest extends EclipseCommonTests {
    * Hence separated class loaders are required for different configurations.
    */
   @Test
-  public void multipleConfigurations() throws Exception {
+  public void multipleConfigurations() throws Throwable {
     FormatterStep tabFormatter = createStepForDefaultVersion(config -> {
       config.setProperty("indentationChar", "tab");
       config.setProperty("indentationSize", "1");
@@ -116,7 +116,7 @@ public class EclipseWtpFormatterStepTest extends EclipseCommonTests {
     assertThat(formatWith(spaceFormatter)).as("Space formatting output unexpected").isEqualTo(wtp.expectation.replace("\t", "     "));
   }
 
-  private String formatWith(FormatterStep formatter) throws Exception {
+  private String formatWith(FormatterStep formatter) throws Throwable {
     File baseLocation = File.createTempFile("EclipseWtpFormatterStepTest-", ".xml"); //Only required for relative path lookup
     return formatter.format(wtp.input, baseLocation);
   }

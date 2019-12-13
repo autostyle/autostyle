@@ -1,6 +1,7 @@
 plugins {
     id("com.gradle.plugin-publish")
     id("java-gradle-plugin")
+    `kotlin-dsl`
 }
 
 dependencies {
@@ -44,28 +45,37 @@ val npmTest by tasks.registering(Test::class) {
 //////////////////////////
 // GRADLE PLUGIN PORTAL //
 //////////////////////////
+gradlePlugin {
+    plugins {
+        create("autostylePlugin") {
+            id = "com.github.autostyle"
+            displayName = "Autostyle formatting plugin"
+            implementationClass = "com.github.autostyle.gradle.AutostylePlugin"
+        }
+    }
+}
 pluginBundle {
     // These settings are set for the whole plugin bundle
     website = "https://github.com/autostyle/autostyle"
     vcsUrl = "https://github.com/autostyle/autostyle"
     description = project.description
 
-    plugins {
-        create("autostylePlugin") {
-            id = "com.github.vlsi.autostyle"
-            displayName = "Autostyle formatting plugin"
-            tags = listOf(
-                "format",
-                "style",
-                "license",
-                "header"
-            )
-        }
-    }
+//    plugins {
+//        create("autostylePlugin") {
+//            id = "com.github.autostyle"
+//            displayName = "Autostyle formatting plugin"
+//            tags = listOf(
+//                "format",
+//                "style",
+//                "license",
+//                "header"
+//            )
+//        }
+//    }
 
-    mavenCoordinates {
+/*    mavenCoordinates {
         groupId = project.group.toString()
         artifactId = project.name
         version = project.version.toString()
-    }
+    }*/
 }

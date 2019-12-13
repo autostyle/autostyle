@@ -44,7 +44,7 @@ public abstract class LazyForwardingEquality<T extends Serializable> implements 
    *
    * Throws exception because it's likely that there will be some IO going on.
    */
-  protected abstract T calculateState() throws Exception;
+  protected abstract T calculateState() throws Throwable;
 
   /** Returns the underlying state, possibly triggering a call to {{@link #calculateState()}. */
   protected final T state() {
@@ -54,7 +54,7 @@ public abstract class LazyForwardingEquality<T extends Serializable> implements 
         if (state == null) {
           try {
             state = calculateState();
-          } catch (Exception e) {
+          } catch (Throwable e) {
             throw ThrowingEx.asRuntime(e);
           }
         }

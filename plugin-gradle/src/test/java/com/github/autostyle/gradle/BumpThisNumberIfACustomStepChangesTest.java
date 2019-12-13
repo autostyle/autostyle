@@ -24,15 +24,12 @@ public class BumpThisNumberIfACustomStepChangesTest extends GradleIntegrationTes
   private void writeBuildFile(String toInsert) throws IOException {
     setFile("build.gradle").toLines(
         "plugins {",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
         "autostyle {",
         "    format 'misc', {",
         "        target file('README.md')",
-        "        customLazyGroovy('lowercase') {",
-        "             return { str -> str.toLowerCase(Locale.ROOT) }",
-        "        }",
-        toInsert,
+        "        custom('lowercase'," + toInsert + ") { str -> str.toLowerCase(Locale.ROOT) }",
         "    }",
         "}");
   }
@@ -49,37 +46,38 @@ public class BumpThisNumberIfACustomStepChangesTest extends GradleIntegrationTes
 
   @Test
   public void customRuleNeverUpToDate() throws IOException {
-    writeBuildFile("");
+    writeBuildFile("0");
     writeContentWithBadFormatting();
     applyIsUpToDate(false);
     checkIsUpToDate(false);
-    checkIsUpToDate(false);
+    checkIsUpToDate(true);
   }
 
   @Test
   public void unlessBumpThisNumberIfACustomStepChanges() throws IOException {
-    writeBuildFile("bumpThisNumberIfACustomStepChanges(1)");
+    writeBuildFile("1");
     writeContentWithBadFormatting();
     applyIsUpToDate(false);
     applyIsUpToDate(false);
     applyIsUpToDate(true);
+    checkIsUpToDate(false);
     checkIsUpToDate(true);
 
     writeContentWithBadFormatting();
     applyIsUpToDate(false);
-    checkIsUpToDate(false);
+    // The input has been just formatted, so check is up to date
     checkIsUpToDate(true);
   }
 
   @Test
   public void andRunsAgainIfNumberChanges() throws IOException {
-    writeBuildFile("bumpThisNumberIfACustomStepChanges(1)");
+    writeBuildFile("1");
     writeContentWithBadFormatting();
     applyIsUpToDate(false);
     checkIsUpToDate(false);
     checkIsUpToDate(true);
 
-    writeBuildFile("bumpThisNumberIfACustomStepChanges(2)");
+    writeBuildFile("2");
     checkIsUpToDate(false);
     checkIsUpToDate(true);
   }

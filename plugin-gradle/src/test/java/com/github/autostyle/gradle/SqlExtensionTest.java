@@ -25,7 +25,7 @@ public class SqlExtensionTest extends GradleIntegrationTest {
   public void should_format_sql_with_default_configuration() throws IOException {
     setFile("build.gradle").toLines(
         "plugins {",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
         "autostyle {",
         "    sql {",
@@ -42,11 +42,13 @@ public class SqlExtensionTest extends GradleIntegrationTest {
   public void should_format_sql_with_alternative_configuration() throws IOException {
     setFile("build.gradle").toLines(
         "plugins {",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
         "autostyle {",
         "    sql {",
-        "       dbeaver().configFile 'myConfig.properties'",
+        "       dbeaver {",
+        "           configFiles('myConfig.properties')",
+        "       }",
         "    }",
         "}");
     setFile("myConfig.properties").toResource("sql/dbeaver/sqlConfig2.properties");

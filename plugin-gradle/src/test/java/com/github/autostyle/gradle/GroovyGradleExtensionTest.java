@@ -22,7 +22,8 @@ import org.junit.Test;
 import com.diffplug.common.base.StringPrinter;
 
 public class GroovyGradleExtensionTest extends GradleIntegrationTest {
-  private static final String HEADER = "//My tests header";
+  private static final String HEADER = "My tests header";
+  private static final String FORMATTED_HEADER = "/*\n * My tests header\n */\n";
 
   @Test
   public void defaultTarget() throws IOException {
@@ -35,23 +36,23 @@ public class GroovyGradleExtensionTest extends GradleIntegrationTest {
   }
 
   private void testTarget(boolean useDefaultTarget) throws IOException {
-    String target = useDefaultTarget ? "" : "target 'other.gradle'";
+    String target = useDefaultTarget ? "" : "target file('other.gradle')";
     String buildContent = StringPrinter.buildStringFromLines(
         "plugins {",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
         "autostyle {",
         "    groovyGradle {",
         target,
-        "        licenseHeader('" + HEADER + "', 'plugins')",
+        "        licenseHeader('" + HEADER + "')",
         "    }",
         "}");
     setFile("build.gradle").toContent(buildContent);
 
-    gradleRunner().withArguments("autostyleApply").build();
+    gradleRunner().withArguments("autostyleApply", "--info").build();
 
     if (useDefaultTarget) {
-      assertFile("build.gradle").hasContent(HEADER + "\n" + buildContent);
+      assertFile("build.gradle").hasContent(FORMATTED_HEADER + buildContent);
     } else {
       assertFile("build.gradle").hasContent(buildContent);
     }

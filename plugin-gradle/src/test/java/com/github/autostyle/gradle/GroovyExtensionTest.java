@@ -23,7 +23,7 @@ import org.junit.Test;
 
 public class GroovyExtensionTest extends GradleIntegrationTest {
 
-  private static final String HEADER = "//My tests header";
+  private static final String HEADER = "My tests header";
 
   @Test
   public void includeJava() throws IOException {
@@ -39,7 +39,7 @@ public class GroovyExtensionTest extends GradleIntegrationTest {
     String excludeStatement = excludeJava ? "excludeJava()" : "";
     setFile("build.gradle").toLines(
         "plugins {",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
         "apply plugin: 'groovy'",
         "",
@@ -59,34 +59,12 @@ public class GroovyExtensionTest extends GradleIntegrationTest {
     gradleRunner().withArguments("autostyleApply").build();
 
     assertFile("src/main/java/test.java").hasContent(withoutHeader);
-    assertFile("src/main/groovy/test.groovy").hasContent(HEADER + "\n" + withoutHeader);
+    String header = "/*\n * " + HEADER + "\n */\n";
+    assertFile("src/main/groovy/test.groovy").hasContent(header + withoutHeader);
     if (excludeJava) {
       assertFile("src/main/groovy/test.java").hasContent(withoutHeader);
     } else {
-      assertFile("src/main/groovy/test.java").hasContent(HEADER + "\n" + withoutHeader);
-    }
-  }
-
-  @Test
-  public void excludeJavaWithCustomTarget() throws IOException {
-    setFile("build.gradle").toLines(
-        "plugins {",
-        "    id 'com.github.autostyle.gradle'",
-        "}",
-        "apply plugin: 'groovy'",
-        "",
-        "autostyle {",
-        "    groovy {",
-        "        excludeJava()",
-        "        target '**/*.java', '**/*.groovy'",
-        "    }",
-        "}");
-
-    try {
-      gradleRunner().withArguments("autostyleApply").build();
-      Assert.fail("Exception expected when running 'excludeJava' in combination with 'target'.");
-    } catch (Throwable t) {
-      Assertions.assertThat(t).hasMessageContaining("'excludeJava' is not supported");
+      assertFile("src/main/groovy/test.java").hasContent(header + withoutHeader);
     }
   }
 
@@ -94,7 +72,7 @@ public class GroovyExtensionTest extends GradleIntegrationTest {
   public void groovyPluginMissingCheck() throws IOException {
     setFile("build.gradle").toLines(
         "plugins {",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
         "apply plugin: 'java'",
         "",

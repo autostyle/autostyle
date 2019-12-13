@@ -23,19 +23,21 @@ public class ScalaExtensionTest extends GradleIntegrationTest {
   @Test
   public void integration() throws IOException {
     setFile("build.gradle").toLines(
-        "buildscript { repositories { mavenCentral() } }",
         "plugins {",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
+        "repositories { mavenCentral() }",
         "apply plugin: 'scala'",
         "autostyle {",
         "    scala {",
-        "        scalafmt().configFile('scalafmt.conf')",
+        "        scalafmt {",
+        "            configFile = 'scalafmt.conf'",
+        "        }",
         "    }",
         "}");
     setFile("scalafmt.conf").toResource("scala/scalafmt/scalafmt.conf");
     setFile("src/main/scala/basic.scala").toResource("scala/scalafmt/basic.dirty");
-    gradleRunner().withArguments("autostyleApply").build();
+    gradleRunner().withArguments("autostyleApply", "--stacktrace").build();
     assertFile("src/main/scala/basic.scala").sameAsResource("scala/scalafmt/basic.cleanWithCustomConf_2.0.1");
   }
 }

@@ -19,7 +19,6 @@ import java.io.File;
 import java.util.function.Consumer;
 
 import org.gradle.api.Project;
-import org.gradle.api.tasks.incremental.IncrementalTaskInputs;
 import org.gradle.testkit.runner.GradleRunner;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -37,15 +36,8 @@ public class SelfTest {
   enum Type {
     CHECK {
       @Override
-      public void runAllTasks(Project project) {
-        project.getTasks().stream()
-            .filter(task -> task instanceof AutostyleTask)
-            .map(task -> (AutostyleTask) task)
-            .forEach(task -> Errors.rethrow().run(() -> {
-              IncrementalTaskInputs inputs = Mocks.mockIncrementalTaskInputs(task.getTarget());
-              task.setCheck();
-              task.performAction(inputs);
-            }));
+      protected Class<? extends AutostyleTask> taskClass() {
+        return AutostyleCheckTask.class;
       }
 
       @Override
@@ -55,15 +47,8 @@ public class SelfTest {
     },
     APPLY {
       @Override
-      public void runAllTasks(Project project) {
-        project.getTasks().stream()
-            .filter(task -> task instanceof AutostyleTask)
-            .map(task -> (AutostyleTask) task)
-            .forEach(task -> Errors.rethrow().run(() -> {
-              IncrementalTaskInputs inputs = Mocks.mockIncrementalTaskInputs(task.getTarget());
-              task.setApply();
-              task.performAction(inputs);
-            }));
+      protected Class<? extends AutostyleTask> taskClass() {
+        return AutostyleApplyTask.class;
       }
 
       @Override
@@ -72,7 +57,16 @@ public class SelfTest {
       }
     };
 
-    public abstract void runAllTasks(Project project);
+    protected abstract Class<? extends AutostyleTask> taskClass();
+
+    public void runAllTasks(Project project) {
+      project.getTasks().stream()
+        .filter(task -> taskClass().isInstance(task))
+        .map(task -> (AutostyleTask) task)
+        .forEach(task -> Errors.rethrow().run(() -> {
+          task.performAction(Mocks.mockInputChanges());
+        }));
+    }
 
     public abstract <T> T checkApply(T check, T apply);
   }
@@ -92,11 +86,12 @@ public class SelfTest {
     Project project = createProject(extension -> {
       extension.java(java -> {
         java.target("**/*.java");
-        java.licenseHeaderFile("autostyle.license.java");
-        java.importOrderFile("autostyle.importorder");
-        java.eclipse().configFile("autostyle.eclipseformat.xml");
+        // TODO: license header, import order
+        java.eclipse(config -> {
+          config.getConfigFiles().add("autostyle.eclipseformat.xml");
+        });
         java.trimTrailingWhitespace();
-        java.customLazy("Lambda fix", () -> raw -> {
+        java.custom("Lambda fix", 1, raw -> {
           if (!raw.contains("public class SelfTest ")) {
             // don't format this line away, lol
             return raw.replace("} )", "})").replace("} ,", "},");
@@ -121,7 +116,7 @@ public class SelfTest {
     // create the Autostyle plugin
     AutostylePlugin plugin = project.getPlugins().apply(AutostylePlugin.class);
     // setup the plugin
-    test.accept(plugin.getExtension());
+    test.accept(project.getExtensions().getByType(AutostyleExtension.class));
     // return the configured plugin
     return project;
   }

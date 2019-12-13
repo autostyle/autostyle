@@ -17,6 +17,7 @@ package com.github.autostyle.java;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
@@ -150,7 +151,12 @@ public class GoogleJavaFormatStep {
       Method removeUnusedMethod = removeUnusedClass.getMethod(REMOVE_UNUSED_METHOD, String.class, removeJavadocOnlyClass);
 
       return input -> {
-        String removeUnused = (String) removeUnusedMethod.invoke(null, input, removeJavadocConstant);
+        String removeUnused = null;
+        try {
+          removeUnused = (String) removeUnusedMethod.invoke(null, input, removeJavadocConstant);
+        } catch (InvocationTargetException e) {
+          throw e.getCause();
+        }
         return fixWindowsBug(removeUnused, version);
       };
     }

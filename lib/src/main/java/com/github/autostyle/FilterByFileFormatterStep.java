@@ -35,7 +35,7 @@ final class FilterByFileFormatterStep implements FormatterStep {
   }
 
   @Override
-  public @Nullable String format(String raw, File file) throws Exception {
+  public @Nullable String format(String raw, File file) throws Throwable {
     Objects.requireNonNull(raw, "raw");
     Objects.requireNonNull(file, "file");
     if (filter.accept(file)) {

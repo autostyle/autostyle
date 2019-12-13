@@ -65,7 +65,7 @@ public abstract class EclipseCommonTests extends ResourceHarness {
   protected abstract FormatterStep createStep(String version);
 
   @Test
-  public void testSupportedVersions() throws Exception {
+  public void testSupportedVersions() throws Throwable {
     String[] versions = getSupportedVersions();
     for (String version : versions) {
       String input = getTestInput(version);

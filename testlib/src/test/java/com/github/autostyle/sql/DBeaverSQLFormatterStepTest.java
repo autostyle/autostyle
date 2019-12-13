@@ -29,7 +29,7 @@ import com.github.autostyle.StepHarness;
 public class DBeaverSQLFormatterStepTest extends ResourceHarness {
 
   @Test
-  public void behavior() throws Exception {
+  public void behavior() throws Throwable {
     FormatterStep step = DBeaverSQLFormatterStep.create(Collections.emptySet());
     StepHarness.forStep(step)
         .testResource("sql/dbeaver/full.dirty", "sql/dbeaver/full.clean")
@@ -39,14 +39,14 @@ public class DBeaverSQLFormatterStepTest extends ResourceHarness {
   }
 
   @Test
-  public void behaviorWithConfigFile() throws Exception {
+  public void behaviorWithConfigFile() throws Throwable {
     FormatterStep step = DBeaverSQLFormatterStep.create(createTestFiles("sql/dbeaver/sqlConfig.properties"));
     StepHarness.forStep(step)
         .testResource("sql/dbeaver/create.dirty", "sql/dbeaver/create.clean");
   }
 
   @Test
-  public void behaviorWithAlternativeConfigFile() throws Exception {
+  public void behaviorWithAlternativeConfigFile() throws Throwable {
     FormatterStep step = DBeaverSQLFormatterStep.create(createTestFiles("sql/dbeaver/sqlConfig2.properties"));
     StepHarness.forStep(step)
         .testResource("sql/dbeaver/create.dirty", "sql/dbeaver/create.clean.alternative");

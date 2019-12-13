@@ -54,8 +54,10 @@ class Reflective {
     try {
       Method m = staticMethod(className, methodName, parameters);
       return m.invoke(m.getDeclaringClass(), parameters);
-    } catch (IllegalAccessException | InvocationTargetException e) {
+    } catch (IllegalAccessException e) {
       throw new ReflectiveException(e);
+    } catch (InvocationTargetException e) {
+      throw new ReflectiveException(e.getCause());
     }
   }
 
@@ -75,8 +77,10 @@ class Reflective {
     Method m = method(target, clazz(target), methodName, parameters);
     try {
       return m.invoke(target, parameters);
-    } catch (IllegalAccessException | InvocationTargetException e) {
+    } catch (IllegalAccessException e) {
       throw new ReflectiveException(e);
+    } catch (InvocationTargetException e) {
+      throw new ReflectiveException(e.getCause());
     }
   }
 
@@ -84,8 +88,10 @@ class Reflective {
     Method m = method(target, clazz(target), methodName, parameters);
     try {
       return m.invoke(target, objects(parameters));
-    } catch (IllegalAccessException | InvocationTargetException e) {
+    } catch (IllegalAccessException e) {
       throw new ReflectiveException(e);
+    } catch (InvocationTargetException e) {
+      throw new ReflectiveException(e.getCause());
     }
   }
 
@@ -155,8 +161,10 @@ class Reflective {
     try {
       final Constructor<?> constructor = constructor(className, parameters);
       return constructor.newInstance(objects(parameters));
-    } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+    } catch (InstantiationException | IllegalAccessException e) {
       throw new ReflectiveException(e);
+    } catch (InvocationTargetException e) {
+      throw new ReflectiveException(e.getCause());
     }
   }
 
@@ -170,8 +178,10 @@ class Reflective {
     try {
       final Constructor<?> constructor = constructor(className, parameters);
       return constructor.newInstance(parameters);
-    } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+    } catch (InstantiationException | IllegalAccessException e) {
       throw new ReflectiveException(e);
+    } catch (InvocationTargetException e) {
+      throw new ReflectiveException(e.getCause());
     }
   }
 

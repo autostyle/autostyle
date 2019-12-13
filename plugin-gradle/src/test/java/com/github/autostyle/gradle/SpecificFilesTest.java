@@ -17,8 +17,10 @@ package com.github.autostyle.gradle;
 
 import java.io.IOException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class SpecificFilesTest extends GradleIntegrationTest {
   private String testFile(int number, boolean absolute) throws IOException {
     String rel = "src/main/java/test" + number + ".java";
@@ -41,10 +43,10 @@ public class SpecificFilesTest extends GradleIntegrationTest {
       throws IOException {
 
     setFile("build.gradle").toLines(
-        "buildscript { repositories { mavenCentral() } }",
         "plugins {",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
+        "repositories { mavenCentral() }",
         "apply plugin: 'java'",
         "autostyle {",
         "    java {",
@@ -57,7 +59,7 @@ public class SpecificFilesTest extends GradleIntegrationTest {
     setFile(testFile(3)).toResource(fixture(false));
 
     gradleRunner()
-        .withArguments("autostyleApply", "-PautostyleFiles=" + patterns)
+        .withArguments("autostyleApply", "--include=" + patterns)
         .build();
 
     assertFile(testFile(1)).sameAsResource(fixture(firstFormatted));

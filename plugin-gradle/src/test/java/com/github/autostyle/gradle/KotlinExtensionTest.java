@@ -24,15 +24,16 @@ import org.gradle.testkit.runner.BuildResult;
 import org.junit.Test;
 
 public class KotlinExtensionTest extends GradleIntegrationTest {
-  private static final String HEADER = "// License Header";
-  private static final String HEADER_WITH_YEAR = "// License Header $YEAR";
+  private static final String HEADER = "License Header";
+  private static final String HEADER_WITH_YEAR = "License Header $YEAR";
+  private static final String FORMATTED_HEADER = "/*\n * License Header\n */\n";
 
   @Test
   public void integration() throws IOException {
     setFile("build.gradle").toLines(
         "plugins {",
         "    id 'nebula.kotlin' version '1.0.6'",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
         "repositories { mavenCentral() }",
         "autostyle {",
@@ -50,12 +51,14 @@ public class KotlinExtensionTest extends GradleIntegrationTest {
     setFile("build.gradle").toLines(
         "plugins {",
         "    id 'nebula.kotlin' version '1.0.6'",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
-        "repositories { mavenCentral() }",
+        "repositories { jcenter() }",
         "autostyle {",
         "    kotlin {",
-        "        ktlint('0.21.0').userData(['indent_size': '6'])",
+        "        ktlint('0.21.0') {",
+        "            userData(['indent_size': '6'])",
+        "        }",
         "    }",
         "}");
     setFile("src/main/kotlin/basic.kt").toResource("kotlin/ktlint/basic.dirty");
@@ -68,7 +71,7 @@ public class KotlinExtensionTest extends GradleIntegrationTest {
     setFile("build.gradle").toLines(
         "plugins {",
         "    id 'nebula.kotlin' version '1.0.6'",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
         "repositories { mavenCentral() }",
         "autostyle {",
@@ -79,7 +82,7 @@ public class KotlinExtensionTest extends GradleIntegrationTest {
         "}");
     setFile("src/main/kotlin/test.kt").toResource("kotlin/licenseheader/KotlinCodeWithoutHeader.test");
     gradleRunner().withArguments("autostyleApply").build();
-    assertFile("src/main/kotlin/test.kt").hasContent(HEADER + "\n" + getTestResource("kotlin/licenseheader/KotlinCodeWithoutHeader.test"));
+    assertFile("src/main/kotlin/test.kt").hasContent(FORMATTED_HEADER + getTestResource("kotlin/licenseheader/KotlinCodeWithoutHeader.test"));
   }
 
   @Test
@@ -87,43 +90,17 @@ public class KotlinExtensionTest extends GradleIntegrationTest {
     setFile("build.gradle").toLines(
         "plugins {",
         "    id 'nebula.kotlin' version '1.0.6'",
-        "    id 'com.github.autostyle.gradle'",
+        "    id 'com.github.autostyle'",
         "}",
         "repositories { mavenCentral() }",
         "autostyle {",
         "    kotlin {",
-        "        licenseHeader ('" + HEADER + "', '@file')",
+        "        licenseHeader ('" + HEADER + "')",
         "        ktlint()",
         "    }",
         "}");
     setFile("src/main/kotlin/test.kt").toResource("kotlin/licenseheader/KotlinCodeWithoutHeader.test");
-    gradleRunner().withArguments("autostyleApply").build();
-    assertFile("src/main/kotlin/test.kt").hasContent(HEADER + "\n" + getTestResource("kotlin/licenseheader/KotlinCodeWithoutHeader.test"));
-  }
-
-  @Test
-  public void testWithNonStandardYearSeparator() throws IOException {
-    setFile("build.gradle").toLines(
-        "plugins {",
-        "    id 'nebula.kotlin' version '1.0.6'",
-        "    id 'com.github.autostyle.gradle'",
-        "}",
-        "repositories { mavenCentral() }",
-        "autostyle {",
-        "    kotlin {",
-        "        licenseHeader('" + HEADER_WITH_YEAR + "').yearSeparator(', ')",
-        "        ktlint()",
-        "    }",
-        "}");
-
-    setFile("src/main/kotlin/test.kt").toResource("kotlin/licenseheader/KotlinCodeWithMultiYearHeader.test");
-    setFile("src/main/kotlin/test2.kt").toResource("kotlin/licenseheader/KotlinCodeWithMultiYearHeader2.test");
-    gradleRunner().withArguments("autostyleApply").build();
-    assertFile("src/main/kotlin/test.kt").matches(matcher -> {
-      matcher.startsWith("// License Header 2012, 2014");
-    });
-    assertFile("src/main/kotlin/test2.kt").matches(matcher -> {
-      matcher.startsWith(HEADER_WITH_YEAR.replace("$YEAR", String.valueOf(YearMonth.now().getYear())));
-    });
+    gradleRunner().withArguments("autostyleApply", "--info").build();
+    assertFile("src/main/kotlin/test.kt").hasContent(FORMATTED_HEADER + getTestResource("kotlin/licenseheader/KotlinCodeWithoutHeader.test"));
   }
 }

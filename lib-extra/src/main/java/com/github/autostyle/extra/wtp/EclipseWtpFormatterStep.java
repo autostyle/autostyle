@@ -108,10 +108,8 @@ public enum EclipseWtpFormatterStep {
     return input -> {
       try {
         return (String) method.invoke(formatter, input);
-      } catch (InvocationTargetException exceptionWrapper) {
-        Throwable throwable = exceptionWrapper.getTargetException();
-        Exception exception = (throwable instanceof Exception) ? (Exception) throwable : null;
-        throw (null == exception) ? exceptionWrapper : exception;
+      } catch (InvocationTargetException e) {
+        throw e.getCause();
       }
     };
   }
@@ -123,20 +121,18 @@ public enum EclipseWtpFormatterStep {
     return (input, source) -> {
       try {
         return (String) method.invoke(formatter, input, source.getAbsolutePath());
-      } catch (InvocationTargetException exceptionWrapper) {
-        Throwable throwable = exceptionWrapper.getTargetException();
-        Exception exception = (throwable instanceof Exception) ? (Exception) throwable : null;
-        throw (null == exception) ? exceptionWrapper : exception;
+      } catch (InvocationTargetException e) {
+        throw e.getCause();
       }
     };
   }
 
-  private static interface FormatterFuncWithFile extends FormatterFunc {
+  private interface FormatterFuncWithFile extends FormatterFunc {
     @Override
-    default String apply(String input) throws Exception {
+    default String apply(String input) {
       throw new UnsupportedOperationException("Formatter requires file path of source.");
     }
 
-    public String apply(String input, File source) throws Exception;
+    String apply(String input, File source) throws Throwable;
   }
 }
