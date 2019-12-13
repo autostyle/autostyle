@@ -15,7 +15,7 @@
  */
 package com.github.autostyle.kotlin;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.github.autostyle.FormatterStep;
 import com.github.autostyle.ResourceHarness;

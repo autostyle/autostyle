@@ -15,7 +15,7 @@
  */
 package com.github.autostyle.generic;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.github.autostyle.FormatterStep;
 import com.github.autostyle.ResourceHarness;
@@ -24,7 +24,7 @@ import com.github.autostyle.StepHarness;
 
 public class TrimTrailingWhitespaceStepTest extends ResourceHarness {
   @Test
-  public void trimTrailingWhitespace() throws Exception {
+  public void trimTrailingWhitespace() throws Throwable {
     StepHarness step = StepHarness.forStep(TrimTrailingWhitespaceStep.create());
     step.testUnaffected("");
     step.testUnaffected("\n");

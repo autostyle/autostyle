@@ -18,8 +18,7 @@ package com.github.autostyle.gradle;
 import java.io.IOException;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class GroovyExtensionTest extends GradleIntegrationTest {
 
@@ -83,7 +82,7 @@ public class GroovyExtensionTest extends GradleIntegrationTest {
 
     try {
       gradleRunner().withArguments("autostyleApply").build();
-      Assert.fail("Exception expected when using 'groovy' without 'target' if groovy-plugin is not applied.");
+      Assertions.fail("Exception expected when using 'groovy' without 'target' if groovy-plugin is not applied.");
     } catch (Throwable t) {
       Assertions.assertThat(t).hasMessageContaining("must apply the groovy plugin before");
     }

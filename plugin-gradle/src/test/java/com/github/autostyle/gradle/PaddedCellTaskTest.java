@@ -15,8 +15,6 @@
  */
 package com.github.autostyle.gradle;
 
-import static com.github.autostyle.gradle.Tasks.execute;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -25,16 +23,20 @@ import java.util.Locale;
 
 import org.assertj.core.api.Assertions;
 import org.gradle.api.Project;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.diffplug.common.base.StandardSystemProperty;
 import com.diffplug.common.base.StringPrinter;
+
 import com.github.autostyle.FormatterFunc;
 import com.github.autostyle.FormatterStep;
 import com.github.autostyle.LineEnding;
 import com.github.autostyle.ResourceHarness;
 import com.github.autostyle.TestProvisioner;
+
+import static com.github.autostyle.gradle.Tasks.execute;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PaddedCellTaskTest extends ResourceHarness {
   private static final boolean IS_WIN = StandardSystemProperty.OS_NAME.value().toLowerCase(Locale.US).contains("win");
@@ -174,9 +176,9 @@ public class PaddedCellTaskTest extends ResourceHarness {
 
   private void assertFolderContents(String subfolderName, String... files) throws IOException {
     File subfolder = new File(rootFolder(), subfolderName);
-    Assert.assertTrue(subfolder.isDirectory());
+    assertTrue(subfolder.isDirectory());
     String asList = String.join("\n", Arrays.asList(files));
-    Assert.assertEquals(StringPrinter.buildStringFromLines(files).trim(), asList);
+    assertEquals(StringPrinter.buildStringFromLines(files).trim(), asList);
   }
 
   @Test
@@ -203,6 +205,6 @@ public class PaddedCellTaskTest extends ResourceHarness {
   private void assertFailureMessage(Bundle bundle, String... expectedOutput) {
     String msg = bundle.checkFailureMsg();
     String expected = StringPrinter.buildStringFromLines(expectedOutput).trim();
-    Assert.assertEquals(expected, msg);
+    Assertions.assertThat(msg).isEqualTo(expected);
   }
 }

@@ -22,9 +22,10 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.diffplug.common.base.StandardSystemProperty;
+
 import com.github.autostyle.generic.EndWithNewlineStep;
 
 public class FormatterTest {
@@ -36,7 +37,6 @@ public class FormatterTest {
       private Charset encoding = StandardCharsets.UTF_8;
       private Path rootDir = Paths.get(StandardSystemProperty.USER_DIR.value());
       private List<FormatterStep> steps = new ArrayList<>();
-      private FormatExceptionPolicy exceptionPolicy = FormatExceptionPolicy.failOnlyOnError();
 
       @Override
       protected void setupTest(API api) throws Exception {
@@ -53,20 +53,6 @@ public class FormatterTest {
 
         steps.add(EndWithNewlineStep.create());
         api.areDifferentThan();
-
-        {
-          FormatExceptionPolicyStrict standard = new FormatExceptionPolicyStrict();
-          standard.excludePath("path");
-          exceptionPolicy = standard;
-          api.areDifferentThan();
-        }
-
-        {
-          FormatExceptionPolicyStrict standard = new FormatExceptionPolicyStrict();
-          standard.excludeStep("step");
-          exceptionPolicy = standard;
-          api.areDifferentThan();
-        }
       }
 
       @Override
@@ -76,7 +62,6 @@ public class FormatterTest {
             .encoding(encoding)
             .rootDir(rootDir)
             .steps(steps)
-            .exceptionPolicy(exceptionPolicy)
             .build();
       }
     }.testEquals();

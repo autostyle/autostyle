@@ -31,14 +31,14 @@ dependencies {
 //}
 
 tasks.named<Test>("test") {
-    useJUnit {
-        excludeCategories("com.github.autostyle.category.NpmTest")
+    useJUnitPlatform {
+        excludeTags("npm")
     }
 }
 
 val npmTest by tasks.registering(Test::class) {
-    useJUnit {
-        includeCategories("com.github.autostyle.category.NpmTest")
+    useJUnitPlatform {
+        includeTags("npm")
     }
 }
 

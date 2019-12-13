@@ -20,18 +20,19 @@ import java.util.function.Consumer;
 
 import org.gradle.api.Project;
 import org.gradle.testkit.runner.GradleRunner;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.StandardSystemProperty;
+
 import com.github.autostyle.TestProvisioner;
 
 /**
  * If you'd like to step through the full Autostyle plugin,
  * these tests make that easier. Uncomment ignore to do it.
  */
-@Ignore
+@Disabled
 public class SelfTest {
   enum Type {
     CHECK {

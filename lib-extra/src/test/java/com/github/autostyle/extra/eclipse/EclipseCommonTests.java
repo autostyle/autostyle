@@ -19,11 +19,16 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.io.File;
 
+import com.diffplug.common.base.Errors;
+
+import org.junit.Rule;
 import org.junit.Test;
 
 import com.github.autostyle.FormatterStep;
 import com.github.autostyle.LineEnding;
 import com.github.autostyle.ResourceHarness;
+
+import org.junit.rules.TemporaryFolder;
 
 /**
  * Provides a common set of tests for all Autostyle Eclipse Formatter steps provided by
@@ -42,6 +47,14 @@ import com.github.autostyle.ResourceHarness;
  * </p>
  */
 public abstract class EclipseCommonTests extends ResourceHarness {
+
+  @Rule
+  public TemporaryFolder folderDontUseDirectly = new TemporaryFolder();
+
+  @Override
+  protected File rootFolder() {
+    return Errors.rethrow().get(() -> folderDontUseDirectly.getRoot().getCanonicalFile());
+  }
 
   /** Returns the complete set of versions supported by the formatter */
   protected abstract String[] getSupportedVersions();

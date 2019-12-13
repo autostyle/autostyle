@@ -27,59 +27,28 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
-import java.util.logging.Logger;
 
 import org.assertj.core.api.AbstractCharSequenceAssert;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.util.CheckReturnValue;
-import org.junit.Assert;
-import org.junit.ComparisonFailure;
-import org.junit.Rule;
-import org.junit.rules.TemporaryFolder;
-import org.junit.rules.TestWatcher;
-import org.junit.runner.Description;
+import org.junit.jupiter.api.BeforeEach;
 
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.io.Resources;
 
+import org.junit.jupiter.api.io.TempDir;
+
 public class ResourceHarness {
-  /**
-   * On OS X, the temp folder is a symlink,
-   * and some of gradle's stuff breaks symlinks.
-   * By only accessing it through the {@link #rootFolder()}
-   * and {@link #newFile(String)} apis, we can guarantee there
-   * will be no symlink problems.
-   */
-  @Rule
-  public TemporaryFolder folderDontUseDirectly = new TemporaryFolder();
+  private File tempDir;
 
-  /** Log nontruncated diff in case of a comparison failure to ease test development.*/
-  @Rule
-  public TestWatcher logComparisonFailureDiff = new TestWatcher() {
-    private static final String COMPARISON_SEPARATOR = "------------------------------------";
-
-    @Override
-    protected void failed(Throwable e, Description description) {
-      if (e instanceof ComparisonFailure) {
-        ComparisonFailure failure = (ComparisonFailure) e;
-        String msg = "";
-        msg += String.format("Output:  %n%1$s%n%2$s%n%1$s%n", COMPARISON_SEPARATOR, failure.getActual());
-        msg += String.format("Expected:%n%1$s%n%2$s%n%1$s%n", COMPARISON_SEPARATOR, failure.getExpected());
-        logFailure(msg, description);
-      }
-
-    }
-
-    private void logFailure(String message, Description description) {
-      Logger log = Logger.getLogger(description.getClassName());
-      log.warning(String.format("Step '%s' failed.%n%s", description.getDisplayName(), message));
-    }
-
-  };
+  @BeforeEach
+  public void createFolder(@TempDir File tempDir) {
+    this.tempDir = tempDir;
+  }
 
   /** Returns the root folder (canonicalized to fix OS X issue) */
   protected File rootFolder() {
-    return Errors.rethrow().get(() -> folderDontUseDirectly.getRoot().getCanonicalFile());
+    return Errors.rethrow().get(() -> tempDir.getCanonicalFile());
   }
 
   /** Returns a new child of the root folder. */
@@ -159,11 +128,11 @@ public class ResourceHarness {
     String unformatted = LineEnding.toUnix(getTestResource(unformattedPath)); // unix-ified input
     String formatted = step.apply(unformatted);
     // no windows newlines
-    Assert.assertEquals(-1, formatted.indexOf('\r'));
+    Assertions.assertThat(formatted).doesNotContain("\r");
 
     // unix-ify the test resource output in case git screwed it up
     String expected = LineEnding.toUnix(getTestResource(expectedPath)); // unix-ified output
-    Assert.assertEquals(expected, formatted);
+    Assertions.assertThat(formatted).isEqualTo(expected);
   }
 
   @CheckReturnValue

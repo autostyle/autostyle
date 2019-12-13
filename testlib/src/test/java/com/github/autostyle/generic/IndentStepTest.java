@@ -17,8 +17,8 @@ package com.github.autostyle.generic;
 
 import java.io.File;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import com.github.autostyle.FormatterStep;
 import com.github.autostyle.ResourceHarness;
@@ -53,7 +53,7 @@ public class IndentStepTest extends ResourceHarness {
   public void doesntClipNewlines() throws Throwable {
     FormatterStep indent = IndentStep.Type.SPACE.create(4);
     String blankNewlines = "\n\n\n\n";
-    Assert.assertEquals(blankNewlines, indent.format(blankNewlines, new File("")));
+    Assertions.assertEquals(blankNewlines, indent.format(blankNewlines, new File("")));
   }
 
   @Test

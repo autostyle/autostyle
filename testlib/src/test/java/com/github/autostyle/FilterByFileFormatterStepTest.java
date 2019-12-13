@@ -19,13 +19,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.github.autostyle.generic.ReplaceStep;
 
 public class FilterByFileFormatterStepTest extends ResourceHarness {
   @Test
-  public void behavior() throws Exception {
+  public void behavior() throws Throwable {
     FormatterStep underTest = ReplaceStep.create("makeSpaceA", " ", "a")
         .filterByFile(SerializableFileFilter.skipFilesNamed("dontFormat"));
     assertThat(underTest.format(" ", new File("someFileName"))).isEqualTo("a");

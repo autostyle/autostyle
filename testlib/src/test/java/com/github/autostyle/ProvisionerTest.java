@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ProvisionerTest {
   @Test

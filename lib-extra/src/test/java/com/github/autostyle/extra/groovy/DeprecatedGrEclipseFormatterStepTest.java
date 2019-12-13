@@ -19,6 +19,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import com.diffplug.common.base.Errors;
+
+import org.junit.Rule;
 import org.junit.Test;
 
 import com.github.autostyle.FormatterStep;
@@ -28,8 +31,17 @@ import com.github.autostyle.SerializableEqualityTester;
 import com.github.autostyle.StepHarness;
 import com.github.autostyle.TestProvisioner;
 
+import org.junit.rules.TemporaryFolder;
+
 @Deprecated
 public class DeprecatedGrEclipseFormatterStepTest extends ResourceHarness {
+  @Rule
+  public TemporaryFolder folderDontUseDirectly = new TemporaryFolder();
+
+  @Override
+  protected File rootFolder() {
+    return Errors.rethrow().get(() -> folderDontUseDirectly.getRoot().getCanonicalFile());
+  }
 
   private static final String RESOURCE_PATH = "groovy/greclipse/format/";
   private static final String CONFIG_FILE = RESOURCE_PATH + "greclipse.properties";

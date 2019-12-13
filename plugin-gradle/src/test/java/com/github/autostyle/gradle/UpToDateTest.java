@@ -17,7 +17,7 @@ package com.github.autostyle.gradle;
 
 import java.io.IOException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class UpToDateTest extends GradleIntegrationTest {
   /** Requires that README be lowercase. */

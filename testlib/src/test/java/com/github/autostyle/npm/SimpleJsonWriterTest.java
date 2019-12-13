@@ -15,15 +15,16 @@
  */
 package com.github.autostyle.npm;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.File;
 import java.io.IOException;
 
-import org.junit.Test;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import com.diffplug.common.collect.ImmutableMap;
+
 import com.github.autostyle.ResourceHarness;
 
 public class SimpleJsonWriterTest extends ResourceHarness {
@@ -32,37 +33,38 @@ public class SimpleJsonWriterTest extends ResourceHarness {
 
   @Test
   public void itWritesAValidEmptyObject() {
-    assertThat(jsonWriter.toJsonString().replaceAll("\\s", ""), equalTo("{}"));
+    assertThat(jsonWriter.toJsonString().replaceAll("\\s", "")).isEqualTo("{}");
   }
 
   @Test
   public void itWritesABooleanProperty() {
     jsonWriter.put("mybool", true);
-    assertThat(jsonWriter.toJsonString(), equalTo("{\n    \"mybool\": true\n}"));
+    assertThat(jsonWriter.toJsonString()).isEqualTo("{\n    \"mybool\": true\n}");
   }
 
   @Test
   public void itWritesAStringProperty() {
     jsonWriter.put("mystring", "stringvalue");
-    assertThat(jsonWriter.toJsonString(), equalTo("{\n    \"mystring\": \"stringvalue\"\n}"));
+    assertThat(jsonWriter.toJsonString()).isEqualTo("{\n    \"mystring\": \"stringvalue\"\n}");
   }
 
   @Test
   public void itWritesAnInteger() {
     jsonWriter.put("myint", 7);
-    assertThat(jsonWriter.toJsonString(), equalTo("{\n    \"myint\": 7\n}"));
+    assertThat(jsonWriter.toJsonString()).isEqualTo("{\n    \"myint\": 7\n}");
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void itFailsOnUnsupportedObject() {
-    jsonWriter.put("anyobj", new Object());
-    fail("should not be accepted");
+    Assertions.assertThatThrownBy(() -> {
+      jsonWriter.put("anyobj", new Object());
+    }).isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
   public void itHandlesSeveralOptionsSimultaneously() {
     jsonWriter.putAll(ImmutableMap.of("mystring", "stringvalue", "intvalue", 1));
-    assertThat(jsonWriter.toJsonString(), equalTo("{\n    \"mystring\": \"stringvalue\",\n    \"intvalue\": 1\n}"));
+    assertThat(jsonWriter.toJsonString()).isEqualTo("{\n    \"mystring\": \"stringvalue\",\n    \"intvalue\": 1\n}");
   }
 
   @Test

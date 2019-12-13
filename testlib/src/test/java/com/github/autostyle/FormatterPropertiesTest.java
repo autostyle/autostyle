@@ -24,15 +24,9 @@ import java.util.LinkedList;
 import java.util.Properties;
 
 import org.assertj.core.api.AbstractAssert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 public class FormatterPropertiesTest extends ResourceHarness {
-
-  @Rule
-  public ExpectedException expectedEx = ExpectedException.none();
-
   private static final String RESOURCES_ROOT_DIR = "formatter/properties/";
 
   private static final String[] VALID_SETTINGS_RESOURCES = {

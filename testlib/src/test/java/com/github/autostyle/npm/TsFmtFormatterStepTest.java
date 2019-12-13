@@ -21,33 +21,28 @@ import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collections;
 
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.junit.experimental.runners.Enclosed;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import com.diffplug.common.collect.ImmutableMap;
-import com.github.autostyle.*;
-import com.github.autostyle.category.NpmTest;
 
-@Category(NpmTest.class)
-@RunWith(Enclosed.class)
+import com.github.autostyle.*;
+
 public class TsFmtFormatterStepTest {
 
-  @Category(NpmTest.class)
-  @RunWith(Parameterized.class)
+  @Nested
+  @Tag("npm")
   public static class TsFmtUsingVariousFormattingFilesTest extends NpmFormatterStepCommonTests {
-    @Parameterized.Parameter
-    public String formattingConfigFile;
-
-    @Parameterized.Parameters(name = "{index}: formatting using {0} is working")
     public static Iterable<String> formattingConfigFiles() {
       return Arrays.asList("vscode/vscode.json", "tslint/tslint.json", "tsfmt/tsfmt.json", "tsconfig/tsconfig.json");
     }
 
-    @Test
-    public void formattingUsingConfigFile() throws Throwable {
+    @ParameterizedTest
+    @MethodSource("formattingConfigFiles")
+    public void formattingUsingConfigFile(String formattingConfigFile) throws Throwable {
       String configFileName = formattingConfigFile.substring(formattingConfigFile.lastIndexOf('/') >= 0 ? formattingConfigFile.lastIndexOf('/') + 1 : 0);
       String configFileNameWithoutExtension = configFileName.substring(0, configFileName.lastIndexOf('.'));
       String filedir = "npm/tsfmt/" + configFileNameWithoutExtension + "/";
@@ -73,7 +68,9 @@ public class TsFmtFormatterStepTest {
     }
   }
 
-  @Category(NpmTest.class)
+
+  @Nested
+  @Tag("npm")
   public static class TsFmtUsingInlineConfigTest extends NpmFormatterStepCommonTests {
     @Test
     public void formattingUsingInlineConfigWorks() throws Throwable {

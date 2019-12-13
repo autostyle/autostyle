@@ -22,8 +22,8 @@ import java.util.Locale;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.StringPrinter;
@@ -96,9 +96,9 @@ public class GradleIncrementalResolutionTest extends GradleIntegrationTest {
     for (char c : state.toCharArray()) {
       String letter = new String(new char[]{c});
       if (Character.isLowerCase(c)) {
-        Assert.assertEquals(letter.toLowerCase(Locale.ROOT), read(filename(letter)).trim());
+        Assertions.assertEquals(letter.toLowerCase(Locale.ROOT), read(filename(letter)).trim());
       } else {
-        Assert.assertEquals(letter.toUpperCase(Locale.ROOT), read(filename(letter)).trim());
+        Assertions.assertEquals(letter.toUpperCase(Locale.ROOT), read(filename(letter)).trim());
       }
     }
   }
@@ -128,7 +128,7 @@ public class GradleIncrementalResolutionTest extends GradleIntegrationTest {
         added.add(trimmed.substring(1, trimmed.length() - 1));
       }
     }
-    Assert.assertEquals(concat(Arrays.asList(ranAgainst)), concat(added));
+    Assertions.assertEquals(concat(Arrays.asList(ranAgainst)), concat(added));
   }
 
   private String concat(Iterable<String> iterable) {

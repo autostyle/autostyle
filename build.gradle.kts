@@ -18,7 +18,7 @@ allprojects {
     group = "com.github.vlsi.autostyle"
     version = buildVersion
 
-    val javaUsed = file("src/main/java").isDirectory
+    val javaUsed = file("src/main/java").isDirectory || file("src/test/java").isDirectory
     val kotlinUsed = file("src/main/kotlin").isDirectory || file("src/test/kotlin").isDirectory
     if (javaUsed) {
         apply(plugin = "java-library")
@@ -55,11 +55,6 @@ allprojects {
             testImplementation("org.junit.jupiter:junit-jupiter-params")
             testImplementation("org.hamcrest:hamcrest")
             testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
-            if (props.bool("junit4", default = true)) {
-                // Allow projects to opt-out of junit dependency, so they can be JUnit5-only
-                testImplementation("junit:junit")
-                testRuntimeOnly("org.junit.vintage:junit-vintage-engine")
-            }
         }
     }
 

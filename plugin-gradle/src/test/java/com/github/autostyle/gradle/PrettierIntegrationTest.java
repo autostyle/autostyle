@@ -17,12 +17,10 @@ package com.github.autostyle.gradle;
 
 import java.io.IOException;
 
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
-import com.github.autostyle.category.NpmTest;
-
-@Category(NpmTest.class)
+@Tag("npm")
 public class PrettierIntegrationTest extends GradleIntegrationTest {
   @Test
   public void useInlineConfig() throws IOException {

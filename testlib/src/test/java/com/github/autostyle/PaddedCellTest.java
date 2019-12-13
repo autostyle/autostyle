@@ -29,14 +29,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 public class PaddedCellTest {
-  @Rule
-  public TemporaryFolder folder = new TemporaryFolder();
+  private File tempDir;
+
+  @BeforeEach
+  public void createFolder(@TempDir File tempDir) {
+    this.tempDir = tempDir;
+  }
 
   private void misbehaved(FormatterFunc step, String input, PaddedCell.Type expectedOutputType, String steps, String canonical) throws IOException {
     testCase(step, input, expectedOutputType, steps, canonical, true);
@@ -52,26 +56,26 @@ public class PaddedCellTest {
     try (Formatter formatter = Formatter.builder()
         .lineEndingsPolicy(LineEnding.UNIX.createPolicy())
         .encoding(StandardCharsets.UTF_8)
-        .rootDir(folder.getRoot().toPath())
+        .rootDir(tempDir.toPath())
         .steps(formatterSteps).build()) {
 
-      File file = folder.newFile();
+      File file = File.createTempFile("input", "txt", tempDir);
       Files.write(file.toPath(), input.getBytes(StandardCharsets.UTF_8));
 
       PaddedCell result = PaddedCell.check(formatter, file);
-      Assert.assertEquals(misbehaved, result.misbehaved());
-      Assert.assertEquals(expectedOutputType, result.type());
+      Assertions.assertEquals(misbehaved, result.misbehaved());
+      Assertions.assertEquals(expectedOutputType, result.type());
 
       String actual = String.join(",", result.steps());
-      Assert.assertEquals(expectedSteps, actual);
+      Assertions.assertEquals(expectedSteps, actual);
 
       if (canonical == null) {
         try {
           result.canonical();
-          Assert.fail("Expected exception");
+          Assertions.fail("Expected exception");
         } catch (IllegalArgumentException expected) {}
       } else {
-        Assert.assertEquals(canonical, result.canonical());
+        Assertions.assertEquals(canonical, result.canonical());
       }
     }
   }
@@ -124,9 +128,9 @@ public class PaddedCellTest {
       for (int i = 0; i < unordered.size(); ++i) {
         // try every rotation of the list
         Collections.rotate(unordered, 1);
-        PaddedCell result = CYCLE.create(folder.getRoot(), unordered);
+        PaddedCell result = CYCLE.create(tempDir, unordered);
         // make sure the canonical result is always the appropriate one
-        Assert.assertEquals(canonical, result.canonical());
+        Assertions.assertEquals(canonical, result.canonical());
       }
     };
     // alphabetic

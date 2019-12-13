@@ -24,8 +24,8 @@ import java.util.Collections;
 import org.assertj.core.api.Assertions;
 import org.gradle.api.GradleException;
 import org.gradle.api.Project;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.github.autostyle.FormatterStep;
 import com.github.autostyle.LineEnding;
@@ -36,18 +36,20 @@ public class FormatTaskTest extends ResourceHarness {
   private AutostyleTask checkTask;
   private AutostyleTask applyTask;
 
-  @Before
+  @BeforeEach
   public void createTask() throws IOException {
     Project project = TestProvisioner.gradleProject(rootFolder());
     checkTask = project.getTasks().create("checkTaskUnderTest", AutostyleCheckTask.class);
     applyTask = project.getTasks().create("applyTaskUnderTest", AutostyleApplyTask.class);
   }
 
-  @Test(expected = GradleException.class)
+  @Test
   public void testLineEndingsCheckFail() throws Exception {
-    checkTask.getLineEndingsPolicy().set(LineEnding.UNIX.createPolicy());
-    checkTask.getSourceFiles().from(Collections.singleton(setFile("testFile").toContent("\r\n")));
-    execute(checkTask);
+    Assertions.assertThatThrownBy(() -> {
+      checkTask.getLineEndingsPolicy().set(LineEnding.UNIX.createPolicy());
+      checkTask.getSourceFiles().from(Collections.singleton(setFile("testFile").toContent("\r\n")));
+      execute(checkTask);
+    }).isInstanceOf(GradleException.class);
   }
 
   @Test

@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class FileSignatureTest extends ResourceHarness {
   private final static String[] inputPaths = {"A", "C", "C", "A", "B"};

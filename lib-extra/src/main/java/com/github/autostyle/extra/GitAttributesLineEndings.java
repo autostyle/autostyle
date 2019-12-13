@@ -50,12 +50,12 @@ import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.util.FS;
 import org.eclipse.jgit.util.SystemReader;
 
+import com.diffplug.common.base.Errors;
+import com.diffplug.common.tree.TreeStream;
 import com.googlecode.concurrenttrees.radix.ConcurrentRadixTree;
 import com.googlecode.concurrenttrees.radix.node.Node;
 import com.googlecode.concurrenttrees.radix.node.concrete.DefaultCharSequenceNodeFactory;
 
-import com.diffplug.common.base.Errors;
-import com.diffplug.common.tree.TreeStream;
 import com.github.autostyle.FileSignature;
 import com.github.autostyle.LazyForwardingEquality;
 import com.github.autostyle.LineEnding;

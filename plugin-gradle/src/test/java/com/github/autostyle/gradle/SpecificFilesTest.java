@@ -17,10 +17,10 @@ package com.github.autostyle.gradle;
 
 import java.io.IOException;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
-@Ignore
+@Disabled
 public class SpecificFilesTest extends GradleIntegrationTest {
   private String testFile(int number, boolean absolute) throws IOException {
     String rel = "src/main/java/test" + number + ".java";

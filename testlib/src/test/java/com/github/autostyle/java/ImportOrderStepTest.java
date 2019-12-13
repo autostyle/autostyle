@@ -15,7 +15,7 @@
  */
 package com.github.autostyle.java;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.github.autostyle.FormatterStep;
 import com.github.autostyle.ResourceHarness;
@@ -31,43 +31,43 @@ public class ImportOrderStepTest extends ResourceHarness {
 
   @Test
   public void sortImportsFromFile() throws Throwable {
-    FormatterStep step = ImportOrderStep.forJava().createFrom(createTestFile("java/importsorter/import.properties"));
+    FormatterStep step = ImportOrderStep.forJava().createFrom("java", "javax", "org", "\\#com");
     assertOnResources(step, "java/importsorter/JavaCodeUnsortedImports.test", "java/importsorter/JavaCodeSortedImports.test");
   }
 
   @Test
   public void sortImportsUnmatched() throws Throwable {
-    FormatterStep step = ImportOrderStep.forJava().createFrom(createTestFile("java/importsorter/import_unmatched.properties"));
+    FormatterStep step = ImportOrderStep.forJava().createFrom("\\#", "com.google", "", "java", "javax");
     assertOnResources(step, "java/importsorter/JavaCodeUnsortedImportsUnmatched.test", "java/importsorter/JavaCodeSortedImportsUnmatched.test");
   }
 
   @Test
   public void removeDuplicates() throws Throwable {
-    FormatterStep step = ImportOrderStep.forJava().createFrom(createTestFile("java/importsorter/import_unmatched.properties"));
+    FormatterStep step = ImportOrderStep.forJava().createFrom("\\#", "com.google", "", "java", "javax");
     assertOnResources(step, "java/importsorter/JavaCodeSortedDuplicateImportsUnmatched.test", "java/importsorter/JavaCodeSortedImportsUnmatched.test");
   }
 
   @Test
   public void removeComments() throws Throwable {
-    FormatterStep step = ImportOrderStep.forJava().createFrom(createTestFile("java/importsorter/import.properties"));
+    FormatterStep step = ImportOrderStep.forJava().createFrom("java", "javax", "org", "\\#com");
     assertOnResources(step, "java/importsorter/JavaCodeImportComments.test", "java/importsorter/JavaCodeSortedImports.test");
   }
 
   @Test
   public void misplacedImports() throws Throwable {
-    FormatterStep step = ImportOrderStep.forJava().createFrom(createTestFile("java/importsorter/import.properties"));
+    FormatterStep step = ImportOrderStep.forJava().createFrom("java", "javax", "org", "\\#com");
     assertOnResources(step, "java/importsorter/JavaCodeUnsortedMisplacedImports.test", "java/importsorter/JavaCodeSortedMisplacedImports.test");
   }
 
   @Test
   public void empty() throws Throwable {
-    FormatterStep step = ImportOrderStep.forJava().createFrom(createTestFile("java/importsorter/import.properties"));
+    FormatterStep step = ImportOrderStep.forJava().createFrom("java", "javax", "org", "\\#com");
     assertOnResources(step, "java/importsorter/JavaCodeEmptyFile.test", "java/importsorter/JavaCodeEmptyFile.test");
   }
 
   @Test
   public void groovyImports() throws Throwable {
-    FormatterStep step = ImportOrderStep.forGroovy().createFrom(createTestFile("java/importsorter/import.properties"));
+    FormatterStep step = ImportOrderStep.forGroovy().createFrom("java", "javax", "org", "\\#com");
     assertOnResources(step, "java/importsorter/GroovyCodeUnsortedMisplacedImports.test", "java/importsorter/GroovyCodeSortedMisplacedImports.test");
   }
 

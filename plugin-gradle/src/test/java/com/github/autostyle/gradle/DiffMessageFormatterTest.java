@@ -15,6 +15,8 @@
  */
 package com.github.autostyle.gradle;
 
+import static com.github.autostyle.gradle.Tasks.execute;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ import java.util.regex.Pattern;
 import org.assertj.core.api.Assertions;
 import org.gradle.api.GradleException;
 import org.gradle.api.Project;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.diffplug.common.base.StringPrinter;
 
@@ -34,8 +36,6 @@ import com.github.autostyle.LineEnding;
 import com.github.autostyle.ResourceHarness;
 import com.github.autostyle.TestProvisioner;
 import com.github.autostyle.extra.integration.DiffMessageFormatter;
-
-import static com.github.autostyle.gradle.Tasks.execute;
 
 public class DiffMessageFormatterTest extends ResourceHarness {
   private AutostyleTask create(File... files) throws IOException {

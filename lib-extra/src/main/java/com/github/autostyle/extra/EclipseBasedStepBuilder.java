@@ -28,6 +28,7 @@ import java.util.Optional;
 import java.util.Properties;
 
 import com.diffplug.common.base.Errors;
+
 import com.github.autostyle.FileSignature;
 import com.github.autostyle.FormatterFunc;
 import com.github.autostyle.FormatterProperties;

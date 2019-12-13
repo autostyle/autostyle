@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 
 import org.gradle.testkit.runner.BuildResult;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class KotlinGradleExtensionTest extends GradleIntegrationTest {
   @Test

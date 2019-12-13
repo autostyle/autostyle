@@ -15,7 +15,7 @@
  */
 package com.github.autostyle.generic;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.github.autostyle.FormatterStep;
 import com.github.autostyle.SerializableEqualityTester;
@@ -23,7 +23,7 @@ import com.github.autostyle.StepHarness;
 
 public class EndWithNewlineStepTest {
   @Test
-  public void behavior() throws Exception {
+  public void behavior() throws Throwable {
     StepHarness harness = StepHarness.forStep(EndWithNewlineStep.create());
     harness.test("", "\n");
     harness.test("\n\n\n\n", "\n");

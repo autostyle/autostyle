@@ -20,14 +20,18 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
 
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 public class GitAttributesTest {
-  @Rule
-  public TemporaryFolder folder = new TemporaryFolder();
+  private File tempDir;
+
+  @BeforeEach
+  public void createFolder(@TempDir File tempDir) {
+    this.tempDir = tempDir;
+  }
 
   private void write(String path, String... content) throws IOException {
     File file = file(path);
@@ -36,7 +40,7 @@ public class GitAttributesTest {
   }
 
   private File file(String path) {
-    return new File(folder.getRoot(), path);
+    return new File(tempDir, path);
   }
 
   @Test
@@ -44,28 +48,28 @@ public class GitAttributesTest {
     write(".gitattributes", "* eol=lf", "*.MF eol=crlf");
     {
       GitAttributesLineEndings.AttributesCache cache = new GitAttributesLineEndings.AttributesCache();
-      Assert.assertEquals("lf", cache.valueFor(file("someFile"), "eol"));
-      Assert.assertEquals("lf", cache.valueFor(file("subfolder/someFile"), "eol"));
-      Assert.assertEquals("crlf", cache.valueFor(file("MANIFEST.MF"), "eol"));
-      Assert.assertEquals("crlf", cache.valueFor(file("subfolder/MANIFEST.MF"), "eol"));
+      Assertions.assertEquals("lf", cache.valueFor(file("someFile"), "eol"));
+      Assertions.assertEquals("lf", cache.valueFor(file("subfolder/someFile"), "eol"));
+      Assertions.assertEquals("crlf", cache.valueFor(file("MANIFEST.MF"), "eol"));
+      Assertions.assertEquals("crlf", cache.valueFor(file("subfolder/MANIFEST.MF"), "eol"));
 
       // write out a .gitattributes for the subfolder
       write("subfolder/.gitattributes", "* eol=lf");
 
       // it shouldn't change anything, because it's cached
-      Assert.assertEquals("lf", cache.valueFor(file("someFile"), "eol"));
-      Assert.assertEquals("lf", cache.valueFor(file("subfolder/someFile"), "eol"));
-      Assert.assertEquals("crlf", cache.valueFor(file("MANIFEST.MF"), "eol"));
-      Assert.assertEquals("crlf", cache.valueFor(file("subfolder/MANIFEST.MF"), "eol"));
+      Assertions.assertEquals("lf", cache.valueFor(file("someFile"), "eol"));
+      Assertions.assertEquals("lf", cache.valueFor(file("subfolder/someFile"), "eol"));
+      Assertions.assertEquals("crlf", cache.valueFor(file("MANIFEST.MF"), "eol"));
+      Assertions.assertEquals("crlf", cache.valueFor(file("subfolder/MANIFEST.MF"), "eol"));
     }
 
     {
       // but if we make a new cache, it should change
       GitAttributesLineEndings.AttributesCache cache = new GitAttributesLineEndings.AttributesCache();
-      Assert.assertEquals("lf", cache.valueFor(file("someFile"), "eol"));
-      Assert.assertEquals("lf", cache.valueFor(file("subfolder/someFile"), "eol"));
-      Assert.assertEquals("crlf", cache.valueFor(file("MANIFEST.MF"), "eol"));
-      Assert.assertEquals("lf", cache.valueFor(file("subfolder/MANIFEST.MF"), "eol"));
+      Assertions.assertEquals("lf", cache.valueFor(file("someFile"), "eol"));
+      Assertions.assertEquals("lf", cache.valueFor(file("subfolder/someFile"), "eol"));
+      Assertions.assertEquals("crlf", cache.valueFor(file("MANIFEST.MF"), "eol"));
+      Assertions.assertEquals("lf", cache.valueFor(file("subfolder/MANIFEST.MF"), "eol"));
     }
   }
 }

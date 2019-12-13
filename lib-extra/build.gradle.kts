@@ -16,6 +16,9 @@ dependencies {
     testImplementation(project(":testlib"))
     testImplementation("org.assertj:assertj-core")
     testImplementation("com.diffplug.durian:durian-testlib")
+    // EclipseCommonTests is hard to migrate to JUnit5 :(
+    testImplementation("junit:junit")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine")
 }
 
 // we'll hold the core lib to a high standard

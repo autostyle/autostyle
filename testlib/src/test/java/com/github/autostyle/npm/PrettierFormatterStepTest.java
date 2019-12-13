@@ -18,34 +18,30 @@ package com.github.autostyle.npm;
 import java.io.File;
 import java.util.Arrays;
 
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.junit.experimental.runners.Enclosed;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import com.diffplug.common.collect.ImmutableMap;
-import com.github.autostyle.*;
-import com.github.autostyle.category.NpmTest;
 
-@Category(NpmTest.class)
-@RunWith(Enclosed.class)
+import com.github.autostyle.FormatterStep;
+import com.github.autostyle.StepHarness;
+import com.github.autostyle.TestProvisioner;
+
 public class PrettierFormatterStepTest {
 
-  @Category(NpmTest.class)
-  @RunWith(Parameterized.class)
+  @Nested
+  @Tag("npm")
   public static class PrettierFormattingOfFileTypesIsWorking extends NpmFormatterStepCommonTests {
-
-    @Parameterized.Parameter
-    public String fileType;
-
-    @Parameterized.Parameters(name = "{index}: prettier can be applied to {0}")
     public static Iterable<String> formattingConfigFiles() {
       return Arrays.asList("typescript", "json", "javascript-es5", "javascript-es6", "css", "scss", "markdown", "yaml");
     }
 
-    @Test
-    public void formattingUsingConfigFile() throws Throwable {
+    @ParameterizedTest
+    @MethodSource("formattingConfigFiles")
+    public void formattingUsingConfigFile(String fileType) throws Throwable {
       String filedir = "npm/prettier/filetypes/" + fileType + "/";
 
       final File prettierRc = createTestFile(filedir + ".prettierrc.yml");
@@ -65,7 +61,8 @@ public class PrettierFormatterStepTest {
     }
   }
 
-  @Category(NpmTest.class)
+  @Nested
+  @Tag("npm")
   public static class SpecificPrettierFormatterStepTests extends NpmFormatterStepCommonTests {
 
     @Test
@@ -88,7 +85,8 @@ public class PrettierFormatterStepTest {
     }
   }
 
-  @Category(NpmTest.class)
+  @Nested
+  @Tag("npm")
   public static class PrettierFormattingOptionsAreWorking extends NpmFormatterStepCommonTests {
 
     private static final String FILEDIR = "npm/prettier/config/";
@@ -124,6 +122,5 @@ public class PrettierFormatterStepTest {
     public void configFileOptionsCanBeOverriden() throws Throwable {
       runFormatTest(new PrettierConfig(createTestFile(FILEDIR + ".prettierrc.yml"), ImmutableMap.of("printWidth", 300)), "override");
     }
-
   }
 }

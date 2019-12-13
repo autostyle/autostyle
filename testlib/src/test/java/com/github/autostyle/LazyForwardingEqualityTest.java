@@ -17,7 +17,7 @@ package com.github.autostyle;
 
 import static com.diffplug.common.testing.SerializableTester.reserializeAndAssert;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.diffplug.common.testing.EqualsTester;
 

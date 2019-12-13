@@ -18,10 +18,10 @@ package com.github.autostyle.gradle
 import org.assertj.core.api.Assertions.assertThat
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.TaskOutcome
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 /** Tests the desired behavior from https://github.com/diffplug/spotless/issues/46.  */
-class ErrorShouldRethrow : GradleIntegrationTest() {
+class ErrorShouldRethrowTest : GradleIntegrationTest() {
     private fun writeBuild(formatSettings: String = "", enforceCheck: Boolean? = null) {
         val build = """
             plugins {
