@@ -25,3 +25,18 @@ jobs:
       - name: 'Test'
         run: |
           ./gradlew --no-parallel --no-daemon build
+  linux-self:
+    name: 'Self-check, Linux (JDK 8)'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+        with:
+          fetch-depth: 10
+      - name: 'Set up JDK 8'
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8
+      - name: 'Self-check'
+        run: |
+          ./gradlew --no-parallel --no-daemon jar
+          ./gradlew --no-parallel --no-daemon -PautostyleSelf autostyleCheck
