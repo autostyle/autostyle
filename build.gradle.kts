@@ -135,12 +135,12 @@ allprojects {
                         description = project.description
                         from(project.components.get("java"))
 
-                        //if (!skipJavadoc) {
+                        // if (!skipJavadoc) {
                         // Eager task creation is required due to
                         // https://github.com/gradle/gradle/issues/6246
                         //  artifact(sourcesJar.get())
                         //  artifact(javadocJar.get())
-                        //}
+                        // }
 
                         // Use the resolved versions in pom.xml
                         // Gradle might have different resolution rules, so we set the versions

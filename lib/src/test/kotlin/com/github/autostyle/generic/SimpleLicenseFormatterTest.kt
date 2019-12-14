@@ -18,7 +18,7 @@ class SimpleLicenseFormatterTest {
                  * Line 2
                  */
             """.trimIndent(), txt
-        );
+        )
     }
 
     @Test
@@ -36,6 +36,6 @@ class SimpleLicenseFormatterTest {
                 :: Line 2
                 ::$s
             """.trimIndent(), txt
-        );
+        )
     }
 }

@@ -101,6 +101,6 @@ open class JavaExtension @Inject constructor(name: String, root: AutostyleExtens
         }
     }
 
-    class EclipseConfig internal constructor(version: String, project: Project):
-        EclipseBasedConfig(version, project, { EclipseJdtFormatterStep.createBuilder(it) } )
+    class EclipseConfig internal constructor(version: String, project: Project) :
+        EclipseBasedConfig(version, project, { EclipseJdtFormatterStep.createBuilder(it) })
 }

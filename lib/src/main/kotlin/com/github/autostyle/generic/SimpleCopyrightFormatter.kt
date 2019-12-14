@@ -6,13 +6,13 @@ abstract class SimpleCopyrightFormatter(
     val commentStart: String? = null,
     val commentLine: String? = null,
     val commentEnd: String? = null
-): Function<String, String> {
-    object Java: SimpleCopyrightFormatter("/*", " * ", " */")
-    object Shell: SimpleCopyrightFormatter("# ", "# ", "# ")
-    object Bat: SimpleCopyrightFormatter("rem ", "rem ", "rem ")
-    object AtBat: SimpleCopyrightFormatter("@rem ", "@rem ", "@rem ")
-    object PaamayimNekudotayim: SimpleCopyrightFormatter(":: ", ":: ", ":: ")
-    object Xml: SimpleCopyrightFormatter("<!--", "  ~ ", "  -->")
+) : Function<String, String> {
+    object Java : SimpleCopyrightFormatter("/*", " * ", " */")
+    object Shell : SimpleCopyrightFormatter("# ", "# ", "# ")
+    object Bat : SimpleCopyrightFormatter("rem ", "rem ", "rem ")
+    object AtBat : SimpleCopyrightFormatter("@rem ", "@rem ", "@rem ")
+    object PaamayimNekudotayim : SimpleCopyrightFormatter(":: ", ":: ", ":: ")
+    object Xml : SimpleCopyrightFormatter("<!--", "  ~ ", "  -->")
 
     override fun apply(value: String): String {
         val sb = StringBuilder()

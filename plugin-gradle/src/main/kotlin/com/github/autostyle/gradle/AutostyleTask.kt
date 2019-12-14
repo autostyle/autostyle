@@ -36,6 +36,12 @@ import javax.inject.Inject
 abstract class AutostyleTask @Inject constructor(
     objects: ObjectFactory
 ) : DefaultTask() {
+
+    init {
+        // The task produces no output, so we need to provide upToDateWhen
+        outputs.upToDateWhen { true }
+    }
+
     // set by AutostyleExtension, but possibly overridden by FormatExtension
     @get:Input
     val encoding = objects.property<String>().conv("UTF-8")
@@ -49,7 +55,7 @@ abstract class AutostyleTask @Inject constructor(
     val paddedCell = objects.property<Boolean>().conv(false)
 
     @get:Input
-    val steps= objects.listProperty<FormatterStep>()
+    val steps = objects.listProperty<FormatterStep>()
 
     @get:InputFiles
 //    @get:Incremental

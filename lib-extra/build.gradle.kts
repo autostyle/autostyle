@@ -22,4 +22,4 @@ dependencies {
 }
 
 // we'll hold the core lib to a high standard
-//spotbugs { reportLevel = 'low' } // low|medium|high (low = sensitive to even minor mistakes)
+// spotbugs { reportLevel = 'low' } // low|medium|high (low = sensitive to even minor mistakes)

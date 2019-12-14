@@ -12,7 +12,7 @@ dependencies {
 }
 
 // we"ll hold the testlib to a low standard (prize brevity)
-//spotbugs { reportLevel = "high" } // low|medium|high (low = sensitive to even minor mistakes)
+// spotbugs { reportLevel = "high" } // low|medium|high (low = sensitive to even minor mistakes)
 
 tasks.named<Test>("test") {
     useJUnitPlatform {

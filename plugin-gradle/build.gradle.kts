@@ -16,20 +16,6 @@ dependencies {
     testImplementation("com.diffplug.durian:durian-testlib")
 }
 
-/////////////////////
-// SPOTLESS (fake) //
-/////////////////////
-//task autostyleCheck(type: JavaExec) {
-//  classpath sourceSets.test.runtimeClasspath
-//  main = "com.github.autostyle.gradle.SelfTestCheck"
-//}
-//check.dependsOn(autostyleCheck)
-//
-//task autostyleApply(type: JavaExec) {
-//  classpath sourceSets.test.runtimeClasspath
-//  main = "com.github.autostyle.gradle.SelfTestApply"
-//}
-
 tasks.named<Test>("test") {
     useJUnitPlatform {
         excludeTags("npm")
@@ -42,9 +28,6 @@ val npmTest by tasks.registering(Test::class) {
     }
 }
 
-//////////////////////////
-// GRADLE PLUGIN PORTAL //
-//////////////////////////
 gradlePlugin {
     plugins {
         create("autostylePlugin") {

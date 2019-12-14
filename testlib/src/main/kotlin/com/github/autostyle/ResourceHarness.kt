@@ -197,7 +197,6 @@ open class ResourceHarness {
             )
             conditions.accept(Assertions.assertThat(content))
         }
-
     }
 
     @Throws(IOException::class)

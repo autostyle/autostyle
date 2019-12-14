@@ -24,7 +24,7 @@ import org.gradle.kotlin.dsl.mapProperty
 import org.gradle.kotlin.dsl.property
 import javax.inject.Inject
 
-open class PrettierConfig internal @Inject constructor(
+open class PrettierConfig @Inject internal constructor(
     private val devDependencies: Map<String, String>,
     objects: ObjectFactory,
     private val project: Project

@@ -43,7 +43,6 @@ property("localReleasePlugins")?.ifBlank { "../vlsi-release-plugins" }?.let {
     includeBuild(it)
 }
 
-
 buildscript {
     fun property(name: String) =
         when (extra.has(name)) {
