@@ -1,5 +1,5 @@
 dependencies {
-    api(project(":lib"))
+    api(project(":autostyle-lib"))
     api("com.diffplug.durian:durian-core")
     api("com.diffplug.durian:durian-testlib")
     api("org.assertj:assertj-core")

@@ -5,13 +5,13 @@ plugins {
 }
 
 dependencies {
-    api(project(":lib"))
-    api(project(":lib-extra"))
+    api(project(":autostyle-lib"))
+    api(project(":autostyle-lib-extra"))
     implementation("com.diffplug.durian:durian-core")
     implementation("com.diffplug.durian:durian-io")
     implementation("com.diffplug.durian:durian-collect")
 
-    testImplementation(project(":testlib"))
+    testImplementation(project(":autostyle-testlib"))
     testImplementation("org.assertj:assertj-core")
     testImplementation("com.diffplug.durian:durian-testlib")
 }

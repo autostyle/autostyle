@@ -6,18 +6,22 @@ plugins {
     id("com.gradle.plugin-publish") apply false
     id("com.jfrog.bintray") apply false
     id("org.jdrupes.mdoclet") apply false
+    id("org.jetbrains.gradle.plugin.idea-ext")
     id("com.github.vlsi.gradle-extensions")
+    id("com.github.vlsi.ide")
+    id("com.github.vlsi.stage-vote-release")
     kotlin("jvm") apply false
 }
 
 val String.v: String get() = rootProject.extra["$this.version"] as String
 
 val buildVersion = "autostyle".v + "-SNAPSHOT"
+val enableGradleMetadata by props()
 
 val autostyleSelf by props()
 
 allprojects {
-    group = "com.github.vlsi.autostyle"
+    group = "com.github.autostyle"
     version = buildVersion
 
     val javaUsed = file("src/main/java").isDirectory || file("src/test/java").isDirectory
@@ -43,7 +47,7 @@ allprojects {
     if (javaUsed || kotlinUsed) {
         dependencies {
             val implementation by configurations
-            implementation(platform(project(":bom")))
+            implementation(platform(project(":autostyle-bom")))
         }
     }
 
@@ -91,6 +95,12 @@ allprojects {
         }
 
         apply(plugin = "maven-publish")
+
+        if (!enableGradleMetadata) {
+            tasks.withType<GenerateModuleMetadata> {
+                enabled = false
+            }
+        }
 
         tasks {
             withType<JavaCompile>().configureEach {

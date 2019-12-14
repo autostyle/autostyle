@@ -1,5 +1,5 @@
 dependencies {
-    api(project(":lib"))
+    api(project(":autostyle-lib"))
     // misc useful utilities
     implementation("com.diffplug.durian:durian-core")
     implementation("com.diffplug.durian:durian-collect")
@@ -13,7 +13,7 @@ dependencies {
     implementation("org.codehaus.groovy:groovy-xml")
 
     // testing
-    testImplementation(project(":testlib"))
+    testImplementation(project(":autostyle-testlib"))
     testImplementation("org.assertj:assertj-core")
     testImplementation("com.diffplug.durian:durian-testlib")
     // EclipseCommonTests is hard to migrate to JUnit5 :(

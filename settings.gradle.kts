@@ -17,13 +17,18 @@ pluginManagement {
     }
 }
 
-include(
+for (p in listOf(
     "bom",
     "testlib",
     "lib",
     "lib-extra",
     "plugin-gradle"
-)
+)) {
+    include(p)
+    project(":$p").apply {
+        name = "autostyle-$p"
+    }
+}
 
 // See https://github.com/gradle/gradle/issues/1348#issuecomment-284758705 and
 // https://github.com/gradle/gradle/issues/5321#issuecomment-387561204
@@ -57,9 +62,9 @@ buildscript {
             gradlePluginPortal()
         }
         dependencies {
-            classpath(files("plugin-gradle/build/libs/plugin-gradle-$ver.jar",
-                "lib/build/libs/lib-$ver.jar",
-                "lib-extra/build/libs/lib-extra-$ver.jar"))
+            classpath(files("plugin-gradle/build/libs/autostyle-plugin-gradle-$ver.jar",
+                "lib/build/libs/autostyle-lib-$ver.jar",
+                "lib-extra/build/libs/autostyle-lib-extra-$ver.jar"))
             classpath("com.diffplug.durian:durian-core:${"durian".v()}")
             classpath("com.diffplug.durian:durian-collect:${"durian".v()}")
             // needed by GitAttributesLineEndings
