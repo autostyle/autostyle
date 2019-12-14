@@ -178,7 +178,10 @@ open class BaseFormatExtension @Inject constructor(
 
     /** Uses exactly the npm packages specified in the map.  */
     @JvmOverloads
-    fun prettier(devDependencies: Map<String, String>, action: Action<PrettierConfig>? = null) {
+    fun prettier(
+        devDependencies: Map<String, String> = PrettierFormatterStep.defaultDevDependencies(),
+        action: Action<PrettierConfig>? = null
+    ) {
         createPrettierConfig(devDependencies).also {
             action?.execute(it)
             addStep(it.createStep())

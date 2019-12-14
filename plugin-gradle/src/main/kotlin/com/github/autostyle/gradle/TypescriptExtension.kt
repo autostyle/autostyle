@@ -26,7 +26,13 @@ open class TypescriptExtension @Inject constructor(name: String, root: Autostyle
     }
 
     /** Uses the specified version of typescript-format.  */
-    fun tsfmt(version: String, action: Action<TypescriptConfig>) {
+    fun tsfmt(action: Action<TypescriptConfig>) {
+        tsfmt(TsFmtFormatterStep.defaultDevDependencies(), action)
+    }
+
+    /** Uses the specified version of typescript-format.  */
+    @JvmOverloads
+    fun tsfmt(version: String, action: Action<TypescriptConfig>? = null) {
         tsfmt(TsFmtFormatterStep.defaultDevDependenciesWithTsFmt(version), action)
     }
 
@@ -45,6 +51,6 @@ open class TypescriptExtension @Inject constructor(name: String, root: Autostyle
 
     override fun createPrettierConfig(devDependencies: Map<String, String>): PrettierConfig =
         super.createPrettierConfig(devDependencies).apply {
-            properties.put("parser", "typescript")
+            config.put("parser", "typescript")
         }
 }

@@ -29,7 +29,6 @@ import java.io.File;
 import java.util.Arrays;
 
 public class PrettierFormatterStepTest {
-
   @Nested
   @Tag("npm")
   public static class PrettierFormattingOfFileTypesIsWorking extends NpmFormatterStepCommonTests {

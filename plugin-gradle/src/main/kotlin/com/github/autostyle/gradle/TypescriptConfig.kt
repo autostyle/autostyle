@@ -31,10 +31,10 @@ class TypescriptConfig @Inject internal constructor(
     private val project: Project
 ) : NpmStepConfig(objects) {
     private var config = emptyMap<String, Any>()
-    private lateinit var configFile: TypedTsFmtConfigFile
+    private var configFile: TypedTsFmtConfigFile? = null
 
     fun config(config: Map<String, Any>) {
-        this.config = TreeMap(config)
+        this.config = config.toSortedMap()
     }
 
     fun tsconfigFile(path: Any) {

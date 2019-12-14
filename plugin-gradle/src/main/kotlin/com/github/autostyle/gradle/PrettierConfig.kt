@@ -30,7 +30,15 @@ open class PrettierConfig @Inject internal constructor(
     private val project: Project
 ) : NpmStepConfig(objects) {
     val configFile = objects.property<Any>()
-    val properties = objects.mapProperty<String, Any>()
+    val config = objects.mapProperty<String, Any>()
+
+    fun configFile(value: Any) {
+        configFile.set(value)
+    }
+
+    fun config(value: Map<String, Any>) {
+        config.set(value)
+    }
 
     override fun createStep(): FormatterStep = PrettierFormatterStep.create(
         devDependencies,
@@ -39,7 +47,7 @@ open class PrettierConfig @Inject internal constructor(
         npmExecutable.orNull?.let { project.file(it) },
         com.github.autostyle.npm.PrettierConfig(
             configFile.orNull?.let { project.file(it) },
-            properties.get()
+            config.get()
         )
     )
 }
