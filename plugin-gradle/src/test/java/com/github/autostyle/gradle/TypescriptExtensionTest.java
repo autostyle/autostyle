@@ -15,10 +15,10 @@
  */
 package com.github.autostyle.gradle;
 
-import java.io.IOException;
-
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
 
 @Tag("npm")
 public class TypescriptExtensionTest extends GradleIntegrationTest {

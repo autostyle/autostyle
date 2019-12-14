@@ -15,6 +15,8 @@
  */
 package com.github.autostyle;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URLClassLoader;
@@ -24,8 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Autostyle global cache. {@link AutostyleCache#clear()} should be called

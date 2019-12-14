@@ -17,6 +17,9 @@ package com.github.autostyle.java;
 
 import static com.github.autostyle.java.LibJavaPreconditions.requireElementsNonNull;
 
+import com.github.autostyle.FormatterFunc;
+import com.github.autostyle.FormatterStep;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -27,13 +30,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import com.github.autostyle.FormatterFunc;
-import com.github.autostyle.FormatterStep;
 
 public final class ImportOrderStep {
   private final String lineFormat;

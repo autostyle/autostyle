@@ -15,23 +15,20 @@
  */
 package com.github.autostyle.extra.groovy;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
 import com.diffplug.common.base.Errors;
-
-import org.junit.Rule;
-import org.junit.Test;
-
 import com.github.autostyle.FormatterStep;
 import com.github.autostyle.Provisioner;
 import com.github.autostyle.ResourceHarness;
 import com.github.autostyle.SerializableEqualityTester;
 import com.github.autostyle.StepHarness;
 import com.github.autostyle.TestProvisioner;
-
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 @Deprecated
 public class DeprecatedGrEclipseFormatterStepTest extends ResourceHarness {

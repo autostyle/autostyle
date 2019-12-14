@@ -18,6 +18,11 @@ package com.github.autostyle.npm;
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 
+import com.github.autostyle.FormatterFunc;
+import com.github.autostyle.FormatterStep;
+import com.github.autostyle.Provisioner;
+import com.github.autostyle.ThrowingEx;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -27,11 +32,6 @@ import java.util.TreeMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import com.github.autostyle.FormatterFunc;
-import com.github.autostyle.FormatterStep;
-import com.github.autostyle.Provisioner;
-import com.github.autostyle.ThrowingEx;
 
 public class PrettierFormatterStep {
   public static final String NAME = "prettier-format";

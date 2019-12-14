@@ -18,6 +18,8 @@ package com.github.autostyle;
 import static com.github.autostyle.MoreIterables.toNullHostileList;
 import static com.github.autostyle.MoreIterables.toSortedSet;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -25,8 +27,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /** Computes a signature for any needed files. */
 public final class FileSignature implements Serializable {

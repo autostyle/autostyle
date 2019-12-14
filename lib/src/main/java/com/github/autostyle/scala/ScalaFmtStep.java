@@ -15,6 +15,12 @@
  */
 package com.github.autostyle.scala;
 
+import com.github.autostyle.FileSignature;
+import com.github.autostyle.FormatterFunc;
+import com.github.autostyle.FormatterStep;
+import com.github.autostyle.JarState;
+import com.github.autostyle.Provisioner;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -27,12 +33,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
-
-import com.github.autostyle.FileSignature;
-import com.github.autostyle.FormatterFunc;
-import com.github.autostyle.FormatterStep;
-import com.github.autostyle.JarState;
-import com.github.autostyle.Provisioner;
 
 /** Wraps up [scalafmt](https://github.com/olafurpg/scalafmt) as a FormatterStep. */
 public class ScalaFmtStep {

@@ -15,18 +15,16 @@
  */
 package com.github.autostyle;
 
+import com.diffplug.common.base.StandardSystemProperty;
+import com.github.autostyle.generic.EndWithNewlineStep;
+import org.junit.jupiter.api.Test;
+
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.junit.jupiter.api.Test;
-
-import com.diffplug.common.base.StandardSystemProperty;
-
-import com.github.autostyle.generic.EndWithNewlineStep;
 
 public class FormatterTest {
   // Formatter normally needs to be closed, but no resources will be leaked in this special case

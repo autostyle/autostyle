@@ -15,6 +15,11 @@
  */
 package com.github.autostyle.kotlin;
 
+import com.github.autostyle.FormatterFunc;
+import com.github.autostyle.FormatterStep;
+import com.github.autostyle.JarState;
+import com.github.autostyle.Provisioner;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
@@ -27,12 +32,6 @@ import java.util.Objects;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.github.autostyle.FormatterFunc;
-import com.github.autostyle.FormatterStep;
-import com.github.autostyle.JarState;
-import com.github.autostyle.Provisioner;
-import com.github.autostyle.ThrowingEx;
 
 /** Wraps up [ktlint](https://github.com/pinterest/ktlint) as a FormatterStep. */
 public class KtLintStep {

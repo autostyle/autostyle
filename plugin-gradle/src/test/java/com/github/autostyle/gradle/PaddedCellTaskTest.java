@@ -15,28 +15,26 @@
  */
 package com.github.autostyle.gradle;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Locale;
-
-import org.assertj.core.api.Assertions;
-import org.gradle.api.Project;
-import org.junit.jupiter.api.Test;
+import static com.github.autostyle.gradle.Tasks.execute;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.diffplug.common.base.StandardSystemProperty;
 import com.diffplug.common.base.StringPrinter;
-
 import com.github.autostyle.FormatterFunc;
 import com.github.autostyle.FormatterStep;
 import com.github.autostyle.LineEnding;
 import com.github.autostyle.ResourceHarness;
 import com.github.autostyle.TestProvisioner;
+import org.assertj.core.api.Assertions;
+import org.gradle.api.Project;
+import org.junit.jupiter.api.Test;
 
-import static com.github.autostyle.gradle.Tasks.execute;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Locale;
 
 public class PaddedCellTaskTest extends ResourceHarness {
   private static final boolean IS_WIN = StandardSystemProperty.OS_NAME.value().toLowerCase(Locale.US).contains("win");

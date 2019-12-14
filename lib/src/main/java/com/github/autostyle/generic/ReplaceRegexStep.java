@@ -15,12 +15,12 @@
  */
 package com.github.autostyle.generic;
 
+import com.github.autostyle.FormatterFunc;
+import com.github.autostyle.FormatterStep;
+
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.regex.Pattern;
-
-import com.github.autostyle.FormatterFunc;
-import com.github.autostyle.FormatterStep;
 
 public final class ReplaceRegexStep {
   // prevent direct instantiation

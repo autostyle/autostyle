@@ -15,11 +15,10 @@
  */
 package com.github.autostyle.java;
 
-import org.junit.jupiter.api.Test;
-
 import com.github.autostyle.FormatterStep;
 import com.github.autostyle.ResourceHarness;
 import com.github.autostyle.SerializableEqualityTester;
+import org.junit.jupiter.api.Test;
 
 public class ImportOrderStepTest extends ResourceHarness {
 

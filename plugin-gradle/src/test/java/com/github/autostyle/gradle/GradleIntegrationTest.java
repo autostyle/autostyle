@@ -15,13 +15,12 @@
  */
 package com.github.autostyle.gradle;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
+import com.diffplug.common.base.Errors;
+import com.diffplug.common.base.StringPrinter;
+import com.diffplug.common.tree.TreeDef;
+import com.diffplug.common.tree.TreeStream;
+import com.github.autostyle.LineEnding;
+import com.github.autostyle.ResourceHarness;
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.BuildTask;
 import org.gradle.testkit.runner.GradleRunner;
@@ -29,13 +28,12 @@ import org.gradle.testkit.runner.TaskOutcome;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 
-import com.diffplug.common.base.Errors;
-import com.diffplug.common.base.StringPrinter;
-import com.diffplug.common.tree.TreeDef;
-import com.diffplug.common.tree.TreeStream;
-
-import com.github.autostyle.LineEnding;
-import com.github.autostyle.ResourceHarness;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class GradleIntegrationTest extends ResourceHarness {
   /**

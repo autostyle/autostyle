@@ -17,13 +17,13 @@ package com.github.autostyle;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.jupiter.api.Test;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import org.junit.jupiter.api.Test;
 
 public class FileSignatureTest extends ResourceHarness {
   private final static String[] inputPaths = {"A", "C", "C", "A", "B"};

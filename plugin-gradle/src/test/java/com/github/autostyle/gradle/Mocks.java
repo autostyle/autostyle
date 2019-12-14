@@ -15,8 +15,7 @@
  */
 package com.github.autostyle.gradle;
 
-import java.io.File;
-
+import com.diffplug.common.collect.Iterables;
 import org.gradle.api.Action;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.file.FileSystemLocation;
@@ -28,7 +27,7 @@ import org.gradle.internal.file.FileType;
 import org.gradle.work.FileChange;
 import org.gradle.work.InputChanges;
 
-import com.diffplug.common.collect.Iterables;
+import java.io.File;
 
 final class Mocks {
   private Mocks() {}

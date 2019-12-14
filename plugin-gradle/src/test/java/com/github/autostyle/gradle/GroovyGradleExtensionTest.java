@@ -15,11 +15,10 @@
  */
 package com.github.autostyle.gradle;
 
-import java.io.IOException;
-
+import com.diffplug.common.base.StringPrinter;
 import org.junit.jupiter.api.Test;
 
-import com.diffplug.common.base.StringPrinter;
+import java.io.IOException;
 
 public class GroovyGradleExtensionTest extends GradleIntegrationTest {
   private static final String HEADER = "My tests header";

@@ -17,6 +17,12 @@ package com.github.autostyle.markdown;
 
 import static com.github.autostyle.markdown.LibMarkdownPreconditions.requireKeysAndValuesNonNull;
 
+import com.github.autostyle.FormatterFunc;
+import com.github.autostyle.FormatterStep;
+import com.github.autostyle.JarState;
+import com.github.autostyle.Provisioner;
+import com.github.autostyle.ThrowingEx.Supplier;
+
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -26,12 +32,6 @@ import java.util.Objects;
 import java.util.TreeMap;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
-
-import com.github.autostyle.FormatterFunc;
-import com.github.autostyle.FormatterStep;
-import com.github.autostyle.JarState;
-import com.github.autostyle.Provisioner;
-import com.github.autostyle.ThrowingEx.Supplier;
 
 /** A step for [FreshMark](https://github.com/diffplug/freshmark). */
 public class FreshMarkStep {

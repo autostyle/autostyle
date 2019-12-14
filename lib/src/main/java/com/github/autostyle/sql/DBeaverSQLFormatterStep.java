@@ -15,13 +15,13 @@
  */
 package com.github.autostyle.sql;
 
-import java.io.File;
-import java.io.Serializable;
-
 import com.github.autostyle.FileSignature;
 import com.github.autostyle.FormatterFunc;
 import com.github.autostyle.FormatterProperties;
 import com.github.autostyle.FormatterStep;
+
+import java.io.File;
+import java.io.Serializable;
 
 /** SQL formatter step which wraps up DBeaver's SqlTokenizedFormatter implementation. */
 public class DBeaverSQLFormatterStep {

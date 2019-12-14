@@ -15,17 +15,15 @@
  */
 package com.github.autostyle.npm;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.File;
-import java.io.IOException;
-
+import com.diffplug.common.collect.ImmutableMap;
+import com.github.autostyle.ResourceHarness;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import com.diffplug.common.collect.ImmutableMap;
-
-import com.github.autostyle.ResourceHarness;
+import java.io.File;
+import java.io.IOException;
 
 public class SimpleJsonWriterTest extends ResourceHarness {
 

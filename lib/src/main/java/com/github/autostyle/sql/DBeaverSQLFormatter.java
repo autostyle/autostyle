@@ -15,10 +15,10 @@
  */
 package com.github.autostyle.sql;
 
-import java.util.Properties;
-
 import com.github.autostyle.sql.dbeaver.DBeaverSQLFormatterConfiguration;
 import com.github.autostyle.sql.dbeaver.SQLTokenizedFormatter;
+
+import java.util.Properties;
 
 /**
  * @author Baptiste Mesta.

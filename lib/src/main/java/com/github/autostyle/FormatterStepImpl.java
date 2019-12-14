@@ -15,14 +15,13 @@
  */
 package com.github.autostyle;
 
+import com.github.autostyle.FormatterStep.Strict;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Random;
-
-import com.github.autostyle.FormatterStep.Strict;
-
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Standard implementation of FormatExtension which cleanly enforces

@@ -17,14 +17,14 @@ package com.github.autostyle;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.assertj.core.api.AbstractAssert;
+import org.junit.jupiter.api.Test;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Properties;
-
-import org.assertj.core.api.AbstractAssert;
-import org.junit.jupiter.api.Test;
 
 public class FormatterPropertiesTest extends ResourceHarness {
   private static final String RESOURCES_ROOT_DIR = "formatter/properties/";

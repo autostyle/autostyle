@@ -15,15 +15,15 @@
  */
 package com.github.autostyle.extra.wtp;
 
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Properties;
-
 import com.github.autostyle.FormatterFunc;
 import com.github.autostyle.Provisioner;
 import com.github.autostyle.ThrowingEx;
 import com.github.autostyle.extra.EclipseBasedStepBuilder;
+
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Properties;
 
 /** Formatter step which calls out to the Groovy-Eclipse formatter. */
 public enum EclipseWtpFormatterStep {

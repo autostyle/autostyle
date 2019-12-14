@@ -15,10 +15,10 @@
  */
 package com.github.autostyle.java;
 
-import java.util.Objects;
-
 import com.github.autostyle.FormatterStep;
 import com.github.autostyle.Provisioner;
+
+import java.util.Objects;
 
 /** Uses google-java-format, but only to remove unused imports. */
 public class RemoveUnusedImportsStep {

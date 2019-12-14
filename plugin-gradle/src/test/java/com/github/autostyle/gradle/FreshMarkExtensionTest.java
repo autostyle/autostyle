@@ -15,9 +15,9 @@
  */
 package com.github.autostyle.gradle;
 
-import java.io.IOException;
-
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
 
 public class FreshMarkExtensionTest extends GradleIntegrationTest {
   @Test

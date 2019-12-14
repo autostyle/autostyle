@@ -17,10 +17,8 @@ package com.github.autostyle.gradle
 
 import com.github.autostyle.Formatter
 import com.github.autostyle.PaddedCellBulk
-import com.github.autostyle.gradle.ext.deserialize
 import com.github.autostyle.gradle.ext.serialize
 import org.gradle.api.model.ObjectFactory
-import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.OutputFile
 import org.gradle.work.ChangeType
 import org.gradle.work.InputChanges
@@ -31,10 +29,9 @@ import javax.inject.Inject
 open class AutostyleCheckTask @Inject constructor(
     objects: ObjectFactory
 ) : AutostyleTask(objects) {
-//    @get:OutputFile
-//    @get:InputFile
-//    private val cacheFile: File
-//        get() = File(project.buildDir, "autostyle/$name")
+    @get:OutputFile
+    val cacheFile: File
+        get() = File(project.buildDir, "autostyle/$name")
 
     override fun performAction(inputChanges: InputChanges) {
         val filesToCheck = mutableSetOf<File>()
@@ -53,10 +50,10 @@ open class AutostyleCheckTask @Inject constructor(
         val filesWithViolations = formatter.use { check(it, filesToCheck) }
 
         // Save violations so the next task execution reports them as well
-//        cacheFile.parentFile.mkdirs()
-//        cacheFile.serialize(LastViolations().apply {
-//            violations.addAll(filesWithViolations)
-//        })
+        cacheFile.parentFile.mkdirs()
+        cacheFile.serialize(LastViolations().apply {
+            violations.addAll(filesWithViolations)
+        })
     }
 
     internal class LastViolations : Serializable {

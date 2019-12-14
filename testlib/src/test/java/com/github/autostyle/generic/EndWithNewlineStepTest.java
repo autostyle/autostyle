@@ -15,11 +15,10 @@
  */
 package com.github.autostyle.generic;
 
-import org.junit.jupiter.api.Test;
-
 import com.github.autostyle.FormatterStep;
 import com.github.autostyle.SerializableEqualityTester;
 import com.github.autostyle.StepHarness;
+import org.junit.jupiter.api.Test;
 
 public class EndWithNewlineStepTest {
   @Test

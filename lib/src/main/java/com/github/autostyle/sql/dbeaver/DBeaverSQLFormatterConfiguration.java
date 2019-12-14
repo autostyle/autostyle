@@ -15,9 +15,9 @@
  */
 package com.github.autostyle.sql.dbeaver;
 
-import java.util.Properties;
-
 import com.github.autostyle.annotations.Internal;
+
+import java.util.Properties;
 
 /**
  * **Warning:** Use this class at your own risk. It is an implementation detail and is not

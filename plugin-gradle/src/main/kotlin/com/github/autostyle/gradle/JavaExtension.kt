@@ -16,7 +16,6 @@
 package com.github.autostyle.gradle
 
 import com.github.autostyle.FormatterStep
-import com.github.autostyle.extra.groovy.GrEclipseFormatterStep
 import com.github.autostyle.extra.java.EclipseJdtFormatterStep
 import com.github.autostyle.gradle.ext.asProvisioner
 import com.github.autostyle.gradle.ext.conv

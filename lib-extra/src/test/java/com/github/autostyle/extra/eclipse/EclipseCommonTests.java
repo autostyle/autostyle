@@ -15,20 +15,18 @@
  */
 package com.github.autostyle.extra.eclipse;
 
-import static org.assertj.core.api.Assertions.*;
-
-import java.io.File;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import com.diffplug.common.base.Errors;
-
-import org.junit.Rule;
-import org.junit.Test;
-
 import com.github.autostyle.FormatterStep;
 import com.github.autostyle.LineEnding;
 import com.github.autostyle.ResourceHarness;
-
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+
+import java.io.File;
 
 /**
  * Provides a common set of tests for all Autostyle Eclipse Formatter steps provided by

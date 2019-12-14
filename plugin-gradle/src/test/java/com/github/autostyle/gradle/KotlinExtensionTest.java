@@ -17,10 +17,10 @@ package com.github.autostyle.gradle;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.IOException;
-
 import org.gradle.testkit.runner.BuildResult;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
 
 public class KotlinExtensionTest extends GradleIntegrationTest {
   private static final String HEADER = "License Header";

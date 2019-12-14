@@ -17,6 +17,27 @@ package com.github.autostyle.extra;
 
 import static com.github.autostyle.extra.LibExtraPreconditions.requireElementsNonNull;
 
+import com.diffplug.common.base.Errors;
+import com.diffplug.common.tree.TreeStream;
+import com.github.autostyle.FileSignature;
+import com.github.autostyle.LazyForwardingEquality;
+import com.github.autostyle.LineEnding;
+import com.googlecode.concurrenttrees.radix.ConcurrentRadixTree;
+import com.googlecode.concurrenttrees.radix.node.Node;
+import com.googlecode.concurrenttrees.radix.node.concrete.DefaultCharSequenceNodeFactory;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import org.eclipse.jgit.attributes.Attribute;
+import org.eclipse.jgit.attributes.AttributesNode;
+import org.eclipse.jgit.attributes.AttributesRule;
+import org.eclipse.jgit.lib.Config;
+import org.eclipse.jgit.lib.ConfigConstants;
+import org.eclipse.jgit.lib.Constants;
+import org.eclipse.jgit.lib.CoreConfig.EOL;
+import org.eclipse.jgit.storage.file.FileBasedConfig;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.eclipse.jgit.util.FS;
+import org.eclipse.jgit.util.SystemReader;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -37,30 +58,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
-
-import org.eclipse.jgit.attributes.Attribute;
-import org.eclipse.jgit.attributes.AttributesNode;
-import org.eclipse.jgit.attributes.AttributesRule;
-import org.eclipse.jgit.lib.Config;
-import org.eclipse.jgit.lib.ConfigConstants;
-import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.lib.CoreConfig.EOL;
-import org.eclipse.jgit.storage.file.FileBasedConfig;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
-import org.eclipse.jgit.util.FS;
-import org.eclipse.jgit.util.SystemReader;
-
-import com.diffplug.common.base.Errors;
-import com.diffplug.common.tree.TreeStream;
-import com.googlecode.concurrenttrees.radix.ConcurrentRadixTree;
-import com.googlecode.concurrenttrees.radix.node.Node;
-import com.googlecode.concurrenttrees.radix.node.concrete.DefaultCharSequenceNodeFactory;
-
-import com.github.autostyle.FileSignature;
-import com.github.autostyle.LazyForwardingEquality;
-import com.github.autostyle.LineEnding;
-
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Uses [.gitattributes](https://git-scm.com/docs/gitattributes) to determine

@@ -17,6 +17,16 @@ package com.github.autostyle.extra.wtp;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.github.autostyle.FormatterStep;
+import com.github.autostyle.TestProvisioner;
+import com.github.autostyle.extra.EclipseBasedStepBuilder;
+import com.github.autostyle.extra.eclipse.EclipseCommonTests;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameter;
+import org.junit.runners.Parameterized.Parameters;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -24,17 +34,6 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.function.Consumer;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
-
-import com.github.autostyle.FormatterStep;
-import com.github.autostyle.TestProvisioner;
-import com.github.autostyle.extra.EclipseBasedStepBuilder;
-import com.github.autostyle.extra.eclipse.EclipseCommonTests;
 
 @RunWith(value = Parameterized.class)
 public class EclipseWtpFormatterStepTest extends EclipseCommonTests {

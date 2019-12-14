@@ -17,11 +17,10 @@ package com.github.autostyle;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.File;
-
+import com.github.autostyle.generic.ReplaceStep;
 import org.junit.jupiter.api.Test;
 
-import com.github.autostyle.generic.ReplaceStep;
+import java.io.File;
 
 public class FilterByFileFormatterStepTest extends ResourceHarness {
   @Test

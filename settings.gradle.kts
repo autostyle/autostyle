@@ -42,3 +42,35 @@ property("localReleasePlugins")?.ifBlank { "../vlsi-release-plugins" }?.let {
     println("Importing project '$it'")
     includeBuild(it)
 }
+
+
+buildscript {
+    fun property(name: String) =
+        when (extra.has(name)) {
+            true -> extra.get(name) as? String
+            else -> null
+        }
+    if (property("autostyleSelf")?.ifBlank { "true" }?.toBoolean() == true) {
+        val ver = property("autostyle.version") + "-SNAPSHOT"
+        fun String.v(): String = extra["$this.version"] as String
+
+        repositories {
+            gradlePluginPortal()
+        }
+        dependencies {
+            classpath(files("plugin-gradle/build/libs/plugin-gradle-$ver.jar",
+                "lib/build/libs/lib-$ver.jar",
+                "lib-extra/build/libs/lib-extra-$ver.jar"))
+            classpath("com.diffplug.durian:durian-core:${"durian".v()}")
+            classpath("com.diffplug.durian:durian-collect:${"durian".v()}")
+            // needed by GitAttributesLineEndings
+            classpath("org.eclipse.jgit:org.eclipse.jgit:${"org.eclipse.jgit".v()}") {
+                exclude("com.jcraft", "jsch")
+                exclude("org.bouncycastle")
+            }
+            classpath("com.googlecode.concurrent-trees:concurrent-trees:${"concurrent-trees".v()}")
+            // used for xml parsing in EclipseFormatter
+            classpath("org.codehaus.groovy:groovy-xml:${"groovy-xml".v()}")
+        }
+    }
+}

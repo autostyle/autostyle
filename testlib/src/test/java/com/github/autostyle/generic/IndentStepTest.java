@@ -15,14 +15,13 @@
  */
 package com.github.autostyle.generic;
 
-import java.io.File;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import com.github.autostyle.FormatterStep;
 import com.github.autostyle.ResourceHarness;
 import com.github.autostyle.SerializableEqualityTester;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import java.io.File;
 
 public class IndentStepTest extends ResourceHarness {
   @Test

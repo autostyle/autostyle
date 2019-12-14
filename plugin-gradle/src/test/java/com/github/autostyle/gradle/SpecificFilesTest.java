@@ -15,10 +15,10 @@
  */
 package com.github.autostyle.gradle;
 
-import java.io.IOException;
-
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
 
 @Disabled
 public class SpecificFilesTest extends GradleIntegrationTest {

@@ -15,14 +15,14 @@
  */
 package com.github.autostyle.extra.cpp;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Properties;
-
 import com.github.autostyle.FormatterFunc;
 import com.github.autostyle.Provisioner;
 import com.github.autostyle.extra.EclipseBasedStepBuilder;
 import com.github.autostyle.extra.EclipseBasedStepBuilder.State;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Properties;
 
 /** Formatter step which calls out to the Eclipse CDT formatter. */
 public final class EclipseCdtFormatterStep {

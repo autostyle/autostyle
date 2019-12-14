@@ -15,9 +15,9 @@
  */
 package com.github.autostyle.gradle;
 
-import java.nio.charset.Charset;
-
 import org.junit.jupiter.api.Test;
+
+import java.nio.charset.Charset;
 
 public class EncodingTest extends GradleIntegrationTest {
   @Test

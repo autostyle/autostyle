@@ -15,18 +15,17 @@
  */
 package com.github.autostyle.gradle;
 
+import com.diffplug.common.base.Errors;
+import com.diffplug.common.base.StringPrinter;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
-import com.diffplug.common.base.Errors;
-import com.diffplug.common.base.StringPrinter;
 
 public class GradleIncrementalResolutionTest extends GradleIntegrationTest {
   @Test

@@ -15,12 +15,12 @@
  */
 package com.github.autostyle.sql.dbeaver;
 
+import com.github.autostyle.annotations.Internal;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-
-import com.github.autostyle.annotations.Internal;
 
 /**
  * **Warning:** Use this class at your own risk. It is an implementation detail and is not

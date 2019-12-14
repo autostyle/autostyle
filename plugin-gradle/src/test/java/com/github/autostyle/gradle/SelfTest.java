@@ -15,18 +15,16 @@
  */
 package com.github.autostyle.gradle;
 
-import java.io.File;
-import java.util.function.Consumer;
-
+import com.diffplug.common.base.Errors;
+import com.diffplug.common.base.StandardSystemProperty;
+import com.github.autostyle.TestProvisioner;
 import org.gradle.api.Project;
 import org.gradle.testkit.runner.GradleRunner;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import com.diffplug.common.base.Errors;
-import com.diffplug.common.base.StandardSystemProperty;
-
-import com.github.autostyle.TestProvisioner;
+import java.io.File;
+import java.util.function.Consumer;
 
 /**
  * If you'd like to step through the full Autostyle plugin,

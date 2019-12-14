@@ -17,15 +17,14 @@ package com.github.autostyle.npm;
 
 import static java.util.Objects.requireNonNull;
 
+import com.github.autostyle.FileSignature;
+import com.github.autostyle.ThrowingEx;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Locale;
-
-import com.github.autostyle.FileSignature;
-import com.github.autostyle.ThrowingEx;
-
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public class TypedTsFmtConfigFile implements Serializable {
 

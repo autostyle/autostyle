@@ -17,6 +17,8 @@ package com.github.autostyle.npm;
 
 import static java.util.Objects.requireNonNull;
 
+import com.github.autostyle.ThrowingEx;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -25,8 +27,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import com.github.autostyle.ThrowingEx;
 
 public class SimpleJsonWriter {
 

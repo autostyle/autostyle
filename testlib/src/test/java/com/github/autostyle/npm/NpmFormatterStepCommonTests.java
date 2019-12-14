@@ -15,10 +15,10 @@
  */
 package com.github.autostyle.npm;
 
+import com.github.autostyle.ResourceHarness;
+
 import java.io.File;
 import java.io.IOException;
-
-import com.github.autostyle.ResourceHarness;
 
 public abstract class NpmFormatterStepCommonTests extends ResourceHarness {
 

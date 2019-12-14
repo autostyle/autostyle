@@ -17,6 +17,13 @@ package com.github.autostyle.npm;
 
 import static java.util.Objects.requireNonNull;
 
+import com.github.autostyle.FileSignature;
+import com.github.autostyle.FormatterFunc;
+import com.github.autostyle.JarState;
+import com.github.autostyle.Provisioner;
+import com.github.autostyle.ThrowingEx;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -31,10 +38,6 @@ import java.util.Map.Entry;
 import java.util.Optional;
 
 import javax.annotation.Nullable;
-
-import com.github.autostyle.*;
-
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 abstract class NpmFormatterStepStateBase implements Serializable {
 

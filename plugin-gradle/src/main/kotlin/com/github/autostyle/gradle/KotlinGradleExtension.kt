@@ -19,7 +19,6 @@ import com.github.autostyle.FormatterStep
 import com.github.autostyle.gradle.ext.asProvisioner
 import com.github.autostyle.kotlin.KtLintStep
 import org.gradle.api.Action
-import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.mapProperty
 import javax.inject.Inject

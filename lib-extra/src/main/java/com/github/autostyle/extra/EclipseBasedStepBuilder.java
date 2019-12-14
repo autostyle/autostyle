@@ -15,6 +15,15 @@
  */
 package com.github.autostyle.extra;
 
+import com.diffplug.common.base.Errors;
+import com.github.autostyle.FileSignature;
+import com.github.autostyle.FormatterFunc;
+import com.github.autostyle.FormatterProperties;
+import com.github.autostyle.FormatterStep;
+import com.github.autostyle.JarState;
+import com.github.autostyle.Provisioner;
+import com.github.autostyle.ThrowingEx;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -26,16 +35,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
-
-import com.diffplug.common.base.Errors;
-
-import com.github.autostyle.FileSignature;
-import com.github.autostyle.FormatterFunc;
-import com.github.autostyle.FormatterProperties;
-import com.github.autostyle.FormatterStep;
-import com.github.autostyle.JarState;
-import com.github.autostyle.Provisioner;
-import com.github.autostyle.ThrowingEx;
 
 /**
  * Generic Eclipse based formatter step {@link State} builder.

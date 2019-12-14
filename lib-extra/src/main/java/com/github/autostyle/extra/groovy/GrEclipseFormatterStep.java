@@ -15,16 +15,16 @@
  */
 package com.github.autostyle.extra.groovy;
 
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Properties;
-
 import com.github.autostyle.FormatterFunc;
 import com.github.autostyle.FormatterStep;
 import com.github.autostyle.Provisioner;
 import com.github.autostyle.extra.EclipseBasedStepBuilder;
 import com.github.autostyle.extra.EclipseBasedStepBuilder.State;
+
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Properties;
 
 /** Formatter step which calls out to the Groovy-Eclipse formatter. */
 public final class GrEclipseFormatterStep {

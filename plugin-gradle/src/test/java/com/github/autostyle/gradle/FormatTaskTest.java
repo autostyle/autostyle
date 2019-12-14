@@ -17,20 +17,19 @@ package com.github.autostyle.gradle;
 
 import static com.github.autostyle.gradle.Tasks.execute;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Collections;
-
+import com.github.autostyle.FormatterStep;
+import com.github.autostyle.LineEnding;
+import com.github.autostyle.ResourceHarness;
+import com.github.autostyle.TestProvisioner;
 import org.assertj.core.api.Assertions;
 import org.gradle.api.GradleException;
 import org.gradle.api.Project;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.github.autostyle.FormatterStep;
-import com.github.autostyle.LineEnding;
-import com.github.autostyle.ResourceHarness;
-import com.github.autostyle.TestProvisioner;
+import java.io.File;
+import java.io.IOException;
+import java.util.Collections;
 
 public class FormatTaskTest extends ResourceHarness {
   private AutostyleTask checkTask;

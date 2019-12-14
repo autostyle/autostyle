@@ -22,10 +22,8 @@ import com.github.autostyle.gradle.ext.deserialize
 import com.github.autostyle.gradle.ext.serialize
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.tasks.InputFiles
-import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.SkipWhenEmpty
-import org.gradle.api.tasks.options.Option
 import org.gradle.work.ChangeType
 import org.gradle.work.InputChanges
 import java.io.File
@@ -47,7 +45,7 @@ open class AutostyleApplyTask @Inject constructor(
     internal data class LastViolations(
         val violations: Set<File> = setOf(),
         val modifiedWhen: Long = if (violations.isEmpty()) 0 else System.currentTimeMillis()
-    ): Serializable {
+    ) : Serializable {
         companion object {
             private const val serialVersionUID = 1L
         }

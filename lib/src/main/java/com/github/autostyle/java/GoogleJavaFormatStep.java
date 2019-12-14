@@ -15,17 +15,17 @@
  */
 package com.github.autostyle.java;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Objects;
-
 import com.github.autostyle.FormatterFunc;
 import com.github.autostyle.FormatterStep;
 import com.github.autostyle.JarState;
 import com.github.autostyle.LineEnding;
 import com.github.autostyle.Provisioner;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Objects;
 
 /** Wraps up [google-java-format](https://github.com/google/google-java-format) as a FormatterStep. */
 public class GoogleJavaFormatStep {

@@ -15,21 +15,21 @@
  */
 package com.github.autostyle.npm;
 
-import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.Collections;
-
+import com.diffplug.common.collect.ImmutableMap;
+import com.github.autostyle.FormatterStep;
+import com.github.autostyle.StepHarness;
+import com.github.autostyle.TestProvisioner;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import com.diffplug.common.collect.ImmutableMap;
-
-import com.github.autostyle.*;
+import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class TsFmtFormatterStepTest {
 

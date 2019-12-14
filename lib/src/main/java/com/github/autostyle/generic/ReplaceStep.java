@@ -15,11 +15,11 @@
  */
 package com.github.autostyle.generic;
 
-import java.io.Serializable;
-import java.util.Objects;
-
 import com.github.autostyle.FormatterFunc;
 import com.github.autostyle.FormatterStep;
+
+import java.io.Serializable;
+import java.util.Objects;
 
 public final class ReplaceStep {
   // prevent direct instantiation

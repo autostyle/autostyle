@@ -19,7 +19,6 @@ import com.github.autostyle.LineEnding
 import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.model.ObjectFactory
-import org.gradle.api.provider.ProviderFactory
 import org.gradle.kotlin.dsl.container
 import org.gradle.kotlin.dsl.newInstance
 import java.nio.charset.Charset

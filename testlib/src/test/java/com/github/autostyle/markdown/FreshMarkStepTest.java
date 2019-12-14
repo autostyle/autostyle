@@ -15,15 +15,14 @@
  */
 package com.github.autostyle.markdown;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.jupiter.api.Test;
-
 import com.github.autostyle.FormatterStep;
 import com.github.autostyle.SerializableEqualityTester;
 import com.github.autostyle.StepHarness;
 import com.github.autostyle.TestProvisioner;
+import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class FreshMarkStepTest {
   @Test

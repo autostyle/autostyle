@@ -15,16 +15,14 @@
  */
 package com.github.autostyle.java;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import com.diffplug.common.base.StringPrinter;
-
 import com.github.autostyle.FormatterStep;
 import com.github.autostyle.ResourceHarness;
 import com.github.autostyle.SerializableEqualityTester;
 import com.github.autostyle.StepHarness;
 import com.github.autostyle.TestProvisioner;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class GoogleJavaFormatStepTest extends ResourceHarness {
   @Test

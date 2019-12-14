@@ -15,16 +15,15 @@
  */
 package com.github.autostyle.sql;
 
-import java.io.File;
-import java.util.Collections;
-import java.util.List;
-
-import org.junit.jupiter.api.Test;
-
 import com.github.autostyle.FormatterStep;
 import com.github.autostyle.ResourceHarness;
 import com.github.autostyle.SerializableEqualityTester;
 import com.github.autostyle.StepHarness;
+import org.junit.jupiter.api.Test;
+
+import java.io.File;
+import java.util.Collections;
+import java.util.List;
 
 public class DBeaverSQLFormatterStepTest extends ResourceHarness {
 

@@ -35,7 +35,7 @@ import javax.inject.Inject
 
 abstract class AutostyleTask @Inject constructor(
     objects: ObjectFactory
-): DefaultTask() {
+) : DefaultTask() {
     // set by AutostyleExtension, but possibly overridden by FormatExtension
     @get:Input
     val encoding = objects.property<String>().conv("UTF-8")

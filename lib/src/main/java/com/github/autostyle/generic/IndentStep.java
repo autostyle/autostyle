@@ -15,11 +15,11 @@
  */
 package com.github.autostyle.generic;
 
-import java.io.Serializable;
-import java.util.Objects;
-
 import com.github.autostyle.FormatterFunc;
 import com.github.autostyle.FormatterStep;
+
+import java.io.Serializable;
+import java.util.Objects;
 
 /** Simple step which checks for consistent indentation characters. */
 public final class IndentStep {

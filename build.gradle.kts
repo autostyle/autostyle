@@ -14,6 +14,8 @@ val String.v: String get() = rootProject.extra["$this.version"] as String
 
 val buildVersion = "autostyle".v + "-SNAPSHOT"
 
+val autostyleSelf by props()
+
 allprojects {
     group = "com.github.vlsi.autostyle"
     version = buildVersion
@@ -72,6 +74,10 @@ allprojects {
         kotlinOptions {
             jvmTarget = "1.8"
         }
+    }
+
+    if (autostyleSelf) {
+        apply(from = "$rootDir/autostyle.gradle.kts")
     }
 
     plugins.withType<JavaPlugin> {

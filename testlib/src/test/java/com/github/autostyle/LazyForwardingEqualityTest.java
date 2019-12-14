@@ -17,9 +17,8 @@ package com.github.autostyle;
 
 import static com.diffplug.common.testing.SerializableTester.reserializeAndAssert;
 
-import org.junit.jupiter.api.Test;
-
 import com.diffplug.common.testing.EqualsTester;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("serial")
 public class LazyForwardingEqualityTest {
