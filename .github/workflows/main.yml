@@ -24,7 +24,7 @@ jobs:
           java-version: 8
       - name: 'Test'
         run: |
-          ./gradlew --no-parallel --no-daemon build
+          ./gradlew --no-parallel --no-daemon build -x npmTest
   linux-self:
     name: 'Self-check, Linux (JDK 8)'
     runs-on: ubuntu-latest
