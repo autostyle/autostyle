@@ -4,6 +4,6 @@ You might be looking for:
 
 - [plugin-gradle/CHANGES.md](plugin-gradle/CHANGES.md)
 
-### Version 1.0-SNAPSHOT - TBD
+### Version 3.0
 
 * The first release after fork of https://github.com/diffplug/spotless

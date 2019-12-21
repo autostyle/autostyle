@@ -212,6 +212,12 @@ open class BaseFormatExtension @Inject constructor(
                         } else {
                             project.files(it).asFileTree
                         }
+                    is String ->
+                        if (File(it).isDirectory) {
+                            project.fileTree(it)
+                        } else {
+                            project.files(it).asFileTree
+                        }
                     else -> project.fileTree(it)
                 }.matching(patterns)
             }

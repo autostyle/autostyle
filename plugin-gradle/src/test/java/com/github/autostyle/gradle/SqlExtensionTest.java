@@ -47,7 +47,7 @@ public class SqlExtensionTest extends GradleIntegrationTest {
         "autostyle {",
         "    sql {",
         "       dbeaver {",
-        "           configFiles('myConfig.properties')",
+        "           configFile('myConfig.properties')",
         "       }",
         "    }",
         "}");

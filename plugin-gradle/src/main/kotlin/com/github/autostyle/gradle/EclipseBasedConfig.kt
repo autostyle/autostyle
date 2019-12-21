@@ -29,6 +29,10 @@ open class EclipseBasedConfig(
 ) {
     val configFiles = project.objects.setProperty<Any>()
 
+    fun configFile(vararg files: Any) {
+        configFiles.addAll(files)
+    }
+
     internal fun createStep(): FormatterStep =
         builderBuilder(project.asProvisioner()).apply {
             setVersion(version)

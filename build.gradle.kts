@@ -15,10 +15,32 @@ plugins {
 
 val String.v: String get() = rootProject.extra["$this.version"] as String
 
-val buildVersion = "autostyle".v + "-SNAPSHOT"
-val enableGradleMetadata by props()
+val buildVersion = "autostyle".v + releaseParams.snapshotSuffix
 
+println("Building Autostyle $buildVersion")
+
+val enableGradleMetadata by props()
 val autostyleSelf by props()
+
+releaseParams {
+    tlp.set("Autostyle")
+    organizationName.set("autostyle")
+    componentName.set("Autostyle")
+    prefixForProperties.set("gh")
+    svnDistEnabled.set(false)
+    sitePreviewEnabled.set(false)
+    nexus {
+        mavenCentral()
+    }
+    voteText.set {
+        """
+        ${it.componentName} v${it.version}-rc${it.rc} is ready for preview.
+
+        Git SHA: ${it.gitSha}
+        Staging repository: ${it.nexusRepositoryUri}
+        """.trimIndent()
+    }
+}
 
 allprojects {
     group = "com.github.autostyle"
@@ -85,9 +107,11 @@ allprojects {
     }
 
     plugins.withType<JavaPlugin> {
-        configure<JavaPluginConvention> {
+        configure<JavaPluginExtension> {
             sourceCompatibility = JavaVersion.VERSION_1_8
             targetCompatibility = JavaVersion.VERSION_1_8
+            withSourcesJar()
+            withJavadocJar()
         }
 
         repositories {

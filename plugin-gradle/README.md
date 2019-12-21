@@ -56,14 +56,14 @@ To use it in your buildscript, just [add the Autostyle dependency](https://plugi
 ```gradle
 autostyle {
   format 'misc', {
-    target '**/*.gradle', '**/*.md', '**/.gitignore'
+    patterns.include '**/*.gradle', '**/*.md', '**/.gitignore'
 
     trimTrailingWhitespace()
     indentWithTabs() // or spaces. Takes an integer argument if you don't like 4
     endWithNewline()
   }
   format 'cpp', {
-    target '**/*.hpp', '**/*.cpp'
+    patterns.include '**/*.hpp', '**/*.cpp'
 
     replace      'Not enough space after if', 'if(', 'if ('
     replaceRegex 'Too much space after if', 'if +\\(', 'if ('
@@ -107,9 +107,8 @@ apply plugin: 'java'
 
 autostyle {
   java {
-    licenseHeader '/* Licensed under Apache-2.0 */'  // License header
-    licenseHeaderFile 'autostyle.license.java'    // License header file
-    // Obviously, you can't specify both licenseHeader and licenseHeaderFile at the same time
+    // Note: it will be automatically commented according to file extension
+    licenseHeader 'Licensed under Apache-2.0'  // License header
 
     importOrder 'java', 'javax', 'org', 'com', 'com.diffplug', ''  // A sequence of package names
     importOrderFile 'autostyle.importorder'        // An import ordering file, exported from Eclipse
@@ -119,7 +118,9 @@ autostyle {
 
     removeUnusedImports() // removes any unused imports
 
-    eclipse().configFile 'autostyle.eclipseformat.xml'  // XML file dumped out by the Eclipse formatter
+    eclipse {
+      configFile 'autostyle.eclipseformat.xml'  // XML file dumped out by the Eclipse formatter
+    }
     // If you have Eclipse preference or property files, you can use them too.
     // eclipse('4.7.1') to specify a specific version of eclipse,
     // available versions are: https://github.com/autostyle/autostyle/tree/master/lib-extra/src/main/resources/com/github/autostyle/autostyle/extra/eclipse_jdt_formatter
@@ -132,13 +133,13 @@ See [ECLIPSE_SCREENSHOTS](../ECLIPSE_SCREENSHOTS.md) for screenshots that demons
 <a name="android"></a>
 
 ### Applying to Android Java source
-Be sure to add `target '**/*.java'` otherwise Autostyle will not detect Java code inside Android modules.
+Be sure to add `patterns.include '**/*.java'` otherwise Autostyle will not detect Java code inside Android modules.
 
 ```gradle
 autostyle {
   java {
     // ...
-    target '**/*.java'
+    patterns.include '**/*.java'
     // ...
   }
 }
@@ -153,9 +154,11 @@ autostyle {
   java {
     googleJavaFormat()
     // optional: you can specify a specific version and/or switch to AOSP style
-    googleJavaFormat('1.1').aosp()
+    googleJavaFormat('1.1') {
+      aosp()
+    }
     // you can then layer other format steps, such as
-    licenseHeaderFile 'autostyle.license.java'
+    licenseHeader 'autostyle.license.java'
   }
 }
 ```
@@ -185,12 +188,16 @@ autostyle {
     paddedCell() // Avoid cyclic ambiguities
     // the Groovy Eclipse formatter extends the Java Eclipse formatter,
     // so it formats Java files by default (unless `excludeJava` is used).
-    greclipse().configFile('greclipse.properties')
+    greclipse {
+      configFile('greclipse.properties')
+    }
   }
   groovyGradle {
     // same as groovy, but for .gradle (defaults to '*.gradle')
-    target '*.gradle', 'additionalScripts/*.gradle'
-    greclipse().configFile('greclipse.properties')
+    patterns.include '*.gradle', 'additionalScripts/*.gradle'
+    greclipse {
+      configFile('greclipse.properties')
+    }
   }
 }
 ```
@@ -208,7 +215,9 @@ autostyle {
     greclipse()
     // optional: you can specify a specific version or config file(s)
     // available versions: https://github.com/autostyle/autostyle/tree/master/lib-extra/src/main/resources/com/github/autostyle/autostyle/extra/groovy_eclipse_formatter
-    greclipse('2.3.0').configFile('autostyle.eclipseformat.xml', 'org.codehaus.groovy.eclipse.ui.prefs')
+    greclipse('2.3.0') {
+      configFile('autostyle.eclipseformat.xml', 'org.codehaus.groovy.eclipse.ui.prefs')
+    }
   }
 }
 ```
@@ -227,7 +236,7 @@ To apply freshmark to all of the `.md` files in your project, with all of your p
 ```gradle
 autostyle {
   freshmark {
-    target 'README.md', 'CONTRIBUTING.md'  // defaults to '**/*.md'
+    target file('README.md'), file('CONTRIBUTING.md')  // defaults to '**/*.md'
     propertiesFile('gradle.properties')    // loads all the properties in the given file
     properties {
       it.put('key', 'value')        // specify other properties manually
@@ -245,7 +254,9 @@ autostyle {
   scala {
     scalafmt()
     // optional: you can specify a specific version or config file
-    scalafmt('0.5.1').configFile('scalafmt.conf')
+    scalafmt('0.5.1') {
+      configFile('scalafmt.conf')
+    }
   }
 }
 ```
@@ -260,23 +271,26 @@ autostyle {
     // optionally takes a version
     ktlint()
     // Optional user arguments can be set as such:
-    ktlint().userData(['indent_size': '2', 'continuation_indent_size' : '2'])
+    ktlint {
+      userData(['indent_size': '2', 'continuation_indent_size' : '2'])
+    }
 
     // also supports license headers
-    licenseHeader '/* Licensed under Apache-2.0 */'  // License header
-    licenseHeaderFile 'path-to-license-file'    // License header file
+    licenseHeader 'Licensed under Apache-2.0'  // License header
   }
   kotlinGradle {
     // same as kotlin, but for .gradle.kts files (defaults to '*.gradle.kts')
-    target '*.gradle.kts', 'additionalScripts/*.gradle.kts'
+    patterns.include 'additionalScripts/*.gradle.kts'
 
     ktlint()
 
     // Optional user arguments can be set as such:
-    ktlint().userData(['indent_size': '2', 'continuation_indent_size' : '2'])
+    ktlint {
+      userData(['indent_size': '2', 'continuation_indent_size' : '2'])
+    }
 
-    // doesn't support licenseHeader, because scripts don't have a package statement
-    // to clearly mark where the license should go
+    // also supports license headers
+    licenseHeader 'Licensed under Apache-2.0'  // License header
   }
 }
 ```
@@ -291,7 +305,9 @@ autostyle {
     // default value for target files
     target '**/*.sql'
     // configFile is optional, arguments available here: https://github.com/autostyle/autostyle/blob/master/lib/src/main/java/com/github/autostyle/autostyle/sql/dbeaver/DBeaverSQLFormatterConfiguration.java
-    dbeaver().configFile('dbeaver.props')
+    dbeaver {
+      configFile('dbeaver.props')
+    }
   }
 }
 ```
@@ -315,13 +331,14 @@ sql.formatter.indent.size=4
 ```gradle
 autostyle {
   cpp {
-    target '**/*.CPP' // Change file filter. By default files with 'c', 'h', 'C', 'cpp', 'cxx', 'cc', 'c++', 'h', 'hpp', 'hh', 'hxx' and 'inc' extension are supported
-    eclipse().configFile 'autostyle.eclipseformat.xml'  // XML file dumped out by the Eclipse formatter
+    patterns.include '**/*.CPP' // Change file filter. By default files with 'c', 'h', 'C', 'cpp', 'cxx', 'cc', 'c++', 'h', 'hpp', 'hh', 'hxx' and 'inc' extension are supported
+    eclipse {
+      configFile 'autostyle.eclipseformat.xml'  // XML file dumped out by the Eclipse formatter
+    }
     // If you have Eclipse preference or property files, you can use them too.
     // eclipse('4.7.1') to specify a specific version of Eclipse,
     // available versions are: https://github.com/autostyle/autostyle/tree/master/lib-extra/src/main/resources/com/github/autostyle/autostyle/extra/eclipse_cdt_formatter
-    licenseHeader '// Licensed under Apache'  // License header
-    licenseHeaderFile './license.txt'  // License header file
+    licenseHeader 'Licensed under Apache'  // License header
   }
 }
 ```
@@ -346,7 +363,9 @@ set the `target` parameter as described in the [Custom rules](#custom) section.
 autostyle {
   typescript {
     // using existing config files
-    tsfmt().tslintFile('/path/to/repo/tslint.json')
+    tsfmt {
+      tslintFile('/path/to/repo/tslint.json')
+    }
     // tsfmt('7.2.2') to specify specific version of tsfmt
     // tsfmt(['typescript-formatter': '7.2.2', 'typescript': '3.3.3', 'tslint': '5.12.1') to specify all of the npm dependencies that you want
   }
@@ -367,7 +386,9 @@ autostyle {
     // custom file-set
     target 'src/main/resources/**/*.ts'
     // provide config inline
-    tsfmt().config(['indentSize': 1, 'convertTabsToSpaces': true])
+    tsfmt {
+      config(['indentSize': 1, 'convertTabsToSpaces': true])
+    }
   }
 }
 ```
@@ -384,7 +405,10 @@ Autostyle will try to auto-discover an npm installation. If that is not working 
 ```gradle
 autostyle {
   typescript {
-    tsfmt().npmExecutable('/usr/bin/npm').config(...)
+    tsfmt {
+      npmExecutable('/usr/bin/npm')
+      config(...)
+    }
   }
 }
 ```
@@ -405,12 +429,16 @@ autostyle {
     target '**/*.css', '**/*.scss'
 
     // at least provide the parser to use
-    prettier().config(['parser': 'postcss'])
+    prettier {
+      config(['parser': 'postcss'])
+    }
     // prettier('1.16.4') to specify specific version of prettier
     // prettier(['my-prettier-fork': '1.16.4']) to specify exactly which npm packages to use
 
     // or provide a typical filename
-    prettier().config(['filepath': 'style.scss'])
+    prettier {
+      config(['filepath': 'style.scss'])
+    }
   }
 }
 ```
@@ -422,12 +450,17 @@ It is also possible to specify the config via file:
 ```gradle
 autostyle {
   format 'styling', {
-    target '**/*.css', '**/*.scss'
+    patterns.include '**/*.css', '**/*.scss'
 
-    prettier().configFile('/path-to/.prettierrc.yml')
+    prettier {
+      configFile('/path-to/.prettierrc.yml')
+    }
 
     // or provide both (config options take precedence over configFile options)
-    prettier().config(['parser': 'postcss']).configFile('path-to/.prettierrc.yml')
+    prettier {
+      config(['parser': 'postcss'])
+      configFile('path-to/.prettierrc.yml')
+    }
   }
 }
 ```
@@ -442,8 +475,10 @@ To apply prettier to more kinds of files, just add more formats
 ```gradle
 autostyle {
   format 'javascript', {
-    target 'src/main/resources/**/*.js'
-    prettier().config(['filepath': 'file.js'])
+    patterns.include 'src/main/resources/**/*.js'
+    prettier {
+      config(['filepath': 'file.js'])
+    }
   }
 }
 ```
@@ -469,7 +504,10 @@ Autostyle will try to auto-discover an npm installation. If that is not working 
 ```gradle
 autostyle {
   format 'javascript', {
-    prettier().npmExecutable('/usr/bin/npm').config(...)
+    prettier {
+      npmExecutable('/usr/bin/npm')
+      config(...)
+    }
   }
 }
 ```
@@ -485,13 +523,13 @@ The Eclipse [WTP](https://www.eclipse.org/webtools/) formatter can be applied as
 ```gradle
 autostyle {
   format 'xml', {
-    target fileTree('.') {
-      include '**/*.xml', '**/*.xsd'
-      exclude '**/build/**'
-    }
+    patterns.include '**/*.xml', '**/*.xsd'
+    patterns.exclude '**/build/**'
     // Use for example eclipseWtp('xml', '4.7.3a') to specify a specific version of Eclipse,
     // available versions are: https://github.com/autostyle/autostyle/tree/master/lib-extra/src/main/resources/com/github/autostyle/autostyle/extra/eclipse_wtp_formatters
-    eclipseWtp('xml').configFile 'autostyle.xml.prefs', 'autostyle.common.properties'
+    eclipseWtp('xml') {
+      configFile 'autostyle.xml.prefs', 'autostyle.common.properties'
+    }
   }
 }
 ```
@@ -523,43 +561,7 @@ to true.
 
 ## License header options
 
-If the string contents of a licenseHeader step or the file contents of a licenseHeaderFile step contains a $YEAR token,
-then in the end-result generated license headers which use this license header as a template, $YEAR will be replaced with the current year.
-
-
-For example:
-```
-/* Licensed under Apache-2.0 $YEAR. */
-```
-will produce
-```
-/* Licensed under Apache-2.0 2017. */
-```
-if Autostyle is launched in 2017
-
-
-The `licenseHeader` and `licenseHeaderFile` steps will generate license headers with automatic years from the base license header according to the following rules:
-* A generated license header will be updated with the current year when
-  * the generated license header is missing
-  * the generated license header is not formatted correctly
-* A generated license header will _not_ be updated when
-  * a single year is already present, e.g.
-  `/* Licensed under Apache-2.0 1990. */`
-  * a year range is already present, e.g.
-  `/* Licensed under Apache-2.0 1990-2003. */`
-  * the `$YEAR` token is otherwise missing
-
-The separator for the year range defaults to the hyphen character, e.g `1990-2003`, but can be customized with the `yearSeparator` property.
-
-For instance, the following configuration treats `1990, 2003` as a valid year range.
-
-```gradle
-autostyle {
-  java {
-    licenseHeader('Licensed under Apache-2.0 $YEAR').yearSeparator(', ')
-  }
-}
-```
+License hader is automatically formatted according to the file extension.
 
 <a name="custom"></a>
 
@@ -571,18 +573,18 @@ Autostyle is a generic system for specifying a sequence of steps which are appli
 autostyle {
   // this will create two tasks: autostyleMiscCheck and autostyleMiscApply
   format 'misc', {
-    // target determines which files this format will apply to
+    // target determines the root(s) of the filetree for which this format will apply to
     // - if you pass a string or a list of strings, they will be treated
     //       as 'include' parameters to a fileTree in the root directory
     // - if you pass a FileCollection, it will pass through untouched
     //       e.g. project.files('build.gradle', 'settings.gradle')
     // - if you pass anything else, it will be sent to project.files(yourArg)
+    // By default target is set to the project.rootDir 
     target '**/*.gradle', '**/*.md', '**/.gitignore'
 
-    targetExclude 'src/main/codegen/**', 'src/test/codegen/**'
-    // the files to be formatted = (target - targetExclude)
-    // NOTE: if target or targetExclude is called multiple times, only the
-    // last call is effective
+    // You can specify exclude-include patters with
+    patterns.include '**/*.yaml'
+    patterns.exclude '**/*.xml'
 
     // Autostyle has built-in rules for the most basic formatting tasks
     trimTrailingWhitespace()
@@ -590,7 +592,10 @@ autostyle {
     endWithNewline()
 
     // you can also call out to your own function
-    custom 'superFormatter', {
+    // Note: Gradle does not know when the function is changed, so it needs an extra input
+    // to understand when the formatter needs to be re-run. This is why the second argument
+    // is needed. You need to bump it every time you alter implementation
+    custom 'superFormatter', 3, {
       // when writing a custom step, it will be helpful to know
       // how the formatting process works, which is as follows:
 
@@ -675,13 +680,7 @@ autostyle {
 
 ## Can I apply Autostyle to specific files?
 
-You can target specific files by setting the `autostyleFiles` project property to a comma-separated list of file patterns:
-
-```
-cmd> gradlew autostyleApply -PautostyleFiles=my/file/pattern.java,more/generic/.*-pattern.java
-```
-
-The patterns are matched using `String#matches(String)` against the absolute file path.
+Not yet.
 
 ## Example configurations (from real-world projects)
 

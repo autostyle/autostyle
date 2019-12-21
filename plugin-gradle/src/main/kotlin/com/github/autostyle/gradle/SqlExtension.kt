@@ -40,7 +40,7 @@ open class SqlExtension @Inject constructor(name: String, root: AutostyleExtensi
     ) {
         val configFiles = project.objects.setProperty<Any>()
 
-        fun configFiles(vararg files: Any) {
+        fun configFile(vararg files: Any) {
             configFiles.addAll(files)
         }
 
