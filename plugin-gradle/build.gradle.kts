@@ -33,6 +33,7 @@ gradlePlugin {
         create("autostylePlugin") {
             id = "com.github.autostyle"
             displayName = "Autostyle formatting plugin"
+            description = "Autostyle formatting plugin"
             implementationClass = "com.github.autostyle.gradle.AutostylePlugin"
         }
     }

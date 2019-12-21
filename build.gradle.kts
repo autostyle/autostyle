@@ -163,12 +163,15 @@ allprojects {
                     return@configure
                 }
                 publications {
-                    create<MavenPublication>(project.name) {
-                        artifactId = project.name
-                        version = rootProject.version.toString()
-                        description = project.description
-                        from(project.components.get("java"))
-
+                    if (project.path != ":autostyle-plugin-gradle") {
+                        create<MavenPublication>(project.name) {
+                            artifactId = project.name
+                            version = rootProject.version.toString()
+                            description = project.description
+                            from(project.components.get("java"))
+                        }
+                    }
+                    withType<MavenPublication> {
                         // if (!skipJavadoc) {
                         // Eager task creation is required due to
                         // https://github.com/gradle/gradle/issues/6246
@@ -214,6 +217,13 @@ allprojects {
                                 project.description
                                     ?: "Autostyle ${project.name.capitalize()}"
                             )
+                            developers {
+                                developer {
+                                    id.set("vlsi")
+                                    name.set("Vladimir Sitnikov")
+                                    email.set("sitnikov.vladimir@gmail.com")
+                                }
+                            }
                             inceptionYear.set("2019")
                             url.set("https://github.com/autostyle/autostyle")
                             licenses {
