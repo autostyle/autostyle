@@ -58,7 +58,6 @@ abstract class AutostyleTask @Inject constructor(
     val steps = objects.listProperty<FormatterStep>()
 
     @get:InputFiles
-//    @get:Incremental
     @get:SkipWhenEmpty
     @get:PathSensitive(PathSensitivity.RELATIVE)
     val sourceFiles: ConfigurableFileCollection = project.files()

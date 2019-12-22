@@ -21,9 +21,7 @@ import com.github.autostyle.PaddedCellBulk
 import com.github.autostyle.gradle.ext.deserialize
 import com.github.autostyle.gradle.ext.serialize
 import org.gradle.api.model.ObjectFactory
-import org.gradle.api.tasks.InputFiles
-import org.gradle.api.tasks.Optional
-import org.gradle.api.tasks.SkipWhenEmpty
+import org.gradle.api.tasks.*
 import org.gradle.work.ChangeType
 import org.gradle.work.InputChanges
 import java.io.File
@@ -36,6 +34,7 @@ open class AutostyleApplyTask @Inject constructor(
     @get:Optional
     @get:InputFiles
     @get:SkipWhenEmpty
+    @get:PathSensitive(PathSensitivity.RELATIVE)
     val cacheFile: File
         get() = File(project.buildDir, "autostyle/$name")
 
