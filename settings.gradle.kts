@@ -11,7 +11,6 @@ pluginManagement {
         idv("com.github.vlsi.stage-vote-release", "com.github.vlsi.vlsi-release-plugins")
         idv("com.gradle.plugin-publish")
         idv("com.jfrog.bintray")
-        idv("org.jdrupes.mdoclet")
         idv("org.jetbrains.gradle.plugin.idea-ext")
         kotlin("jvm") version "kotlin".v()
     }

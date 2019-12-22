@@ -5,7 +5,6 @@ plugins {
     id("com.github.ben-manes.versions")
     id("com.gradle.plugin-publish") apply false
     id("com.jfrog.bintray") apply false
-    id("org.jdrupes.mdoclet") apply false
     id("org.jetbrains.gradle.plugin.idea-ext")
     id("com.github.vlsi.gradle-extensions")
     id("com.github.vlsi.ide")
@@ -50,7 +49,7 @@ allprojects {
     val kotlinUsed = file("src/main/kotlin").isDirectory || file("src/test/kotlin").isDirectory
     if (javaUsed) {
         apply(plugin = "java-library")
-        apply(plugin = "org.jdrupes.mdoclet")
+        apply(plugin = "mdoclet")
         dependencies {
             val compileOnly by configurations
             compileOnly("net.jcip:jcip-annotations:1.0")
