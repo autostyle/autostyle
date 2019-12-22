@@ -28,13 +28,21 @@ import javax.inject.Inject
 
 open class KotlinExtension @Inject constructor(name: String, root: AutostyleExtension) :
     BaseFormatExtension(name, root) {
-    init {
+
+    private var forScript = false
+
+    internal fun kotlinDefaults() {
         filter.include("**/*.kt", "**/*.kts")
         target.conv(root.providers.provider {
             val javaPlugin = project.convention.findPlugin(JavaPluginConvention::class.java)
                 ?: throw GradleException("You must apply the kotlin plugin before the Autostyle plugin if you are using the kotlin extension.")
             javaPlugin.sourceSets.map { it.allSource }
         })
+    }
+
+    internal fun kotlinGradleDefaults() {
+        forScript = true
+        filter.include("**/*.gradle.kts")
     }
 
     fun ktlint(action: Action<KotlinFormatConfig>) {
@@ -46,7 +54,7 @@ open class KotlinExtension @Inject constructor(name: String, root: AutostyleExte
         version: String = KtLintStep.defaultVersion(),
         action: Action<KotlinFormatConfig>? = null
     ) {
-        KotlinFormatConfig(version, root.project).also {
+        KotlinFormatConfig(version, root.project, forScript).also {
             action?.execute(it)
             addStep(it.createStep())
         }
@@ -54,7 +62,8 @@ open class KotlinExtension @Inject constructor(name: String, root: AutostyleExte
 
     class KotlinFormatConfig internal constructor(
         private val version: String,
-        private val project: Project
+        private val project: Project,
+        private val forScript: Boolean
     ) {
         val userData = project.objects.mapProperty<String, String>()
 
@@ -64,6 +73,7 @@ open class KotlinExtension @Inject constructor(name: String, root: AutostyleExte
             return KtLintStep.create(
                 version,
                 project.asProvisioner(),
+                forScript,
                 userData.get()
             )
         }

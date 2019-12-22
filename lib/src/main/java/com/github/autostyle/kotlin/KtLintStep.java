@@ -66,7 +66,7 @@ public class KtLintStep {
     return create(version, provisioner, true, userData);
   }
 
-  private static FormatterStep create(String version, Provisioner provisioner, boolean isScript, Map<String, String> userData) {
+  public static FormatterStep create(String version, Provisioner provisioner, boolean isScript, Map<String, String> userData) {
     Objects.requireNonNull(version, "version");
     Objects.requireNonNull(provisioner, "provisioner");
     return FormatterStep.createLazy(NAME,

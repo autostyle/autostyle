@@ -90,12 +90,18 @@ open class AutostyleExtension @Inject constructor(
 
     /** Configures the special kotlin-specific extension.  */
     fun kotlin(action: Action<KotlinExtension>) {
-        configure("kotlin", action)
+        getOrCreate<KotlinExtension>("kotlin").apply {
+            kotlinDefaults()
+            action.execute(this)
+        }
     }
 
     /** Configures the special Gradle Kotlin DSL specific extension.  */
-    fun kotlinGradle(action: Action<KotlinGradleExtension>) {
-        configure("kotlinGradle", action)
+    fun kotlinGradle(action: Action<KotlinExtension>) {
+        getOrCreate<KotlinExtension>("kotlinGradle").apply {
+            kotlinGradleDefaults()
+            action.execute(this)
+        }
     }
 
     /** Configures the special freshmark-specific extension.  */
