@@ -26,6 +26,7 @@ import groovy.lang.Closure
 import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.file.FileTree
+import org.gradle.api.tasks.util.PatternFilterable
 import org.gradle.api.tasks.util.PatternSet
 import org.gradle.kotlin.dsl.listProperty
 import org.gradle.kotlin.dsl.property
@@ -37,7 +38,11 @@ open class BaseFormatExtension @Inject constructor(
     val name: String,
     val root: AutostyleExtension
 ) {
-    val patterns: PatternSet = PatternSet()
+    val filter: PatternFilterable = PatternSet()
+
+    fun filter(execute: Action<PatternFilterable>) {
+        execute.execute(filter)
+    }
 
     protected val project: Project get() = root.project
 
@@ -219,7 +224,7 @@ open class BaseFormatExtension @Inject constructor(
                             project.files(it).asFileTree
                         }
                     else -> project.fileTree(it)
-                }.matching(patterns)
+                }.matching(filter)
             }
         })
         task.steps.set(steps)

@@ -29,7 +29,7 @@ import javax.inject.Inject
 open class KotlinExtension @Inject constructor(name: String, root: AutostyleExtension) :
     BaseFormatExtension(name, root) {
     init {
-        patterns.include("**/*.kt", "**/*.kts")
+        filter.include("**/*.kt", "**/*.kts")
         target.conv(root.providers.provider {
             val javaPlugin = project.convention.findPlugin(JavaPluginConvention::class.java)
                 ?: throw GradleException("You must apply the kotlin plugin before the Autostyle plugin if you are using the kotlin extension.")

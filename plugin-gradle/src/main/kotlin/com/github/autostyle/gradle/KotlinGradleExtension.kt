@@ -26,7 +26,7 @@ import javax.inject.Inject
 open class KotlinGradleExtension @Inject constructor(name: String, root: AutostyleExtension) :
     BaseFormatExtension(name, root) {
     init {
-        patterns.include("**/*.gradle.kts")
+        filter.include("**/*.gradle.kts")
     }
 
     fun ktlint(action: Action<KotlinFormatConfig>) {

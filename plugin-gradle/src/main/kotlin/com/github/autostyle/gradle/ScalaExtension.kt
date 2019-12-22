@@ -28,7 +28,7 @@ import javax.inject.Inject
 open class ScalaExtension @Inject constructor(name: String, root: AutostyleExtension) :
     BaseFormatExtension(name, root) {
     init {
-        patterns.include("**/*.scala", "**/*.sc")
+        filter.include("**/*.scala", "**/*.sc")
         target.conv(root.providers.provider {
             val javaPlugin = project.convention.findPlugin(JavaPluginConvention::class.java)
                 ?: throw GradleException("You must apply the java plugin before the Autostyle plugin if you are using the java extension.")

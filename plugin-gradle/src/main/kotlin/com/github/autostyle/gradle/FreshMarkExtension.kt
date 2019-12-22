@@ -27,7 +27,7 @@ open class FreshMarkExtension @Inject constructor(name: String, root: AutostyleE
         mutableListOf<Action<MutableMap<String, Any>>>()
 
     init {
-        patterns.include("**/*.md")
+        filter.include("**/*.md")
         addStep(FreshMarkStep.create(project.asProvisioner()) {
             mutableMapOf<String, Any>().also {
                 for (action in propertyActions) {

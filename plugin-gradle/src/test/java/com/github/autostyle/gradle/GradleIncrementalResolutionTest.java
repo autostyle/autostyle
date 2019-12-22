@@ -36,7 +36,7 @@ public class GradleIncrementalResolutionTest extends GradleIntegrationTest {
         "}",
         "autostyle {",
         "    format 'misc', {",
-        "        patterns.include '*.md'",
+        "        filter.include '*.md'",
         "        custom 'lowercase', 1, { str ->",
         "            String result = str.toLowerCase(Locale.ROOT)",
         "            println(\"<${result.trim()}>\")",

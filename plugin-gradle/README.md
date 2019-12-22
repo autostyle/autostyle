@@ -56,14 +56,14 @@ To use it in your buildscript, just [add the Autostyle dependency](https://plugi
 ```gradle
 autostyle {
   format 'misc', {
-    patterns.include '**/*.gradle', '**/*.md', '**/.gitignore'
+    filter.include '**/*.gradle', '**/*.md', '**/.gitignore'
 
     trimTrailingWhitespace()
     indentWithTabs() // or spaces. Takes an integer argument if you don't like 4
     endWithNewline()
   }
   format 'cpp', {
-    patterns.include '**/*.hpp', '**/*.cpp'
+    filter.include '**/*.hpp', '**/*.cpp'
 
     replace      'Not enough space after if', 'if(', 'if ('
     replaceRegex 'Too much space after if', 'if +\\(', 'if ('
@@ -133,13 +133,13 @@ See [ECLIPSE_SCREENSHOTS](../ECLIPSE_SCREENSHOTS.md) for screenshots that demons
 <a name="android"></a>
 
 ### Applying to Android Java source
-Be sure to add `patterns.include '**/*.java'` otherwise Autostyle will not detect Java code inside Android modules.
+Be sure to add `filter.include '**/*.java'` otherwise Autostyle will not detect Java code inside Android modules.
 
 ```gradle
 autostyle {
   java {
     // ...
-    patterns.include '**/*.java'
+    filter.include '**/*.java'
     // ...
   }
 }
@@ -194,7 +194,7 @@ autostyle {
   }
   groovyGradle {
     // same as groovy, but for .gradle (defaults to '*.gradle')
-    patterns.include '*.gradle', 'additionalScripts/*.gradle'
+    filter.include '*.gradle', 'additionalScripts/*.gradle'
     greclipse {
       configFile('greclipse.properties')
     }
@@ -280,7 +280,7 @@ autostyle {
   }
   kotlinGradle {
     // same as kotlin, but for .gradle.kts files (defaults to '*.gradle.kts')
-    patterns.include 'additionalScripts/*.gradle.kts'
+    filter.include 'additionalScripts/*.gradle.kts'
 
     ktlint()
 
@@ -331,7 +331,7 @@ sql.formatter.indent.size=4
 ```gradle
 autostyle {
   cpp {
-    patterns.include '**/*.CPP' // Change file filter. By default files with 'c', 'h', 'C', 'cpp', 'cxx', 'cc', 'c++', 'h', 'hpp', 'hh', 'hxx' and 'inc' extension are supported
+    filter.include '**/*.CPP' // Change file filter. By default files with 'c', 'h', 'C', 'cpp', 'cxx', 'cc', 'c++', 'h', 'hpp', 'hh', 'hxx' and 'inc' extension are supported
     eclipse {
       configFile 'autostyle.eclipseformat.xml'  // XML file dumped out by the Eclipse formatter
     }
@@ -450,7 +450,7 @@ It is also possible to specify the config via file:
 ```gradle
 autostyle {
   format 'styling', {
-    patterns.include '**/*.css', '**/*.scss'
+    filter.include '**/*.css', '**/*.scss'
 
     prettier {
       configFile('/path-to/.prettierrc.yml')
@@ -475,7 +475,7 @@ To apply prettier to more kinds of files, just add more formats
 ```gradle
 autostyle {
   format 'javascript', {
-    patterns.include 'src/main/resources/**/*.js'
+    filter.include 'src/main/resources/**/*.js'
     prettier {
       config(['filepath': 'file.js'])
     }
@@ -523,8 +523,10 @@ The Eclipse [WTP](https://www.eclipse.org/webtools/) formatter can be applied as
 ```gradle
 autostyle {
   format 'xml', {
-    patterns.include '**/*.xml', '**/*.xsd'
-    patterns.exclude '**/build/**'
+    filter {
+      include '**/*.xml', '**/*.xsd'
+      exclude '**/build/**'
+    }
     // Use for example eclipseWtp('xml', '4.7.3a') to specify a specific version of Eclipse,
     // available versions are: https://github.com/autostyle/autostyle/tree/master/lib-extra/src/main/resources/com/github/autostyle/autostyle/extra/eclipse_wtp_formatters
     eclipseWtp('xml') {
@@ -583,8 +585,10 @@ autostyle {
     target '**/*.gradle', '**/*.md', '**/.gitignore'
 
     // You can specify exclude-include patters with
-    patterns.include '**/*.yaml'
-    patterns.exclude '**/*.xml'
+    filter {
+      include '**/*.yaml'
+      exclude '**/*.xml'
+    }
 
     // Autostyle has built-in rules for the most basic formatting tasks
     trimTrailingWhitespace()

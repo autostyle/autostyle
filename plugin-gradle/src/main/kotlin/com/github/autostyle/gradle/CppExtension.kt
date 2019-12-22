@@ -24,7 +24,7 @@ import javax.inject.Inject
 open class CppExtension @Inject constructor(name: String, root: AutostyleExtension) :
     BaseFormatExtension(name, root) {
     init {
-        patterns.include(CppDefaults.EXTENSIONS.map { "**/*.$it" })
+        filter.include(CppDefaults.EXTENSIONS.map { "**/*.$it" })
     }
 
     fun eclipse(action: Action<EclipseConfig>) {

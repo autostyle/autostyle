@@ -24,7 +24,7 @@ import javax.inject.Inject
 open class GroovyGradleExtension @Inject constructor(name: String, root: AutostyleExtension) :
     BaseFormatExtension(name, root) {
     init {
-        patterns.include("**/*.gradle")
+        filter.include("**/*.gradle")
     }
 
     fun importOrder(vararg importOrder: String?) {

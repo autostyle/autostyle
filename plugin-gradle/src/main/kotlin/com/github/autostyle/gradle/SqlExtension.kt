@@ -24,7 +24,7 @@ import javax.inject.Inject
 
 open class SqlExtension @Inject constructor(name: String, root: AutostyleExtension) : BaseFormatExtension(name, root) {
     init {
-        patterns.include("**/*.sql")
+        filter.include("**/*.sql")
     }
 
     @JvmOverloads

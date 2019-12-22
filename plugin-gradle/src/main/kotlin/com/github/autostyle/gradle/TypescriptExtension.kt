@@ -22,7 +22,7 @@ import javax.inject.Inject
 open class TypescriptExtension @Inject constructor(name: String, root: AutostyleExtension) :
     BaseFormatExtension(name, root) {
     init {
-        patterns.include("**/*.ts")
+        filter.include("**/*.ts")
     }
 
     /** Uses the specified version of typescript-format.  */
