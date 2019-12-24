@@ -32,7 +32,7 @@ val generateMDocletPath by tasks.registering(Jar::class) {
         manifest {
             attributes(
                 "Main-Class" to "sqlline.SqlLine",
-                "Class-Path" to provider { mdoclet.map { it.absolutePath }.joinToString(" ") }
+                "Class-Path" to provider { mdoclet.joinToString(" ") { it.absolutePath } }
             )
         }
     }
