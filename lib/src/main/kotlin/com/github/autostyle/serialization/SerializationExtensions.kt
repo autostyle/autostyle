@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.autostyle.gradle.ext
+package com.github.autostyle.serialization
 
+import com.github.autostyle.closable.use
 import java.io.File
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream

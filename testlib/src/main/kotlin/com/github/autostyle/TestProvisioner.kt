@@ -17,14 +17,14 @@ package com.github.autostyle
 
 import com.diffplug.common.base.StandardSystemProperty
 import com.diffplug.common.io.Files
+import com.github.autostyle.serialization.deserialize
+import com.github.autostyle.serialization.serialize
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.ResolveException
 import org.gradle.api.artifacts.dsl.RepositoryHandler
 import org.gradle.testfixtures.ProjectBuilder
 import java.io.File
-import java.io.ObjectInputStream
-import java.io.ObjectOutputStream
 import java.nio.file.Path
 import java.util.*
 import java.util.function.Supplier
@@ -80,9 +80,7 @@ object TestProvisioner {
         val testlib = File(autostyleDir, "testlib")
         val cacheFile = File(testlib, "build/tmp/testprovisioner.$name.cache")
         val cached = if (cacheFile.exists()) {
-            ObjectInputStream(Files.asByteSource(cacheFile).openBufferedStream()).use {
-                it.readObject() as MutableMap<Set<String>, Set<File>>
-            }
+            cacheFile.deserialize<MutableMap<Set<String>, Set<File>>>()
         } else {
             mutableMapOf()
         }
@@ -98,9 +96,7 @@ object TestProvisioner {
                         mavenCoords
                     )
                     cached[mavenCoords] = result
-                    ObjectOutputStream(Files.asByteSink(cacheFile).openBufferedStream()).use {
-                        it.writeObject(cached)
-                    }
+                    cacheFile.serialize(cached)
                 }
                 result!!
             }

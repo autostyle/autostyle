@@ -18,8 +18,8 @@ package com.github.autostyle.gradle
 import com.github.autostyle.Formatter
 import com.github.autostyle.PaddedCell
 import com.github.autostyle.PaddedCellBulk
-import com.github.autostyle.gradle.ext.deserialize
-import com.github.autostyle.gradle.ext.serialize
+import com.github.autostyle.serialization.deserialize
+import com.github.autostyle.serialization.serialize
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.tasks.*
 import org.gradle.work.ChangeType
