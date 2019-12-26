@@ -16,10 +16,8 @@
 package com.github.autostyle.gradle;
 
 import com.diffplug.common.base.Errors;
-import com.diffplug.common.base.StandardSystemProperty;
 import com.github.autostyle.TestProvisioner;
 import org.gradle.api.Project;
-import org.gradle.testkit.runner.GradleRunner;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -118,19 +116,5 @@ public class SelfTest {
     test.accept(project.getExtensions().getByType(AutostyleExtension.class));
     // return the configured plugin
     return project;
-  }
-
-  /** Runs against the `autostyleSelfApply.gradle` file. */
-  static void runWithTestKit(Type type) throws Exception {
-    GradleRunner.create()
-        .withPluginClasspath()
-        .withProjectDir(new File(StandardSystemProperty.USER_DIR.value()).getParentFile())
-        .withArguments(
-            "--build-file", "autostyleSelf.gradle",
-            "--project-cache-dir", ".gradle-selfapply",
-            "autostyle" + type.checkApply("Check", "Apply"),
-            "--stacktrace")
-        .forwardOutput()
-        .build();
   }
 }

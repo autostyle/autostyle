@@ -38,4 +38,13 @@ configure<AutostyleExtension> {
         trimTrailingWhitespace()
         endWithNewline()
     }
+    freshmark {
+        filter.include("**/*.md")
+        propertiesFile("$rootDir/gradle.properties")
+        properties {
+            put("yes", ":+1:")
+            put("no", ":white_large_square:")
+            put("stableGradle", get("autostyle.version") as String)
+        }
+    }
 }

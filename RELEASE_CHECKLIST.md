@@ -2,7 +2,7 @@
 
 - [ ] Update [`CHANGES.md`](CHANGES.md), [`plugin-gradle/CHANGES.md`](plugin-gradle/CHANGES.md), and [`plugin-maven/CHANGES.md`](plugin-maven/CHANGES.md)
 - [ ] Upgrade [`gradle.properties`](gradle.properties).
-- [ ] Run `./gradlew autostyleApply`
+- [ ] Run `./gradlew jar && ./gradlew autostyleApply -PautostyleSelf`
 - [ ] Make sure all files are committed
 - [ ] Run `./gradlew check`
 - [ ] Make sure all tests pass and no files are changes

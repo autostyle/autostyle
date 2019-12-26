@@ -2,24 +2,22 @@
 
 <!---freshmark shields
 output = [
-  link(shield('Gradle plugin', 'plugins.gradle.org', 'com.github.autostyle', 'blue'), 'https://plugins.gradle.org/plugin/com.github.autostyle.gradle'),
+  link(shield('Gradle plugin', 'plugins.gradle.org', 'com.github.autostyle', 'blue'), 'https://plugins.gradle.org/plugin/com.github.autostyle'),
   link(shield('Maven central', 'mavencentral', 'com.github.autostyle.gradle:autostyle', 'blue'), 'https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.github.autostyle%22%20AND%20a%3A%22autostyle-plugin-gradle%22'),
   link(shield('Javadoc', 'javadoc', '{{stableGradle}}', 'blue'), 'https://{{org}}.github.io/{{name}}/javadoc/autostyle-plugin-gradle/{{stableGradle}}/'),
   '',
-  link(shield('Changelog', 'changelog', '{{versionGradle}}', 'brightgreen'), 'CHANGES.md'),
+  link(shield('Changelog', 'changelog', '{{autostyle.version}}-SNAPSHOT', 'brightgreen'), 'CHANGES.md'),
   link(image('Travis CI', 'https://travis-ci.org/{{org}}/{{name}}.svg?branch=master'), 'https://travis-ci.org/{{org}}/{{name}}'),
   link(shield('Live chat', 'gitter', 'chat', 'brightgreen'), 'https://gitter.im/{{org}}/{{name}}'),
-  link(shield('License Apache', 'license', 'apache', 'brightgreen'), 'https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)')
   ].join('\n');
 -->
-[![Gradle plugin](https://img.shields.io/badge/plugins.gradle.org-com.github.autostyle.gradle-blue.svg)](https://plugins.gradle.org/plugin/com.github.autostyle.gradle)
+[![Gradle plugin](https://img.shields.io/badge/plugins.gradle.org-com.github.autostyle-blue.svg)](https://plugins.gradle.org/plugin/com.github.autostyle)
 [![Maven central](https://img.shields.io/badge/mavencentral-com.github.autostyle.gradle%3Aautostyle-blue.svg)](https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.github.autostyle%22%20AND%20a%3A%22autostyle-plugin-gradle%22)
-[![Javadoc](https://img.shields.io/badge/javadoc-3.26.0-blue.svg)](https://autostyle.github.io/autostyle/javadoc/autostyle-plugin-gradle/3.26.0/)
+[![Javadoc](https://img.shields.io/badge/javadoc-3.0-blue.svg)](https://autostyle.github.io/autostyle/javadoc/autostyle-plugin-gradle/3.0/)
 
-[![Changelog](https://img.shields.io/badge/changelog-3.27.0--SNAPSHOT-brightgreen.svg)](CHANGES.md)
+[![Changelog](https://img.shields.io/badge/changelog-3.0--SNAPSHOT-brightgreen.svg)](CHANGES.md)
 [![Travis CI](https://travis-ci.org/autostyle/autostyle.svg?branch=master)](https://travis-ci.org/autostyle/autostyle)
 [![Live chat](https://img.shields.io/badge/gitter-chat-brightgreen.svg)](https://gitter.im/autostyle/autostyle)
-[![License Apache](https://img.shields.io/badge/license-apache-brightgreen.svg)](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0))
 <!---freshmark /shields -->
 
 <!---freshmark javadoc
@@ -75,7 +73,7 @@ autostyle {
 }
 ```
 
-Autostyle can check and apply formatting to any plain-text file, using simple rules ([javadoc](https://autostyle.github.io/autostyle/javadoc/autostyle-plugin-gradle/3.26.0/com/github/autostyle/gradle/FormatExtension.html)) like those above.  It also supports more powerful formatters:
+Autostyle can check and apply formatting to any plain-text file, using simple rules ([javadoc](https://autostyle.github.io/autostyle/javadoc/autostyle-plugin-gradle/3.0/com/github/autostyle/gradle/FormatExtension.html)) like those above.  It also supports more powerful formatters:
 
 * Eclipse's [CDT](#eclipse-cdt) C/C++ code formatter
 * Eclipse's java code formatter (including style and import ordering)
@@ -616,7 +614,7 @@ autostyle {
 }
 ```
 
-If you use `custom` or `customLazy`, you might want to take a look at [this javadoc](https://autostyle.github.io/autostyle/javadoc/autostyle-plugin-gradle/3.26.0/com/github/autostyle/gradle/FormatExtension.html#bumpThisNumberIfACustomStepChanges-int-) for a big performance win.
+If you use `custom` or `customLazy`, you might want to take a look at [this javadoc](https://autostyle.github.io/autostyle/javadoc/autostyle-plugin-gradle/3.0/com/github/autostyle/gradle/FormatExtension.html#bumpThisNumberIfACustomStepChanges-int-) for a big performance win.
 
 See [`JavaExtension.java`](src/main/java/com/github/autostyle/gradle/JavaExtension.java) if you'd like to see how a language-specific set of custom rules is implemented.  We'd love PR's which add support for other languages.
 

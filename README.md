@@ -4,6 +4,7 @@
 output = [
   link(image('Travis CI', 'https://travis-ci.org/{{org}}/{{name}}.svg?branch=master'), 'https://travis-ci.org/{{org}}/{{name}}'),
   link(image('CI Status', 'https://github.com/{{org}}/{{name}}/workflows/CI/badge.svg'), 'https://github.com/{{org}}/{{name}}/actions'),
+  ].join('\n');
 -->
 [![Travis CI](https://travis-ci.org/autostyle/autostyle.svg?branch=master)](https://travis-ci.org/autostyle/autostyle)
 [![CI Status](https://github.com/autostyle/autostyle/workflows/CI/badge.svg)](https://github.com/autostyle/autostyle/actions)
@@ -26,7 +27,7 @@ function extra(className) { return '| [`' + className + '`](lib-extra/src/main/j
 
 //                                               | GRADLE        | (new)   |
 output = [
-'| Feature / FormatterStep                       | [plugin-gradle](plugin-gradle/README.md) | [plugin-maven](plugin-maven/README.md) | [(Your build tool here)](CONTRIBUTING.md#how-to-add-a-new-plugin-for-a-build-system) |',
+'| Feature / FormatterStep                       | [plugin-gradle](plugin-gradle/README.md) | [(Your build tool here)](CONTRIBUTING.md#how-to-add-a-new-plugin-for-a-build-system) |',
 '| --------------------------------------------- | ------------- | --------|',
 lib('generic.EndWithNewlineStep')                +'{{yes}}       | {{no}}  |',
 lib('generic.IndentStep')                        +'{{yes}}       | {{no}}  |',
@@ -53,35 +54,41 @@ extra('wtp.EclipseWtpFormatterStep')             +'{{yes}}       | {{no}}  |',
 ''
 ].join('\n');
 -->
-| Feature / FormatterStep                       | [plugin-gradle](plugin-gradle/README.md) | [plugin-maven](plugin-maven/README.md) | [(Your build tool here)](CONTRIBUTING.md#how-to-add-a-new-plugin-for-a-build-system) |
-| --------------------------------------------- | ------------- | ------------ | --------|
-| [`generic.EndWithNewlineStep`](lib/src/main/java/com/github/autostyle/generic/EndWithNewlineStep.java) | :+1:       | :+1:       | :white_large_square:  |
-| [`generic.IndentStep`](lib/src/main/java/com/github/autostyle/generic/IndentStep.java) | :+1:       | :+1:       | :white_large_square:  |
-| [`generic.LicenseHeaderStep`](lib/src/main/java/com/github/autostyle/generic/LicenseHeaderStep.java) | :+1:       | :+1:      | :white_large_square:  |
-| [`generic.ReplaceRegexStep`](lib/src/main/java/com/github/autostyle/generic/ReplaceRegexStep.java) | :+1:       | :+1:       | :white_large_square:  |
-| [`generic.ReplaceStep`](lib/src/main/java/com/github/autostyle/generic/ReplaceStep.java) | :+1:       | :+1:       | :white_large_square:  |
-| [`generic.TrimTrailingWhitespaceStep`](lib/src/main/java/com/github/autostyle/generic/TrimTrailingWhitespaceStep.java) | :+1:       | :+1:       | :white_large_square:  |
-| [`cpp.EclipseFormatterStep`](lib-extra/src/main/java/com/github/autostyle/extra/cpp/EclipseFormatterStep.java) | :+1:       | :+1:       | :white_large_square:  |
-| [`groovy.GrEclipseFormatterStep`](lib-extra/src/main/java/com/github/autostyle/extra/groovy/GrEclipseFormatterStep.java) | :+1:       | :white_large_square:       | :white_large_square:  |
-| [`java.GoogleJavaFormatStep`](lib/src/main/java/com/github/autostyle/java/GoogleJavaFormatStep.java) | :+1:       | :+1:      | :white_large_square:  |
-| [`java.ImportOrderStep`](lib/src/main/java/com/github/autostyle/java/ImportOrderStep.java) | :+1:       | :+1:      | :white_large_square:  |
-| [`java.RemoveUnusedImportsStep`](lib/src/main/java/com/github/autostyle/java/RemoveUnusedImportsStep.java) | :+1:       | :+1:      | :white_large_square:  |
-| [`java.EclipseFormatterStep`](lib-extra/src/main/java/com/github/autostyle/extra/java/EclipseFormatterStep.java) | :+1:       | :+1:      | :white_large_square:  |
-| [`kotlin.KtLintStep`](lib/src/main/java/com/github/autostyle/kotlin/KtLintStep.java) | :+1:       | :+1:      | :white_large_square:  |
-| [`markdown.FreshMarkStep`](lib/src/main/java/com/github/autostyle/markdown/FreshMarkStep.java) | :+1:       | :white_large_square:       | :white_large_square:  |
-| [`npm.PrettierFormatterStep`](lib/src/main/java/com/github/autostyle/npm/PrettierFormatterStep.java) | :+1:       | :white_large_square:       | :white_large_square:  |
-| [`npm.TsFmtFormatterStep`](lib/src/main/java/com/github/autostyle/npm/TsFmtFormatterStep.java) | :+1:       | :white_large_square:       | :white_large_square:  |
-| [`scala.ScalaFmtStep`](lib/src/main/java/com/github/autostyle/scala/ScalaFmtStep.java) | :+1:       | :+1:       | :white_large_square:  |
-| [`sql.DBeaverSQLFormatterStep`](lib/src/main/java/com/github/autostyle/sql/DBeaverSQLFormatterStep.java) | :+1:       | :white_large_square:       | :white_large_square:  |
-| [`wtp.EclipseWtpFormatterStep`](lib-extra/src/main/java/com/github/autostyle/extra/wtp/EclipseWtpFormatterStep.java) | :+1:       | :+1:      | :white_large_square:  |
-| [(Your FormatterStep here)](CONTRIBUTING.md#how-to-add-a-new-formatterstep) | :white_large_square:        | :white_large_square:       | :white_large_square:  |
-| Fast up-to-date checking                      | :+1:       | :white_large_square:       | :white_large_square:  |
-| Automatic idempotency safeguard               | :+1:       | :white_large_square:       | :white_large_square:  |
+| Feature / FormatterStep                       | [plugin-gradle](plugin-gradle/README.md) | [(Your build tool here)](CONTRIBUTING.md#how-to-add-a-new-plugin-for-a-build-system) |
+| --------------------------------------------- | ------------- | --------|
+| [`generic.EndWithNewlineStep`](lib/src/main/java/com/github/autostyle/generic/EndWithNewlineStep.java) | :+1:       | :white_large_square:  |
+| [`generic.IndentStep`](lib/src/main/java/com/github/autostyle/generic/IndentStep.java) | :+1:       | :white_large_square:  |
+| [`generic.LicenseHeaderStep`](lib/src/main/java/com/github/autostyle/generic/LicenseHeaderStep.java) | :+1:       | :white_large_square:  |
+| [`generic.ReplaceRegexStep`](lib/src/main/java/com/github/autostyle/generic/ReplaceRegexStep.java) | :+1:       | :white_large_square:  |
+| [`generic.ReplaceStep`](lib/src/main/java/com/github/autostyle/generic/ReplaceStep.java) | :+1:       | :white_large_square:  |
+| [`generic.TrimTrailingWhitespaceStep`](lib/src/main/java/com/github/autostyle/generic/TrimTrailingWhitespaceStep.java) | :+1:       | :white_large_square:  |
+| [`cpp.EclipseFormatterStep`](lib-extra/src/main/java/com/github/autostyle/extra/cpp/EclipseFormatterStep.java) | :+1:       | :white_large_square:  |
+| [`groovy.GrEclipseFormatterStep`](lib-extra/src/main/java/com/github/autostyle/extra/groovy/GrEclipseFormatterStep.java) | :+1:       | :white_large_square:  |
+| [`java.GoogleJavaFormatStep`](lib/src/main/java/com/github/autostyle/java/GoogleJavaFormatStep.java) | :+1:       | :white_large_square:  |
+| [`java.ImportOrderStep`](lib/src/main/java/com/github/autostyle/java/ImportOrderStep.java) | :+1:       | :white_large_square:  |
+| [`java.RemoveUnusedImportsStep`](lib/src/main/java/com/github/autostyle/java/RemoveUnusedImportsStep.java) | :+1:       | :white_large_square:  |
+| [`java.EclipseFormatterStep`](lib-extra/src/main/java/com/github/autostyle/extra/java/EclipseFormatterStep.java) | :+1:       | :white_large_square:  |
+| [`kotlin.KtLintStep`](lib/src/main/java/com/github/autostyle/kotlin/KtLintStep.java) | :+1:       | :white_large_square:  |
+| [`markdown.FreshMarkStep`](lib/src/main/java/com/github/autostyle/markdown/FreshMarkStep.java) | :+1:       | :white_large_square:  |
+| [`npm.PrettierFormatterStep`](lib/src/main/java/com/github/autostyle/npm/PrettierFormatterStep.java) | :+1:       | :white_large_square:  |
+| [`npm.TsFmtFormatterStep`](lib/src/main/java/com/github/autostyle/npm/TsFmtFormatterStep.java) | :+1:       | :white_large_square:  |
+| [`scala.ScalaFmtStep`](lib/src/main/java/com/github/autostyle/scala/ScalaFmtStep.java) | :+1:       | :white_large_square:  |
+| [`sql.DBeaverSQLFormatterStep`](lib/src/main/java/com/github/autostyle/sql/DBeaverSQLFormatterStep.java) | :+1:       | :white_large_square:  |
+| [`wtp.EclipseWtpFormatterStep`](lib-extra/src/main/java/com/github/autostyle/extra/wtp/EclipseWtpFormatterStep.java) | :+1:       | :white_large_square:  |
+| [(Your FormatterStep here)](CONTRIBUTING.md#how-to-add-a-new-formatterstep) | :white_large_square:       | :white_large_square:  |
+| Fast up-to-date checking                      | :+1:       | :white_large_square:  |
+| Automatic idempotency safeguard               | :+1:       | :white_large_square:  |
 <!---freshmark /matrix -->
 
-*Why are there empty squares?* Many projects get harder to work on as they get bigger. Autostyle is easier to work on than ever, and one of the reasons why is that we don't require contributors to "fill the matrix". If you want to [add Bazel support](https://github.com/github/autostyle/issues/76), we'd happily accept the PR even if it only supports the one formatter you use. And if you want to add FooFormatter support, we'll happily accept the PR even if it only supports the one build system you use.
+*Why are there empty squares?* Many projects get harder to work on as they get bigger. 
+Autostyle is easier to work on than ever, and one of the reasons why is that we don't require 
+contributors to "fill the matrix". So far Autostyle works better with Gradle, however we would consider PRs 
+even if it only supports the one formatter you use.
 
-Once someone has filled in one square of the formatter/build system matrix, it's easy for interested parties to fill in any empty squares, since you'll now have a working example for every piece needed.
+And if you want to add FooFormatter support, we'll happily accept the PR even if it only supports the one build system you use.
+
+Once someone has filled in one square of the formatter/build system matrix, 
+it's easy for interested parties to fill in any empty squares, since you'll now have a working example for every piece needed.
 
 ## Acknowledgements
 - Thanks to contributors of [Spotless](https://github.com/diffplug/spotless).
