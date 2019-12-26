@@ -1,9 +1,5 @@
-# autostyle-lib and autostyle-lib-extra releases
-
-You might be looking for:
-
-- [plugin-gradle/CHANGES.md](plugin-gradle/CHANGES.md)
-
 ### Version 3.0
 
 * The first release after fork of https://github.com/diffplug/spotless
+* Gradle plugin: Visualize CR and LF symbols ([#2](https://github.com/autostyle/autostyle/issues/2))
+* Gradle plugin: make autostyleCheck/Apply tasks operate only on the files that belong to the relevant projects ([#1](https://github.com/autostyle/autostyle/issues/1))

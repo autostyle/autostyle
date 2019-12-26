@@ -686,6 +686,46 @@ autostyle {
 
 Not yet.
 
+## Can I apply Autostyle to multi-module project?
+
+Yes.
+By default Autostyle operates only on files relevant to a single module, so you can apply it inside
+`allprojects` block:
+
+```kotlin
+plugins {
+    id("com.github.autostyle")
+}
+
+allprojects {
+    apply(plugin = "com.github.autostyle")
+    // Note: even though Autostyle uses `filter.include("*.gradle.kts")` for kotlinGradle,
+    // It will not descend to folders of other projects, so :autostyleCheck task in the root
+    // project would validate only Gradle scripts for the root project.
+    autostyle {
+        kotlinGradle {
+            ktlint()
+        }
+    }
+}
+```
+
+If that does not suit for you, you can use `excludeSubprojects` property as follows.
+Note: the possibility is there, however you should probably refrain from using this approach.
+Having project-specific tasks enables fine-grained control, and enables to use build cache.
+
+```kotlin
+// Declare Autostyle for the root project
+autostyle {
+    format("markdown") {
+        filter.include("**/*.md")
+        // Default is true
+        // It will process all the *.md files in the source tree
+        excludeSubprojects.set(false)
+    }
+}
+```
+
 ## Example configurations (from real-world projects)
 
 Autostyle is hosted on jcenter and at plugins.gradle.org. [Go here](https://plugins.gradle.org/plugin/com.github.autostyle) if you're not sure how to import the plugin.

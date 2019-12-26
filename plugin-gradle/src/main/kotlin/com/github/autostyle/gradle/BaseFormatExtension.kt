@@ -28,10 +28,12 @@ import org.gradle.api.Project
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.util.PatternFilterable
 import org.gradle.api.tasks.util.PatternSet
+import org.gradle.kotlin.dsl.extra
 import org.gradle.kotlin.dsl.listProperty
 import org.gradle.kotlin.dsl.property
 import java.io.File
 import java.nio.charset.Charset
+import java.util.*
 import javax.inject.Inject
 
 open class BaseFormatExtension @Inject constructor(
@@ -51,6 +53,9 @@ open class BaseFormatExtension @Inject constructor(
     fun paddedCell() {
         paddedCell.set(true)
     }
+
+    // TODO: implement gitignore
+    val excludeSubprojects = root.objects.property<Boolean>().conv(true)
 
     val lineEndings = root.objects.property<LineEnding>()
         .conv(root.providers.provider { root.lineEndings })
@@ -203,10 +208,17 @@ open class BaseFormatExtension @Inject constructor(
     ) =
         EclipseWtpConfig(type, version, root.project)
 
+    @Suppress("UNCHECKED_CAST")
+    val dirsToExclude: NavigableSet<String> get() =
+        (project.rootProject.extra[AutostylePlugin.PROJECT_DIR_MAP] as Lazy<NavigableSet<String>>).value
+
     /** Sets up a format task according to the values in this extension.  */
     internal open fun configureTask(task: AutostyleTask) {
         task.paddedCell.set(paddedCell)
         task.encoding.set(encoding.map { it.name() })
+        if (excludeSubprojects.get()) {
+            excludeSubprojects()
+        }
         task.sourceFiles.from(target.map { targetRoot ->
             targetRoot.map {
                 when (it) {
@@ -231,5 +243,27 @@ open class BaseFormatExtension @Inject constructor(
         task.lineEndingsPolicy.set(lineEndings.map {
             it.createPolicy(project.projectDir) { project.files(task.sourceFiles) }
         })
+    }
+
+    private fun excludeSubprojects() {
+        // When Autostyle rule (e.g. **/*.md) is declared for a project,
+        // it should not descend to subprojects by default.
+        // So we want to exclude all the folders that represent project dir and build dirs of the subproject
+        val sep = File.separatorChar
+        val currentDir = root.project.projectDir.absolutePath + sep
+        val offset = currentDir.length
+        val dirs = dirsToExclude
+        filter.exclude { fileTreeElement ->
+            val path = fileTreeElement.file.absolutePath
+
+            path.length > currentDir.length && path[currentDir.length - 1] == sep &&
+                    path.startsWith(currentDir) &&
+                    dirs.subSet(currentDir, false, "$path$sep", true)
+                        .any {
+                            path.regionMatches(offset, it, offset, it.length - offset - 1) &&
+                                    (path.length == it.length - 1 ||
+                                            path.length > it.length && path[it.length - 1] == sep)
+                        }
+        }
     }
 }

@@ -20,7 +20,10 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.BasePlugin
 import org.gradle.api.plugins.JavaBasePlugin
+import org.gradle.kotlin.dsl.extra
 import org.gradle.kotlin.dsl.withType
+import java.io.File
+import java.util.*
 
 class AutostylePlugin : Plugin<Project> {
     companion object {
@@ -30,10 +33,30 @@ class AutostylePlugin : Plugin<Project> {
         private const val APPLY_DESCRIPTION =
             "Applies code formatting steps to sourcecode in-place."
         private const val FILES_PROPERTY = "autostyleFiles"
+        internal const val PROJECT_DIR_MAP = "_autostyleProjectDirMap_"
     }
 
     override fun apply(project: Project) {
         project.configurePlugin()
+        project.rootProject.installProjectPathsExtra()
+    }
+
+    private fun Project.installProjectPathsExtra() {
+        // When Autostyle rule (e.g. **/*.md) is declared for a project,
+        // it should not descend to subprojects by default.
+        // So we want to exclude all the folders that represent project dir and build dirs of the subproject
+        if (extra.has(PROJECT_DIR_MAP)) {
+            return
+        }
+        extra[PROJECT_DIR_MAP] = lazy {
+            allprojects
+                .asSequence()
+                .flatMap { sequenceOf(it.projectDir, it.buildDir) }
+                .plus(File(rootDir, "buildSrc"))
+                .plus(File(rootDir, ".gradle"))
+                .plus(File(rootDir, ".idea"))
+                .mapTo(TreeSet()) { it.absolutePath + File.separatorChar }
+        }
     }
 
     private fun Project.configurePlugin() {
