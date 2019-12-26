@@ -59,7 +59,10 @@ object TestProvisioner {
             config.isTransitive = withTransitives
             config.description = mavenCoords.toString()
             try {
-                config.resolve()
+                // https://github.com/gradle/gradle/issues/11752
+                synchronized(TestProvisioner) {
+                    config.resolve()
+                }
             } catch (e: ResolveException) { /* Provide Maven coordinates in exception message instead of static string 'detachedConfiguration' */
                 throw ResolveException(config.description!!, e)
             } finally { // delete the temp dir
