@@ -8,6 +8,9 @@
 *.sql    text
 *.q      text
 
+# Reduce merge-conflicts on edits to CHANGES.md file
+CHANGES.md merge=union
+
 # Note: executable is a non-standard attribute, and it is used by the release plugin
 *.sh     text eol=lf executable
 *.cgi    text eol=lf executable
