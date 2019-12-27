@@ -36,7 +36,7 @@ class DiffMessageFormatter constructor(
         const val MAX_FILES_TO_LIST = 10
         private const val MIN_LINES_PER_FILE = 4
         private val NEWLINE_SPLITTER = Splitter.on('\n')
-        private const val NORMAL_INDENT = "    "
+        private const val NORMAL_INDENT = "  "
         private const val DIFF_INDENT = NORMAL_INDENT + NORMAL_INDENT
     }
 
