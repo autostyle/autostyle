@@ -29,23 +29,28 @@ private const val XML_COMMENT = "<!--(?>[^-]++|(?!-->)[^<>])*+-->"
 interface CopyrightReplacer {
     fun replace(input: String, copyright: String): String
 
-    object Java : SimpleCopyrightReplacer(
-        Regex("^\\s*+(?>$JAVA_MULTILINE_COMMENT|$JAVA_SINGLE_LINE_COMMENT_BLOCK)?\\s*+")
+    object Java : TextAndHeaderCopyrightReplacer(
+        1, listOf(),
+        Regex("^\\s*+(?>$JAVA_MULTILINE_COMMENT|$JAVA_SINGLE_LINE_COMMENT_BLOCK)?\\s*+"),
+        Regex("^/[/*]")
     )
 
     object Shell : TextAndHeaderCopyrightReplacer(
         2, listOf(1),
-        Regex("^\\s*+($SHELL_BANG_LINE)?+\\s*+($SHELL_COMMENT_BLOCK)?\\s*+")
+        Regex("^\\s*+($SHELL_BANG_LINE)?+\\s*+($SHELL_COMMENT_BLOCK)?\\s*+"),
+        Regex("^#")
     )
 
     object Bat : TextAndHeaderCopyrightReplacer(
         2, listOf(1),
-        Regex("^\\s*+($BAT_ECHO_LINE)?+\\s*+($BAT_COMMENT_BLOCK)?\\s*+")
+        Regex("^\\s*+($BAT_ECHO_LINE)?+\\s*+($BAT_COMMENT_BLOCK)?\\s*+"),
+        Regex("^(?>::|rem|@rem)")
     )
 
     object Xml : TextAndHeaderCopyrightReplacer(
         2, listOf(1, 3),
-        Regex("^\\s*+($XML_PI)?+\\s*+($XML_COMMENT)?\\s*+($XML_PI)?+\\s*+")
+        Regex("^\\s*+($XML_PI)?+\\s*+($XML_COMMENT)?\\s*+($XML_PI)?+\\s*+"),
+        Regex("^<!--")
     )
 }
 
@@ -57,7 +62,8 @@ abstract class SimpleCopyrightReplacer(val regex: Regex) : CopyrightReplacer {
 abstract class TextAndHeaderCopyrightReplacer(
     val valueGroup: Int,
     val headerGroups: List<Int>,
-    val regex: Regex
+    val regex: Regex,
+    val commentStartRegex: Regex
 ) : CopyrightReplacer {
     override fun replace(input: String, copyright: String): String {
         val match = regex.find(input) ?: return copyright + "\n" + input
@@ -67,8 +73,15 @@ abstract class TextAndHeaderCopyrightReplacer(
             sb.append(h).append('\n')
         }
         sb.append(copyright)
-        if (match.range.last + 1 < input.length) {
-            sb.append(input, match.range.last + 1, input.length)
+        val lastIndex = match.range.last + 1
+        if (lastIndex < input.length) {
+            val prefix = input.subSequence(lastIndex, input.length.coerceAtMost(lastIndex + 10))
+            if (commentStartRegex.find(prefix) != null) {
+                // If comment follows the copyright header, then they should be separated with a blank line
+                // This especially helps for shell-like comments
+                sb.append('\n')
+            }
+            sb.append(input, lastIndex, input.length)
         }
         return sb.toString()
     }

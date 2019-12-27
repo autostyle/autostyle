@@ -5,5 +5,6 @@
 * Gradle plugin: make autostyleCheck/Apply tasks operate only on the files that belong to the relevant projects ([#1](https://github.com/autostyle/autostyle/issues/1))
 * Gradle plugin: simplify configuration of license header style
 * Gradle plugin: log intermediate steps when formatting cannot converge
+* License formatter: add a blank line if license header is followed with a comment
 * Diff formatter: Use simple characters when rendering diff on Windows ([#4](https://github.com/autostyle/autostyle/issues/4))
 * Reduce merge conflicts on `CHANGES.md` by leveraging `merge=union` Git strategy

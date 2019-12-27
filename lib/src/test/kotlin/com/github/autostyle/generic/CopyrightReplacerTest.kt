@@ -41,6 +41,7 @@ class CopyrightReplacerTest {
                          * Updated Copyright
                          * Line 2
                          */
+
                         // comment
                         package test
                     """.trimIndent()
@@ -60,6 +61,7 @@ class CopyrightReplacerTest {
                          * Updated Copyright
                          * Line 2
                          */
+
                         // comment
                         package test
                     """.trimIndent()
@@ -100,6 +102,25 @@ class CopyrightReplacerTest {
                         # Line 2
                         #${' '}
                         A=2
+                    """.trimIndent()
+                )
+            )
+            add(
+                arguments(
+                    """
+                        # Copyright ACME
+
+                        # Let A be 42
+                        A=42
+                    """.trimIndent(),
+                    """
+                        #${' '}
+                        # Updated Copyright
+                        # Line 2
+                        #${' '}
+
+                        # Let A be 42
+                        A=42
                     """.trimIndent()
                 )
             )
@@ -222,6 +243,9 @@ class CopyrightReplacerTest {
         style: CopyrightStyle
     ) {
         val new = style.licenseFormatter.apply(NEW_COPYRIGHT) + '\n'
-        assertEquals(expected, style.replacer.replace(input, new), input)
+        val replaced = style.replacer.replace(input, new)
+        assertEquals(expected, replaced, input)
+        val replaced2 = style.replacer.replace(replaced, new)
+        assertEquals(replaced, replaced2) { "second pass for <$input>" }
     }
 }
