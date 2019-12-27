@@ -18,6 +18,7 @@ package com.github.autostyle.gradle.ext
 import com.github.autostyle.Provisioner
 import org.gradle.api.Project
 import org.gradle.api.provider.ListProperty
+import org.gradle.api.provider.MapProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
 import org.gradle.util.GradleVersion
@@ -46,3 +47,6 @@ fun <T> Property<T>.conv(v: Provider<out T>) = if (gradleGe51) convention(v) els
 
 fun <T> ListProperty<T>.conv(v: Iterable<T>) = if (gradleGe51) convention(v) else apply { set(v) }
 fun <T> ListProperty<T>.conv(v: Provider<out Iterable<T>>) = if (gradleGe51) convention(v) else apply { set(v) }
+
+fun <K, V> MapProperty<K, V>.conv(v: Map<K, V>) = if (gradleGe51) convention(v) else apply { set(v) }
+fun <K, V> MapProperty<K, V>.conv(v: Provider<out Map<K, V>>) = if (gradleGe51) convention(v) else apply { set(v) }

@@ -162,17 +162,16 @@ open class BaseFormatExtension @Inject constructor(
      */
     @JvmOverloads
     fun licenseHeader(
-        copyright: String,
-        addBlankLineAfter: Boolean = false,
-        map: Map<String, CopyrightStyle>? = null
+        copyright: String? = null,
+        action: Action<LicenseHeaderConfig>? = null
     ) {
-        addStep(
-            ImprovedLicenseHeaderStep(
-                copyright,
-                addBlankLineAfter,
-                map ?: DEFAULT_HEADER_STYLES
-            )
-        )
+        LicenseHeaderConfig(root.project).also {
+            if (copyright != null) {
+                it.copyright.set(copyright)
+            }
+            action?.execute(it)
+            addStep(it.createStep())
+        }
     }
 
     /** Uses the default version of prettier.  */

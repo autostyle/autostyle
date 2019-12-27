@@ -66,9 +66,7 @@ autostyle {
     replace      'Not enough space after if', 'if(', 'if ('
     replaceRegex 'Too much space after if', 'if +\\(', 'if ('
 
-    // Everything before the first #include or #pragma will
-    // be replaced with whatever is in `autostyle.license.cpp`
-    licenseHeaderFile 'autostyle.license.cpp', '#'
+    licenseHeader 'Licensed under Apache-2.0'
   }
 }
 ```
@@ -128,6 +126,67 @@ autostyle {
 
 See [ECLIPSE_SCREENSHOTS](../ECLIPSE_SCREENSHOTS.md) for screenshots that demonstrate how to get and install the eclipseFormatFile and importOrderFile mentioned above.
 
+### Configuring License Headers
+
+Autostyle is capable of formatting copyright headers for several files.
+For instance: XML (header must be present after `<?xml...?`>), Shell (header must be present after `#!/...`), Java, Kotlin, Bat, and so on.
+
+It uses file extension to identify the comment style.
+
+For instance, here's how you can configure license headers:
+
+```kotlin
+// Note: Autostyle automatically adds relevant comments depending on the file type
+val license = "Licensed under Apache-2.0"
+
+autostyle {
+    format("xml") {
+        filter.include("**/*.xml")
+        licenseHeader(license)
+    }
+    format("batch") {
+        filter.include("**/*.bat", "**/*.cmd")
+        licenseHeader(license) {
+            // Note: below are for illustration purposes only
+            // Autostyle has default formatting for lots of extensions (see ImprovedLicenseHeaderStep.kt)
+            copyrightStyle("bat", com.github.autostyle.generic.DefaultCopyrightStyle.PAAMAYIM_NEKUDOTAYIM)
+            copyrightStyle("cmd", "AT_REM")
+        }
+    }
+}
+``` 
+
+The output will be like
+
+`test.xml`
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Licensed under Apache-2.0
+  -->
+...
+```
+
+`test.cmd` (`AT_REM` formatting)
+
+```
+@rem
+@rem Licensed under Apache-2.0
+@rem
+...
+```
+
+`test.bat` (`PAAMAYIM_NEKUDOTAYIM` formatting)
+
+```shell script
+::
+:: Licensed under Apache-2.0
+::
+...
+```
+
+
 <a name="android"></a>
 
 ### Applying to Android Java source
@@ -177,11 +236,11 @@ apply plugin: 'groovy'
 
 autostyle {
   java {
-    licenseHeaderFile 'autostyle.license.java'
+    licenseHeader 'Licensed under Apache-2.0'
     googleJavaFormat() // use a specific formatter for Java files
   }
   groovy {
-    licenseHeaderFile 'autostyle.license.java'
+    licenseHeader 'Licensed under Apache-2.0'
     excludeJava() // excludes all Java sources within the Groovy source dirs from formatting
     paddedCell() // Avoid cyclic ambiguities
     // the Groovy Eclipse formatter extends the Java Eclipse formatter,

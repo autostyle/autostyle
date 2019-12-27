@@ -13,7 +13,7 @@ val DEFAULT_HEADER_STYLES =
             setOf("bat", "cmd").associateWith { DefaultCopyrightStyle.PAAMAYIM_NEKUDOTAYIM } +
             setOf("kts", "kt").associateWith { DefaultCopyrightStyle.JAVA } +
             setOf("groovy", "gradle").associateWith { DefaultCopyrightStyle.JAVA } +
-            setOf("yml", "properties").associateWith { DefaultCopyrightStyle.SHELL } +
+            setOf("sh", "yml", "properties").associateWith { DefaultCopyrightStyle.SHELL } +
             setOf("xml", "html").associateWith { DefaultCopyrightStyle.XML }
 
 class ImprovedLicenseHeaderStep(
