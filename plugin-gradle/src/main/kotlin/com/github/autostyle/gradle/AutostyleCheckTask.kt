@@ -51,8 +51,9 @@ open class AutostyleCheckTask @Inject constructor(
             PaddedCellGradle.check(this, formatter, problemFiles)
         } else if (problemFiles.isNotEmpty()) {
             // if we're not in paddedCell mode, we'll check if maybe we should be
-            if (PaddedCellBulk.anyMisbehave(formatter, problemFiles)) {
-                throw PaddedCellGradle.youShouldTurnOnPaddedCell(this)
+            val cell = PaddedCellBulk.anyMisbehave(formatter, problemFiles)
+            if (cell != null) {
+                throw PaddedCellGradle.youShouldTurnOnPaddedCell(this, cell)
             } else {
                 throw formatViolationsFor(formatter, problemFiles)
             }

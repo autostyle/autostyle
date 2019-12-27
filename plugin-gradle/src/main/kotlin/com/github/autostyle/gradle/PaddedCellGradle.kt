@@ -16,6 +16,7 @@
 package com.github.autostyle.gradle
 
 import com.github.autostyle.Formatter
+import com.github.autostyle.PaddedCell
 import com.github.autostyle.PaddedCellBulk
 import org.gradle.api.GradleException
 import java.io.File
@@ -48,12 +49,28 @@ internal object PaddedCellGradle {
     private const val URL =
         "https://github.com/autostyle/autostyle/blob/master/PADDEDCELL.md"
 
-    fun youShouldTurnOnPaddedCell(task: AutostyleTask): GradleException {
+    fun youShouldTurnOnPaddedCell(
+        task: AutostyleTask,
+        cell: PaddedCell
+    ): GradleException {
         val rootPath = task.project.rootDir.toPath()
+        val diagnoseDir = diagnoseDir(task)
+        diagnoseDir.mkdirs()
+        val name = cell.file().nameWithoutExtension
+        val extension = cell.file().extension
+
+        for ((index, step) in cell.steps().withIndex()) {
+            File(diagnoseDir, "$name.${index + 1}.$extension").writeText(step)
+        }
+
         return GradleException(
             """
             You have a misbehaving rule which can't make up its mind.
             This means that autostyleCheck will fail even after autostyleApply has run.
+
+            The file in question is ${rootPath.relativize(cell.file().toPath())}
+            Formatting ${cell.userMessage()}
+            You can find intermediate results in ${rootPath.relativize(diagnoseDir.toPath())}
 
             This is a bug in a formatting rule, not Autostyle itself, but Autostyle can
             work around this bug and generate helpful bug reports for the broken rule
@@ -65,10 +82,6 @@ internal object PaddedCellGradle {
                         paddedCell()
                     }
                 }
-
-            The next time you run autostyleCheck, it will put helpful bug reports into
-            ${rootPath.relativize(diagnoseDir(task).toPath())}, and autostyleApply
-            and autostyleCheck will be self-consistent from here on out.
 
             For details see $URL
             """.trimIndent()

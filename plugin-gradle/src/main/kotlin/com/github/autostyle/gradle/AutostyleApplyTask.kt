@@ -83,7 +83,7 @@ open class AutostyleApplyTask @Inject constructor(
             }
             return changedFiles
         }
-        var anyMisbehave = false
+        var anyMisbehave: PaddedCell? = null
         for (file in filesToCheck) {
             logger.info("Applying format to {}", file)
             val unixResultIfDirty = formatter.applyToAndReturnResultIfDirty(file)
@@ -92,7 +92,7 @@ open class AutostyleApplyTask @Inject constructor(
             }
             // because apply will count as up-to-date, it's important
             // that every call to apply will get a PaddedCell check
-            if (!anyMisbehave && unixResultIfDirty != null) {
+            if (anyMisbehave == null && unixResultIfDirty != null) {
                 val onceMore = formatter.compute(unixResultIfDirty, file)
                 //  f(f(input) == f(input) for an idempotent function
                 if (onceMore == unixResultIfDirty) {
@@ -103,15 +103,15 @@ open class AutostyleApplyTask @Inject constructor(
                 val result = PaddedCell.check(formatter, file, onceMore)
                 if (result.type() != PaddedCell.Type.CONVERGE) {
                     // it didn't converge, so the user is going to need padded cell mode
-                    anyMisbehave = true
+                    anyMisbehave = result
                 } else {
                     val finalResult = formatter.computeLineEndings(result.canonical(), file)
                     file.writeText(finalResult, formatter.encoding)
                 }
             }
         }
-        if (anyMisbehave) {
-            throw PaddedCellGradle.youShouldTurnOnPaddedCell(this)
+        if (anyMisbehave != null) {
+            throw PaddedCellGradle.youShouldTurnOnPaddedCell(this, anyMisbehave)
         }
         return changedFiles
     }

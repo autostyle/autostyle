@@ -35,6 +35,8 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.annotation.Nullable;
+
 /**
  * Incorporates the PaddedCell machinery into broader apply / check usage.
  *
@@ -72,25 +74,27 @@ public final class PaddedCellBulk {
    * tell the user about a misbehaving rule and alert her to how to enable
    * paddedCell mode, with minimal effort.
    */
-  public static boolean anyMisbehave(Formatter formatter, List<File> problemFiles) {
+  public static @Nullable PaddedCell anyMisbehave(Formatter formatter, List<File> problemFiles) {
     return anyMisbehave(formatter, problemFiles, 500);
   }
 
   /** Same as {@link #anyMisbehave(Formatter, List)} but with a customizable timeout. */
-  public static boolean anyMisbehave(Formatter formatter, List<File> problemFiles, long timeoutMs) {
+  public static @Nullable PaddedCell anyMisbehave(Formatter formatter, List<File> problemFiles, long timeoutMs) {
     Objects.requireNonNull(formatter, "formatter");
     Objects.requireNonNull(problemFiles, "problemFiles");
     long start = System.currentTimeMillis();
     for (File problem : problemFiles) {
       PaddedCell padded = PaddedCell.check(formatter, problem);
       if (padded.misbehaved()) {
-        return true;
+        logger.warning("Formatting for file " + problem +
+          " does not converge: " + padded.type() + " after " + padded.steps().size() + " steps");
+        return padded;
       }
       if (timeoutMs > 0 && System.currentTimeMillis() - start > timeoutMs) {
-        return false;
+        return null;
       }
     }
-    return false;
+    return null;
   }
 
   /**
