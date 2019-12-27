@@ -146,6 +146,14 @@ class CopyrightReplacerTest {
 
         @JvmStatic
         fun xmlSources() = ArrayList<Arguments>().apply {
+            val expected = """
+                <?xml version="1.0" encoding="utf-8"?>
+                <!--
+                  ~ Updated Copyright
+                  ~ Line 2
+                  -->
+                <root>
+            """.trimIndent()
             add(
                 arguments(
                     """
@@ -155,8 +163,24 @@ class CopyrightReplacerTest {
                           -->
                         <root>
                     """.trimIndent(),
+                    expected
+                )
+            )
+            add(
+                arguments(
                     """
                         <?xml version="1.0" encoding="utf-8"?>
+                        <root>
+                    """.trimIndent(),
+                    expected
+                )
+            )
+            add(
+                arguments(
+                    """
+                        <root>
+                    """.trimIndent(),
+                    """
                         <!--
                           ~ Updated Copyright
                           ~ Line 2

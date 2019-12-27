@@ -61,8 +61,6 @@ abstract class TextAndHeaderCopyrightReplacer(
 ) : CopyrightReplacer {
     override fun replace(input: String, copyright: String): String {
         val match = regex.find(input) ?: return copyright + "\n" + input
-        match.groups[valueGroup]?.value
-            ?: throw IllegalArgumentException("Group $valueGroup does not exist for regex $regex in text $input")
         val headers = headerGroups.mapNotNull { match.groups[it]?.value }
         val sb = StringBuilder()
         for (h in headers) {
