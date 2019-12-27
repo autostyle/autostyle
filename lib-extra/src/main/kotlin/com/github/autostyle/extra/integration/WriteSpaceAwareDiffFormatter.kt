@@ -53,13 +53,14 @@ internal class WriteSpaceAwareDiffFormatter(
         private val CR_SIMPLE = byteArrayOf('\\'.toByte(), 'r'.toByte())
         private val LF_SIMPLE = byteArrayOf('\\'.toByte(), 'n'.toByte())
         private val TAB_SIMPLE = byteArrayOf('\\'.toByte(), 't'.toByte())
+        private val isWindows = "win" in System.getProperty("os.name").toLowerCase()
         private fun replacementFor(
             charsetEncoder: CharsetEncoder,
             value: String,
             fancy: ByteArray,
             simple: ByteArray
         ): ByteArray {
-            return if (charsetEncoder.canEncode(value)) fancy else simple
+            return if (!isWindows && charsetEncoder.canEncode(value)) fancy else simple
         }
     }
 
