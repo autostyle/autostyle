@@ -48,23 +48,31 @@ object TestProvisioner {
      * Every call to resolve will take about 1 second, even when all artifacts are resolved.
      */
     private fun createWithRepositories(repoConfig: RepositoryHandler.() -> Unit): Provisioner { // Running this takes ~3 seconds the first time it is called. Probably because of classloading.
-        val tempDir = Files.createTempDir()
-        val project = gradleProject(tempDir)
-        project.repositories.repoConfig()
         return Provisioner { withTransitives: Boolean, mavenCoords: Collection<String?> ->
+            val tempDir = Files.createTempDir()
+            val project = gradleProject(tempDir)
+            project.repositories.repoConfig()
             val deps: Array<Dependency> = mavenCoords
                 .map { project.dependencies.create(it as String) }
                 .toTypedArray()
-            val config = project.configurations.detachedConfiguration(*deps)
-            config.isTransitive = withTransitives
-            config.description = mavenCoords.toString()
+            fun resolve() = project.configurations.detachedConfiguration(*deps).apply {
+                isTransitive = withTransitives
+                description = mavenCoords.toString()
+            }.resolve()
             try {
-                // https://github.com/gradle/gradle/issues/11752
-                synchronized(TestProvisioner) {
-                    config.resolve()
+                for (i in 1..5) {
+                    try {
+                        return@Provisioner resolve()
+                    } catch (e: ResolveException) {
+                        Thread.sleep(100)
+                        // https://github.com/gradle/gradle/issues/11752
+                        // Retry a couple of times
+                        continue
+                    }
                 }
+                resolve()
             } catch (e: ResolveException) { /* Provide Maven coordinates in exception message instead of static string 'detachedConfiguration' */
-                throw ResolveException(config.description!!, e)
+                throw ResolveException(mavenCoords.toString(), e)
             } finally { // delete the temp dir
                 java.nio.file.Files.walk(tempDir.toPath())
                     .sorted(Comparator.reverseOrder())

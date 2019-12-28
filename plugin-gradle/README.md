@@ -42,7 +42,7 @@ cmd> gradlew build
     +\t\tif·(targets.length·==·0)·{
     ...
   You might want to adjust -PmaxCheckMessageLines=50 -PmaxFilesToList=10 -PminLinesPerFile=4 to see more violations
-  Run 'gradlew autostyleApply' to fix these violations.
+  Run './gradlew autostyleApply' to fix the violations.
 
 cmd> gradlew autostyleApply
 :autostyleApply

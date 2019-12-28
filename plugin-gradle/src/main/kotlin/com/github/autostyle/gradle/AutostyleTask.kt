@@ -109,7 +109,7 @@ abstract class AutostyleTask @Inject constructor(
             minLinesPerFile = project.intProperty("minLinesPerFile") ?: minLinesPerFile
             diff(problemFiles.sorted(), paddedCell.get())
         }
-        sb.append("Run './gradlew autostyleApply' to fix the violations")
+        sb.append("Run './gradlew autostyleApply' to fix the violations.")
         return GradleException(sb.toString())
     }
 }

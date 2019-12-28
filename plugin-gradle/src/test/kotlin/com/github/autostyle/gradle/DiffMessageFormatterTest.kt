@@ -42,7 +42,7 @@ class DiffMessageFormatterTest : ResourceHarness() {
     private fun assertTaskFailure(task: AutostyleTask, expected: String) {
         val msg = getTaskErrorMessage(task)
         val firstLine = "The following files have format violations:\n"
-        val lastLine = "\nRun 'gradlew autostyleApply' to fix these violations."
+        val lastLine = "\nRun './gradlew autostyleApply' to fix the violations."
         assertThat(msg).startsWith(firstLine).endsWith(lastLine)
         val middle = msg!!.substring(firstLine.length, msg.length - lastLine.length)
         assertThat(middle).isEqualTo(expected)
@@ -62,14 +62,14 @@ class DiffMessageFormatterTest : ResourceHarness() {
             task,
             """
             testFile
-                @@ -1,3 +1,3 @@
-                -A␍␊
-                -B␍␊
-                -C␍␊
-                +A␊
-                +B␊
-                +C␊
-            """.replaceIndent("    ")
+              @@ -1,3 +1,3 @@
+              -A␍␊
+              -B␍␊
+              -C␍␊
+              +A␊
+              +B␊
+              +C␊
+            """.replaceIndent("  ")
         )
     }
 
@@ -87,14 +87,14 @@ class DiffMessageFormatterTest : ResourceHarness() {
             task,
             """
             testFile
-                @@ -1,3 +1,3 @@
-                -A·␊
-                -B⇥␊
-                -C··␊
-                +A␊
-                +B␊
-                +C␊
-            """.replaceIndent("    ")
+              @@ -1,3 +1,3 @@
+              -A·␊
+              -B⇥␊
+              -C··␊
+              +A␊
+              +B␊
+              +C␊
+            """.replaceIndent("  ")
         )
     }
 
@@ -121,20 +121,20 @@ class DiffMessageFormatterTest : ResourceHarness() {
             task,
             """
             testFile
-                @@ -2,9 +2,9 @@
-                 u 1
-                 u 2
-                 u 3
-                -⇥·leading·space␊
-                -trailing·space⇥·␊
-                +leading·space␊
-                +trailing·space␊
-                 u 4
-                -··leading·and·trailing·space··␊
-                +leading·and·trailing·space␊
-                 u 5
-                 u 6
-            """.replaceIndent("    ")
+              @@ -2,9 +2,9 @@
+               u 1
+               u 2
+               u 3
+              -⇥·leading·space␊
+              -trailing·space⇥·␊
+              +leading·space␊
+              +trailing·space␊
+               u 4
+              -··leading·and·trailing·space··␊
+              +leading·and·trailing·space␊
+               u 5
+               u 6
+            """.replaceIndent("  ")
         )
     }
 
@@ -158,21 +158,21 @@ class DiffMessageFormatterTest : ResourceHarness() {
             task,
             """
             testFile
-                @@ -1,11 +1,11 @@
-                 u0
-                -trailing·space⇥·␊
-                +trailing·space␊
-                 u1
-                 u2
-                 u3
-                 u4
-                 u5
-                 u6
-                 u7
-                -trailing·space2·␊
-                +trailing·space2␊
-                 u8
-            """.replaceIndent("    ")
+              @@ -1,11 +1,11 @@
+               u0
+              -trailing·space⇥·␊
+              +trailing·space␊
+               u1
+               u2
+               u3
+               u4
+               u5
+               u6
+               u7
+              -trailing·space2·␊
+              +trailing·space2␊
+               u8
+            """.replaceIndent("  ")
         )
     }
 
@@ -196,21 +196,21 @@ class DiffMessageFormatterTest : ResourceHarness() {
             task,
             """
             testFile
-                @@ -1,5 +1,5 @@
-                 u0
-                -trailing·space⇥·␊
-                +trailing·space␊
-                 u1
-                 u2
-                 u3
-                @@ -8,5 +8,5 @@
-                 u6
-                 u7
-                 u8
-                -trailing·space2·␊
-                +trailing·space2␊
-                 u9
-            """.replaceIndent("    ")
+              @@ -1,5 +1,5 @@
+               u0
+              -trailing·space⇥·␊
+              +trailing·space␊
+               u1
+               u2
+               u3
+              @@ -8,5 +8,5 @@
+               u6
+               u7
+               u8
+              -trailing·space2·␊
+              +trailing·space2␊
+               u9
+            """.replaceIndent("  ")
         )
     }
 
@@ -230,10 +230,10 @@ class DiffMessageFormatterTest : ResourceHarness() {
             task,
             """
             testFile
-                @@ -1 +1 @@
-                -line·without·line·ending
-                +line·without·line·ending␊
-            """.replaceIndent("    ")
+              @@ -1 +1 @@
+              -line·without·line·ending
+              +line·without·line·ending␊
+            """.replaceIndent("  ")
         )
     }
 
@@ -253,10 +253,10 @@ class DiffMessageFormatterTest : ResourceHarness() {
             task,
             """
             testFile
-                @@ -1 +1 @@
-                -line·without·line·ending␍␊
-                +line·without·line·ending
-            """.replaceIndent("    ")
+              @@ -1 +1 @@
+              -line·without·line·ending␍␊
+              +line·without·line·ending
+            """.replaceIndent("  ")
         )
     }
 
@@ -276,14 +276,14 @@ class DiffMessageFormatterTest : ResourceHarness() {
             task,
             """
             testFile
-                @@ -1,4 +1,4 @@
-                 line 1
-                -trailing·whitespace··␊
-                -line·with·CRLF␍␊
-                +trailing·whitespace␊
-                +line·with·CRLF␊
-                 line 2
-            """.replaceIndent("    ")
+              @@ -1,4 +1,4 @@
+               line 1
+              -trailing·whitespace··␊
+              -line·with·CRLF␍␊
+              +trailing·whitespace␊
+              +line·with·CRLF␊
+               line 2
+            """.replaceIndent("  ")
         )
     }
 
@@ -297,17 +297,17 @@ class DiffMessageFormatterTest : ResourceHarness() {
             task,
             """
             A
-                @@ -1,2 +1,2 @@
-                -1␍␊
-                -2␍␊
-                +1␊
-                +2␊
+              @@ -1,2 +1,2 @@
+              -1␍␊
+              -2␍␊
+              +1␊
+              +2␊
             B
-                @@ -1,2 +1,2 @@
-                 3
-                -4␍␊
-                +4␊
-            """.replaceIndent("    ")
+              @@ -1,2 +1,2 @@
+               3
+              -4␍␊
+              +4␊
+            """.replaceIndent("  ")
         )
     }
 
@@ -321,69 +321,70 @@ class DiffMessageFormatterTest : ResourceHarness() {
         assertTaskFailure(
             task,
             """
-                0.txt
-                    @@ -1,2 +1,2 @@
-                    -1␍␊
-                    -2␍␊
-                    +1␊
-                    +2␊
-                1.txt
-                    @@ -1,2 +1,2 @@
-                    -1␍␊
-                    -2␍␊
-                    +1␊
-                    +2␊
-                10.txt
-                    @@ -1,2 +1,2 @@
-                    -1␍␊
-                    -2␍␊
-                    +1␊
-                    +2␊
-                11.txt
-                    @@ -1,2 +1,2 @@
-                    -1␍␊
-                    -2␍␊
-                    +1␊
-                    +2␊
-                12.txt
-                    @@ -1,2 +1,2 @@
-                    -1␍␊
-                    -2␍␊
-                    +1␊
-                    +2␊
-                13.txt
-                    @@ -1,2 +1,2 @@
-                    -1␍␊
-                    -2␍␊
-                    +1␊
-                    +2␊
-                14.txt
-                    @@ -1,2 +1,2 @@
-                    -1␍␊
-                    -2␍␊
-                    +1␊
-                    +2␊
-                15.txt
-                    @@ -1,2 +1,2 @@
-                    -1␍␊
-                    -2␍␊
-                    +1␊
-                    +2␊
-                16.txt
-                    @@ -1,2 +1,2 @@
-                    -1␍␊
-                    -2␍␊
-                ... (2 more lines that didn't fit)
+              0.txt
+                @@ -1,2 +1,2 @@
+                -1␍␊
+                -2␍␊
+                +1␊
+                +2␊
+              1.txt
+                @@ -1,2 +1,2 @@
+                -1␍␊
+                -2␍␊
+                +1␊
+                +2␊
+              10.txt
+                @@ -1,2 +1,2 @@
+                -1␍␊
+                -2␍␊
+                +1␊
+                +2␊
+              11.txt
+                @@ -1,2 +1,2 @@
+                -1␍␊
+                -2␍␊
+                +1␊
+                +2␊
+              12.txt
+                @@ -1,2 +1,2 @@
+                -1␍␊
+                -2␍␊
+                +1␊
+                +2␊
+              13.txt
+                @@ -1,2 +1,2 @@
+                -1␍␊
+                -2␍␊
+                +1␊
+                +2␊
+              14.txt
+                @@ -1,2 +1,2 @@
+                -1␍␊
+                -2␍␊
+                +1␊
+                +2␊
+              15.txt
+                @@ -1,2 +1,2 @@
+                -1␍␊
+                -2␍␊
+                +1␊
+                +2␊
+              16.txt
+                @@ -1,2 +1,2 @@
+                -1␍␊
+                -2␍␊
+              ... (2 more lines that didn't fit)
             Violations also present in:
-                17.txt
-                2.txt
-                3.txt
-                4.txt
-                5.txt
-                6.txt
-                7.txt
-                8.txt
-                9.txt
+              17.txt
+              2.txt
+              3.txt
+              4.txt
+              5.txt
+              6.txt
+              7.txt
+              8.txt
+              9.txt
+            You might want to adjust -PmaxCheckMessageLines=50 -PmaxFilesToList=10 -PminLinesPerFile=4 to see more violations
             """.trimIndent()
         )
     }
@@ -398,60 +399,61 @@ class DiffMessageFormatterTest : ResourceHarness() {
         assertTaskFailure(
             task,
             """
-                0.txt
-                    @@ -1,2 +1,2 @@
-                    -1␍␊
-                    -2␍␊
-                    +1␊
-                    +2␊
-                1.txt
-                    @@ -1,2 +1,2 @@
-                    -1␍␊
-                    -2␍␊
-                    +1␊
-                    +2␊
-                10.txt
-                    @@ -1,2 +1,2 @@
-                    -1␍␊
-                    -2␍␊
-                    +1␊
-                    +2␊
-                11.txt
-                    @@ -1,2 +1,2 @@
-                    -1␍␊
-                    -2␍␊
-                    +1␊
-                    +2␊
-                12.txt
-                    @@ -1,2 +1,2 @@
-                    -1␍␊
-                    -2␍␊
-                    +1␊
-                    +2␊
-                13.txt
-                    @@ -1,2 +1,2 @@
-                    -1␍␊
-                    -2␍␊
-                    +1␊
-                    +2␊
-                14.txt
-                    @@ -1,2 +1,2 @@
-                    -1␍␊
-                    -2␍␊
-                    +1␊
-                    +2␊
-                15.txt
-                    @@ -1,2 +1,2 @@
-                    -1␍␊
-                    -2␍␊
-                    +1␊
-                    +2␊
-                16.txt
-                    @@ -1,2 +1,2 @@
-                    -1␍␊
-                    -2␍␊
-                ... (2 more lines that didn't fit)
+              0.txt
+                @@ -1,2 +1,2 @@
+                -1␍␊
+                -2␍␊
+                +1␊
+                +2␊
+              1.txt
+                @@ -1,2 +1,2 @@
+                -1␍␊
+                -2␍␊
+                +1␊
+                +2␊
+              10.txt
+                @@ -1,2 +1,2 @@
+                -1␍␊
+                -2␍␊
+                +1␊
+                +2␊
+              11.txt
+                @@ -1,2 +1,2 @@
+                -1␍␊
+                -2␍␊
+                +1␊
+                +2␊
+              12.txt
+                @@ -1,2 +1,2 @@
+                -1␍␊
+                -2␍␊
+                +1␊
+                +2␊
+              13.txt
+                @@ -1,2 +1,2 @@
+                -1␍␊
+                -2␍␊
+                +1␊
+                +2␊
+              14.txt
+                @@ -1,2 +1,2 @@
+                -1␍␊
+                -2␍␊
+                +1␊
+                +2␊
+              15.txt
+                @@ -1,2 +1,2 @@
+                -1␍␊
+                -2␍␊
+                +1␊
+                +2␊
+              16.txt
+                @@ -1,2 +1,2 @@
+                -1␍␊
+                -2␍␊
+              ... (2 more lines that didn't fit)
             Violations also present in ${DiffMessageFormatter.MAX_FILES_TO_LIST} other files.
+            You might want to adjust -PmaxCheckMessageLines=50 -PmaxFilesToList=10 -PminLinesPerFile=4 to see more violations
             """.trimIndent()
         )
     }
@@ -468,57 +470,57 @@ class DiffMessageFormatterTest : ResourceHarness() {
             task,
             """
             testFile
-                @@ -1,1000 +1,1000 @@
-                -0␍␊
-                -1␍␊
-                -2␍␊
-                -3␍␊
-                -4␍␊
-                -5␍␊
-                -6␍␊
-                -7␍␊
-                -8␍␊
-                -9␍␊
-                -10␍␊
-                -11␍␊
-                -12␍␊
-                -13␍␊
-                -14␍␊
-                -15␍␊
-                -16␍␊
-                -17␍␊
-                -18␍␊
-                -19␍␊
-                -20␍␊
-                -21␍␊
-                -22␍␊
-                -23␍␊
-                -24␍␊
-                -25␍␊
-                -26␍␊
-                -27␍␊
-                -28␍␊
-                -29␍␊
-                -30␍␊
-                -31␍␊
-                -32␍␊
-                -33␍␊
-                -34␍␊
-                -35␍␊
-                -36␍␊
-                -37␍␊
-                -38␍␊
-                -39␍␊
-                -40␍␊
-                -41␍␊
-                -42␍␊
-                -43␍␊
-                -44␍␊
-                -45␍␊
-                -46␍␊
-                -47␍␊
+              @@ -1,1000 +1,1000 @@
+              -0␍␊
+              -1␍␊
+              -2␍␊
+              -3␍␊
+              -4␍␊
+              -5␍␊
+              -6␍␊
+              -7␍␊
+              -8␍␊
+              -9␍␊
+              -10␍␊
+              -11␍␊
+              -12␍␊
+              -13␍␊
+              -14␍␊
+              -15␍␊
+              -16␍␊
+              -17␍␊
+              -18␍␊
+              -19␍␊
+              -20␍␊
+              -21␍␊
+              -22␍␊
+              -23␍␊
+              -24␍␊
+              -25␍␊
+              -26␍␊
+              -27␍␊
+              -28␍␊
+              -29␍␊
+              -30␍␊
+              -31␍␊
+              -32␍␊
+              -33␍␊
+              -34␍␊
+              -35␍␊
+              -36␍␊
+              -37␍␊
+              -38␍␊
+              -39␍␊
+              -40␍␊
+              -41␍␊
+              -42␍␊
+              -43␍␊
+              -44␍␊
+              -45␍␊
+              -46␍␊
+              -47␍␊
             ... (1952 more lines that didn't fit)
-            """.replaceIndent("    ")
+            """.replaceIndent("  ")
         )
     }
 
@@ -537,57 +539,57 @@ class DiffMessageFormatterTest : ResourceHarness() {
             task,
             """
             testFile
-                @@ -1,25 +1,25 @@
-                 0
-                -1␍␊
-                -2␍␊
-                -3␍␊
-                -4␍␊
-                -5␍␊
-                -6␍␊
-                -7␍␊
-                -8␍␊
-                -9␍␊
-                -10␍␊
-                -11␍␊
-                -12␍␊
-                -13␍␊
-                -14␍␊
-                -15␍␊
-                -16␍␊
-                -17␍␊
-                -18␍␊
-                -19␍␊
-                -20␍␊
-                -21␍␊
-                -22␍␊
-                -23␍␊
-                -24␍␊
-                +1␊
-                +2␊
-                +3␊
-                +4␊
-                +5␊
-                +6␊
-                +7␊
-                +8␊
-                +9␊
-                +10␊
-                +11␊
-                +12␊
-                +13␊
-                +14␊
-                +15␊
-                +16␊
-                +17␊
-                +18␊
-                +19␊
-                +20␊
-                +21␊
-                +22␊
-                +23␊
-                +24␊
-            """.replaceIndent("    ")
+              @@ -1,25 +1,25 @@
+               0
+              -1␍␊
+              -2␍␊
+              -3␍␊
+              -4␍␊
+              -5␍␊
+              -6␍␊
+              -7␍␊
+              -8␍␊
+              -9␍␊
+              -10␍␊
+              -11␍␊
+              -12␍␊
+              -13␍␊
+              -14␍␊
+              -15␍␊
+              -16␍␊
+              -17␍␊
+              -18␍␊
+              -19␍␊
+              -20␍␊
+              -21␍␊
+              -22␍␊
+              -23␍␊
+              -24␍␊
+              +1␊
+              +2␊
+              +3␊
+              +4␊
+              +5␊
+              +6␊
+              +7␊
+              +8␊
+              +9␊
+              +10␊
+              +11␊
+              +12␊
+              +13␊
+              +14␊
+              +15␊
+              +16␊
+              +17␊
+              +18␊
+              +19␊
+              +20␊
+              +21␊
+              +22␊
+              +23␊
+              +24␊
+            """.replaceIndent("  ")
         )
     }
 }

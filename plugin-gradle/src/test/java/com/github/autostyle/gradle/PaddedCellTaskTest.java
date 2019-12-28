@@ -183,21 +183,21 @@ public class PaddedCellTaskTest extends ResourceHarness {
   public void paddedCellCheckCycleFailureMsg() throws IOException {
     assertFailureMessage(cycle().paddedCell(),
         "The following files have format violations:",
-        slashify("    src/test.cycle"),
-        "        @@ -1 +1 @@",
-        "        -CCC",
-        "        +A",
-        "Run 'gradlew autostyleApply' to fix these violations.");
+        slashify("  src/test.cycle"),
+        "    @@ -1 +1 @@",
+        "    -CCC",
+        "    +A",
+        "Run './gradlew autostyleApply' to fix the violations.");
   }
 
   @Test
   public void paddedCellCheckConvergeFailureMsg() throws IOException {
     assertFailureMessage(converge().paddedCell(),
         "The following files have format violations:",
-        slashify("    src/test.converge"),
-        "        @@ -1 +0,0 @@",
-        "        -CCC",
-        "Run 'gradlew autostyleApply' to fix these violations.");
+        slashify("  src/test.converge"),
+        "    @@ -1 +0,0 @@",
+        "    -CCC",
+        "Run './gradlew autostyleApply' to fix the violations.");
   }
 
   private void assertFailureMessage(Bundle bundle, String... expectedOutput) {
