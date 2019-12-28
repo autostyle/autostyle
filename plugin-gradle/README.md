@@ -4,9 +4,9 @@
 output = [
   link(shield('Gradle plugin', 'plugins.gradle.org', 'com.github.autostyle', 'blue'), 'https://plugins.gradle.org/plugin/com.github.autostyle'),
   link(shield('Maven central', 'mavencentral', 'com.github.autostyle.gradle:autostyle', 'blue'), 'https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.github.autostyle%22%20AND%20a%3A%22autostyle-plugin-gradle%22'),
-  link(shield('Javadoc', 'javadoc', '{{stableGradle}}', 'blue'), 'https://{{org}}.github.io/{{name}}/javadoc/autostyle-plugin-gradle/{{stableGradle}}/'),
+  link(shield('Javadoc', 'javadoc', '{{released.version}}', 'blue'), 'https://{{org}}.github.io/{{name}}/javadoc/autostyle-plugin-gradle/{{released.version}}/'),
   '',
-  link(shield('Changelog', 'changelog', '{{autostyle.version}}-SNAPSHOT', 'brightgreen'), 'CHANGES.md'),
+  link(shield('Changelog', 'changelog', '{{released.version}}', 'brightgreen'), 'CHANGES.md'),
   link(image('Travis CI', 'https://travis-ci.org/{{org}}/{{name}}.svg?branch=master'), 'https://travis-ci.org/{{org}}/{{name}}'),
   link(shield('Live chat', 'gitter', 'chat', 'brightgreen'), 'https://gitter.im/{{org}}/{{name}}'),
   ].join('\n');
@@ -15,13 +15,13 @@ output = [
 [![Maven central](https://img.shields.io/badge/mavencentral-com.github.autostyle.gradle%3Aautostyle-blue.svg)](https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.github.autostyle%22%20AND%20a%3A%22autostyle-plugin-gradle%22)
 [![Javadoc](https://img.shields.io/badge/javadoc-3.0-blue.svg)](https://autostyle.github.io/autostyle/javadoc/autostyle-plugin-gradle/3.0/)
 
-[![Changelog](https://img.shields.io/badge/changelog-3.0--SNAPSHOT-brightgreen.svg)](CHANGES.md)
+[![Changelog](https://img.shields.io/badge/changelog-3.0-brightgreen.svg)](CHANGES.md)
 [![Travis CI](https://travis-ci.org/autostyle/autostyle.svg?branch=master)](https://travis-ci.org/autostyle/autostyle)
 [![Live chat](https://img.shields.io/badge/gitter-chat-brightgreen.svg)](https://gitter.im/autostyle/autostyle)
 <!---freshmark /shields -->
 
 <!---freshmark javadoc
-output = prefixDelimiterReplace(input, 'https://{{org}}.github.io/{{name}}/javadoc/autostyle-plugin-gradle/', '/', stableGradle)
+output = prefixDelimiterReplace(input, 'https://{{org}}.github.io/{{name}}/javadoc/autostyle-plugin-gradle/', '/', '{{released.version}}')
 -->
 
 Autostyle is a general-purpose formatting plugin.  It is completely à la carte, but also includes powerful "batteries-included" if you opt-in.

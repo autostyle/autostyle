@@ -2,6 +2,7 @@ import com.github.vlsi.gradle.properties.dsl.props
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
 plugins {
+    id("com.github.autostyle")
     id("com.github.ben-manes.versions")
     id("com.gradle.plugin-publish") apply false
     id("com.jfrog.bintray") apply false
@@ -20,6 +21,8 @@ println("Building Autostyle $buildVersion")
 
 val enableGradleMetadata by props()
 val autostyleSelf by props()
+val skipAutostyle by props()
+val skipJavadoc by props()
 
 releaseParams {
     tlp.set("Autostyle")
@@ -101,7 +104,12 @@ allprojects {
         }
     }
 
-    if (autostyleSelf) {
+    if (!skipAutostyle) {
+        if (!autostyleSelf) {
+            apply(plugin = "com.github.autostyle")
+        }
+        // Autostyle is already published, so we can always use it, except it is broken :)
+        // So there's an option to disable it
         apply(from = "$rootDir/autostyle.gradle.kts")
     }
 
@@ -110,7 +118,9 @@ allprojects {
             sourceCompatibility = JavaVersion.VERSION_1_8
             targetCompatibility = JavaVersion.VERSION_1_8
             withSourcesJar()
-            withJavadocJar()
+            if (!skipJavadoc) {
+                withJavadocJar()
+            }
         }
 
         repositories {

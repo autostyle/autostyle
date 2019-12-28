@@ -3,6 +3,7 @@ pluginManagement {
         fun String.v() = extra["$this.version"].toString()
         fun PluginDependenciesSpec.idv(id: String, key: String = id) = id(id) version key.v()
 
+        idv("com.github.autostyle", "released")
         idv("com.github.ben-manes.versions")
         idv("com.github.vlsi.crlf", "com.github.vlsi.vlsi-release-plugins")
         idv("com.github.vlsi.gradle-extensions", "com.github.vlsi.vlsi-release-plugins")
@@ -53,13 +54,18 @@ buildscript {
             true -> extra.get(name) as? String
             else -> null
         }
-    if (property("autostyleSelf")?.ifBlank { "true" }?.toBoolean() == true) {
+
+    fun String.v(): String = extra["$this.version"] as String
+
+    if (property("skipAutostyle")?.ifBlank { "true" }?.toBoolean() == true) {
+        // Skip
+    } else if (property("autostyleSelf")?.ifBlank { "true" }?.toBoolean() == true) {
         val ver = property("autostyle.version") + "-SNAPSHOT"
-        fun String.v(): String = extra["$this.version"] as String
 
         repositories {
             gradlePluginPortal()
         }
+
         dependencies {
             classpath(files("plugin-gradle/build/libs/autostyle-plugin-gradle-$ver.jar",
                 "lib/build/libs/autostyle-lib-$ver.jar",
@@ -74,6 +80,14 @@ buildscript {
             classpath("com.googlecode.concurrent-trees:concurrent-trees:${"concurrent-trees".v()}")
             // used for xml parsing in EclipseFormatter
             classpath("org.codehaus.groovy:groovy-xml:${"groovy-xml".v()}")
+        }
+    } else {
+        repositories {
+            gradlePluginPortal()
+        }
+
+        dependencies {
+            classpath("com.github.autostyle:com.github.autostyle.gradle.plugin:${"released".v()}")
         }
     }
 }

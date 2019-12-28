@@ -44,7 +44,7 @@ configure<AutostyleExtension> {
         properties {
             put("yes", ":+1:")
             put("no", ":white_large_square:")
-            put("stableGradle", get("autostyle.version") as String)
+            put("stableGradle", get("released.version") as String)
         }
     }
 }
