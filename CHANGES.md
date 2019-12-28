@@ -9,3 +9,6 @@
 * License formatter: add a blank line if license header is followed with a comment
 * Diff formatter: Use simple characters when rendering diff on Windows ([#4](https://github.com/autostyle/autostyle/issues/4))
 * Reduce merge conflicts on `CHANGES.md` by leveraging `merge=union` Git strategy
+
+Default versions:
+* ktlint [0.36.0](https://github.com/pinterest/ktlint/releases/tag/0.36.0)
