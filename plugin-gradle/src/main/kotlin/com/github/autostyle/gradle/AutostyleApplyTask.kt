@@ -54,11 +54,33 @@ open class AutostyleApplyTask @Inject constructor(
     override fun performAction(inputChanges: InputChanges) {
         val filesToCheck = mutableSetOf<File>()
 
+        // This is the regular incremental inputs
+        // In other words, it is the set of files the user specified
         inputChanges.getFileChanges(sourceFiles).forEach {
             if (it.changeType != ChangeType.REMOVED && it.fileType == FileType.FILE) {
                 filesToCheck.add(it.file)
             }
         }
+
+        // However, Gradle does not know that Apply task updates its inputs
+        // Typically it is OK, however there's an edge case:
+        // User might run the task, and revert the files to their original state
+        // Then Gradle would think it does not need to re-execute the task, as
+        // it knows it has already executed the task on exactly the same inputs,
+        // and the task succeeded.
+
+        // The solution is we create yet another file which remembers the set of files
+        // the task **modified** during the last execution.
+        // Then, if user reverts the files to their original state, we know which files we processed,
+        // and we add the files once again to the set of files to process
+
+        // Note: the user might adjust task configuration in-between the runs,
+        // So we can't blindly add the files from the previous execution, but we check if
+        // they match the current filters. That is why we have `sourceFiles.contains`.
+
+        // Note: the extra "last processed" file is declared as **incremental** input so
+        // the task is fully incremental (it enables to trigger the task if `cacheFile` changes)
+        // and it enables to keep incremental processing of sourceFiles
         prevFiles?.let {
             filesToCheck += it.violations.filter { f -> sourceFiles.contains(f) }
         }
