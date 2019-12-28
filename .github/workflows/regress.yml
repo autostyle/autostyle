@@ -22,9 +22,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 8
-      - name: 'Install to Maven Local'
-        run: |
-          ./gradlew publishToMavenLocal -Pautostyle.version=1.0.0-dev-master -PskipJavadoc
       - name: 'Clone Apache Calcite Avatica'
         run: |
           git clone --depth 100 https://github.com/apache/calcite-avatica.git ../calcite-avatica
@@ -32,7 +29,11 @@ jobs:
       - name: 'autostyleCheck'
         working-directory: ../calcite-avatica
         run: |
-          ./gradlew -no-parallel --no-daemon autostyleCheck -Pcom.github.autostyle.version=1.0.0-dev-master-SNAPSHOT
+          ./gradlew -no-parallel --no-daemon -PlocalAutostyle autostyleCheck
+      - name: 'autostyleApply'
+        working-directory: ../calcite-avatica
+        run: |
+          ./gradlew -no-parallel --no-daemon -PlocalAutostyle autostyleApply
 
   linux-calcite:
     name: 'Apache Calcite (JDK 8, Linux)'
@@ -45,9 +46,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 8
-      - name: 'Install to Maven Local'
-        run: |
-          ./gradlew publishToMavenLocal -Pautostyle.version=1.0.0-dev-master -PskipJavadoc
       - name: 'Clone Apache Calcite'
         run: |
           git clone --depth 100 https://github.com/apache/calcite.git ../calcite
@@ -55,7 +53,11 @@ jobs:
       - name: 'autostyleCheck'
         working-directory: ../calcite
         run: |
-          ./gradlew -no-parallel --no-daemon autostyleCheck -Pcom.github.autostyle.version=1.0.0-dev-master-SNAPSHOT
+          ./gradlew -no-parallel --no-daemon -PlocalAutostyle autostyleCheck
+      - name: 'autostyleApply'
+        working-directory: ../calcite
+        run: |
+          ./gradlew -no-parallel --no-daemon -PlocalAutostyle autostyleApply
 
   mac-jmeter:
     name: 'Apache JMeter (JDK 11, MacOS)'
@@ -68,9 +70,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 8
-      - name: 'Install to Maven Local'
-        run: |
-          ./gradlew publishToMavenLocal -Pautostyle.version=1.0.0-dev-master -PskipJavadoc
       - name: 'Clone Apache JMeter'
         run: |
           git clone --depth 100 https://github.com/apache/jmeter.git ../jmeter
@@ -82,7 +81,11 @@ jobs:
       - name: 'autostyleCheck'
         working-directory: ../jmeter
         run: |
-          ./gradlew -no-parallel --no-daemon autostyleCheck -Pcom.github.autostyle.version=1.0.0-dev-master-SNAPSHOT
+          ./gradlew -no-parallel --no-daemon -PlocalAutostyle autostyleCheck
+      - name: 'autostyleApply'
+        working-directory: ../jmeter
+        run: |
+          ./gradlew -no-parallel --no-daemon -PlocalAutostyle autostyleApply
 
   linux-vrp:
     name: 'vlsi-release-plugins (JDK 8, Linux)'
@@ -95,9 +98,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 8
-      - name: 'Install to Maven Local'
-        run: |
-          ./gradlew publishToMavenLocal -Pautostyle.version=1.0.0-dev-master -PskipJavadoc
       - name: 'Clone vlsi-release-plugins'
         run: |
           git clone --depth 100 https://github.com/vlsi/vlsi-release-plugins.git ../vlsi-release-plugins
@@ -105,4 +105,8 @@ jobs:
       - name: 'autostyleCheck'
         working-directory: ../vlsi-release-plugins
         run: |
-          ./gradlew -no-parallel --no-daemon autostyleCheck -Pcom.github.autostyle.version=1.0.0-dev-master-SNAPSHOT
+          ./gradlew -no-parallel --no-daemon -PlocalAutostyle autostyleCheck
+      - name: 'autostyleApply'
+        working-directory: ../vlsi-release-plugins
+        run: |
+          ./gradlew -no-parallel --no-daemon -PlocalAutostyle autostyleApply
