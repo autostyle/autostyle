@@ -788,9 +788,13 @@ autostyle {
 
 ## Example configurations (from real-world projects)
 
-Autostyle is hosted on jcenter and at plugins.gradle.org. [Go here](https://plugins.gradle.org/plugin/com.github.autostyle) if you're not sure how to import the plugin.
+Autostyle is hosted on Maven Central, and it can be used as a regular Gradle plugin: `id("com.github.autostyle")`
 
 * [GitHub search for Autostyle](https://github.com/search?l=gradle&q=autostyle&type=Code)
-* (Your project here)
+* [Apache Calcite](https://github.com/apache/calcite) (see [Spotless -> Autostyle](https://github.com/apache/calcite/pull/1682))
+* [Apache Calcite Avatica](https://github.com/apache/calcite-avatica) (see [Spotless -> Autostyle](https://github.com/apache/calcite-avatica/pull/118))
+* [Apache JMeter](https://github.com/apache/jmeter) (see [Spotless -> Autostyle](https://github.com/apache/jmeter/pull/549))
+* [vlsi-release-plugins](https://github.com/vlsi/vlsi-release-plugins) (see [Spotless -> Autostyle](https://github.com/vlsi/vlsi-release-plugins/commit/8f9353cfd788508bdcecf6469c0054757afb295b))
+* Your project here
 
 <!---freshmark /javadoc -->
