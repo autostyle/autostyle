@@ -1,5 +1,6 @@
 ### HEAD
 * Added CI regression tests with Apache Calcite, Apache JMeter, and vlsi-release-plugins projects
+* Support build chache for autostyleCheck task
 
 ### Version 3.0
 

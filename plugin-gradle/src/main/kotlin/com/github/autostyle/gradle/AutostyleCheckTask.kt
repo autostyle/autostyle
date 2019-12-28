@@ -19,11 +19,13 @@ import com.github.autostyle.Formatter
 import com.github.autostyle.PaddedCellBulk
 import org.gradle.api.file.FileType
 import org.gradle.api.model.ObjectFactory
+import org.gradle.api.tasks.CacheableTask
 import org.gradle.work.ChangeType
 import org.gradle.work.InputChanges
 import java.io.File
 import javax.inject.Inject
 
+@CacheableTask
 open class AutostyleCheckTask @Inject constructor(
     objects: ObjectFactory
 ) : AutostyleTask(objects) {
