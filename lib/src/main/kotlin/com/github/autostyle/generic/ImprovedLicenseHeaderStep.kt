@@ -14,7 +14,7 @@ val DEFAULT_HEADER_STYLES =
             setOf("kts", "kt").associateWith { DefaultCopyrightStyle.JAVA } +
             setOf("groovy", "gradle").associateWith { DefaultCopyrightStyle.JAVA } +
             setOf("sh", "yml", "properties").associateWith { DefaultCopyrightStyle.SHELL } +
-            setOf("xml", "html").associateWith { DefaultCopyrightStyle.XML }
+            setOf("xsd", "xsl", "xml", "html").associateWith { DefaultCopyrightStyle.XML }
 
 class ImprovedLicenseHeaderStep(
     val copyright: String,
