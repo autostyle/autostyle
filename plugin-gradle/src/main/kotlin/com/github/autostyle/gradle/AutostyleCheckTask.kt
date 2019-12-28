@@ -17,6 +17,7 @@ package com.github.autostyle.gradle
 
 import com.github.autostyle.Formatter
 import com.github.autostyle.PaddedCellBulk
+import org.gradle.api.file.FileType
 import org.gradle.api.model.ObjectFactory
 import org.gradle.work.ChangeType
 import org.gradle.work.InputChanges
@@ -31,7 +32,7 @@ open class AutostyleCheckTask @Inject constructor(
         val filesToCheck = mutableSetOf<File>()
 
         inputChanges.getFileChanges(sourceFiles).forEach {
-            if (it.changeType != ChangeType.REMOVED && it.file.isFile) {
+            if (it.changeType != ChangeType.REMOVED && it.fileType == FileType.FILE) {
                 filesToCheck.add(it.file)
             }
         }
@@ -44,7 +45,7 @@ open class AutostyleCheckTask @Inject constructor(
         filesToCheck: Collection<File>
     ): Collection<File> {
         val problemFiles = filesToCheck.filterNot {
-            logger.debug("Applying format to {}", it)
+            logger.debug("Checking format of {}", it)
             formatter.isClean(it)
         }
         if (paddedCell.get()) {

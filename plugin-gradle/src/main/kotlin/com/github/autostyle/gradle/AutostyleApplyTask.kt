@@ -20,6 +20,7 @@ import com.github.autostyle.PaddedCell
 import com.github.autostyle.PaddedCellBulk
 import com.github.autostyle.serialization.deserialize
 import com.github.autostyle.serialization.serialize
+import org.gradle.api.file.FileType
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.tasks.*
 import org.gradle.work.ChangeType
@@ -54,11 +55,13 @@ open class AutostyleApplyTask @Inject constructor(
         val filesToCheck = mutableSetOf<File>()
 
         inputChanges.getFileChanges(sourceFiles).forEach {
-            if (it.changeType != ChangeType.REMOVED && it.file.isFile) {
+            if (it.changeType != ChangeType.REMOVED && it.fileType == FileType.FILE) {
                 filesToCheck.add(it.file)
             }
         }
-        prevFiles?.let { filesToCheck += it.violations }
+        prevFiles?.let {
+            filesToCheck += it.violations.filter { f -> sourceFiles.contains(f) }
+        }
 
         val changedFiles = formatter.use { applyFormat(it, filesToCheck) }
 
@@ -78,14 +81,16 @@ open class AutostyleApplyTask @Inject constructor(
         val changedFiles = mutableSetOf<File>()
         if (paddedCell.get()) {
             for (file in filesToCheck) {
-                logger.debug("Applying format to $file")
-                PaddedCellBulk.applyAnyChanged(formatter, file)
+                logger.debug("Applying format to {}", file)
+                if (PaddedCellBulk.applyAnyChanged(formatter, file)) {
+                    changedFiles += file
+                }
             }
             return changedFiles
         }
         var anyMisbehave: PaddedCell? = null
         for (file in filesToCheck) {
-            logger.info("Applying format to {}", file)
+            logger.debug("Applying format to {}", file)
             val unixResultIfDirty = formatter.applyToAndReturnResultIfDirty(file)
             if (unixResultIfDirty != null) {
                 changedFiles += file
