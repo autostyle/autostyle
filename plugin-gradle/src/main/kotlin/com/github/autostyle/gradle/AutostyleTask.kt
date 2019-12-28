@@ -103,7 +103,7 @@ abstract class AutostyleTask @Inject constructor(
     ): GradleException {
         val sb = StringBuilder()
         sb.append("The following files have format violations:\n")
-        val diff = DiffMessageFormatter(formatter, sb).apply {
+        DiffMessageFormatter(formatter, sb).apply {
             maxCheckMessageLines = project.intProperty("maxCheckMessageLines") ?: maxCheckMessageLines
             maxFilesToList = project.intProperty("maxFilesToList") ?: maxFilesToList
             minLinesPerFile = project.intProperty("minLinesPerFile") ?: minLinesPerFile

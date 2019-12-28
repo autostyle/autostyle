@@ -75,11 +75,13 @@ abstract class TextAndHeaderCopyrightReplacer(
         sb.append(copyright)
         val lastIndex = match.range.last + 1
         if (lastIndex < input.length) {
-            val prefix = input.subSequence(lastIndex, input.length.coerceAtMost(lastIndex + 10))
-            if (commentStartRegex.find(prefix) != null) {
-                // If comment follows the copyright header, then they should be separated with a blank line
-                // This especially helps for shell-like comments
-                sb.append('\n')
+            if (!sb.endsWith("\n\n")) {
+                val prefix = input.subSequence(lastIndex, input.length.coerceAtMost(lastIndex + 10))
+                if (commentStartRegex.find(prefix) != null) {
+                    // If comment follows the copyright header, then they should be separated with a blank line
+                    // This especially helps for shell-like comments
+                    sb.append('\n')
+                }
             }
             sb.append(input, lastIndex, input.length)
         }
