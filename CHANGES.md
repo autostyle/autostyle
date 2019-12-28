@@ -1,3 +1,6 @@
+### HEAD
+* Added CI regression tests with Apache Calcite, Apache JMeter, and vlsi-release-plugins projects
+
 ### Version 3.0
 
 * The first release after fork of https://github.com/diffplug/spotless
