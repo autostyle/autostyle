@@ -29,7 +29,8 @@ import java.nio.charset.StandardCharsets
 
 /** Prints a human-readable diff that represents the missing changes.  */
 class DiffMessageFormatter constructor(
-    val formatter: Formatter
+    val formatter: Formatter,
+    val sb: StringBuilder = StringBuilder(MAX_CHECK_MESSAGE_LINES * 64)
 ) {
     companion object {
         private const val MAX_CHECK_MESSAGE_LINES = 50
@@ -40,7 +41,10 @@ class DiffMessageFormatter constructor(
         private const val DIFF_INDENT = NORMAL_INDENT + NORMAL_INDENT
     }
 
-    private val sb = StringBuilder(MAX_CHECK_MESSAGE_LINES * 64)
+    var maxCheckMessageLines: Int = MAX_CHECK_MESSAGE_LINES
+    var maxFilesToList: Int = MAX_FILES_TO_LIST
+    var minLinesPerFile: Int = MIN_LINES_PER_FILE
+
     private var numLines = 0
 
     private fun File.relativize(): String {
@@ -49,13 +53,13 @@ class DiffMessageFormatter constructor(
 
     fun diff(files: List<File>, paddedCell: Boolean = false): StringBuilder {
         val problemIter = files.listIterator()
-        while (problemIter.hasNext() && numLines < MAX_CHECK_MESSAGE_LINES) {
+        while (problemIter.hasNext() && numLines < maxCheckMessageLines) {
             val file = problemIter.next()
             addFile(file.relativize() + "\n" + diff(file, paddedCell))
         }
         if (problemIter.hasNext()) {
             val remainingFiles = files.size - problemIter.nextIndex()
-            if (remainingFiles >= MAX_FILES_TO_LIST) {
+            if (remainingFiles >= maxFilesToList) {
                 sb.append("Violations also present in ").append(remainingFiles)
                     .append(" other files.\n")
             } else {
@@ -64,6 +68,11 @@ class DiffMessageFormatter constructor(
                     addIntendedLine(NORMAL_INDENT, problemIter.next().relativize())
                 }
             }
+            sb.append("You might want to adjust")
+            sb.append(" -PmaxCheckMessageLines=").append(maxCheckMessageLines)
+            sb.append(" -PmaxFilesToList=").append(maxFilesToList)
+            sb.append(" -PminLinesPerFile=").append(minLinesPerFile)
+            sb.append(" to see more violations\n")
         }
         return sb
     }
@@ -78,19 +87,19 @@ class DiffMessageFormatter constructor(
         if (lines.isNotEmpty()) {
             addIntendedLine(NORMAL_INDENT, lines[0])
         }
-        for (i in 1 until lines.size.coerceAtMost(MIN_LINES_PER_FILE)) {
+        for (i in 1 until lines.size.coerceAtMost(minLinesPerFile)) {
             addIntendedLine(DIFF_INDENT, lines[i])
         }
         // then we'll print the rest that can fit
-        val iter = lines.listIterator(lines.size.coerceAtMost(MIN_LINES_PER_FILE))
+        val iter = lines.listIterator(lines.size.coerceAtMost(minLinesPerFile))
         // lines.size() - iter.nextIndex() == 1 means "just one line left", and we just print the line
         // instead of "1 more lines that didn't fit"
         while (iter.hasNext() &&
-            (numLines < MAX_CHECK_MESSAGE_LINES || lines.size - iter.nextIndex() == 1)
+            (numLines < maxCheckMessageLines || lines.size - iter.nextIndex() == 1)
         ) {
             addIntendedLine(DIFF_INDENT, iter.next())
         }
-        if (numLines >= MAX_CHECK_MESSAGE_LINES) { // we're out of space
+        if (numLines >= maxCheckMessageLines) { // we're out of space
             if (iter.hasNext()) {
                 val linesLeft = lines.size - iter.nextIndex()
                 addIntendedLine(NORMAL_INDENT, "... ($linesLeft more lines that didn't fit)")

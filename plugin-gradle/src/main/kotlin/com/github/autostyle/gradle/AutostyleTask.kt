@@ -22,9 +22,11 @@ import com.github.autostyle.extra.integration.DiffMessageFormatter
 import com.github.autostyle.gradle.ext.conv
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
+import org.gradle.api.Project
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.tasks.*
+import org.gradle.kotlin.dsl.extra
 import org.gradle.kotlin.dsl.listProperty
 import org.gradle.kotlin.dsl.property
 import org.gradle.work.InputChanges
@@ -86,15 +88,28 @@ abstract class AutostyleTask @Inject constructor(
             .steps(steps.get())
             .build()
 
+    private fun Project.stringProperty(name: String) =
+        when (extra.has(name)) {
+            true -> extra.get(name) as? String
+            else -> null
+        }
+
+    private fun Project.intProperty(name: String) = stringProperty(name)?.toInt()
+
     /** Returns an exception which indicates problem files nicely.  */
     fun formatViolationsFor(
         formatter: Formatter,
         problemFiles: List<File>
-    ) = GradleException(
-        "The following files have format violations:\n" +
-                DiffMessageFormatter(formatter)
-                    .diff(problemFiles.sorted(), paddedCell.get())
-                    .append("Run 'gradlew autostyleApply' to fix these violations.")
-                    .toString()
-    )
+    ): GradleException {
+        val sb = StringBuilder()
+        sb.append("The following files have format violations:\n")
+        val diff = DiffMessageFormatter(formatter, sb).apply {
+            maxCheckMessageLines = project.intProperty("maxCheckMessageLines") ?: maxCheckMessageLines
+            maxFilesToList = project.intProperty("maxFilesToList") ?: maxFilesToList
+            minLinesPerFile = project.intProperty("minLinesPerFile") ?: minLinesPerFile
+            diff(problemFiles.sorted(), paddedCell.get())
+        }
+        sb.append("Run './gradlew autostyleApply' to fix the violations")
+        return GradleException(sb.toString())
+    }
 }

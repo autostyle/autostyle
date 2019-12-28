@@ -12,7 +12,7 @@ output = [
 
 Autostyle can format &lt;java | kotlin | scala | sql | groovy | javascript | flow | typeScript | css | scss | less | jsx | vue | graphql | json | yaml | markdown | license headers | anything> using &lt;Gradle>.
 
-- [Autostyle for Gradle](plugin-gradle)
+- [Autostyle for Gradle 5.6+](plugin-gradle)
 - [Other build systems](CONTRIBUTING.md#how-to-add-a-new-plugin-for-a-build-system)
 
 Ideally, a code formatter can do more than just find formatting errors - it should fix them as well. Such a formatter is really just a `Function<String, String>`, which returns a formatted version of its potentially unformatted input.

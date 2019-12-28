@@ -26,6 +26,8 @@ output = prefixDelimiterReplace(input, 'https://{{org}}.github.io/{{name}}/javad
 
 Autostyle is a general-purpose formatting plugin.  It is completely à la carte, but also includes powerful "batteries-included" if you opt-in.
 
+Autostyle requires Gradle 5.4+ for execution.
+
 To people who use your build, it looks like this:
 
 ```
@@ -39,6 +41,7 @@ cmd> gradlew build
     -\t\t····if·(targets.length·==·0)·{
     +\t\tif·(targets.length·==·0)·{
     ...
+  You might want to adjust -PmaxCheckMessageLines=50 -PmaxFilesToList=10 -PminLinesPerFile=4 to see more violations
   Run 'gradlew autostyleApply' to fix these violations.
 
 cmd> gradlew autostyleApply
