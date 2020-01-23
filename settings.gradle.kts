@@ -11,7 +11,6 @@ pluginManagement {
         idv("com.github.vlsi.license-gather", "com.github.vlsi.vlsi-release-plugins")
         idv("com.github.vlsi.stage-vote-release", "com.github.vlsi.vlsi-release-plugins")
         idv("com.gradle.plugin-publish")
-        idv("com.jfrog.bintray")
         idv("org.jetbrains.gradle.plugin.idea-ext")
         kotlin("jvm") version "kotlin".v()
     }
@@ -73,10 +72,7 @@ buildscript {
             classpath("com.diffplug.durian:durian-core:${"durian".v()}")
             classpath("com.diffplug.durian:durian-collect:${"durian".v()}")
             // needed by GitAttributesLineEndings
-            classpath("org.eclipse.jgit:org.eclipse.jgit:${"org.eclipse.jgit".v()}") {
-                exclude("com.jcraft", "jsch")
-                exclude("org.bouncycastle")
-            }
+            classpath("org.eclipse.jgit:org.eclipse.jgit:${"org.eclipse.jgit".v()}")
             classpath("com.googlecode.concurrent-trees:concurrent-trees:${"concurrent-trees".v()}")
             // used for xml parsing in EclipseFormatter
             classpath("org.codehaus.groovy:groovy-xml:${"groovy-xml".v()}")

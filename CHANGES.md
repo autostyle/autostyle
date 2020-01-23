@@ -2,6 +2,7 @@
 * Added CI regression tests with Apache Calcite, Apache JMeter, and vlsi-release-plugins projects
 * Support build chache for autostyleCheck task
 * Skip execution when JitPack is detected  ([#17](https://github.com/autostyle/autostyle/issues/17))
+* Fix lib-extra dependencies: it should have transitives for org.eclipse.jgit
 
 ### Version 3.0
 

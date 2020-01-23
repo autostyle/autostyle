@@ -4,10 +4,7 @@ dependencies {
     implementation("com.diffplug.durian:durian-core")
     implementation("com.diffplug.durian:durian-collect")
     // needed by GitAttributesLineEndings
-    implementation("org.eclipse.jgit:org.eclipse.jgit") {
-        exclude("com.jcraft", "jsch")
-        exclude("org.bouncycastle")
-    }
+    implementation("org.eclipse.jgit:org.eclipse.jgit")
     implementation("com.googlecode.concurrent-trees:concurrent-trees")
     // used for xml parsing in EclipseFormatter
     implementation("org.codehaus.groovy:groovy-xml")
