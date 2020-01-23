@@ -11,7 +11,6 @@ pluginManagement {
         idv("com.github.vlsi.license-gather", "com.github.vlsi.vlsi-release-plugins")
         idv("com.github.vlsi.stage-vote-release", "com.github.vlsi.vlsi-release-plugins")
         idv("com.gradle.plugin-publish")
-        idv("org.jetbrains.gradle.plugin.idea-ext")
         kotlin("jvm") version "kotlin".v()
     }
 }
@@ -83,6 +82,7 @@ buildscript {
         }
 
         dependencies {
+            classpath("org.eclipse.jgit:org.eclipse.jgit:${"org.eclipse.jgit".v()}")
             classpath("com.github.autostyle:com.github.autostyle.gradle.plugin:${"released".v()}")
         }
     }

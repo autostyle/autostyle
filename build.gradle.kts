@@ -5,7 +5,6 @@ plugins {
     id("com.github.autostyle")
     id("com.github.ben-manes.versions")
     id("com.gradle.plugin-publish") apply false
-    id("org.jetbrains.gradle.plugin.idea-ext")
     id("com.github.vlsi.gradle-extensions")
     id("com.github.vlsi.ide")
     id("com.github.vlsi.stage-vote-release")
