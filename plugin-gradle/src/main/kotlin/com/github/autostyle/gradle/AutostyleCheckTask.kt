@@ -30,6 +30,13 @@ open class AutostyleCheckTask @Inject constructor(
     objects: ObjectFactory
 ) : AutostyleTask(objects) {
 
+    init {
+        if (System.getenv("JITPACK")?.toBoolean() == true) {
+            // It makes no sense to verify code style on JitPack builds
+            enabled = false
+        }
+    }
+
     override fun performAction(inputChanges: InputChanges) {
         val filesToCheck = mutableSetOf<File>()
 
