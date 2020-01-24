@@ -82,7 +82,6 @@ buildscript {
         }
 
         dependencies {
-            classpath("org.eclipse.jgit:org.eclipse.jgit:${"org.eclipse.jgit".v()}")
             classpath("com.github.autostyle:com.github.autostyle.gradle.plugin:${"released".v()}")
         }
     }

@@ -1,4 +1,6 @@
 ### HEAD
+
+### Version 3.1
 * Added CI regression tests with Apache Calcite, Apache JMeter, and vlsi-release-plugins projects
 * Support build chache for autostyleCheck task
 * Skip execution when JitPack is detected  ([#17](https://github.com/autostyle/autostyle/issues/17))
