@@ -38,12 +38,6 @@ import javax.inject.Inject
 abstract class AutostyleTask @Inject constructor(
     objects: ObjectFactory
 ) : DefaultTask() {
-
-    init {
-        // The task produces no output, so we need to provide upToDateWhen
-        outputs.upToDateWhen { true }
-    }
-
     // set by AutostyleExtension, but possibly overridden by FormatExtension
     @get:Input
     val encoding = objects.property<String>().conv("UTF-8")
@@ -66,7 +60,18 @@ abstract class AutostyleTask @Inject constructor(
 
     fun addStep(step: FormatterStep) = steps.add(step)
 
+    // Note: if all outputs are removed, the task needs outputs.upToDateWhen { true }
+    // for proper up-to-date checks
+    @OutputFile
+    val buildCacheSupport = objects.fileProperty()
+        .convention(project.layout.buildDirectory.file("autostyle/$name.txt"))
+
     @TaskAction
+    fun run(inputChanges: InputChanges) {
+        performAction(inputChanges)
+        buildCacheSupport.get().asFile.writeText("Gradle needs at least one output to support task in the build cache")
+    }
+
     abstract fun performAction(inputChanges: InputChanges)
 
     /** Returns the name of this format.  */

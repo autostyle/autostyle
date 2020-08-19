@@ -1,4 +1,5 @@
 ### HEAD
+* Support Gradle build cache. The tasks were not cached previously since they produced no output
 
 ### Version 3.1
 * Added CI regression tests with Apache Calcite, Apache JMeter, and vlsi-release-plugins projects
