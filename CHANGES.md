@@ -1,5 +1,7 @@
 ### HEAD
 * Support Gradle build cache. The tasks were not cached previously since they produced no output
+* Bump release-plugins: 1.54 -> 1.70
+* Bump Gradle: 6.1 -> 6.6
 
 ### Version 3.1
 * Added CI regression tests with Apache Calcite, Apache JMeter, and vlsi-release-plugins projects
