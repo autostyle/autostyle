@@ -19,6 +19,8 @@ import com.diffplug.common.base.Splitter
 import com.github.autostyle.Formatter
 import com.github.autostyle.LineEnding
 import com.github.autostyle.PaddedCell
+import org.eclipse.jgit.diff.Edit
+import org.eclipse.jgit.diff.EditList
 import org.eclipse.jgit.diff.HistogramDiff
 import org.eclipse.jgit.diff.RawText
 import org.eclipse.jgit.diff.RawTextComparator
@@ -129,13 +131,16 @@ class DiffMessageFormatter constructor(
             formatter.compute(rawUnix, file)
         }
         val formatted = formatter.computeLineEndings(formattedUnix, file)
-        return visualizeDiff(raw, formatted)
+        return visualizeDiff(file, raw, formatted)
     }
 
-    private fun visualizeDiff(raw: String, formattedBytes: String): String {
+    private fun visualizeDiff(file: File, raw: String, formattedBytes: String): String {
         val a = RawText(raw.toByteArray(StandardCharsets.UTF_8))
         val b = RawText(formattedBytes.toByteArray(StandardCharsets.UTF_8))
         val edits = HistogramDiff().diff(RawTextComparator.DEFAULT, a, b)
+
+        printGitHubActionsErrors(file, edits, a, b)
+
         val out = ByteArrayOutputStream()
         // defaultCharset is here so the formatter could select "fancy" or "simple"
         // characters for whitespace visualization based on the capabilities of the console
@@ -145,4 +150,72 @@ class DiffMessageFormatter constructor(
         WriteSpaceAwareDiffFormatter(out, Charset.defaultCharset()).format(edits, a, b)
         return out.toByteArray().toString(StandardCharsets.UTF_8)
     }
+
+    private fun printGitHubActionsErrors(file: File, edits: EditList, a: RawText, b: RawText) {
+        val workspace = System.getenv("GITHUB_WORKSPACE") ?: return
+        if (System.getenv("AUTOSTYLE_SKIP_GITHUB_ACTIONS")?.toBoolean() == true) {
+            return
+        }
+        val relativePath = file.toRelativeString(File(workspace))
+
+        for (edit in edits) {
+            when (edit.type) {
+                null, Edit.Type.EMPTY -> {
+                }
+                Edit.Type.DELETE ->
+                    issueCommand(
+                        "error", relativePath, edit.beginA + 1,
+                        "Remove ${edit.lengthA} line${edit.lengthA.plural}: ${edit.beginA + 1}..${edit.endA}"
+                    )
+                Edit.Type.INSERT ->
+                    issueCommand(
+                        "error", relativePath, edit.beginA + 1,
+                        "Insert ${edit.lengthB} line${edit.lengthB.plural}:\n" +
+                                suggestion(b, edit)
+                    )
+                Edit.Type.REPLACE ->
+                    issueCommand(
+                        "error", relativePath, edit.beginA + 1,
+                        "Replace ${edit.lengthB} line${edit.lengthB.plural} ${edit.beginA + 1}..${edit.endA} with\n" +
+                                suggestion(b, edit)
+                    )
+            }
+        }
+    }
+
+    private fun suggestion(
+        b: RawText,
+        edit: Edit,
+        maxLines: Int = 20
+    ): String? {
+        if (edit.lengthB <= maxLines) {
+            return b.getString(edit.beginB, edit.endB, true)
+        }
+        val linesLeft = edit.lengthB - maxLines
+        return b.getString(edit.beginB, edit.beginB + maxLines, true) +
+                "\n...$linesLeft more line${linesLeft.plural}"
+    }
+
+    private val Int.plural: String get() = if (this == 1) "" else "s"
+
+    private fun issueCommand(
+        @Suppress("SameParameterValue") command: String,
+        file: String,
+        line: Int,
+        message: String
+    ) {
+        println("::$command file=${file.escapeProperty()},line=$line::${message.escapeData()}")
+    }
+
+    fun String.escapeData() =
+        replace("%", "%25")
+            .replace("\r", "%0D")
+            .replace("\n", "%0A")
+
+    fun String.escapeProperty() =
+        replace("%", "%25")
+            .replace("\r", "%0D")
+            .replace("\n", "%0A")
+            .replace(":", "%3A")
+            .replace(",", "%2C")
 }
