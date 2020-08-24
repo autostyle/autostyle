@@ -6,7 +6,6 @@ dependencies {
     api("org.junit.jupiter:junit-jupiter-api")
     api("org.junit.jupiter:junit-jupiter-params")
 
-    implementation("com.diffplug.durian:durian-io")
     implementation("com.diffplug.durian:durian-collect")
     implementation(gradleTestKit())
 }

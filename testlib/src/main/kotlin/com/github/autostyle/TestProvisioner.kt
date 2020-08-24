@@ -16,7 +16,6 @@
 package com.github.autostyle
 
 import com.diffplug.common.base.StandardSystemProperty
-import com.diffplug.common.io.Files
 import com.github.autostyle.serialization.deserialize
 import com.github.autostyle.serialization.serialize
 import org.gradle.api.Project
@@ -25,6 +24,7 @@ import org.gradle.api.artifacts.ResolveException
 import org.gradle.api.artifacts.dsl.RepositoryHandler
 import org.gradle.testfixtures.ProjectBuilder
 import java.io.File
+import java.nio.file.Files
 import java.nio.file.Path
 import java.util.*
 import java.util.function.Supplier
@@ -49,7 +49,7 @@ object TestProvisioner {
      */
     private fun createWithRepositories(repoConfig: RepositoryHandler.() -> Unit): Provisioner { // Running this takes ~3 seconds the first time it is called. Probably because of classloading.
         return Provisioner { withTransitives: Boolean, mavenCoords: Collection<String?> ->
-            val tempDir = Files.createTempDir()
+            val tempDir = Files.createTempDirectory("autostyle-test-deps").toFile()
             val project = gradleProject(tempDir)
             project.repositories.repoConfig()
             val deps: Array<Dependency> = mavenCoords
@@ -74,7 +74,7 @@ object TestProvisioner {
             } catch (e: ResolveException) { /* Provide Maven coordinates in exception message instead of static string 'detachedConfiguration' */
                 throw ResolveException(mavenCoords.toString(), e)
             } finally { // delete the temp dir
-                java.nio.file.Files.walk(tempDir.toPath())
+                Files.walk(tempDir.toPath())
                     .sorted(Comparator.reverseOrder())
                     .map { obj: Path -> obj.toFile() }
                     .forEach { obj: File -> obj.delete() }

@@ -49,7 +49,6 @@ dependencies {
         apiv("com.diffplug.durian:durian-collect", "durian")
         apiv("com.diffplug.durian:durian-core", "durian")
         apiv("com.diffplug.durian:durian-testlib", "durian")
-        apiv("com.diffplug.durian:durian-io", "durian")
         apiv("org.exparity:hamcrest-date")
         apiv("org.hamcrest:hamcrest")
         apiv("org.hamcrest:hamcrest-core", "hamcrest")

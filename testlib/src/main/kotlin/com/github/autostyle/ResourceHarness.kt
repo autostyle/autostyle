@@ -15,7 +15,6 @@
  */
 package com.github.autostyle
 
-import com.diffplug.common.io.Resources
 import org.assertj.core.api.AbstractCharSequenceAssert
 import org.assertj.core.api.Assertions
 import org.assertj.core.util.CheckReturnValue
@@ -44,10 +43,7 @@ open class ResourceHarness {
         fun getTestResource(filename: String): String {
             val url = ResourceHarness::class.java.getResource("/$filename")
                 ?: throw IllegalArgumentException("No such resource $filename")
-            return Resources.toString(
-                url,
-                StandardCharsets.UTF_8
-            )
+            return url.readText()
         }
     }
 
