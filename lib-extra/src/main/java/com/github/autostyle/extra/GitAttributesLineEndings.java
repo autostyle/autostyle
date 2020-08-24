@@ -17,7 +17,6 @@ package com.github.autostyle.extra;
 
 import static com.github.autostyle.extra.LibExtraPreconditions.requireElementsNonNull;
 
-import com.diffplug.common.base.Errors;
 import com.diffplug.common.tree.TreeStream;
 import com.github.autostyle.FileSignature;
 import com.github.autostyle.LazyForwardingEquality;
@@ -130,9 +129,17 @@ public final class GitAttributesLineEndings {
       // USER AND SYSTEM-WIDE VALUES //
       /////////////////////////////////
       systemConfig = SystemReader.getInstance().openSystemConfig(null, FS.DETECTED);
-      Errors.log().run(systemConfig::load);
+      try {
+        systemConfig.load();
+      } catch (Throwable e) {
+        e.printStackTrace();
+      }
       userConfig = SystemReader.getInstance().openUserConfig(systemConfig, FS.DETECTED);
-      Errors.log().run(userConfig::load);
+      try {
+        userConfig.load();
+      } catch (Throwable e) {
+        e.printStackTrace();
+      }
 
       // copy-pasted from org.eclipse.jgit.lib.CoreConfig
       String globalAttributesPath = userConfig.getString(ConfigConstants.CONFIG_CORE_SECTION, null, ConfigConstants.CONFIG_KEY_ATTRIBUTESFILE);
@@ -174,7 +181,11 @@ public final class GitAttributesLineEndings {
         };
         repoAttributesFile = null;
       }
-      Errors.log().run(repoConfig::load);
+      try {
+        repoConfig.load();
+      } catch (Throwable e) {
+        e.printStackTrace();
+      }
 
       // The .gitattributes files which apply to the files we are formatting
       gitattributes = gitAttributes(toFormat);

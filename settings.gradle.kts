@@ -68,7 +68,6 @@ buildscript {
             classpath(files("plugin-gradle/build/libs/autostyle-plugin-gradle-$ver.jar",
                 "lib/build/libs/autostyle-lib-$ver.jar",
                 "lib-extra/build/libs/autostyle-lib-extra-$ver.jar"))
-            classpath("com.diffplug.durian:durian-core:${"durian".v()}")
             classpath("com.diffplug.durian:durian-collect:${"durian".v()}")
             // needed by GitAttributesLineEndings
             classpath("org.eclipse.jgit:org.eclipse.jgit:${"org.eclipse.jgit".v()}")

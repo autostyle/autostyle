@@ -59,7 +59,7 @@ public final class EclipseJdtFormatterStep {
   }
 
   private static Class<?> getClass(State state) {
-    if (state.getMavenCoordinate(MAVEN_GROUP_ARTIFACT).isPresent()) {
+    if (state.getMavenCoordinate(MAVEN_GROUP_ARTIFACT) != null) {
       return state.loadClass(FORMATTER_CLASS);
     }
     return state.loadClass(FORMATTER_CLASS_OLD);

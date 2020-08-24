@@ -47,7 +47,6 @@ dependencies {
         // In other words, marking dependency as "runtime" would avoid accidental
         // dependency on it during compilation
         apiv("com.diffplug.durian:durian-collect", "durian")
-        apiv("com.diffplug.durian:durian-core", "durian")
         apiv("com.diffplug.durian:durian-testlib", "durian")
         apiv("org.exparity:hamcrest-date")
         apiv("org.hamcrest:hamcrest")

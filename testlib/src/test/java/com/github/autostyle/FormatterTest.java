@@ -15,7 +15,6 @@
  */
 package com.github.autostyle;
 
-import com.diffplug.common.base.StandardSystemProperty;
 import com.github.autostyle.generic.EndWithNewlineStep;
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +32,7 @@ public class FormatterTest {
     new SerializableEqualityTester() {
       private LineEnding.Policy lineEndingsPolicy = LineEnding.UNIX.createPolicy();
       private Charset encoding = StandardCharsets.UTF_8;
-      private Path rootDir = Paths.get(StandardSystemProperty.USER_DIR.value());
+      private Path rootDir = Paths.get(System.getProperty("user.dir"));
       private List<FormatterStep> steps = new ArrayList<>();
 
       @Override

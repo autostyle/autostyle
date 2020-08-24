@@ -15,25 +15,16 @@
  */
 package com.github.autostyle
 
-import com.diffplug.common.base.Box
 import com.diffplug.common.testing.EqualsTester
-import java.io.IOException
 import java.io.ObjectInputStream
 import java.io.Serializable
-import java.util.*
 
 abstract class SerializableEqualityTester {
     companion object {
-        private fun <T : Serializable?> reserialize(input: T): T {
+        private inline fun <reified T : Serializable?> reserialize(input: T): T {
             val asBytes = LazyForwardingEquality.toBytes(input)
             val byteInput = asBytes.inputStream()
-            try {
-                ObjectInputStream(byteInput).use { objectInput -> return objectInput.readObject() as T }
-            } catch (e: IOException) {
-                throw ThrowingEx.asRuntime(e)
-            } catch (e: ClassNotFoundException) {
-                throw ThrowingEx.asRuntime(e)
-            }
+            return ObjectInputStream(byteInput).use { it.readObject() as T }
         }
     }
 
@@ -48,29 +39,19 @@ abstract class SerializableEqualityTester {
 
     fun testEquals() {
         val allGroups = mutableListOf<List<Any>>()
-        val currentGroup = Box.of<MutableList<Any>>(ArrayList())
         val api = object : API {
             override fun areDifferentThan() {
-                currentGroup.modify { current: MutableList<Any> ->
+                allGroups += listOf(
                     // create two instances, and add them to the group
-                    current.add(create())
-                    current.add(create())
+                    create(),
+                    create(),
                     // create two instances using a serialization roundtrip, and add them to the group
-                    current.add(reserialize(create()))
-                    current.add(reserialize(create()))
-                    // add this group to the list of all groups
-                    allGroups.add(current)
-                    mutableListOf()
-                }
+                    reserialize(create()),
+                    reserialize(create())
+                )
             }
         }
-        try {
-            setupTest(api)
-        } catch (e: Exception) {
-            throw AssertionError("Error during setupTest", e)
-        }
-        val lastGroup: List<Any> = currentGroup.get()
-        require(lastGroup.isEmpty()) { "Looks like you forgot to make a final call to 'areDifferentThan()'." }
+        setupTest(api)
         val tester = EqualsTester()
         for (step in allGroups) {
             tester.addEqualityGroup(*step.toTypedArray())

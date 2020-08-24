@@ -15,7 +15,6 @@
  */
 package com.github.autostyle.java;
 
-import com.diffplug.common.base.StringPrinter;
 import com.github.autostyle.FormatterStep;
 import com.github.autostyle.ResourceHarness;
 import com.github.autostyle.SerializableEqualityTester;
@@ -106,7 +105,7 @@ public class GoogleJavaFormatStepTest extends ResourceHarness {
   }
 
   private void fixWindowsBugTestcase(String... lines) {
-    String input = StringPrinter.buildStringFromLines(lines);
+    String input = String.join("\n", lines);
     Assertions.assertEquals(input, GoogleJavaFormatStep.fixWindowsBug(input, "1.1"));
   }
 }

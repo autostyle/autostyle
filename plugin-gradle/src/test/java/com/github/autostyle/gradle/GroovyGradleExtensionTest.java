@@ -15,7 +15,6 @@
  */
 package com.github.autostyle.gradle;
 
-import com.diffplug.common.base.StringPrinter;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -36,7 +35,7 @@ public class GroovyGradleExtensionTest extends GradleIntegrationTest {
 
   private void testTarget(boolean useDefaultTarget) throws IOException {
     String target = useDefaultTarget ? "" : "target file('other.gradle')";
-    String buildContent = StringPrinter.buildStringFromLines(
+    String buildContent = String.join("\n",
         "plugins {",
         "    id 'com.github.autostyle'",
         "}",

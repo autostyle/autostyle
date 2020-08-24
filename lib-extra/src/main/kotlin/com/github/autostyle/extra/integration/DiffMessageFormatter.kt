@@ -15,7 +15,6 @@
  */
 package com.github.autostyle.extra.integration
 
-import com.diffplug.common.base.Splitter
 import org.eclipse.jgit.diff.Edit
 import org.eclipse.jgit.diff.EditList
 import org.eclipse.jgit.diff.HistogramDiff
@@ -38,7 +37,6 @@ class DiffMessageFormatter(
         private const val MAX_CHECK_MESSAGE_LINES = 50
         const val MAX_FILES_TO_LIST = 10
         private const val MIN_LINES_PER_FILE = 4
-        private val NEWLINE_SPLITTER = Splitter.on('\n')
         private const val NORMAL_INDENT = "  "
         private const val DIFF_INDENT = NORMAL_INDENT + NORMAL_INDENT
     }
@@ -99,7 +97,7 @@ class DiffMessageFormatter(
         //         -1\\r\\n,
         //         -2\\r\\n,
         //     ... (more lines that didn't fit)
-        val lines = NEWLINE_SPLITTER.splitToList(diff)
+        val lines = diff.split('\n')
         addIntendedLine(NORMAL_INDENT, relativePath)
         for (i in 0 until lines.size.coerceAtMost(minLinesPerFile - 1)) {
             addIntendedLine(DIFF_INDENT, lines[i])

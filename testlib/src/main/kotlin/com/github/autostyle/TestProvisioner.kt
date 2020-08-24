@@ -15,7 +15,6 @@
  */
 package com.github.autostyle
 
-import com.diffplug.common.base.StandardSystemProperty
 import com.github.autostyle.serialization.deserialize
 import com.github.autostyle.serialization.serialize
 import org.gradle.api.Project
@@ -32,7 +31,7 @@ import java.util.function.Supplier
 object TestProvisioner {
     @JvmStatic
     fun gradleProject(dir: File): Project {
-        val userHome = File(StandardSystemProperty.USER_HOME.value())
+        val userHome = File(System.getProperty("user.home"))
         return ProjectBuilder.builder()
             .withGradleUserHomeDir(File(userHome, ".gradle"))
             .withProjectDir(dir)
@@ -87,7 +86,7 @@ object TestProvisioner {
         name: String,
         input: Supplier<Provisioner>
     ): Provisioner {
-        val autostyleDir = File(StandardSystemProperty.USER_DIR.value()).parentFile
+        val autostyleDir = File(System.getProperty("user.dir")).parentFile
         val testlib = File(autostyleDir, "testlib")
         val cacheFile = File(testlib, "build/tmp/testprovisioner.$name.cache")
         val cached = if (cacheFile.exists()) {
