@@ -15,7 +15,6 @@
  */
 package com.github.autostyle.npm;
 
-import com.diffplug.common.collect.ImmutableMap;
 import com.github.autostyle.FormatterStep;
 import com.github.autostyle.StepHarness;
 import com.github.autostyle.TestProvisioner;
@@ -30,6 +29,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class TsFmtFormatterStepTest {
 
@@ -75,7 +76,10 @@ public class TsFmtFormatterStepTest {
     @Test
     public void formattingUsingInlineConfigWorks() throws Throwable {
 
-      final ImmutableMap<String, Object> inlineConfig = ImmutableMap.of("indentSize", 1, "convertTabsToSpaces", true);
+      final Map<String, Object> inlineConfig = new LinkedHashMap<String, Object>() {{
+        put("indentSize", 1);
+        put("convertTabsToSpaces", true);
+      }};
 
       final FormatterStep formatterStep = TsFmtFormatterStep.create(
           TsFmtFormatterStep.defaultDevDependencies(),

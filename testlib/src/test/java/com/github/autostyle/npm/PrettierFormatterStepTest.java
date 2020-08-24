@@ -15,7 +15,6 @@
  */
 package com.github.autostyle.npm;
 
-import com.diffplug.common.collect.ImmutableMap;
 import com.github.autostyle.FormatterStep;
 import com.github.autostyle.StepHarness;
 import com.github.autostyle.TestProvisioner;
@@ -27,6 +26,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Collections;
 
 public class PrettierFormatterStepTest {
   @Nested
@@ -74,7 +74,7 @@ public class PrettierFormatterStepTest {
           TestProvisioner.mavenCentral(),
           buildDir(),
           npmExecutable(),
-          new PrettierConfig(null, ImmutableMap.of("filepath", "anyname.json"))); // should select parser based on this name
+          new PrettierConfig(null, Collections.singletonMap("filepath", "anyname.json"))); // should select parser based on this name
 
       try (StepHarness stepHarness = StepHarness.forStep(formatterStep)) {
         stepHarness.testResource(dirtyFile, cleanFile);
@@ -107,7 +107,7 @@ public class PrettierFormatterStepTest {
 
     @Test
     public void defaultsAreApplied() throws Throwable {
-      runFormatTest(new PrettierConfig(null, ImmutableMap.of("parser", "typescript")), "defaults");
+      runFormatTest(new PrettierConfig(null, Collections.singletonMap("parser", "typescript")), "defaults");
     }
 
     @Test
@@ -117,7 +117,7 @@ public class PrettierFormatterStepTest {
 
     @Test
     public void configFileOptionsCanBeOverriden() throws Throwable {
-      runFormatTest(new PrettierConfig(createTestFile(FILEDIR + ".prettierrc.yml"), ImmutableMap.of("printWidth", 300)), "override");
+      runFormatTest(new PrettierConfig(createTestFile(FILEDIR + ".prettierrc.yml"), Collections.singletonMap("printWidth", 300)), "override");
     }
   }
 }

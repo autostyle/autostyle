@@ -17,13 +17,13 @@ package com.github.autostyle.npm;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.diffplug.common.collect.ImmutableMap;
 import com.github.autostyle.ResourceHarness;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 
 public class SimpleJsonWriterTest extends ResourceHarness {
 
@@ -61,7 +61,7 @@ public class SimpleJsonWriterTest extends ResourceHarness {
 
   @Test
   public void itHandlesSeveralOptionsSimultaneously() {
-    jsonWriter.putAll(ImmutableMap.of("mystring", "stringvalue", "intvalue", 1));
+    jsonWriter.putAll(new LinkedHashMap<String, Object>(){{ put("mystring", "stringvalue"); put("intvalue", 1);}});
     assertThat(jsonWriter.toJsonString()).isEqualTo("{\n    \"mystring\": \"stringvalue\",\n    \"intvalue\": 1\n}");
   }
 
