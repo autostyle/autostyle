@@ -22,11 +22,20 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /** Computes a signature for any needed files. */
 public final class FileSignature implements Serializable {
@@ -40,60 +49,112 @@ public final class FileSignature implements Serializable {
   @SuppressFBWarnings("SE_TRANSIENT_FIELD_NOT_RESTORED")
   private final transient List<File> files;
 
-  private final String[] filenames;
-  private final long[] filesizes;
-  private final long[] lastModified;
+  private final byte[] digest;
 
-  /** Method has been renamed to {@link FileSignature#signAsSet}.
-   * In case no sorting and removal of duplicates is required,
-   * use {@link FileSignature#signAsList} instead.*/
+  private static final Map<File, String> DEFAULT_KEYS =
+    Collections.singletonMap(new File(System.getProperty("user.home")), "$HOME");
+
+  /**
+   * Creates file signature whereas order of the files remains unchanged.
+   */
   @Deprecated
-  public static FileSignature from(File... files) throws IOException {
-    return from(Arrays.asList(files));
-  }
-
-  /** Method has been renamed to {@link FileSignature#signAsSet}.
-   * In case no sorting and removal of duplicates is required,
-   * use {@link FileSignature#signAsList} instead.*/
-  @Deprecated
-  public static FileSignature from(Iterable<File> files) throws IOException {
-    return signAsSet(files);
-  }
-
-  /** Creates file signature whereas order of the files remains unchanged. */
   public static FileSignature signAsList(File... files) throws IOException {
-    return signAsList(Arrays.asList(files));
+    return new FileSignature(DEFAULT_KEYS, Arrays.asList(files), true);
   }
 
-  /** Creates file signature whereas order of the files remains unchanged. */
+  /**
+   * Creates file signature whereas order of the files remains unchanged.
+   */
+  @Deprecated
   public static FileSignature signAsList(Iterable<File> files) throws IOException {
-    return new FileSignature(toNullHostileList(files));
+    return new FileSignature(DEFAULT_KEYS, toNullHostileList(files), true);
   }
 
   /** Creates file signature whereas order of the files remains unchanged. */
+  @Deprecated
   public static FileSignature signAsSet(File... files) throws IOException {
-    return signAsSet(Arrays.asList(files));
+    return new FileSignature(DEFAULT_KEYS, Arrays.asList(files), false);
   }
 
-  /** Creates file signature insensitive to the order of the files. */
+  /**
+   * Creates file signature insensitive to the order of the files.
+   */
+  @Deprecated
   public static FileSignature signAsSet(Iterable<File> files) throws IOException {
-    return new FileSignature(toSortedSet(files));
+    return new FileSignature(DEFAULT_KEYS, toSortedSet(files), false);
   }
 
-  private FileSignature(final List<File> files) throws IOException {
+  /**
+   * Creates file signature whereas order of the files remains unchanged.
+   */
+  public static FileSignature signAsList(Map<File, String> keyPaths, File... files) throws IOException {
+    return new FileSignature(keyPaths, Arrays.asList(files), true);
+  }
+
+  /**
+   * Creates file signature whereas order of the files remains unchanged.
+   */
+  public static FileSignature signAsList(Map<File, String> keyPaths, Iterable<File> files) throws IOException {
+    return new FileSignature(keyPaths, toNullHostileList(files), true);
+  }
+
+  /**
+   * Creates file signature whereas order of the files remains unchanged.
+   */
+  public static FileSignature signAsSet(Map<File, String> keyPaths, File... files) throws IOException {
+    return new FileSignature(keyPaths, Arrays.asList(files), false);
+  }
+
+  /**
+   * Creates file signature insensitive to the order of the files.
+   */
+  public static FileSignature signAsSet(Map<File, String> keyPaths, Iterable<File> files) throws IOException {
+    return new FileSignature(keyPaths, toSortedSet(files), false);
+  }
+
+  private FileSignature(Map<File, String> keyPaths, final List<File> files, boolean ordered) throws IOException {
     this.files = files;
 
-    filenames = new String[this.files.size()];
-    filesizes = new long[this.files.size()];
-    lastModified = new long[this.files.size()];
-
-    int i = 0;
-    for (File file : this.files) {
-      filenames[i] = file.getCanonicalPath();
-      filesizes[i] = file.length();
-      lastModified[i] = file.lastModified();
-      ++i;
+    MessageDigest md;
+    try {
+      md = MessageDigest.getInstance("SHA-1");
+    } catch (NoSuchAlgorithmException e) {
+      throw new IllegalStateException("SHA-1 is not available", e);
     }
+
+    List<Map.Entry<String, String>> entries = keyPaths.entrySet().stream().map(e -> {
+      try {
+        return (Map.Entry<String, String>) new AbstractMap.SimpleEntry<>(e.getKey().getCanonicalPath(), e.getValue());
+      } catch (IOException ioException) {
+        throw new RuntimeException("Unable to get canonical path of " + e.getKey(), ioException);
+      }
+    }).sorted(Map.Entry.<String, String>comparingByKey().reversed()).collect(Collectors.toList());
+
+    List<Map.Entry<String, File>> contents = new ArrayList<>();
+    for (File file : files) {
+      String path = file.getCanonicalPath();
+      for (Map.Entry<String, String> entry : entries) {
+        if (path.startsWith(entry.getKey())) {
+          path = entry.getValue() + ":" + path.substring(entry.getKey().length());
+          break;
+        }
+      }
+      contents.add(new AbstractMap.SimpleEntry<>(path, file));
+    }
+    if (!ordered) {
+      contents.sort(Map.Entry.comparingByKey());
+    }
+    byte[] buffer = new byte[4096];
+    for (Map.Entry<String, File> entry : contents) {
+      md.update(entry.getKey().getBytes(StandardCharsets.UTF_8));
+      try (InputStream is = Files.newInputStream(entry.getValue().toPath())) {
+        int read;
+        while ((read = is.read(buffer)) != -1) {
+          md.update(buffer, 0, read);
+        }
+      }
+    }
+    digest = md.digest();
   }
 
   /** Returns all of the files in this signature, throwing an exception if there are more or less than 1 file. */

@@ -1,7 +1,6 @@
 dependencies {
     api(project(":autostyle-lib"))
     // misc useful utilities
-    implementation("com.diffplug.durian:durian-collect")
     // needed by GitAttributesLineEndings
     implementation("org.eclipse.jgit:org.eclipse.jgit")
     implementation("com.googlecode.concurrent-trees:concurrent-trees")

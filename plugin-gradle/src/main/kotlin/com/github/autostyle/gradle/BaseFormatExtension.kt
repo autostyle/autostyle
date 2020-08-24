@@ -240,7 +240,7 @@ open class BaseFormatExtension @Inject constructor(
         })
         task.steps.set(steps)
         task.lineEndingsPolicy.set(lineEndings.map {
-            it.createPolicy(project.projectDir) { project.files(task.sourceFiles) }
+            it.createPolicy(project.rootDir, project.projectDir) { project.files(task.sourceFiles) }
         })
     }
 

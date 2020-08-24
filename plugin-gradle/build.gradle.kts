@@ -7,7 +7,6 @@ plugins {
 dependencies {
     api(project(":autostyle-lib"))
     api(project(":autostyle-lib-extra"))
-    implementation("com.diffplug.durian:durian-collect")
     implementation("org.ec4j.core:ec4j-core:0.2.2")
 
     testImplementation(project(":autostyle-testlib"))

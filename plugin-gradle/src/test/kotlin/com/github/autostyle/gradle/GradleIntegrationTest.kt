@@ -15,8 +15,6 @@
  */
 package com.github.autostyle.gradle
 
-import com.diffplug.common.tree.TreeDef
-import com.diffplug.common.tree.TreeStream
 import com.github.autostyle.LineEnding
 import com.github.autostyle.ResourceHarness
 import org.gradle.testkit.runner.BuildResult
@@ -27,7 +25,6 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
-import java.io.File
 import java.io.IOException
 import java.util.function.Predicate
 import java.util.stream.Collectors
@@ -77,10 +74,7 @@ open class GradleIntegrationTest : ResourceHarness() {
 
     @Throws(IOException::class)
     protected fun getContents(subpathsToInclude: Predicate<String>): String {
-        val treeDef: TreeDef<File> = TreeDef.forFile { throw it }
-        val files = TreeStream.depthFirst(treeDef, rootFolder())
-            .filter { obj: File -> obj.isFile }
-            .collect(Collectors.toList())
+        val files = rootFolder().walk().filter { it.isFile }.toList()
         val iterator = files.listIterator(files.size)
         val rootLength = rootFolder().absolutePath.length + 1
         return StringBuilder().apply {

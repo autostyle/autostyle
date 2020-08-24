@@ -42,6 +42,15 @@ class BuildCacheTest : GradleIntegrationTest() {
                 org.gradle.caching.debug=true
             """.trimIndent()
         )
+        setFile("settings.gradle").toContent(
+            """
+                buildCache {
+                    local {
+                        directory '${rootFolder().toURI()}'
+                    }
+                }
+            """.trimIndent()
+        )
     }
 
     @Test

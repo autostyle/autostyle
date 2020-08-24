@@ -17,13 +17,9 @@ package com.github.autostyle.extra;
 
 import static com.github.autostyle.extra.LibExtraPreconditions.requireElementsNonNull;
 
-import com.diffplug.common.tree.TreeStream;
 import com.github.autostyle.FileSignature;
 import com.github.autostyle.LazyForwardingEquality;
 import com.github.autostyle.LineEnding;
-import com.googlecode.concurrenttrees.radix.ConcurrentRadixTree;
-import com.googlecode.concurrenttrees.radix.node.Node;
-import com.googlecode.concurrenttrees.radix.node.concrete.DefaultCharSequenceNodeFactory;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.eclipse.jgit.attributes.Attribute;
 import org.eclipse.jgit.attributes.AttributesNode;
@@ -68,24 +64,26 @@ public final class GitAttributesLineEndings {
   // prevent direct instantiation
   private GitAttributesLineEndings() {}
 
-  public static Policy create(File projectDir, Supplier<Iterable<File>> toFormat) {
-    return new Policy(projectDir, toFormat);
+  public static Policy create(File rootDir, File projectDir, Supplier<Iterable<File>> toFormat) {
+    return new Policy(rootDir, projectDir, toFormat);
   }
 
   static class Policy extends LazyForwardingEquality<FileState> implements LineEnding.Policy {
     private static final long serialVersionUID = 1L;
 
+    final transient File rootDir;
     final transient File projectDir;
     final transient Supplier<Iterable<File>> toFormat;
 
-    Policy(File projectDir, Supplier<Iterable<File>> toFormat) {
+    Policy(File rootDir, File projectDir, Supplier<Iterable<File>> toFormat) {
+      this.rootDir = Objects.requireNonNull(rootDir, "rootDir");
       this.projectDir = Objects.requireNonNull(projectDir, "projectDir");
       this.toFormat = Objects.requireNonNull(toFormat, "toFormat");
     }
 
     @Override
     protected FileState calculateState() throws Exception {
-      return new FileState(projectDir, toFormat.get());
+      return new FileState(rootDir, projectDir, toFormat.get());
     }
 
     /**
@@ -123,7 +121,7 @@ public final class GitAttributesLineEndings {
     final FileSignature signature;
 
     @SuppressFBWarnings("SIC_INNER_SHOULD_BE_STATIC_ANON")
-    FileState(File projectDir, Iterable<File> toFormat) throws IOException {
+    FileState(File rootDir, File projectDir, Iterable<File> toFormat) throws IOException {
       requireElementsNonNull(toFormat);
       /////////////////////////////////
       // USER AND SYSTEM-WIDE VALUES //
@@ -188,7 +186,7 @@ public final class GitAttributesLineEndings {
       }
 
       // The .gitattributes files which apply to the files we are formatting
-      gitattributes = gitAttributes(toFormat);
+      gitattributes = gitAttributes(projectDir, toFormat);
 
       // find every actual File which exists above
       Stream<File> misc = Stream.of(systemConfig.getFile(), userConfig.getFile(), repoConfig.getFile(), globalAttributesFile, repoAttributesFile);
@@ -196,33 +194,26 @@ public final class GitAttributesLineEndings {
           .filter(file -> file != null && file.exists() && file.isFile())
           .collect(Collectors.toList());
       // sign it for up-to-date checking
-      signature = FileSignature.signAsSet(toSign);
+      Map<File, String> keyDirs = new HashMap<>();
+      keyDirs.put(new File(System.getProperty("user.home")), "$HOME");
+      keyDirs.put(projectDir, "$projectDir");
+      keyDirs.put(rootDir, "$rootDir");
+
+      signature = FileSignature.signAsSet(keyDirs, toSign);
     }
 
     /** Returns all of the .gitattributes files which affect the given files. */
-    static List<File> gitAttributes(Iterable<File> files) {
-      // build a radix tree out of all the parent folders in these files
-      ConcurrentRadixTree<String> tree = new ConcurrentRadixTree<>(new DefaultCharSequenceNodeFactory());
-      for (File file : files) {
-        String parentPath = file.getParent() + File.separator;
-        tree.putIfAbsent(parentPath, parentPath);
-      }
-      // traverse the edge nodes to find the outermost folders
-      List<File> edgeFolders = TreeStream.depthFirst(Node::getOutgoingEdges, tree.getNode())
-          .filter(node -> node.getOutgoingEdges().isEmpty() && node.getValue() != null)
-          .map(node -> new File((String) node.getValue()))
-          .collect(Collectors.toList());
-
+    static List<File> gitAttributes(File projectDir, Iterable<File> files) {
       List<File> gitAttrFiles = new ArrayList<>();
       Set<File> visitedFolders = new HashSet<>();
-      for (File edgeFolder : edgeFolders) {
-        gitAttrAddWithParents(edgeFolder, visitedFolders, gitAttrFiles);
+      for (File file : files) {
+        gitAttrAddWithParents(projectDir, file.getAbsoluteFile(), visitedFolders, gitAttrFiles);
       }
       return gitAttrFiles;
     }
 
     /** Searches folder and all its parents for gitattributes files. */
-    private static void gitAttrAddWithParents(File folder, Set<File> visitedFolders, Collection<File> gitAttrFiles) {
+    private static void gitAttrAddWithParents(File projectDir, File folder, Set<File> visitedFolders, Collection<File> gitAttrFiles) {
       if (!visitedFolders.add(folder)) {
         // bail if we already visited this folder
         return;
@@ -232,9 +223,12 @@ public final class GitAttributesLineEndings {
       if (gitAttr.exists() && gitAttr.isFile()) {
         gitAttrFiles.add(gitAttr);
       }
+      if (folder.equals(projectDir)) {
+        return;
+      }
       File parentFile = folder.getParentFile();
       if (parentFile != null) {
-        gitAttrAddWithParents(folder.getParentFile(), visitedFolders, gitAttrFiles);
+        gitAttrAddWithParents(projectDir, folder.getParentFile(), visitedFolders, gitAttrFiles);
       }
     }
 

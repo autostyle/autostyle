@@ -17,9 +17,9 @@ package com.github.autostyle;
 
 import java.io.File;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
-import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
@@ -31,7 +31,7 @@ public enum LineEnding {
   // @formatter:off
   /** Uses the same line endings as Git, using `.gitattributes` and the `core.eol` property. */
   GIT_ATTRIBUTES {
-    /** .gitattributes is path-specific, so you must use {@link LineEnding#createPolicy(File, Supplier)}. */
+    /** .gitattributes is path-specific, so you must use {@link LineEnding#createPolicy(File, File, Supplier)}. */
     @Override @Deprecated
     public Policy createPolicy() {
       return super.createPolicy();
@@ -46,30 +46,36 @@ public enum LineEnding {
   // @formatter:on
 
   /** Returns a {@link Policy} appropriate for files which are contained within the given rootFolder. */
-  public Policy createPolicy(File projectDir, Supplier<Iterable<File>> toFormat) {
+  public Policy createPolicy(File rootDir, File projectDir, Supplier<Iterable<File>> toFormat) {
     Objects.requireNonNull(projectDir, "projectDir");
     Objects.requireNonNull(toFormat, "toFormat");
     if (this != GIT_ATTRIBUTES) {
       return createPolicy();
     } else {
-      if (gitAttributesPolicyCreator == null) {
+      Method method = LineEnding.gitAttributesPolicyCreator;
+      if (method == null) {
         try {
           Class<?> clazz = Class.forName("com.github.autostyle.extra.GitAttributesLineEndings");
-          Method method = clazz.getMethod("create", File.class, Supplier.class);
-          gitAttributesPolicyCreator = (proj, target) -> ThrowingEx.get(() -> (Policy) method.invoke(null, proj, target));
+          method = clazz.getMethod("create", File.class, File.class, Supplier.class);
+          LineEnding.gitAttributesPolicyCreator = method;
         } catch (ClassNotFoundException | NoSuchMethodException | SecurityException e) {
           throw new IllegalStateException("LineEnding.GIT_ATTRIBUTES requires the autostyle-lib-extra library, but it is not on the classpath", e);
         }
       }
-      // gitAttributesPolicyCreator will always be nonnull at this point
-      return gitAttributesPolicyCreator.apply(projectDir, toFormat);
+      try {
+        return (Policy) method.invoke(null, rootDir, projectDir, toFormat);
+      } catch (IllegalAccessException e) {
+        throw new IllegalStateException("Can't call GitAttributesLineEndings#create", e);
+      } catch (InvocationTargetException e) {
+        throw new IllegalStateException("Error in GitAttributesLineEndings#create", e.getCause());
+      }
     }
   }
 
-  private static volatile @Nullable BiFunction<File, Supplier<Iterable<File>>, Policy> gitAttributesPolicyCreator;
+  private static volatile @Nullable Method gitAttributesPolicyCreator;
 
   // @formatter:off
-  /** Should use {@link #createPolicy(File, Supplier)} instead, but this will work iff its a path-independent LineEnding policy. */
+  /** Should use {@link #createPolicy(File, File, Supplier)} instead, but this will work iff its a path-independent LineEnding policy. */
   public Policy createPolicy() {
     switch (this) {
     case PLATFORM_NATIVE:  return _platformNativePolicy;
