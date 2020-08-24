@@ -16,9 +16,6 @@
 package com.github.autostyle.extra.integration
 
 import com.diffplug.common.base.Splitter
-import com.github.autostyle.Formatter
-import com.github.autostyle.LineEnding
-import com.github.autostyle.PaddedCell
 import org.eclipse.jgit.diff.Edit
 import org.eclipse.jgit.diff.EditList
 import org.eclipse.jgit.diff.HistogramDiff
@@ -30,9 +27,12 @@ import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 
 /** Prints a human-readable diff that represents the missing changes.  */
-class DiffMessageFormatter constructor(
-    val formatter: Formatter,
-    val sb: StringBuilder = StringBuilder(MAX_CHECK_MESSAGE_LINES * 64)
+class DiffMessageFormatter(
+    val baseDir: File,
+    val sb: StringBuilder = StringBuilder(MAX_CHECK_MESSAGE_LINES * 64),
+    var maxCheckMessageLines: Int = MAX_CHECK_MESSAGE_LINES,
+    var maxFilesToList: Int = MAX_FILES_TO_LIST,
+    var minLinesPerFile: Int = MIN_LINES_PER_FILE
 ) {
     companion object {
         private const val MAX_CHECK_MESSAGE_LINES = 50
@@ -43,57 +43,69 @@ class DiffMessageFormatter constructor(
         private const val DIFF_INDENT = NORMAL_INDENT + NORMAL_INDENT
     }
 
-    var maxCheckMessageLines: Int = MAX_CHECK_MESSAGE_LINES
-    var maxFilesToList: Int = MAX_FILES_TO_LIST
-    var minLinesPerFile: Int = MIN_LINES_PER_FILE
-
     private var numLines = 0
 
-    private fun File.relativize(): String {
-        return formatter.rootDir.relativize(toPath()).toString()
+    private fun File.relativize() = toRelativeString(baseDir)
+
+    private class FileInfo(val old: File, val new: File, val encoding: Charset)
+
+    private val files = mutableListOf<FileInfo>()
+
+    fun addDiff(old: File, new: File, encoding: Charset) {
+        files += FileInfo(old, new, encoding)
     }
 
-    fun diff(files: List<File>, paddedCell: Boolean = false): StringBuilder {
-        val problemIter = files.listIterator()
-        while (problemIter.hasNext() && numLines < maxCheckMessageLines) {
-            val file = problemIter.next()
-            addFile(file.relativize() + "\n" + diff(file, paddedCell))
+    fun finishWithoutErrors(): Boolean {
+        if (files.isEmpty()) {
+            return true
         }
-        if (problemIter.hasNext()) {
-            val remainingFiles = files.size - problemIter.nextIndex()
-            if (remainingFiles >= maxFilesToList) {
-                sb.append("Violations also present in ").append(remainingFiles)
-                    .append(" other files.\n")
-            } else {
-                sb.append("Violations also present in:\n")
-                while (problemIter.hasNext()) {
-                    addIntendedLine(NORMAL_INDENT, problemIter.next().relativize())
+        var addedFiles = 0
+        var displayedInDiffFiles = 0
+
+        files.sortBy { it.old }
+        val extraFiles = mutableListOf<String>()
+        for (info in files) {
+            addedFiles += 1
+            val relativePath = info.old.relativize()
+            if (numLines >= maxCheckMessageLines) {
+                if (addedFiles <= maxFilesToList) {
+                    extraFiles.add(relativePath)
                 }
+                continue
             }
-            sb.append("You might want to adjust")
-            sb.append(" -PmaxCheckMessageLines=").append(maxCheckMessageLines)
-            sb.append(" -PmaxFilesToList=").append(maxFilesToList)
-            sb.append(" -PminLinesPerFile=").append(minLinesPerFile)
-            sb.append(" to see more violations\n")
+            displayedInDiffFiles += 1
+            addFile(relativePath, diff(info.old, info.new, info.encoding))
         }
-        return sb
+
+        if (extraFiles.isEmpty()) {
+            return false
+        }
+        if (files.size - displayedInDiffFiles > maxFilesToList) {
+            val rest = addedFiles - displayedInDiffFiles
+            sb.append("Violations also present in ").append(rest)
+                .append(" other file${if (rest != 1) "s" else ""}.\n")
+            return false
+        }
+        sb.append("Violations also present in:\n")
+        for (file in files.subList(displayedInDiffFiles, files.size)) {
+            addIntendedLine(NORMAL_INDENT, file.old.relativize())
+        }
+        return false
     }
 
-    private fun addFile(arg: String) { // at the very least, we'll print this about a file:
+    private fun addFile(relativePath: String, diff: String) { // at the very least, we'll print this about a file:
         //     0.txt
         //         @@ -1,2 +1,2 @@,
         //         -1\\r\\n,
         //         -2\\r\\n,
         //     ... (more lines that didn't fit)
-        val lines = NEWLINE_SPLITTER.splitToList(arg)
-        if (lines.isNotEmpty()) {
-            addIntendedLine(NORMAL_INDENT, lines[0])
-        }
-        for (i in 1 until lines.size.coerceAtMost(minLinesPerFile)) {
+        val lines = NEWLINE_SPLITTER.splitToList(diff)
+        addIntendedLine(NORMAL_INDENT, relativePath)
+        for (i in 0 until lines.size.coerceAtMost(minLinesPerFile - 1)) {
             addIntendedLine(DIFF_INDENT, lines[i])
         }
         // then we'll print the rest that can fit
-        val iter = lines.listIterator(lines.size.coerceAtMost(minLinesPerFile))
+        val iter = lines.listIterator(lines.size.coerceAtMost(minLinesPerFile - 1))
         // lines.size() - iter.nextIndex() == 1 means "just one line left", and we just print the line
         // instead of "1 more lines that didn't fit"
         while (iter.hasNext() &&
@@ -116,30 +128,23 @@ class DiffMessageFormatter constructor(
         ++numLines
     }
 
+    fun ByteArray.convertFromTo(from: Charset, to: Charset = StandardCharsets.UTF_8): ByteArray =
+        when (from) {
+            to -> this
+            else -> toString(from).toByteArray(to)
+        }
+
     /**
      * Returns a git-style diff between the contents of the given file and what those contents would
      * look like if formatted using the given formatter. Does not end with any newline
      * sequence (\n, \r, \r\n).
      */
-    private fun diff(file: File, paddedCell: Boolean): String {
-        val encoding = formatter.encoding
-        val raw = file.readBytes().toString(encoding)
-        val rawUnix = LineEnding.toUnix(raw)
-        val formattedUnix = if (paddedCell) {
-            PaddedCell.check(formatter, file, rawUnix).canonical()
-        } else {
-            formatter.compute(rawUnix, file)
-        }
-        val formatted = formatter.computeLineEndings(formattedUnix, file)
-        return visualizeDiff(file, raw, formatted)
-    }
-
-    private fun visualizeDiff(file: File, raw: String, formattedBytes: String): String {
-        val a = RawText(raw.toByteArray(StandardCharsets.UTF_8))
-        val b = RawText(formattedBytes.toByteArray(StandardCharsets.UTF_8))
+    private fun diff(old: File, new: File, encoding: Charset): String {
+        val a = RawText(old.readBytes().convertFromTo(encoding))
+        val b = RawText(new.readBytes().convertFromTo(encoding))
         val edits = HistogramDiff().diff(RawTextComparator.DEFAULT, a, b)
 
-        printGitHubActionsErrors(file, edits, a, b)
+        printGitHubActionsErrors(old, edits, a, b)
 
         val out = ByteArrayOutputStream()
         // defaultCharset is here so the formatter could select "fancy" or "simple"

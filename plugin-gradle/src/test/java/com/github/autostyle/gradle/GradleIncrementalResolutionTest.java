@@ -49,28 +49,28 @@ public class GradleIncrementalResolutionTest extends GradleIntegrationTest {
     assertState("ABC");
     writeState("aBc");
     assertState("aBc");
-    // check will run against all three the first time (and second and third)
+    // First run => need to process all three files
     checkRanAgainst("abc");
-    checkRanAgainst("abc");
-    checkRanAgainst("abc");
-    // apply will run against all three the first time
-    applyRanAgainst("abc");
+    // Files processed => no need to process them anymore
+    checkRanAgainst("");
+    checkRanAgainst("");
+
+    // Apply won't re-execute formatters
+    applyRanAgainst("");
     // the second time, it will only run on the file that was changes
     applyRanAgainst("b");
     // and nobody the last time
     applyRanAgainst("");
-    // TODO: check does not co-operate with apply, so it is executed against all the files
-    //   So it is executed, and caches that the files are OK
-    checkRanAgainst("abc");
+    checkRanAgainst("");
 
     // if we change just one file
     writeState("Abc");
     // Only A is changed, so check is executed against a only
     checkRanAgainst("a");
-    // even after failing, still just the one
-    checkRanAgainst("a");
+    // No files modified => no need to re-format
+    checkRanAgainst("");
     // and so does apply
-    applyRanAgainst("a", "b");
+    applyRanAgainst();
     applyRanAgainst("a");
     // until the issue has been fixed
     applyRanAgainst("");

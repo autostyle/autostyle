@@ -1,5 +1,7 @@
 ### HEAD
 * Support Gradle build cache. The tasks were not cached previously since they produced no output
+* Move file processing to `...Process` task for better integration with Gradle caches
+* Produce helpful error messages by default (deprecate `paddedCell()` option)
 * Print GitHub Actions friendly warnings. The warnings would be visible as diff annotations
 * Bump release-plugins: 1.54 -> 1.70
 * Bump Gradle: 6.1 -> 6.6

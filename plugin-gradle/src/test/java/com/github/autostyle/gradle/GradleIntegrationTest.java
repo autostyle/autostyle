@@ -27,14 +27,18 @@ import org.gradle.testkit.runner.GradleRunner;
 import org.gradle.testkit.runner.TaskOutcome;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+@Execution(ExecutionMode.SAME_THREAD)
 public class GradleIntegrationTest extends ResourceHarness {
   /**
    * Each test gets its own temp folder, and we create a gradle
@@ -110,18 +114,25 @@ public class GradleIntegrationTest extends ResourceHarness {
   }
 
   private void taskIsUpToDate(String task, boolean upToDate) throws IOException {
+    BuildResult buildResult = gradleRunner().withArguments(task).build();
+    BuildTask result = buildResult.getTasks().stream().filter(x -> x.getPath().endsWith("Process")).findFirst().orElse(null);
+
+    Assertions.assertEquals(
+      upToDate ? TaskOutcome.UP_TO_DATE : TaskOutcome.SUCCESS,
+      result == null ? null : result.getOutcome(),
+      () -> "...Process task outcome. All outcomes are " + buildResultToString(buildResult)
+    );
+  }
+
+  public void assertTaskOutcomes(String task, Map<String, TaskOutcome> expected) throws IOException {
     pauseForFilesystem();
     BuildResult buildResult = gradleRunner().withArguments(task).build();
-
-    TaskOutcome expected = upToDate ? TaskOutcome.UP_TO_DATE : TaskOutcome.SUCCESS;
-    TaskOutcome notExpected = upToDate ? TaskOutcome.SUCCESS : TaskOutcome.UP_TO_DATE;
-
-    boolean everythingAsExpected = !buildResult.tasks(expected).isEmpty() &&
-        buildResult.tasks(notExpected).isEmpty() &&
-        buildResult.getTasks().size() == buildResult.tasks(expected).size();
-    if (!everythingAsExpected) {
-      Assertions.fail("Expected all tasks to be " + expected + ", but instead was\n" + buildResultToString(buildResult));
-    }
+    Assertions.assertEquals(
+      expected,
+      buildResult.getTasks()
+        .stream()
+        .collect(Collectors.toMap(BuildTask::getPath, BuildTask::getOutcome))
+    );
   }
 
   static String buildResultToString(BuildResult result) {

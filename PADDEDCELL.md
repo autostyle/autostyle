@@ -1,19 +1,16 @@
-# You have a misbehaving rule that needs a `paddedCell()`
+# Deprecation notice
 
-`autostyleCheck` has detected that one of your rules is misbehaving.  This will cause `autostyleCheck` to fail even after you have called `autostyleApply`.  To bandaid over this problem, add `paddedCell()` to your `build.gradle`, as such:
-
-```gradle
-autostyle {
-  java {
-    ...
-    paddedCell()
-  }
-}
-```
+Deprecation notice: `paddedCell()` has ben deprecated since Autostyle 3.2,
+so if you observe `padded cell` issue, you might want to upgrade Autostyle.
 
 This is not a bug in Autostyle itself, but in one of the third-party formatters, such as the [eclipse formatter](https://bugs.eclipse.org/bugs/show_bug.cgi?id=310642), [google-java-format](https://github.com/google/google-java-format/issues), or some custom rule.
 
-`paddedCell()` will ensure that your code continues to be formatted, although it will be a little slower.  Now when you run `autostyleCheck`, it will generate helpful bug report files in the `build/autostyle-diagnose-<FORMAT_NAME>` folder which will contain the states that your rules are fighting over.  These files are very helpful to the developers of the code formatter you are using.
+Autostyle will try its best to ensure that your code continues to be formatted,
+although it will be a little slower.  Now when you run `autostyleCheck`,
+it will generate helpful bug report files in the `build/autostyle-diagnose-<FORMAT_NAME>`
+folder which will contain the states that your rules are fighting over.
+
+These files are very helpful to the developers of the code formatter you are using.
 
 ## How Autostyle works
 
@@ -46,20 +43,9 @@ The rule we wrote above is obviously a bad idea.  But complex code formatters ca
 
 Formally, a correct formatter `F` must satisfy `F(F(input)) == F(input)` for all values of input.  Any formatter which doesn't meet this rule is misbehaving.
 
-## How does `paddedCell()` work?
+# What if the formatter does not converge?
 
-Autostyle now has a special `paddedCell()` mode.  If you add it to your format as such:
-
-```gradle
-autostyle {
-  format 'cpp', {
-    ...
-    paddedCell()
-  }
-}
-```
-
-then it will run in the following way:
+In order to check if the formatting converges, Autostyle tries to call the formatter multiple times:
 
 - When you call `autostyleApply`, it will automatically check for a ping-pong condition.
 - If there is a ping-pong condition, it will resolve the ambiguity arbitrarily, but consistently

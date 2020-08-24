@@ -15,29 +15,33 @@
  */
 package com.github.autostyle.gradle
 
-import com.github.autostyle.Formatter
-import com.github.autostyle.FormatterStep
-import com.github.autostyle.LineEnding
-import com.github.autostyle.extra.integration.DiffMessageFormatter
+import com.github.autostyle.*
 import com.github.autostyle.gradle.ext.conv
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
-import org.gradle.api.Project
 import org.gradle.api.file.ConfigurableFileCollection
+import org.gradle.api.file.FileType
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.tasks.*
-import org.gradle.kotlin.dsl.extra
 import org.gradle.kotlin.dsl.listProperty
 import org.gradle.kotlin.dsl.property
+import org.gradle.work.ChangeType
 import org.gradle.work.InputChanges
 import java.io.File
 import java.nio.charset.Charset
-import java.util.*
 import javax.inject.Inject
 
+@CacheableTask
 abstract class AutostyleTask @Inject constructor(
     objects: ObjectFactory
 ) : DefaultTask() {
+    init {
+        if (System.getenv("JITPACK")?.toBoolean() == true) {
+            // It makes no sense to verify code style on JitPack builds
+            enabled = false
+        }
+    }
+
     // set by AutostyleExtension, but possibly overridden by FormatExtension
     @get:Input
     val encoding = objects.property<String>().conv("UTF-8")
@@ -45,10 +49,6 @@ abstract class AutostyleTask @Inject constructor(
     @get:Input
     val lineEndingsPolicy = objects.property<LineEnding.Policy>()
         .conv(LineEnding.UNIX.createPolicy())
-
-    // set by FormatExtension
-    @get:Input
-    val paddedCell = objects.property<Boolean>().conv(false)
 
     @get:Input
     val steps = objects.listProperty<FormatterStep>()
@@ -60,61 +60,104 @@ abstract class AutostyleTask @Inject constructor(
 
     fun addStep(step: FormatterStep) = steps.add(step)
 
-    // Note: if all outputs are removed, the task needs outputs.upToDateWhen { true }
-    // for proper up-to-date checks
-    @OutputFile
-    val buildCacheSupport = objects.fileProperty()
-        .convention(project.layout.buildDirectory.file("autostyle/$name.txt"))
+    @OutputDirectory
+    val outputDirectory = objects.directoryProperty()
+        .convention(project.layout.buildDirectory.dir("autostyle/$name/formatted"))
+
+    @OutputDirectory
+    val divergingDirectory = objects.directoryProperty()
+        .convention(project.layout.buildDirectory.dir("autostyle/$name/diverging"))
+
+    private val projectDirectory = project.projectDir
+
+    @get:Internal
+    val formatter: Formatter
+        get() =
+            Formatter.builder()
+                .lineEndingsPolicy(lineEndingsPolicy.get())
+                .encoding(Charset.forName(encoding.get()))
+                .rootDir(project.rootDir.toPath())
+                .steps(steps.get())
+                .build()
 
     @TaskAction
     fun run(inputChanges: InputChanges) {
-        performAction(inputChanges)
-        buildCacheSupport.get().asFile.writeText("Gradle needs at least one output to support task in the build cache")
-    }
-
-    abstract fun performAction(inputChanges: InputChanges)
-
-    /** Returns the name of this format.  */
-    fun formatName(): String {
-        val name = name
-        return if (name.startsWith(AutostyleExtension.EXTENSION)) {
-            name.substring(AutostyleExtension.EXTENSION.length).toLowerCase(Locale.ROOT)
-        } else {
-            name
+        val outputDir = outputDirectory.get().asFile
+        if (!inputChanges.isIncremental) {
+            project.delete(outputDir)
         }
-    }
+        project.mkdir(outputDir)
+        val divergingDir = divergingDirectory.get().asFile
+        project.delete(divergingDir)
+        project.mkdir(divergingDir)
 
-    @get:Input
-    val formatter: Formatter get() =
-        Formatter.builder()
-            .lineEndingsPolicy(lineEndingsPolicy.get())
-            .encoding(Charset.forName(encoding.get()))
-            .rootDir(project.rootDir.toPath())
-            .steps(steps.get())
-            .build()
+        val filesToCheck = mutableListOf<File>()
+        inputChanges.getFileChanges(sourceFiles).forEach {
+            if (it.changeType == ChangeType.REMOVED) {
+                val outFile = outputDir.resolve(it.file.relativeTo(projectDirectory))
+                project.delete(outFile)
+            }
 
-    private fun Project.stringProperty(name: String) =
-        when (extra.has(name)) {
-            true -> extra.get(name) as? String
-            else -> null
+            if (it.changeType != ChangeType.REMOVED && it.fileType == FileType.FILE) {
+                filesToCheck.add(it.file)
+            }
         }
 
-    private fun Project.intProperty(name: String) = stringProperty(name)?.toInt()
+        formatter.use { formatFiles(it, filesToCheck) }
+    }
 
-    /** Returns an exception which indicates problem files nicely.  */
-    fun formatViolationsFor(
+    private fun formatFiles(formatter: Formatter, filesToCheck: Collection<File>) {
+        val outputDir = outputDirectory.get().asFile
+        val divergingDir = divergingDirectory.get().asFile
+        val convergenceAnalyzer = ConvergenceAnalyzer(formatter)
+        val diverges = mutableListOf<String>()
+        val cycles = mutableListOf<String>()
+        for (file in filesToCheck) {
+            logger.debug("Applying format to {}", file)
+            val result = convergenceAnalyzer.analyze(file)
+            val relativeFile = file.relativeTo(projectDirectory)
+            val outFile = outputDir.resolve(relativeFile)
+            outFile.parentFile.mkdirs()
+            when (result) {
+                is ConvergenceResult.Clean ->
+                    project.delete(outFile)
+                is ConvergenceResult.Convergence ->
+                    outFile.writeText(result.formatted, formatter.encoding)
+                is ConvergenceResult.Cycle -> {
+                    storeCycle(formatter, divergingDir, relativeFile, result.cycle)
+                    cycles += relativeFile.toString()
+                }
+                is ConvergenceResult.Divergence -> {
+                    storeCycle(formatter, divergingDir, relativeFile, result.cycle)
+                    diverges += relativeFile.toString()
+                }
+            }
+        }
+        if (diverges.isEmpty() && cycles.isEmpty()) {
+            return
+        }
+        throw GradleException(
+            ("Formatting ${
+                cycles.joinToString(prefix = "cycles for ", postfix = ", ")
+                    .removeSuffix("cycles for , ")
+            }" +
+                    diverges.joinToString(prefix = "diverges for ").removeSuffix("diverges for "))
+                .removeSuffix(", ")
+        )
+    }
+
+    private fun storeCycle(
         formatter: Formatter,
-        problemFiles: List<File>
-    ): GradleException {
-        val sb = StringBuilder()
-        sb.append("The following files have format violations:\n")
-        DiffMessageFormatter(formatter, sb).apply {
-            maxCheckMessageLines = project.intProperty("maxCheckMessageLines") ?: maxCheckMessageLines
-            maxFilesToList = project.intProperty("maxFilesToList") ?: maxFilesToList
-            minLinesPerFile = project.intProperty("minLinesPerFile") ?: minLinesPerFile
-            diff(problemFiles.sorted(), paddedCell.get())
+        divergingDir: File,
+        relativeFile: File,
+        cycle: List<String>
+    ) {
+        val outFile = divergingDir.resolve(relativeFile)
+        project.mkdir(outFile.parentFile)
+        val outPath = outFile.absolutePath
+        for ((index, value) in cycle.withIndex()) {
+            File(outPath + "." + index.toString().padStart(2, '0'))
+                .writeText(value, formatter.encoding)
         }
-        sb.append("Run './gradlew autostyleApply' to fix the violations.")
-        return GradleException(sb.toString())
     }
 }

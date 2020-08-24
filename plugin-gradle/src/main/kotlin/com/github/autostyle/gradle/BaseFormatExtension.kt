@@ -48,10 +48,11 @@ open class BaseFormatExtension @Inject constructor(
 
     protected val project: Project get() = root.project
 
+    @Deprecated("paddedCell no longer needs to be configured", level = DeprecationLevel.HIDDEN)
     val paddedCell = root.objects.property<Boolean>().conv(false)
 
+    @Deprecated("paddedCell no longer needs to be configured", level = DeprecationLevel.HIDDEN)
     fun paddedCell() {
-        paddedCell.set(true)
     }
 
     // TODO: implement gitignore
@@ -213,7 +214,6 @@ open class BaseFormatExtension @Inject constructor(
 
     /** Sets up a format task according to the values in this extension.  */
     internal open fun configureTask(task: AutostyleTask) {
-        task.paddedCell.set(paddedCell)
         task.encoding.set(encoding.map { it.name() })
         if (excludeSubprojects.get()) {
             excludeSubprojects()

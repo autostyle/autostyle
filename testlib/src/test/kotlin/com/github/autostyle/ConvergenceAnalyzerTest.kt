@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 DiffPlug
+ * Copyright 2020 Vladimir Sitnikov <sitnikov.vladimir@gmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import java.nio.file.Files
 import java.util.*
 import java.util.function.BiConsumer
 
-class PaddedCellTest {
+class ConvergenceAnalyzerTest {
     private lateinit var tempDir: File
 
     @BeforeEach
@@ -33,33 +33,13 @@ class PaddedCellTest {
         this.tempDir = tempDir
     }
 
-    private fun misbehaved(
-        step: FormatterFunc,
-        input: String,
-        expectedOutputType: PaddedCell.Type,
-        steps: String,
-        canonical: String?
-    ) {
-        testCase(step, input, expectedOutputType, steps, canonical, true)
-    }
-
-    private fun wellBehaved(
-        step: FormatterFunc,
-        input: String,
-        expectedOutputType: PaddedCell.Type,
-        canonical: String
-    ) {
-        testCase(step, input, expectedOutputType, canonical, canonical, false)
-    }
-
     private fun testCase(
-        step: FormatterFunc,
         input: String,
-        expectedOutputType: PaddedCell.Type,
-        expectedSteps: String,
-        canonical: String?,
-        misbehaved: Boolean
+        expected: ConvergenceResult,
+        formatted: String?,
+        formatterFunc: (String) -> String
     ) {
+        val step = FormatterFunc { formatterFunc(it) }
         val formatterSteps: MutableList<FormatterStep> = ArrayList()
         formatterSteps.add(FormatterStep.createNeverUpToDate("step", step))
         Formatter.builder()
@@ -69,72 +49,71 @@ class PaddedCellTest {
             .steps(formatterSteps).build().use { formatter ->
                 val file = File.createTempFile("input", "txt", tempDir)
                 Files.write(file.toPath(), input.toByteArray(StandardCharsets.UTF_8))
-                val result = PaddedCell.check(formatter, file)
-                Assertions.assertEquals(misbehaved, result.misbehaved())
-                Assertions.assertEquals(expectedOutputType, result.type())
-                val actual = java.lang.String.join(",", result.steps())
-                Assertions.assertEquals(expectedSteps, actual)
-                if (canonical == null) {
-                    try {
-                        result.canonical()
-                        Assertions.fail<Any>("Expected exception")
-                    } catch (expected: IllegalArgumentException) {
+                val analyzer = ConvergenceAnalyzer(formatter)
+                val actual = analyzer.analyze(file)
+                Assertions.assertEquals(expected, actual) {
+                    "input: $input"
+                }
+                if (expected == ConvergenceResult.Clean) {
+                    return
+                }
+                if (formatted == null) {
+                    Assertions.assertThrows(IllegalStateException::class.java) {
+                        actual.formatted
                     }
                 } else {
-                    Assertions.assertEquals(canonical, result.canonical())
+                    Assertions.assertEquals(formatted, actual.formatted) {
+                        "input: $input"
+                    }
                 }
             }
     }
 
     @Test
     fun wellBehaved() {
-        wellBehaved(FormatterFunc { it }, "CCC", PaddedCell.Type.CONVERGE, "CCC")
-        wellBehaved(FormatterFunc { "A" }, "CCC", PaddedCell.Type.CONVERGE, "A")
+        testCase("CCC", ConvergenceResult.Clean, null) { it }
+        testCase("CCC", ConvergenceResult.Convergence(listOf("A")), "A") { "A" }
     }
 
     @Test
     fun pingPong() {
-        misbehaved(
-            FormatterFunc { input: String -> if (input == "A") "B" else "A" },
+        testCase(
             "CCC",
-            PaddedCell.Type.CYCLE,
-            "A,B",
+            ConvergenceResult.Cycle(listOf("A", "B")),
             "A"
-        )
+        ) { input: String -> if (input == "A") "B" else "A" }
     }
 
     @Test
     fun fourState() {
-        misbehaved(FormatterFunc {
+        testCase("CCC", ConvergenceResult.Cycle(listOf("A", "B", "C", "D")), "A") {
             when (it) {
                 "A" -> "B"
                 "B" -> "C"
                 "C" -> "D"
                 else -> "A"
             }
-        }, "CCC", PaddedCell.Type.CYCLE, "A,B,C,D", "A")
+        }
     }
 
     @Test
     fun converging() {
-        misbehaved(FormatterFunc {
+        testCase("CCC", ConvergenceResult.Convergence(listOf("CC", "C", "")), "") {
             if (it.isEmpty()) {
                 it
             } else {
                 it.substring(0, it.length - 1)
             }
-        }, "CCC", PaddedCell.Type.CONVERGE, "CC,C,", "")
+        }
     }
 
     @Test
     fun diverging() {
-        misbehaved(
-            FormatterFunc { "$it " },
+        testCase(
             "",
-            PaddedCell.Type.DIVERGE,
-            " ,  ,   ,    ,     ,      ,       ,        ,         ,          ",
+            ConvergenceResult.Divergence(listOf(" ", "  ", "   ", "    ", "     ", "      ", "       ", "        ", "         ", "          ")),
             null
-        )
+        ) { "$it " }
     }
 
     @Test
@@ -143,9 +122,9 @@ class PaddedCellTest {
             val unordered = unorderedStr.split(",".toRegex())
             for (i in unordered.indices) { // try every rotation of the list
                 Collections.rotate(unordered, 1)
-                val result = PaddedCell.Type.CYCLE.create(tempDir, unordered)
+                val result = ConvergenceResult.Cycle(unordered)
                 // make sure the canonical result is always the appropriate one
-                Assertions.assertEquals(canonical, result.canonical())
+                Assertions.assertEquals(canonical, result.formatted)
             }
         }
         // alphabetic

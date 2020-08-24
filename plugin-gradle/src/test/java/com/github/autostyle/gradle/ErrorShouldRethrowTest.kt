@@ -91,7 +91,7 @@ class ErrorShouldRethrowTest : GradleIntegrationTest() {
         outcome: TaskOutcome?,
         vararg messages: String
     ) {
-        assertThat(result.task(":autostyleMiscCheck")?.outcome).isEqualTo(outcome).`as`("autostyleMiscCheck.outcome")
+        assertThat(result.task(":autostyleMiscProcess")?.outcome).isEqualTo(outcome).`as`("autostyleMiscCheck.outcome")
 //        val expectedToStartWith =
 //            StringPrinter.buildStringFromLines(*messages).trim { it <= ' ' }
 //        val numNewlines = CharMatcher.`is`('\n').countIn(expectedToStartWith)

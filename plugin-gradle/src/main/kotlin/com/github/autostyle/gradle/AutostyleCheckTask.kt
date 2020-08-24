@@ -15,59 +15,81 @@
  */
 package com.github.autostyle.gradle
 
-import com.github.autostyle.Formatter
-import com.github.autostyle.PaddedCellBulk
-import org.gradle.api.file.FileType
+import com.github.autostyle.extra.integration.DiffMessageFormatter
+import com.github.autostyle.gradle.ext.conv
+import org.gradle.api.DefaultTask
+import org.gradle.api.GradleException
+import org.gradle.api.Project
 import org.gradle.api.model.ObjectFactory
-import org.gradle.api.tasks.CacheableTask
-import org.gradle.work.ChangeType
-import org.gradle.work.InputChanges
-import java.io.File
+import org.gradle.api.tasks.*
+import org.gradle.kotlin.dsl.extra
+import org.gradle.kotlin.dsl.property
+import java.nio.charset.Charset
 import javax.inject.Inject
 
-@CacheableTask
 open class AutostyleCheckTask @Inject constructor(
     objects: ObjectFactory
-) : AutostyleTask(objects) {
+) : DefaultTask() {
+    @InputFiles
+    @SkipWhenEmpty
+    @PathSensitive(PathSensitivity.RELATIVE)
+    val inputDirectory = objects.directoryProperty()
 
-    init {
-        if (System.getenv("JITPACK")?.toBoolean() == true) {
-            // It makes no sense to verify code style on JitPack builds
-            enabled = false
+    @Input
+    val encoding = objects.property<String>().conv("UTF-8")
+
+    @Console
+    val maxCheckMessageLines = objects.property<Int>().convention(
+        project.intProperty("maxCheckMessageLines") ?: 50
+    )
+
+    @Console
+    val maxFilesToList = objects.property<Int>().convention(
+        project.intProperty("maxFilesToList") ?: 10
+    )
+
+    @Console
+    val minLinesPerFile = objects.property<Int>().convention(
+        project.intProperty("minLinesPerFile") ?: 4
+    )
+
+    private fun Project.stringProperty(name: String) =
+        when (extra.has(name)) {
+            true -> extra.get(name) as? String
+            else -> null
         }
-    }
 
-    override fun performAction(inputChanges: InputChanges) {
-        val filesToCheck = mutableSetOf<File>()
+    private fun Project.intProperty(name: String) = stringProperty(name)?.toInt()
 
-        inputChanges.getFileChanges(sourceFiles).forEach {
-            if (it.changeType != ChangeType.REMOVED && it.fileType == FileType.FILE) {
-                filesToCheck.add(it.file)
+    @TaskAction
+    fun run() {
+        val sb = StringBuilder()
+        sb.append("The following files have format violations:\n")
+        val writer = DiffMessageFormatter(
+            project.projectDir,
+            sb,
+            maxCheckMessageLines = maxCheckMessageLines.get(),
+            maxFilesToList = maxFilesToList.get(),
+            minLinesPerFile = minLinesPerFile.get()
+        )
+        val projectDir = project.projectDir
+        val encoding = Charset.forName(encoding.get())
+        project.fileTree(inputDirectory).visit {
+            if (!isDirectory) {
+                writer.addDiff(projectDir.resolve(path), file, encoding)
             }
         }
-
-        formatter.use { check(it, filesToCheck) }
-    }
-
-    private fun check(
-        formatter: Formatter,
-        filesToCheck: Collection<File>
-    ): Collection<File> {
-        val problemFiles = filesToCheck.filterNot {
-            logger.debug("Checking format of {}", it)
-            formatter.isClean(it)
+        if (writer.finishWithoutErrors()) {
+            didWork = false
+            return
         }
-        if (paddedCell.get()) {
-            PaddedCellGradle.check(this, formatter, problemFiles)
-        } else if (problemFiles.isNotEmpty()) {
-            // if we're not in paddedCell mode, we'll check if maybe we should be
-            val cell = PaddedCellBulk.anyMisbehave(formatter, problemFiles)
-            if (cell != null) {
-                throw PaddedCellGradle.youShouldTurnOnPaddedCell(this, cell)
-            } else {
-                throw formatViolationsFor(formatter, problemFiles)
-            }
-        }
-        return problemFiles
+        didWork = true
+        sb.append("You might want to adjust")
+        sb.append(" -PmaxCheckMessageLines=").appendln(maxCheckMessageLines.get())
+        sb.append(" -PmaxFilesToList=").appendln(maxFilesToList.get())
+        sb.append(" -PminLinesPerFile=").appendln(minLinesPerFile.get())
+        sb.append(" to see more violations\n")
+        sb.append("Run './gradlew autostyleApply' to fix the violations.")
+        throw GradleException(sb.toString())
     }
 }

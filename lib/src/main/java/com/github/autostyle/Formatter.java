@@ -27,7 +27,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -155,18 +154,13 @@ public final class Formatter implements Serializable, AutoCloseable {
     return formatted.equals(unix);
   }
 
-  /** Applies formatting to the given file. */
-  public void applyTo(File file) throws IOException {
-    applyToAndReturnResultIfDirty(file);
-  }
-
   /**
-   * Applies formatting to the given file.
+   * Returns the formatted contents of the file or null if the file is already formatted.
    *
    * Returns null if the file was already clean, or the
    * formatted result with unix newlines if it was not.
    */
-  public @Nullable String applyToAndReturnResultIfDirty(File file) throws IOException {
+  public @Nullable String formatOrNull(File file) throws IOException {
     Objects.requireNonNull(file);
 
     byte[] rawBytes = Files.readAllBytes(file.toPath());
@@ -180,12 +174,7 @@ public final class Formatter implements Serializable, AutoCloseable {
 
     // write out the file iff it has changed
     byte[] formattedBytes = formatted.getBytes(encoding);
-    if (!Arrays.equals(rawBytes, formattedBytes)) {
-      Files.write(file.toPath(), formattedBytes, StandardOpenOption.TRUNCATE_EXISTING);
-      return formattedUnix;
-    } else {
-      return null;
-    }
+    return Arrays.equals(rawBytes, formattedBytes) ? null : formattedUnix;
   }
 
   /** Applies the appropriate line endings to the given unix content. */

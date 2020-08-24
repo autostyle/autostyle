@@ -60,12 +60,13 @@ public class BumpThisNumberIfACustomStepChangesTest extends GradleIntegrationTes
     applyIsUpToDate(false);
     applyIsUpToDate(false);
     applyIsUpToDate(true);
-    checkIsUpToDate(false);
+    checkIsUpToDate(true);
     checkIsUpToDate(true);
 
     writeContentWithBadFormatting();
     applyIsUpToDate(false);
     // The input has been just formatted, so check is up to date
+    checkIsUpToDate(false);
     checkIsUpToDate(true);
   }
 

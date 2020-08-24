@@ -21,6 +21,7 @@ import org.gradle.api.Project
 import org.gradle.api.model.ObjectFactory
 import org.gradle.kotlin.dsl.container
 import org.gradle.kotlin.dsl.newInstance
+import org.gradle.kotlin.dsl.register
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 import javax.inject.Inject
@@ -30,6 +31,7 @@ open class AutostyleExtension @Inject constructor(
 ) {
     companion object {
         const val EXTENSION = "autostyle"
+        const val PROCESS = "Process"
         const val CHECK = "Check"
         const val APPLY = "Apply"
     }
@@ -62,17 +64,21 @@ open class AutostyleExtension @Inject constructor(
     private val fmts = project.container<BaseFormatExtension>().apply {
         whenObjectAdded {
             val prefix = EXTENSION + name.capitalize()
-            val applyTask = project.tasks.register(prefix + APPLY, AutostyleApplyTask::class.java) {
+            val processTask = project.tasks.register<AutostyleTask>(prefix + PROCESS) {
                 this@whenObjectAdded.configureTask(this)
             }
-            project.tasks.register(prefix + CHECK, AutostyleCheckTask::class.java) {
+            val applyTask = project.tasks.register<AutostyleApplyTask>(prefix + APPLY) {
+                inputDirectory.set(processTask.flatMap { it.outputDirectory })
+            }
+            project.tasks.register<AutostyleCheckTask>(prefix + CHECK) {
+                inputDirectory.set(processTask.flatMap { it.outputDirectory })
                 mustRunAfter(applyTask)
-                this@whenObjectAdded.configureTask(this)
             }
         }
         whenObjectRemoved {
             val prefix = EXTENSION + name.capitalize()
             val tasks = project.tasks
+            tasks.remove(tasks.findByName(prefix + PROCESS))
             tasks.remove(tasks.findByName(prefix + CHECK))
             tasks.remove(tasks.findByName(prefix + APPLY))
         }

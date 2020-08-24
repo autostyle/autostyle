@@ -23,7 +23,7 @@ You can also use lower-level methods like `String compute(String unix, File file
 
 All `FormatterStep` implement `Serializable`, `equals`, and `hashCode`, so build systems that support up-to-date checks can easily and correctly determine if any actions need to be taken.
 
-Autostyle also provides `PaddedCell`, which makes it easy to diagnose and correct idempotence problems.
+Autostyle also detects and recovers errors when formatter can't converge to a single outcome.
 
 ## Project layout
 
@@ -109,7 +109,6 @@ The gist of it is that you will have to:
 - Use the build system's execution logic to create a `Formatter` with the appropriate `FormatterStep`, and pass it the files to be formatted and/or checked.
 - To use the good `FormatterStep` like `EclipseFormatterStep` or `GoogleJavaFormatStep`, you'll need to implement `Provisioner`, which is a generic API for the build system's native mechanism for resolving dependencies from maven: `Set<File> provisionWithDependencies(Collection<String> mavenCoordinates)`.
 - (Optional) Tie into the build system's native up-to-date mechanism.
-- (Optional) Use `PaddedCell` to proactively catch and resolve idempotence issues.
 
 `plugin-gradle` is the canonical example which uses everything that Autostyle has to offer.  It's only ~700 lines.
 

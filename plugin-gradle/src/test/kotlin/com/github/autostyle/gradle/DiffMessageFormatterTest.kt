@@ -15,51 +15,36 @@
  */
 package com.github.autostyle.gradle
 
-import com.github.autostyle.FormatterStep
-import com.github.autostyle.LineEnding
 import com.github.autostyle.ResourceHarness
-import com.github.autostyle.TestProvisioner.gradleProject
 import com.github.autostyle.extra.integration.DiffMessageFormatter
 import org.assertj.core.api.Assertions.assertThat
-import org.gradle.api.GradleException
 import org.junit.jupiter.api.Test
-import java.io.File
+import java.nio.charset.StandardCharsets
 import java.util.regex.Pattern
 
 class DiffMessageFormatterTest : ResourceHarness() {
-    private fun create(vararg files: File): AutostyleTask {
-        return create(listOf(*files))
+    val sb = StringBuilder()
+    val writer by lazy { DiffMessageFormatter(rootFolder(), sb) }
+
+    private fun assertDiff(expected: String) {
+        val msg = if (writer.finishWithoutErrors()) "EMPTY" else sb.toString()
+        assertThat(msg.trimEnd()).isEqualTo(expected)
     }
 
-    private fun create(files: List<File>): AutostyleTask {
-        val project = gradleProject(rootFolder())
-        return project.tasks.create("underTest", AutostyleCheckTask::class.java).apply {
-            lineEndingsPolicy.set(LineEnding.UNIX.createPolicy())
-            sourceFiles.from(files)
-        }
+    private fun addFile(name: String, old: String, new: String) {
+        val a = setFile(name).toContent(old)
+        val b = setFile("$name-new").toContent(new)
+        writer.addDiff(a, b, StandardCharsets.UTF_8)
     }
 
-    private fun assertTaskFailure(task: AutostyleTask, expected: String) {
-        val msg = getTaskErrorMessage(task)
-        val firstLine = "The following files have format violations:\n"
-        val lastLine = "\nRun './gradlew autostyleApply' to fix the violations."
-        assertThat(msg).startsWith(firstLine).endsWith(lastLine)
-        val middle = msg!!.substring(firstLine.length, msg.length - lastLine.length)
-        assertThat(middle).isEqualTo(expected)
-    }
-
-    private fun getTaskErrorMessage(task: AutostyleTask): String? = try {
-        Tasks.execute(task)
-        throw AssertionError("Expected a GradleException")
-    } catch (e: GradleException) {
-        e.message
+    private fun addFile(name: String, old: String, transformer: (String) -> String = { it }) {
+        addFile(name, old, transformer(old.replace("\r\n", "\n")))
     }
 
     @Test
     fun lineEndingProblem() {
-        val task = create(setFile("testFile").toContent("A\r\nB\r\nC\r\n"))
-        assertTaskFailure(
-            task,
+        addFile("testFile", "A\r\nB\r\nC\r\n", "A\nB\nC\n")
+        assertDiff(
             """
             testFile
               @@ -1,3 +1,3 @@
@@ -75,16 +60,14 @@ class DiffMessageFormatterTest : ResourceHarness() {
 
     @Test
     fun whitespaceProblem() {
-        val task = create(setFile("testFile").toContent("A \nB\t\nC  \n"))
-        task.addStep(FormatterStep.createNeverUpToDate("trimTrailing") { input ->
+        addFile("testFile", "A \nB\t\nC  \n") { input ->
             val pattern = Pattern.compile(
                 "[ \t]+$",
                 Pattern.UNIX_LINES or Pattern.MULTILINE
             )
             pattern.matcher(input).replaceAll("")
-        })
-        assertTaskFailure(
-            task,
+        }
+        assertDiff(
             """
             testFile
               @@ -1,3 +1,3 @@
@@ -100,25 +83,22 @@ class DiffMessageFormatterTest : ResourceHarness() {
 
     @Test
     fun whitespaceProblem2() {
-        val task = create(
-            setFile("testFile").toContent(
-                "u0\nu 1\nu 2\nu 3\n" +
-                        "\t leading space\n" +
-                        "trailing space\t \n" +
-                        "u 4\n" +
-                        "  leading and trailing space  \n" +
-                        "u 5\nu 6"
-            )
-        )
-        task.addStep(FormatterStep.createNeverUpToDate("trimTrailing") { input ->
+        addFile(
+            "testFile",
+            "u0\nu 1\nu 2\nu 3\n" +
+                    "\t leading space\n" +
+                    "trailing space\t \n" +
+                    "u 4\n" +
+                    "  leading and trailing space  \n" +
+                    "u 5\nu 6"
+        ) { input ->
             val pattern = Pattern.compile(
                 "(^[ \t]+)|([ \t]+$)",
                 Pattern.UNIX_LINES or Pattern.MULTILINE
             )
             pattern.matcher(input).replaceAll("")
-        })
-        assertTaskFailure(
-            task,
+        }
+        assertDiff(
             """
             testFile
               @@ -2,9 +2,9 @@
@@ -140,22 +120,19 @@ class DiffMessageFormatterTest : ResourceHarness() {
 
     @Test
     fun whitespaceProblemDiffChaining() {
-        val task = create(
-            setFile("testFile").toContent(
-                "u0\ntrailing space\t \n" +
-                        "u1\nu2\nu3\nu4\nu5\nu6\nu7\n" +
-                        "trailing space2 \nu8"
-            )
-        )
-        task.addStep(FormatterStep.createNeverUpToDate("trimTrailing") { input ->
+        addFile(
+            "testFile",
+            "u0\ntrailing space\t \n" +
+                    "u1\nu2\nu3\nu4\nu5\nu6\nu7\n" +
+                    "trailing space2 \nu8"
+        ) { input ->
             val pattern = Pattern.compile(
                 "(^[ \t]+)|([ \t]+$)",
                 Pattern.UNIX_LINES or Pattern.MULTILINE
             )
             pattern.matcher(input).replaceAll("")
-        })
-        assertTaskFailure(
-            task,
+        }
+        assertDiff(
             """
             testFile
               @@ -1,11 +1,11 @@
@@ -178,22 +155,19 @@ class DiffMessageFormatterTest : ResourceHarness() {
 
     @Test
     fun whitespaceProblemDiffChaining2() {
-        val task = create(
-            setFile("testFile").toContent(
-                "u0\ntrailing space\t \n" +
-                        "u1\nu2\nu3\nu4\nu5\nu6\nu7\nu8\n" +
-                        "trailing space2 \nu9"
-            )
-        )
-        task.addStep(FormatterStep.createNeverUpToDate("trimTrailing") { input ->
+        addFile(
+            "testFile",
+            "u0\ntrailing space\t \n" +
+                    "u1\nu2\nu3\nu4\nu5\nu6\nu7\nu8\n" +
+                    "trailing space2 \nu9"
+        ) { input ->
             val pattern = Pattern.compile(
                 "(^[ \t]+)|([ \t]+$)",
                 Pattern.UNIX_LINES or Pattern.MULTILINE
             )
             pattern.matcher(input).replaceAll("")
-        })
-        assertTaskFailure(
-            task,
+        }
+        assertDiff(
             """
             testFile
               @@ -1,5 +1,5 @@
@@ -216,18 +190,11 @@ class DiffMessageFormatterTest : ResourceHarness() {
 
     @Test
     fun singleLineCr() {
-        val task = create(
-            setFile("testFile").toContent(
-                "line without line ending"
-            )
-        )
-        task.addStep(
-            FormatterStep.createNeverUpToDate(
-                "trimTrailing"
-            ) { input: String -> if (input.endsWith("\n")) input else input + "\n" }
-        )
-        assertTaskFailure(
-            task,
+        addFile(
+            "testFile",
+            "line without line ending"
+        ) { input: String -> if (input.endsWith("\n")) input else input + "\n" }
+        assertDiff(
             """
             testFile
               @@ -1 +1 @@
@@ -239,18 +206,11 @@ class DiffMessageFormatterTest : ResourceHarness() {
 
     @Test
     fun singleLineUnnecessaryCr() {
-        val task = create(
-            setFile("testFile").toContent(
-                "line without line ending\r\n"
-            )
-        )
-        task.addStep(
-            FormatterStep.createNeverUpToDate(
-                "trimTrailing"
-            ) { input: String -> input.replace("[\r\n]+$".toRegex(), "") }
-        )
-        assertTaskFailure(
-            task,
+        addFile(
+            "testFile",
+            "line without line ending\r\n"
+        ) { input: String -> input.replace("[\r\n]+$".toRegex(), "") }
+        assertDiff(
             """
             testFile
               @@ -1 +1 @@
@@ -262,18 +222,11 @@ class DiffMessageFormatterTest : ResourceHarness() {
 
     @Test
     fun trailingWhitespaceAndCRLF() {
-        val task = create(
-            setFile("testFile").toContent(
-                "line 1\ntrailing whitespace  \nline with CRLF\r\nline 2"
-            )
-        )
-        task.addStep(
-            FormatterStep.createNeverUpToDate(
-                "trimTrailing"
-            ) { input: String -> input.replace("[\r ]+\n".toRegex(), "\n") }
-        )
-        assertTaskFailure(
-            task,
+        addFile(
+            "testFile",
+            "line 1\ntrailing whitespace  \nline with CRLF\r\nline 2"
+        ) { input: String -> input.replace("[\r ]+\n".toRegex(), "\n") }
+        assertDiff(
             """
             testFile
               @@ -1,4 +1,4 @@
@@ -289,12 +242,9 @@ class DiffMessageFormatterTest : ResourceHarness() {
 
     @Test
     fun multipleFiles() {
-        val task = create(
-            setFile("A").toContent("1\r\n2\r\n"),
-            setFile("B").toContent("3\n4\r\n")
-        )
-        assertTaskFailure(
-            task,
+        addFile("A", "1\r\n2\r\n")
+        addFile("B", "3\n4\r\n")
+        assertDiff(
             """
             A
               @@ -1,2 +1,2 @@
@@ -313,13 +263,10 @@ class DiffMessageFormatterTest : ResourceHarness() {
 
     @Test
     fun manyFiles() {
-        val testFiles = mutableListOf<File>()
         for (i in 0 until 9 + DiffMessageFormatter.MAX_FILES_TO_LIST - 1) {
-            testFiles.add(setFile("$i.txt").toContent("1\r\n2\r\n"))
+            addFile("$i.txt", "1\r\n2\r\n")
         }
-        val task = create(testFiles)
-        assertTaskFailure(
-            task,
+        assertDiff(
             """
               0.txt
                 @@ -1,2 +1,2 @@
@@ -384,20 +331,16 @@ class DiffMessageFormatterTest : ResourceHarness() {
               7.txt
               8.txt
               9.txt
-            You might want to adjust -PmaxCheckMessageLines=50 -PmaxFilesToList=10 -PminLinesPerFile=4 to see more violations
             """.trimIndent()
         )
     }
 
     @Test
     fun manyManyFiles() {
-        val testFiles: MutableList<File> = ArrayList()
-        for (i in 0 until 9 + DiffMessageFormatter.MAX_FILES_TO_LIST) {
-            testFiles.add(setFile("$i.txt").toContent("1\r\n2\r\n"))
+        for (i in 0 until 10 + DiffMessageFormatter.MAX_FILES_TO_LIST) {
+            addFile("$i.txt", "1\r\n2\r\n")
         }
-        val task = create(testFiles)
-        assertTaskFailure(
-            task,
+        assertDiff(
             """
               0.txt
                 @@ -1,2 +1,2 @@
@@ -452,8 +395,7 @@ class DiffMessageFormatterTest : ResourceHarness() {
                 -1␍␊
                 -2␍␊
               ... (2 more lines that didn't fit)
-            Violations also present in ${DiffMessageFormatter.MAX_FILES_TO_LIST} other files.
-            You might want to adjust -PmaxCheckMessageLines=50 -PmaxFilesToList=10 -PminLinesPerFile=4 to see more violations
+            Violations also present in ${DiffMessageFormatter.MAX_FILES_TO_LIST + 1} other files.
             """.trimIndent()
         )
     }
@@ -465,9 +407,8 @@ class DiffMessageFormatterTest : ResourceHarness() {
             builder.append(i)
             builder.append("\r\n")
         }
-        val task = create(setFile("testFile").toContent(builder.toString()))
-        assertTaskFailure(
-            task,
+        addFile("testFile", builder.toString())
+        assertDiff(
             """
             testFile
               @@ -1,1000 +1,1000 @@
@@ -534,9 +475,8 @@ class DiffMessageFormatterTest : ResourceHarness() {
             builder.append(i)
             builder.append(if (i < 1) "\n" else "\r\n")
         }
-        val task = create(setFile("testFile").toContent(builder.toString()))
-        assertTaskFailure(
-            task,
+        addFile("testFile", builder.toString())
+        assertDiff(
             """
             testFile
               @@ -1,25 +1,25 @@
