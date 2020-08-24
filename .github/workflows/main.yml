@@ -8,6 +8,10 @@ on:
     branches:
       - '*'
 
+# Skip "GitHub Actions" error markers from tests
+env:
+  AUTOSTYLE_SKIP_GITHUB_ACTIONS: true
+
 # https://help.github.com/en/actions/automating-your-workflow-with-github-actions/software-installed-on-github-hosted-runners
 
 jobs:
