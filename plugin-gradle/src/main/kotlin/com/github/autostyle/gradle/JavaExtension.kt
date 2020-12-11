@@ -42,9 +42,16 @@ open class JavaExtension @Inject constructor(name: String, root: AutostyleExtens
         addStep(ImportOrderStep.forJava().createFrom(*importOrder))
     }
 
-    /** Removes any unused imports.  */
-    fun removeUnusedImports() {
-        addStep(RemoveUnusedImportsStep.create(project.asProvisioner()))
+    /**
+     * Uses the given version of [google-java-format](https://github.com/google/google-java-format) to remove unused imports.
+     *
+     * Limited to published versions.  See [issue #33](https://github.com/diffplug/spotless/issues/33#issuecomment-252315095)
+     * for an workaround for using snapshot versions.
+     */
+    /** Removes any unused imports.*/
+    @JvmOverloads
+    fun removeUnusedImports(version: String = GoogleJavaFormatStep.defaultVersion()) {
+        addStep(RemoveUnusedImportsStep.create(project.asProvisioner(), version))
     }
 
     fun googleJavaFormat(action: Action<GoogleJavaFormatConfig>) {
