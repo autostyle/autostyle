@@ -49,6 +49,7 @@ public class GoogleJavaFormatStep {
   private static final String REMOVE_UNUSED_CLASS = "com.google.googlejavaformat.java.RemoveUnusedImports";
   private static final String REMOVE_UNUSED_METHOD = "removeUnusedImports";
 
+  private static final float REMOVE_UNUSED_IMPORT_JavadocOnlyImports_LAST_SUPPORTED = 1.7f;
   private static final String REMOVE_UNUSED_IMPORT_JavadocOnlyImports = "com.google.googlejavaformat.java.RemoveUnusedImports$JavadocOnlyImports";
   private static final String REMOVE_UNUSED_IMPORT_JavadocOnlyImports_Keep = "KEEP";
 
@@ -125,39 +126,64 @@ public class GoogleJavaFormatStep {
       Object formatter = formatterClazz.getConstructor(optionsClass).newInstance(options);
       Method formatterMethod = formatterClazz.getMethod(FORMATTER_METHOD, String.class);
 
-      Class<?> removeUnusedClass = classLoader.loadClass(REMOVE_UNUSED_CLASS);
-      Class<?> removeJavadocOnlyClass = classLoader.loadClass(REMOVE_UNUSED_IMPORT_JavadocOnlyImports);
-      Object removeJavadocConstant = Enum.valueOf((Class<Enum>) removeJavadocOnlyClass, REMOVE_UNUSED_IMPORT_JavadocOnlyImports_Keep);
-      Method removeUnusedMethod = removeUnusedClass.getMethod(REMOVE_UNUSED_METHOD, String.class, removeJavadocOnlyClass);
+      FormatterFunc removeUnusedFormatter = createUnusedImportsFormatter(classLoader);
 
       Class<?> importOrdererClass = classLoader.loadClass(IMPORT_ORDERER_CLASS);
       Method importOrdererMethod = importOrdererClass.getMethod(IMPORT_ORDERER_METHOD, String.class);
 
       return input -> {
         String formatted = (String) formatterMethod.invoke(formatter, input);
-        String removedUnused = (String) removeUnusedMethod.invoke(null, formatted, removeJavadocConstant);
+        String removedUnused = removeUnusedFormatter.apply(formatted);
         String sortedImports = (String) importOrdererMethod.invoke(null, removedUnused);
         return fixWindowsBug(sortedImports, version);
       };
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
     FormatterFunc createRemoveUnusedImportsOnly() throws Exception {
       ClassLoader classLoader = jarState.getClassLoader();
 
-      Class<?> removeUnusedClass = classLoader.loadClass(REMOVE_UNUSED_CLASS);
-      Class<?> removeJavadocOnlyClass = classLoader.loadClass(REMOVE_UNUSED_IMPORT_JavadocOnlyImports);
-      Object removeJavadocConstant = Enum.valueOf((Class<Enum>) removeJavadocOnlyClass, REMOVE_UNUSED_IMPORT_JavadocOnlyImports_Keep);
-      Method removeUnusedMethod = removeUnusedClass.getMethod(REMOVE_UNUSED_METHOD, String.class, removeJavadocOnlyClass);
+      FormatterFunc removeUnusedFormatter = createUnusedImportsFormatter(classLoader);
 
+      return input -> fixWindowsBug(removeUnusedFormatter.apply(input), version);
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private FormatterFunc createUnusedImportsFormatter(final ClassLoader classLoader) throws Exception {
+      // All current versions of google-java-format have the format 1.x
+      // If any newer version introduces a different format which can't be parsed as a float,
+      // we set the version to Float.MAX_VALUE i.e. we detect it as a version newer than
+      // REMOVE_UNUSED_IMPORT_JavadocOnlyImports_LAST_SUPPORTED.
+      float versionNumber;
+      try {
+        versionNumber = Float.parseFloat(version);
+      } catch (NumberFormatException e) {
+        versionNumber = Float.MAX_VALUE;
+      }
+
+      Class<?> removeUnusedClass = classLoader.loadClass(REMOVE_UNUSED_CLASS);
+      Method removeUnusedMethod;
+      Object removeJavadocConstant;
+      // In version 1.8 and later the currently deprecated class REMOVE_UNUSED_IMPORT_JavadocOnlyImports has been removed.
+      if (versionNumber <= REMOVE_UNUSED_IMPORT_JavadocOnlyImports_LAST_SUPPORTED) {
+        Class<?> removeJavadocOnlyClass = classLoader.loadClass(REMOVE_UNUSED_IMPORT_JavadocOnlyImports);
+        removeJavadocConstant = Enum.valueOf((Class<Enum>) removeJavadocOnlyClass, REMOVE_UNUSED_IMPORT_JavadocOnlyImports_Keep);
+        removeUnusedMethod = removeUnusedClass.getMethod(REMOVE_UNUSED_METHOD, String.class, removeJavadocOnlyClass);
+      } else {
+        removeUnusedMethod = removeUnusedClass.getMethod(REMOVE_UNUSED_METHOD, String.class);
+        removeJavadocConstant = null;
+      }
       return input -> {
-        String removeUnused = null;
+        String removeUnused;
         try {
-          removeUnused = (String) removeUnusedMethod.invoke(null, input, removeJavadocConstant);
+          if (removeJavadocConstant != null) {
+            removeUnused = (String) removeUnusedMethod.invoke(null, input, removeJavadocConstant);
+          } else {
+            removeUnused = (String) removeUnusedMethod.invoke(null, input);
+          }
         } catch (InvocationTargetException e) {
           throw e.getCause();
         }
-        return fixWindowsBug(removeUnused, version);
+        return removeUnused;
       };
     }
   }

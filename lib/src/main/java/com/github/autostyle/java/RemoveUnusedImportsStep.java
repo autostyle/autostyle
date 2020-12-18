@@ -28,9 +28,13 @@ public class RemoveUnusedImportsStep {
   static final String NAME = "removeUnusedImports";
 
   public static FormatterStep create(Provisioner provisioner) {
+    return create(provisioner, GoogleJavaFormatStep.defaultVersion());
+  }
+
+  public static FormatterStep create(Provisioner provisioner, String version) {
     Objects.requireNonNull(provisioner, "provisioner");
     return FormatterStep.createLazy(NAME,
-        () -> new GoogleJavaFormatStep.State(NAME, GoogleJavaFormatStep.defaultVersion(), provisioner),
+        () -> new GoogleJavaFormatStep.State(NAME, version, provisioner),
         GoogleJavaFormatStep.State::createRemoveUnusedImportsOnly);
   }
 }
