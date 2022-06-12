@@ -33,11 +33,11 @@ jobs:
       - name: 'autostyleCheck'
         working-directory: ../jmeter
         run: |
-          ./gradlew -no-parallel --no-daemon -PlocalAutostyle autostyleCheck
+          ./gradlew -no-parallel --no-daemon -PchecksumIgnore -PlocalAutostyle autostyleCheck
       - name: 'autostyleApply'
         working-directory: ../jmeter
         run: |
-          ./gradlew -no-parallel --no-daemon -PlocalAutostyle autostyleApply
+          ./gradlew -no-parallel --no-daemon -PchecksumIgnore -PlocalAutostyle autostyleApply
 
   linux-vrp:
     name: 'vlsi-release-plugins (JDK 8, Linux)'
@@ -57,8 +57,8 @@ jobs:
       - name: 'autostyleCheck'
         working-directory: ../vlsi-release-plugins
         run: |
-          ./gradlew -no-parallel --no-daemon -PlocalAutostyle autostyleCheck
+          ./gradlew -no-parallel --no-daemon -PchecksumIgnore -PlocalAutostyle autostyleCheck
       - name: 'autostyleApply'
         working-directory: ../vlsi-release-plugins
         run: |
-          ./gradlew -no-parallel --no-daemon -PlocalAutostyle autostyleApply
+          ./gradlew -no-parallel --no-daemon -PchecksumIgnore -PlocalAutostyle autostyleApply
