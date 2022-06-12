@@ -17,6 +17,7 @@ package com.github.autostyle.gradle.ext
 
 import com.github.autostyle.Provisioner
 import org.gradle.api.Project
+import org.gradle.api.attributes.Bundling
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.MapProperty
 import org.gradle.api.provider.Property
@@ -33,6 +34,12 @@ fun Project.asProvisioner() =
             project.configurations.detachedConfiguration(*deps).apply {
                 description = mavenCoords.toString()
                 isTransitive = withTransitives
+                attributes {
+                    attribute(
+                        Bundling.BUNDLING_ATTRIBUTE,
+                        project.objects.named(Bundling::class.java, Bundling.EXTERNAL)
+                    )
+                }
             }.resolve()
         } catch (e: Exception) {
             logger.info("Failed to resolve dependencies for Autostyle. Please add relevant buildscript { repositories { ... } } to $project: $e")

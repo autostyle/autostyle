@@ -21,6 +21,7 @@ import org.gradle.api.Project
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.ResolveException
 import org.gradle.api.artifacts.dsl.RepositoryHandler
+import org.gradle.api.attributes.Bundling
 import org.gradle.testfixtures.ProjectBuilder
 import java.io.File
 import java.nio.file.Files
@@ -57,6 +58,12 @@ object TestProvisioner {
             fun resolve() = project.configurations.detachedConfiguration(*deps).apply {
                 isTransitive = withTransitives
                 description = mavenCoords.toString()
+                attributes {
+                    it.attribute(
+                        Bundling.BUNDLING_ATTRIBUTE,
+                        project.objects.named(Bundling::class.java, Bundling.EXTERNAL)
+                    )
+                }
             }.resolve()
             try {
                 for (i in 1..5) {
