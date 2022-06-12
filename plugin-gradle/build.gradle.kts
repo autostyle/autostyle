@@ -41,19 +41,13 @@ pluginBundle {
     website = "https://github.com/autostyle/autostyle"
     vcsUrl = "https://github.com/autostyle/autostyle"
     description = project.description
-
-//    plugins {
-//        create("autostylePlugin") {
-//            id = "com.github.autostyle"
-//            displayName = "Autostyle formatting plugin"
-//            tags = listOf(
-//                "format",
-//                "style",
-//                "license",
-//                "header"
-//            )
-//        }
-//    }
+    tags = listOf(
+        "format",
+        "style",
+        "license-header",
+        "kotlin",
+        "java"
+    )
 
 /*    mavenCoordinates {
         groupId = project.group.toString()
