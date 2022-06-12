@@ -55,7 +55,7 @@ public class KotlinExtensionTest extends GradleIntegrationTest {
         "repositories { mavenCentral() }",
         "autostyle {",
         "    kotlin {",
-        "        ktlint('0.21.0') {",
+        "        ktlint {",
         "            userData(['indent_size': '6'])",
         "        }",
         "    }",
