@@ -32,6 +32,7 @@ open class AutostyleCheckTask @Inject constructor(
 ) : DefaultTask() {
     @InputFiles
     @SkipWhenEmpty
+    @IgnoreEmptyDirectories
     @PathSensitive(PathSensitivity.RELATIVE)
     val inputDirectory = objects.directoryProperty()
 

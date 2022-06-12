@@ -55,6 +55,7 @@ abstract class AutostyleTask @Inject constructor(
 
     @get:InputFiles
     @get:SkipWhenEmpty
+    @get:IgnoreEmptyDirectories
     @get:PathSensitive(PathSensitivity.RELATIVE)
     val sourceFiles: ConfigurableFileCollection = project.files()
 
