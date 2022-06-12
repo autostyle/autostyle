@@ -4,7 +4,7 @@
 * Produce helpful error messages by default (deprecate `paddedCell()` option)
 * Print GitHub Actions friendly warnings. The warnings would be visible as diff annotations
 * Bump release-plugins: 1.54 -> 1.70
-* Bump Gradle: 6.1 -> 6.6
+* Bump Gradle: 6.1 -> 6.9.2
 
 ### Version 3.1
 * Added CI regression tests with Apache Calcite, Apache JMeter, and vlsi-release-plugins projects
