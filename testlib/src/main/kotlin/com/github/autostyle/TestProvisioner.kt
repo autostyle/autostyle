@@ -115,8 +115,14 @@ object TestProvisioner {
 
     /** Creates a Provisioner for the jcenter repo.  */
     @JvmStatic
+    @Deprecated(
+        message = "use mavenCentral instead",
+        replaceWith = ReplaceWith("mavenCentral()"),
+        level = DeprecationLevel.WARNING
+    )
     fun jcenter(): Provisioner = jcenter
 
+    @Suppress("DEPRECATION")
     private val jcenter by lazy {
         caching("jcenter", Supplier {
             createWithRepositories { jcenter() }

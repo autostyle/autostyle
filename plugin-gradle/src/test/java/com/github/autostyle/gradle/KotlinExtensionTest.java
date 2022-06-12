@@ -52,7 +52,7 @@ public class KotlinExtensionTest extends GradleIntegrationTest {
         "    id 'nebula.kotlin' version '1.0.6'",
         "    id 'com.github.autostyle'",
         "}",
-        "repositories { jcenter() }",
+        "repositories { mavenCentral() }",
         "autostyle {",
         "    kotlin {",
         "        ktlint('0.21.0') {",

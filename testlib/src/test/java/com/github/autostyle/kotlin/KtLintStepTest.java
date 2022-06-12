@@ -27,7 +27,7 @@ public class KtLintStepTest extends ResourceHarness {
   public void behavior() throws Throwable {
     // Must use jcenter because `com.andreapivetta.kolor:kolor:0.0.2` isn't available on mavenCentral.
     // It is a dependency of ktlint.
-    FormatterStep step = KtLintStep.create(TestProvisioner.jcenter());
+    FormatterStep step = KtLintStep.create(TestProvisioner.mavenCentral());
     StepHarness.forStep(step)
         .testResource("kotlin/ktlint/basic.dirty", "kotlin/ktlint/basic.clean")
         .testException("kotlin/ktlint/unsolvable.dirty", assertion -> {
@@ -41,7 +41,7 @@ public class KtLintStepTest extends ResourceHarness {
   public void worksShyiko() throws Throwable {
     // Must use jcenter because `com.andreapivetta.kolor:kolor:0.0.2` isn't available on mavenCentral.
     // It is a dependency of ktlint.
-    FormatterStep step = KtLintStep.create("0.31.0", TestProvisioner.jcenter());
+    FormatterStep step = KtLintStep.create("0.31.0", TestProvisioner.mavenCentral());
     StepHarness.forStep(step)
         .testResource("kotlin/ktlint/basic.dirty", "kotlin/ktlint/basic.clean")
         .testException("kotlin/ktlint/unsolvable.dirty", assertion -> {
@@ -58,7 +58,7 @@ public class KtLintStepTest extends ResourceHarness {
   public void worksPinterestAndPre034() throws Throwable {
     // Must use jcenter because `com.andreapivetta.kolor:kolor:0.0.2` isn't available on mavenCentral.
     // It is a dependency of ktlint.
-    FormatterStep step = KtLintStep.create("0.32.0", TestProvisioner.jcenter());
+    FormatterStep step = KtLintStep.create("0.32.0", TestProvisioner.mavenCentral());
     StepHarness.forStep(step)
         .testResource("kotlin/ktlint/basic.dirty", "kotlin/ktlint/basic.clean")
         .testException("kotlin/ktlint/unsolvable.dirty", assertion -> {
