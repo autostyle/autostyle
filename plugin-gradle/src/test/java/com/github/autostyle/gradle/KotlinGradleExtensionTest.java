@@ -73,24 +73,6 @@ public class KotlinGradleExtensionTest extends GradleIntegrationTest {
   }
 
   @Test
-  public void integration_pinterest() throws IOException {
-    setFile("build.gradle").toLines(
-        "plugins {",
-        "    id 'nebula.kotlin' version '1.0.6'",
-        "    id 'com.github.autostyle'",
-        "}",
-        "repositories { gradlePluginPortal() }",
-        "autostyle {",
-        "    kotlinGradle {",
-        "        ktlint('0.21.0')",
-        "    }",
-        "}");
-    setFile("configuration.gradle.kts").toResource("kotlin/ktlint/basic.dirty");
-    gradleRunner().withArguments("autostyleApply").build();
-    assertFile("configuration.gradle.kts").sameAsResource("kotlin/ktlint/basic.clean");
-  }
-
-  @Test
   public void indentStep() throws IOException {
     setFile("build.gradle").toLines(
         "plugins {",
