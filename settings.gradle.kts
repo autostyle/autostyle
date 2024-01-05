@@ -4,15 +4,18 @@ pluginManagement {
         fun PluginDependenciesSpec.idv(id: String, key: String = id) = id(id) version key.v()
 
         idv("com.github.autostyle", "released")
-        idv("com.github.ben-manes.versions")
-        idv("com.github.vlsi.crlf", "com.github.vlsi.vlsi-release-plugins")
-        idv("com.github.vlsi.gradle-extensions", "com.github.vlsi.vlsi-release-plugins")
-        idv("com.github.vlsi.ide", "com.github.vlsi.vlsi-release-plugins")
-        idv("com.github.vlsi.license-gather", "com.github.vlsi.vlsi-release-plugins")
-        idv("com.github.vlsi.stage-vote-release", "com.github.vlsi.vlsi-release-plugins")
-        idv("com.gradle.plugin-publish")
-        kotlin("jvm") version "kotlin".v()
+        id("com.github.vlsi.crlf") version "1.90"
+        id("com.github.vlsi.gradle-extensions") version "1.90"
+        id("com.github.vlsi.ide") version "1.90"
+        id("com.github.vlsi.license-gather") version "1.90"
+        id("com.github.vlsi.stage-vote-release") version "1.90"
+        id("com.gradle.plugin-publish") version "1.2.1"
+        kotlin("jvm") version "1.9.20"
     }
+}
+
+if (JavaVersion.current() < JavaVersion.VERSION_17) {
+    throw UnsupportedOperationException("Please use Java 17 or 21 for launching Gradle, the current Java is ${JavaVersion.current().majorVersion}")
 }
 
 for (p in listOf(
@@ -69,8 +72,8 @@ buildscript {
                 "lib/build/libs/autostyle-lib-$ver.jar",
                 "lib-extra/build/libs/autostyle-lib-extra-$ver.jar"))
             // needed by GitAttributesLineEndings
-            classpath("org.eclipse.jgit:org.eclipse.jgit:${"org.eclipse.jgit".v()}")
-            classpath("com.googlecode.concurrent-trees:concurrent-trees:${"concurrent-trees".v()}")
+            classpath("org.eclipse.jgit:org.eclipse.jgit:5.6.0.201912101111-r")
+            classpath("com.googlecode.concurrent-trees:concurrent-trees:2.6.1")
             // used for xml parsing in EclipseFormatter
             classpath("org.codehaus.groovy:groovy-xml:${"groovy-xml".v()}")
         }

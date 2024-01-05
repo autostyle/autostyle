@@ -51,7 +51,7 @@ class AutostylePlugin : Plugin<Project> {
         extra[PROJECT_DIR_MAP] = lazy {
             allprojects
                 .asSequence()
-                .flatMap { sequenceOf(it.projectDir, it.buildDir) }
+                .flatMap { sequenceOf(it.projectDir, it.layout.buildDirectory.get().asFile) }
                 .plus(File(rootDir, "buildSrc"))
                 .plus(File(rootDir, ".gradle"))
                 .plus(File(rootDir, ".idea"))

@@ -22,7 +22,9 @@ import com.github.autostyle.scala.ScalaFmtStep
 import org.gradle.api.Action
 import org.gradle.api.GradleException
 import org.gradle.api.Project
-import org.gradle.api.plugins.JavaPluginConvention
+import org.gradle.api.plugins.JavaPluginExtension
+import org.gradle.api.tasks.ScalaSourceDirectorySet
+import org.gradle.kotlin.dsl.findByType
 import javax.inject.Inject
 
 open class ScalaExtension @Inject constructor(name: String, root: AutostyleExtension) :
@@ -30,9 +32,11 @@ open class ScalaExtension @Inject constructor(name: String, root: AutostyleExten
     init {
         filter.include("**/*.scala", "**/*.sc")
         target.conv(root.providers.provider {
-            val javaPlugin = project.convention.findPlugin(JavaPluginConvention::class.java)
+            val java = project.extensions.findByType<JavaPluginExtension>()
                 ?: throw GradleException("You must apply the java plugin before the Autostyle plugin if you are using the java extension.")
-            javaPlugin.sourceSets.map { it.allSource }
+            java.sourceSets.mapNotNull { sourceSet ->
+                sourceSet.extensions.findByType<ScalaSourceDirectorySet>()
+            }
         })
     }
 

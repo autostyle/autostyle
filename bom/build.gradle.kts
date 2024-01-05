@@ -19,48 +19,28 @@ plugins {
     `java-platform`
 }
 
-val String.v: String get() = rootProject.extra["$this.version"] as String
-
-// Note: Gradle allows to declare dependency on "bom" as "api",
-// and it makes the contraints to be transitively visible
-// However Maven can't express that, so the approach is to use Gradle resolution
-// and generate pom files with resolved versions
-// See https://github.com/gradle/gradle/issues/9866
-
-fun DependencyConstraintHandlerScope.apiv(
-    notation: String,
-    versionProp: String = notation.substringAfterLast(':')
-) =
-    "api"(notation + ":" + versionProp.v)
-
-fun DependencyConstraintHandlerScope.runtimev(
-    notation: String,
-    versionProp: String = notation.substringAfterLast(':')
-) =
-    "runtime"(notation + ":" + versionProp.v)
-
 dependencies {
     // Parenthesis are needed here: https://github.com/gradle/gradle/issues/9248
-    (constraints) {
+    constraints {
         // api means "the dependency is for both compilation and runtime"
         // runtime means "the dependency is only for runtime, not for compilation"
         // In other words, marking dependency as "runtime" would avoid accidental
         // dependency on it during compilation
-        apiv("com.diffplug.durian:durian-testlib", "durian")
-        apiv("org.exparity:hamcrest-date")
-        apiv("org.hamcrest:hamcrest")
-        apiv("org.hamcrest:hamcrest-core", "hamcrest")
-        apiv("org.hamcrest:hamcrest-library", "hamcrest")
-        apiv("org.eclipse.jgit:org.eclipse.jgit")
-        apiv("com.googlecode.concurrent-trees:concurrent-trees")
-        apiv("org.codehaus.groovy:groovy-xml")
-        apiv("junit:junit", "junit4")
-        apiv("org.assertj:assertj-core")
-        apiv("org.junit.jupiter:junit-jupiter-api", "junit5")
-        apiv("org.junit.jupiter:junit-jupiter-params", "junit5")
-        apiv("org.slf4j:slf4j-api", "slf4j")
-        apiv("org.slf4j:slf4j-log4j12", "slf4j")
-        runtimev("org.junit.jupiter:junit-jupiter-engine", "junit5")
-        runtimev("org.junit.vintage:junit-vintage-engine", "junit5")
+        api("com.diffplug.durian:durian-testlib:1.2.0")
+        api("org.exparity:hamcrest-date:2.0.4")
+        api("org.hamcrest:hamcrest:2.1")
+        api("org.hamcrest:hamcrest-core:2.1")
+        api("org.hamcrest:hamcrest-library:2.1")
+        api("org.eclipse.jgit:org.eclipse.jgit:5.6.0.201912101111-r")
+        api("com.googlecode.concurrent-trees:concurrent-trees:2.6.1")
+        api("org.codehaus.groovy:groovy-xml:2.4.7")
+        api("junit:junit:4.13.2")
+        api("org.assertj:assertj-core:3.5.2")
+        api("org.junit.jupiter:junit-jupiter-api:5.8.2")
+        api("org.junit.jupiter:junit-jupiter-params:5.8.2")
+        api("org.slf4j:slf4j-api:1.7.25")
+        api("org.slf4j:slf4j-log4j12:1.7.25")
+        runtime("org.junit.jupiter:junit-jupiter-engine:5.8.2")
+        runtime("org.junit.vintage:junit-vintage-engine:5.8.2")
     }
 }

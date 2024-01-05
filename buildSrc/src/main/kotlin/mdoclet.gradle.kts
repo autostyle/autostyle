@@ -19,14 +19,14 @@ val mdoclet by configurations.creating {
 }
 
 dependencies {
-    mdoclet("org.jdrupes.mdoclet:doclet:${project.extra["org.jdrupes.mdoclet.version"]}")
+    mdoclet("org.jdrupes.mdoclet:doclet:3.1.0")
 }
 
 val mdocletJarFile = "mdocletClasspath.jar"
 
 val generateMDocletPath by tasks.registering(Jar::class) {
     description = "Creates classpath-only jar for running org.jdrupes.mdoclet"
-    inputs.files(mdoclet).withNormalizer(ClasspathNormalizer::class.java)
+    inputs.files(mdoclet).withNormalizer(ClasspathNormalizer::class.java).withPropertyName("mdocletClasspath")
     archiveFileName.set(mdocletJarFile)
     manifest {
         manifest {
@@ -42,6 +42,12 @@ tasks.withType<Javadoc>().configureEach {
     dependsOn(generateMDocletPath)
     options.apply {
         doclet = "org.jdrupes.mdoclet.MDoclet"
-        docletpath = listOf(File(buildDir, "libs/$mdocletJarFile"))
+        docletpath = listOf(layout.buildDirectory.file("libs/$mdocletJarFile").get().asFile)
+        this as CoreJavadocOptions
+        addStringOption("Xdoclint:-html", "-quiet")
+        jFlags(
+            "--add-exports=jdk.javadoc/jdk.javadoc.internal.tool=ALL-UNNAMED",
+            "--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
+        )
     }
 }

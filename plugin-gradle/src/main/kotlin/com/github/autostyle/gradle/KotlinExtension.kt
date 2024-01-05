@@ -22,7 +22,8 @@ import com.github.autostyle.kotlin.KtLintStep
 import org.gradle.api.Action
 import org.gradle.api.GradleException
 import org.gradle.api.Project
-import org.gradle.api.plugins.JavaPluginConvention
+import org.gradle.api.plugins.JavaPluginExtension
+import org.gradle.kotlin.dsl.findByType
 import org.gradle.kotlin.dsl.mapProperty
 import javax.inject.Inject
 
@@ -34,9 +35,9 @@ open class KotlinExtension @Inject constructor(name: String, root: AutostyleExte
     internal fun kotlinDefaults() {
         filter.include("**/*.kt", "**/*.kts")
         target.conv(root.providers.provider {
-            val javaPlugin = project.convention.findPlugin(JavaPluginConvention::class.java)
+            val java = project.extensions.findByType<JavaPluginExtension>()
                 ?: throw GradleException("You must apply the kotlin plugin before the Autostyle plugin if you are using the kotlin extension.")
-            javaPlugin.sourceSets.map { it.allSource }
+            java.sourceSets.map { it.allSource }
         })
     }
 

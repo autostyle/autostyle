@@ -31,7 +31,7 @@ public class KotlinExtensionTest extends GradleIntegrationTest {
   public void integration() throws IOException {
     setFile("build.gradle").toLines(
         "plugins {",
-        "    id 'nebula.kotlin' version '1.0.6'",
+        "    id 'org.jetbrains.kotlin.jvm' version '1.9.22'",
         "    id 'com.github.autostyle'",
         "}",
         "repositories { mavenCentral() }",
@@ -49,7 +49,7 @@ public class KotlinExtensionTest extends GradleIntegrationTest {
   public void testWithIndentation() throws IOException {
     setFile("build.gradle").toLines(
         "plugins {",
-        "    id 'nebula.kotlin' version '1.0.6'",
+        "    id 'org.jetbrains.kotlin.jvm' version '1.9.22'",
         "    id 'com.github.autostyle'",
         "}",
         "repositories { mavenCentral() }",
@@ -69,7 +69,7 @@ public class KotlinExtensionTest extends GradleIntegrationTest {
   public void testWithHeader() throws IOException {
     setFile("build.gradle").toLines(
         "plugins {",
-        "    id 'nebula.kotlin' version '1.0.6'",
+        "    id 'org.jetbrains.kotlin.jvm' version '1.9.22'",
         "    id 'com.github.autostyle'",
         "}",
         "repositories { mavenCentral() }",
@@ -88,7 +88,7 @@ public class KotlinExtensionTest extends GradleIntegrationTest {
   public void testWithCustomHeaderSeparator() throws IOException {
     setFile("build.gradle").toLines(
         "plugins {",
-        "    id 'nebula.kotlin' version '1.0.6'",
+        "    id 'org.jetbrains.kotlin.jvm' version '1.9.22'",
         "    id 'com.github.autostyle'",
         "}",
         "repositories { mavenCentral() }",

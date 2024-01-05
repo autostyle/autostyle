@@ -24,6 +24,7 @@ import org.gradle.kotlin.dsl.newInstance
 import org.gradle.kotlin.dsl.register
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
+import java.util.*
 import javax.inject.Inject
 
 open class AutostyleExtension @Inject constructor(
@@ -63,7 +64,7 @@ open class AutostyleExtension @Inject constructor(
 
     private val fmts = project.container<BaseFormatExtension>().apply {
         whenObjectAdded {
-            val prefix = EXTENSION + name.capitalize()
+            val prefix = EXTENSION + name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
             val processTask = project.tasks.register<AutostyleTask>(prefix + PROCESS) {
                 this@whenObjectAdded.configureTask(this)
             }
@@ -76,7 +77,7 @@ open class AutostyleExtension @Inject constructor(
             }
         }
         whenObjectRemoved {
-            val prefix = EXTENSION + name.capitalize()
+            val prefix = EXTENSION + name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
             val tasks = project.tasks
             tasks.remove(tasks.findByName(prefix + PROCESS))
             tasks.remove(tasks.findByName(prefix + CHECK))

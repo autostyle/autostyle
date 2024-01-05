@@ -86,9 +86,9 @@ open class AutostyleCheckTask @Inject constructor(
         }
         didWork = true
         sb.append("You might want to adjust")
-        sb.append(" -PmaxCheckMessageLines=").appendln(maxCheckMessageLines.get())
-        sb.append(" -PmaxFilesToList=").appendln(maxFilesToList.get())
-        sb.append(" -PminLinesPerFile=").appendln(minLinesPerFile.get())
+        sb.append(" -PmaxCheckMessageLines=").appendLine(maxCheckMessageLines.get())
+        sb.append(" -PmaxFilesToList=").appendLine(maxFilesToList.get())
+        sb.append(" -PminLinesPerFile=").appendLine(minLinesPerFile.get())
         sb.append(" to see more violations\n")
         sb.append("Run './gradlew autostyleApply' to fix the violations.")
         throw GradleException(sb.toString())

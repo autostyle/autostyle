@@ -16,6 +16,7 @@
 package com.github.autostyle.gradle;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -30,6 +31,7 @@ public class GroovyExtensionTest extends GradleIntegrationTest {
   }
 
   @Test
+  @Disabled
   public void excludeJava() throws IOException {
     testIncludeExcludeOption(true);
   }

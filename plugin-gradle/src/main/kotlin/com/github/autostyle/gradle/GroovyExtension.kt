@@ -21,12 +21,10 @@ import com.github.autostyle.java.ImportOrderStep
 import org.gradle.api.Action
 import org.gradle.api.GradleException
 import org.gradle.api.Project
-import org.gradle.api.internal.plugins.DslObject
 import org.gradle.api.plugins.GroovyBasePlugin
-import org.gradle.api.plugins.JavaPluginConvention
-import org.gradle.api.tasks.GroovySourceSet
-import org.gradle.kotlin.dsl.findPlugin
-import org.gradle.kotlin.dsl.getPlugin
+import org.gradle.api.plugins.JavaPluginExtension
+import org.gradle.api.tasks.GroovySourceDirectorySet
+import org.gradle.kotlin.dsl.findByType
 import org.gradle.kotlin.dsl.hasPlugin
 import org.gradle.kotlin.dsl.property
 import javax.inject.Inject
@@ -37,18 +35,12 @@ open class GroovyExtension @Inject constructor(name: String, root: AutostyleExte
     init {
         target.conv(
             root.providers.provider {
-                val javaConvention = project.convention.findPlugin<JavaPluginConvention>()
-                if (javaConvention == null || !project.plugins.hasPlugin(GroovyBasePlugin::class)) {
+                val java = project.extensions.findByType<JavaPluginExtension>()
+                if (java == null || !project.plugins.hasPlugin(GroovyBasePlugin::class)) {
                     throw GradleException("You must apply the groovy plugin before the Autostyle plugin if you are using the groovy extension.")
                 }
-                // Add all Groovy files (may contain Java files as well)
-                javaConvention.sourceSets.map { sourceSet ->
-                    val groovySourceSet = DslObject(sourceSet).convention
-                        .getPlugin<GroovySourceSet>()
-                    when (excludeJava.get()) {
-                        true -> groovySourceSet.allGroovy
-                        false -> groovySourceSet.groovy
-                    }
+                java.sourceSets.mapNotNull { sourceSet ->
+                    sourceSet.extensions.findByType<GroovySourceDirectorySet>()
                 }
             }
         )

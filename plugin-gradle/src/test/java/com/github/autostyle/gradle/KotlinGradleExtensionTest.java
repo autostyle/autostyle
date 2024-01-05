@@ -36,7 +36,7 @@ public class KotlinGradleExtensionTest extends GradleIntegrationTest {
   private void testInDirectory(final String directory) throws IOException {
     setFile("build.gradle").toLines(
         "plugins {",
-        "    id 'nebula.kotlin' version '1.0.6'",
+        "    id 'org.jetbrains.kotlin.jvm' version '1.9.22'",
         "    id 'com.github.autostyle'",
         "}",
         "repositories { mavenCentral() }",
@@ -58,7 +58,7 @@ public class KotlinGradleExtensionTest extends GradleIntegrationTest {
   public void integration_default() throws IOException {
     setFile("build.gradle").toLines(
         "plugins {",
-        "    id 'nebula.kotlin' version '1.0.6'",
+        "    id 'org.jetbrains.kotlin.jvm' version '1.9.22'",
         "    id 'com.github.autostyle'",
         "}",
         "repositories { mavenCentral() }",
@@ -76,7 +76,7 @@ public class KotlinGradleExtensionTest extends GradleIntegrationTest {
   public void indentStep() throws IOException {
     setFile("build.gradle").toLines(
         "plugins {",
-        "    id 'nebula.kotlin' version '1.0.6'",
+        "    id 'org.jetbrains.kotlin.jvm' version '1.9.22'",
         "    id 'com.github.autostyle'",
         "}",
         "repositories { mavenCentral() }",
@@ -96,7 +96,7 @@ public class KotlinGradleExtensionTest extends GradleIntegrationTest {
   public void integration_lint_script_files_without_top_level_declaration() throws IOException {
     setFile("build.gradle").toLines(
         "plugins {",
-        "    id 'nebula.kotlin' version '1.0.6'",
+        "    id 'org.jetbrains.kotlin.jvm' version '1.9.22'",
         "    id 'com.github.autostyle'",
         "}",
         "repositories { mavenCentral() }",

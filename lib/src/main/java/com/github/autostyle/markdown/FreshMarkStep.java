@@ -26,12 +26,16 @@ import com.github.autostyle.ThrowingEx.Supplier;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Objects;
 import java.util.TreeMap;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
+
+import javax.script.ScriptEngineManager;
 
 /** A step for [FreshMark](https://github.com/diffplug/freshmark). */
 public class FreshMarkStep {
@@ -41,6 +45,8 @@ public class FreshMarkStep {
   private static final String DEFAULT_VERSION = "1.3.1";
   private static final String NAME = "freshmark";
   private static final String MAVEN_COORDINATE = "com.diffplug.freshmark:freshmark:";
+  private static final String NASHORN_MAVEN_COORDINATE = "org.openjdk.nashorn:nashorn-core:";
+  private static final String NASHORN_VERSION = "15.4";
   private static final String FORMATTER_CLASS = "com.diffplug.freshmark.FreshMark";
   private static final String FORMATTER_METHOD = "compile";
 
@@ -49,13 +55,23 @@ public class FreshMarkStep {
     return create(defaultVersion(), properties, provisioner);
   }
 
+  static class NashornInfo {
+    final static boolean HAS_NASHORN = new ScriptEngineManager().getEngineByName("nashorn") != null;
+  }
+
   /** Creates a formatter step for the given version and settings file. */
   public static FormatterStep create(String version, Supplier<Map<String, ?>> properties, Provisioner provisioner) {
     Objects.requireNonNull(version, "version");
     Objects.requireNonNull(properties, "properties");
     Objects.requireNonNull(provisioner, "provisioner");
+    List<String> mavenCoordinates = new ArrayList<>();
+    mavenCoordinates.add(MAVEN_COORDINATE + version);
+    if (!NashornInfo.HAS_NASHORN) {
+      mavenCoordinates.add("com.diffplug.jscriptbox:jscriptbox:3.0.1");
+      mavenCoordinates.add(NASHORN_MAVEN_COORDINATE + NASHORN_VERSION);
+    }
     return FormatterStep.createLazy(NAME,
-        () -> new State(JarState.from(MAVEN_COORDINATE + version, provisioner), properties.get()),
+        () -> new State(JarState.from(mavenCoordinates, provisioner), properties.get()),
         State::createFormat);
   }
 

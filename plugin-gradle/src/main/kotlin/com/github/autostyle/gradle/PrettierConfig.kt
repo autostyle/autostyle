@@ -43,7 +43,7 @@ open class PrettierConfig @Inject internal constructor(
     override fun createStep(): FormatterStep = PrettierFormatterStep.create(
         devDependencies,
         project.asProvisioner(),
-        project.buildDir,
+        project.layout.buildDirectory.get().asFile,
         npmExecutable.orNull?.let { project.file(it) },
         com.github.autostyle.npm.PrettierConfig(
             configFile.orNull?.let { project.file(it) },

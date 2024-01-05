@@ -21,7 +21,3 @@ repositories {
     mavenCentral()
     gradlePluginPortal()
 }
-
-kotlinDslPluginOptions {
-    experimentalWarning.set(false)
-}
