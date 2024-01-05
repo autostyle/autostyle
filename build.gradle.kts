@@ -1,9 +1,9 @@
 import com.github.vlsi.gradle.properties.dsl.props
+import java.util.Locale
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
 plugins {
     id("com.github.autostyle")
-    id("com.github.ben-manes.versions")
     id("com.gradle.plugin-publish") apply false
     id("com.github.vlsi.gradle-extensions")
     id("com.github.vlsi.ide")
@@ -95,10 +95,11 @@ allprojects {
     }
 
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        sourceCompatibility = "unused"
-        targetCompatibility = "unused"
         kotlinOptions {
+            apiVersion = "1.4"
             jvmTarget = "1.8"
+            freeCompilerArgs += "-Xjvm-default=all"
+            freeCompilerArgs += "-Xjdk-release=1.8"
         }
     }
 
@@ -113,8 +114,9 @@ allprojects {
 
     plugins.withType<JavaPlugin> {
         configure<JavaPluginExtension> {
-            sourceCompatibility = JavaVersion.VERSION_1_8
-            targetCompatibility = JavaVersion.VERSION_1_8
+            toolchain {
+                languageVersion.set(JavaLanguageVersion.of(17))
+            }
             withSourcesJar()
             if (!skipJavadoc) {
                 withJavadocJar()
@@ -136,6 +138,7 @@ allprojects {
         tasks {
             withType<JavaCompile>().configureEach {
                 options.encoding = "UTF-8"
+                options.release.set(8)
             }
 
             withType<Jar>().configureEach {
@@ -219,11 +222,11 @@ allprojects {
                             }
                             name.set(
                                 (project.findProperty("artifact.name") as? String)
-                                    ?: "Autostyle ${project.name.capitalize()}"
+                                    ?: "Autostyle ${project.name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }}"
                             )
                             description.set(
                                 project.description
-                                    ?: "Autostyle ${project.name.capitalize()}"
+                                    ?: "Autostyle ${project.name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }}"
                             )
                             developers {
                                 developer {

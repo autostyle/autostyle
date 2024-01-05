@@ -25,16 +25,17 @@ import com.github.autostyle.java.RemoveUnusedImportsStep
 import org.gradle.api.Action
 import org.gradle.api.GradleException
 import org.gradle.api.Project
-import org.gradle.api.plugins.JavaPluginConvention
+import org.gradle.api.plugins.JavaPluginExtension
+import org.gradle.kotlin.dsl.findByType
 import javax.inject.Inject
 
 open class JavaExtension @Inject constructor(name: String, root: AutostyleExtension) :
     BaseFormatExtension(name, root) {
     init {
         target.conv(root.providers.provider {
-            val javaPlugin = project.convention.findPlugin(JavaPluginConvention::class.java)
+            val java = project.extensions.findByType<JavaPluginExtension>()
                 ?: throw GradleException("You must apply the java plugin before the Autostyle plugin if you are using the java extension.")
-            javaPlugin.sourceSets.map { it.allJava }
+            java.sourceSets.map { it.allJava }
         })
     }
 

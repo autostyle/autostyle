@@ -26,7 +26,12 @@ output = prefixDelimiterReplace(input, 'https://{{org}}.github.io/{{name}}/javad
 
 Autostyle is a general-purpose formatting plugin.  It is completely à la carte, but also includes powerful "batteries-included" if you opt-in.
 
-Autostyle requires Gradle 5.4+ for execution.
+## Compatibility matrix
+
+| Autostyle | Gradle  | Java runtime | Java target | Kotlin target |
+|-----------|---------|--------------|-------------|---------------|
+| 3.2       | 5.6-7.0 | 8-16         | 8           | 1.3           |
+| 4.0       | 7.0+    | 8+           | 8           | 1.4           |
 
 To people who use your build, it looks like this:
 

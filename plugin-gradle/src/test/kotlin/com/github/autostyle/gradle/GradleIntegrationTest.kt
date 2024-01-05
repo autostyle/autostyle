@@ -60,9 +60,8 @@ open class GradleIntegrationTest : ResourceHarness() {
 
     @Throws(IOException::class)
     protected fun gradleRunner(): GradleRunner {
-        // Minimal supported version is 4.8
         return GradleRunner.create()
-            .withGradleVersion("5.4") // InputChanges
+            .withGradleVersion("7.3") // 7.3 is the first that supports running with Java 17
             .withProjectDir(rootFolder()) // .forwardOutput()
             .withPluginClasspath()
     }

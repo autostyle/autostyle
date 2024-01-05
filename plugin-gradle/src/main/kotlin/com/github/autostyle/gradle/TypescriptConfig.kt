@@ -63,7 +63,7 @@ class TypescriptConfig @Inject internal constructor(
     public override fun createStep(): FormatterStep = TsFmtFormatterStep.create(
         devDependencies,
         project.asProvisioner(),
-        project.buildDir,
+        project.layout.buildDirectory.get().asFile,
         npmExecutable.orNull?.let { project.file(it) },
         configFile,
         config

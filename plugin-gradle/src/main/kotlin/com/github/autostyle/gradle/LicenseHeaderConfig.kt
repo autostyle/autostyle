@@ -24,6 +24,7 @@ import com.github.autostyle.gradle.ext.conv
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.mapProperty
 import org.gradle.kotlin.dsl.property
+import java.util.*
 
 open class LicenseHeaderConfig internal constructor(
     project: Project
@@ -38,7 +39,7 @@ open class LicenseHeaderConfig internal constructor(
     }
 
     fun copyrightStyle(extension: String, style: String) {
-        copyrightStyle(extension, DefaultCopyrightStyle.valueOf(style.toUpperCase()))
+        copyrightStyle(extension, DefaultCopyrightStyle.valueOf(style.uppercase(Locale.ENGLISH)))
     }
 
     internal fun createStep(): FormatterStep =

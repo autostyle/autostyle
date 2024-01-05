@@ -15,6 +15,9 @@ tasks.named<Test>("test") {
     useJUnitPlatform {
         excludeTags("npm")
     }
+    // See https://github.com/gradle/gradle/issues/18647
+    // org.gradle.initialization.DefaultLegacyTypesSupport.injectEmptyInterfacesIntoClassLoader
+    jvmArgs("--add-opens=java.base/java.lang=ALL-UNNAMED")
 }
 
 val npmTest by tasks.registering(Test::class) {

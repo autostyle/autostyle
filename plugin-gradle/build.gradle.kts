@@ -30,28 +30,20 @@ gradlePlugin {
     plugins {
         create("autostylePlugin") {
             id = "com.github.autostyle"
+            website.set("https://github.com/autostyle/autostyle")
+            vcsUrl.set("https://github.com/autostyle/autostyle")
             displayName = "Autostyle formatting plugin"
             description = "Autostyle formatting plugin"
+            tags.set(
+                listOf(
+                    "format",
+                    "style",
+                    "license-header",
+                    "kotlin",
+                    "java"
+                )
+            )
             implementationClass = "com.github.autostyle.gradle.AutostylePlugin"
         }
     }
-}
-pluginBundle {
-    // These settings are set for the whole plugin bundle
-    website = "https://github.com/autostyle/autostyle"
-    vcsUrl = "https://github.com/autostyle/autostyle"
-    description = project.description
-    tags = listOf(
-        "format",
-        "style",
-        "license-header",
-        "kotlin",
-        "java"
-    )
-
-/*    mavenCoordinates {
-        groupId = project.group.toString()
-        artifactId = project.name
-        version = project.version.toString()
-    }*/
 }
