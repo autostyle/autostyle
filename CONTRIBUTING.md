@@ -82,7 +82,7 @@ public final class ReplaceStep {
 
 The `FormatterStep` created above implements `equals` and `hashCode` based on the serialized representation of its `State`.  This trick makes it quick and easy to write steps which properly support up-to-date checks.
 
-Oftentimes, a rule's state will be expensive to compute. `EclipseFormatterStep`, for example, depends on a formatting file.  Ideally, we would like to only pay the cost of the I/O needed to load that file if we have to - we'd like to create the FormatterStep now but load its state lazily at the last possible moment.  For this purpose, each of the `FormatterStep.create` methods has a lazy counterpart.  Here are their signatures:
+Oftentimes, a rule's state will be expensive to compute. Ideally, we would like to only pay the cost of the I/O needed to load that file if we have to - we'd like to create the FormatterStep now but load its state lazily at the last possible moment.  For this purpose, each of the `FormatterStep.create` methods has a lazy counterpart.  Here are their signatures:
 
 ```java
 FormatterStep createNeverUpToDate    (String name, FormatterFunc function                  )
@@ -91,7 +91,7 @@ FormatterStep create    (String name, State state                  , Function<St
 FormatterStep createLazy(String name, Supplier<State> stateSupplier, Function<State, FormatterFunc> stateToFormatter)
 ```
 
-If your formatting step only needs to call one or two methods of the external dependency, you can pull it in at runtime and call it via reflection.  See the logic for [`EclipseFormatterStep`](lib-extra/src/main/java/com/github/autostyle/autostyle/extra/java/EclipseFormatterStep.java) or [`GoogleJavaFormatStep`](lib/src/main/java/com/github/autostyle/autostyle/java/GoogleJavaFormatStep.java).
+If your formatting step only needs to call one or two methods of the external dependency, you can pull it in at runtime and call it via reflection.  See the logic for [`GoogleJavaFormatStep`](lib/src/main/java/com/github/autostyle/autostyle/java/GoogleJavaFormatStep.java).
 
 Here's a checklist for creating a new step for Autostyle:
 
@@ -107,7 +107,7 @@ The gist of it is that you will have to:
 
 - Use the build system's user-interface to define a "format" as a set of files, and the list of `FormatterStep` the user would like enforced on those files.
 - Use the build system's execution logic to create a `Formatter` with the appropriate `FormatterStep`, and pass it the files to be formatted and/or checked.
-- To use the good `FormatterStep` like `EclipseFormatterStep` or `GoogleJavaFormatStep`, you'll need to implement `Provisioner`, which is a generic API for the build system's native mechanism for resolving dependencies from maven: `Set<File> provisionWithDependencies(Collection<String> mavenCoordinates)`.
+- To use the good `FormatterStep` like `GoogleJavaFormatStep`, you'll need to implement `Provisioner`, which is a generic API for the build system's native mechanism for resolving dependencies from maven: `Set<File> provisionWithDependencies(Collection<String> mavenCoordinates)`.
 - (Optional) Tie into the build system's native up-to-date mechanism.
 
 `plugin-gradle` is the canonical example which uses everything that Autostyle has to offer.  It's only ~700 lines.

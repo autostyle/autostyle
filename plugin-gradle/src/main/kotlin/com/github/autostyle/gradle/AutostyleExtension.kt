@@ -131,11 +131,6 @@ open class AutostyleExtension @Inject constructor(
         configure("sql", action)
     }
 
-    /** Configures the special C/C++-specific extension.  */
-    fun cpp(action: Action<CppExtension>) {
-        configure("cpp", action)
-    }
-
     /** Configures the special typescript-specific extension for typescript files.  */
     fun typescript(action: Action<TypescriptExtension>) {
         configure("typescript", action)

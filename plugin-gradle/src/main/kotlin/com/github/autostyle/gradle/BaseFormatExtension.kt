@@ -18,7 +18,6 @@ package com.github.autostyle.gradle
 import com.github.autostyle.FormatterFunc
 import com.github.autostyle.FormatterStep
 import com.github.autostyle.LineEnding
-import com.github.autostyle.extra.wtp.EclipseWtpFormatterStep
 import com.github.autostyle.generic.*
 import com.github.autostyle.gradle.ext.conv
 import com.github.autostyle.npm.PrettierFormatterStep
@@ -200,13 +199,6 @@ open class BaseFormatExtension @Inject constructor(
 
     protected open fun createPrettierConfig(devDependencies: Map<String, String>) =
         PrettierConfig(devDependencies, root.objects, root.project)
-
-    @JvmOverloads
-    fun eclipseWtp(
-        type: EclipseWtpFormatterStep,
-        version: String = EclipseWtpFormatterStep.defaultVersion()
-    ) =
-        EclipseWtpConfig(type, version, root.project)
 
     @Suppress("UNCHECKED_CAST")
     val dirsToExclude: NavigableSet<String> get() =
