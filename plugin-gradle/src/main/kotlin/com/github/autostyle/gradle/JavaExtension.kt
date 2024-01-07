@@ -16,7 +16,6 @@
 package com.github.autostyle.gradle
 
 import com.github.autostyle.FormatterStep
-import com.github.autostyle.extra.java.EclipseJdtFormatterStep
 import com.github.autostyle.gradle.ext.asProvisioner
 import com.github.autostyle.gradle.ext.conv
 import com.github.autostyle.java.GoogleJavaFormatStep
@@ -87,21 +86,4 @@ open class JavaExtension @Inject constructor(name: String, root: AutostyleExtens
             project.asProvisioner()
         )
     }
-
-    fun eclipse(action: Action<EclipseConfig>) =
-        eclipse(EclipseJdtFormatterStep.defaultVersion(), action)
-
-    @JvmOverloads
-    fun eclipse(
-        version: String = EclipseJdtFormatterStep.defaultVersion(),
-        action: Action<EclipseConfig>? = null
-    ) {
-        EclipseConfig(version, root.project).also {
-            action?.execute(it)
-            addStep(it.createStep())
-        }
-    }
-
-    class EclipseConfig internal constructor(version: String, project: Project) :
-        EclipseBasedConfig(version, project, { EclipseJdtFormatterStep.createBuilder(it) })
 }

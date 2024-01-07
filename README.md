@@ -35,19 +35,15 @@ lib('generic.LicenseHeaderStep')                 +'{{yes}}       | {{no}}  |',
 lib('generic.ReplaceRegexStep')                  +'{{yes}}       | {{no}}  |',
 lib('generic.ReplaceStep')                       +'{{yes}}       | {{no}}  |',
 lib('generic.TrimTrailingWhitespaceStep')        +'{{yes}}       | {{no}}  |',
-extra('cpp.EclipseFormatterStep')                +'{{yes}}       | {{no}}  |',
-extra('groovy.GrEclipseFormatterStep')           +'{{yes}}       | {{no}}  |',
 lib('java.GoogleJavaFormatStep')                 +'{{yes}}       | {{no}}  |',
 lib('java.ImportOrderStep')                      +'{{yes}}       | {{no}}  |',
 lib('java.RemoveUnusedImportsStep')              +'{{yes}}       | {{no}}  |',
-extra('java.EclipseFormatterStep')               +'{{yes}}       | {{no}}  |',
 lib('kotlin.KtLintStep')                         +'{{yes}}       | {{no}}  |',
 lib('markdown.FreshMarkStep')                    +'{{yes}}       | {{no}}  |',
 lib('npm.PrettierFormatterStep')                 +'{{yes}}       | {{no}}  |',
 lib('npm.TsFmtFormatterStep')                    +'{{yes}}       | {{no}}  |',
 lib('scala.ScalaFmtStep')                        +'{{yes}}       | {{no}}  |',
 lib('sql.DBeaverSQLFormatterStep')               +'{{yes}}       | {{no}}  |',
-extra('wtp.EclipseWtpFormatterStep')             +'{{yes}}       | {{no}}  |',
 '| [(Your FormatterStep here)](CONTRIBUTING.md#how-to-add-a-new-formatterstep) | {{no}}       | {{no}}  |',
 '| Fast up-to-date checking                      | {{yes}}       | {{no}}  |',
 '| Automatic idempotency safeguard               | {{yes}}       | {{no}}  |',
@@ -62,19 +58,15 @@ extra('wtp.EclipseWtpFormatterStep')             +'{{yes}}       | {{no}}  |',
 | [`generic.ReplaceRegexStep`](lib/src/main/java/com/github/autostyle/generic/ReplaceRegexStep.java) | :+1:       | :white_large_square:  |
 | [`generic.ReplaceStep`](lib/src/main/java/com/github/autostyle/generic/ReplaceStep.java) | :+1:       | :white_large_square:  |
 | [`generic.TrimTrailingWhitespaceStep`](lib/src/main/java/com/github/autostyle/generic/TrimTrailingWhitespaceStep.java) | :+1:       | :white_large_square:  |
-| [`cpp.EclipseFormatterStep`](lib-extra/src/main/java/com/github/autostyle/extra/cpp/EclipseFormatterStep.java) | :+1:       | :white_large_square:  |
-| [`groovy.GrEclipseFormatterStep`](lib-extra/src/main/java/com/github/autostyle/extra/groovy/GrEclipseFormatterStep.java) | :+1:       | :white_large_square:  |
 | [`java.GoogleJavaFormatStep`](lib/src/main/java/com/github/autostyle/java/GoogleJavaFormatStep.java) | :+1:       | :white_large_square:  |
 | [`java.ImportOrderStep`](lib/src/main/java/com/github/autostyle/java/ImportOrderStep.java) | :+1:       | :white_large_square:  |
 | [`java.RemoveUnusedImportsStep`](lib/src/main/java/com/github/autostyle/java/RemoveUnusedImportsStep.java) | :+1:       | :white_large_square:  |
-| [`java.EclipseFormatterStep`](lib-extra/src/main/java/com/github/autostyle/extra/java/EclipseFormatterStep.java) | :+1:       | :white_large_square:  |
 | [`kotlin.KtLintStep`](lib/src/main/java/com/github/autostyle/kotlin/KtLintStep.java) | :+1:       | :white_large_square:  |
 | [`markdown.FreshMarkStep`](lib/src/main/java/com/github/autostyle/markdown/FreshMarkStep.java) | :+1:       | :white_large_square:  |
 | [`npm.PrettierFormatterStep`](lib/src/main/java/com/github/autostyle/npm/PrettierFormatterStep.java) | :+1:       | :white_large_square:  |
 | [`npm.TsFmtFormatterStep`](lib/src/main/java/com/github/autostyle/npm/TsFmtFormatterStep.java) | :+1:       | :white_large_square:  |
 | [`scala.ScalaFmtStep`](lib/src/main/java/com/github/autostyle/scala/ScalaFmtStep.java) | :+1:       | :white_large_square:  |
 | [`sql.DBeaverSQLFormatterStep`](lib/src/main/java/com/github/autostyle/sql/DBeaverSQLFormatterStep.java) | :+1:       | :white_large_square:  |
-| [`wtp.EclipseWtpFormatterStep`](lib-extra/src/main/java/com/github/autostyle/extra/wtp/EclipseWtpFormatterStep.java) | :+1:       | :white_large_square:  |
 | [(Your FormatterStep here)](CONTRIBUTING.md#how-to-add-a-new-formatterstep) | :white_large_square:       | :white_large_square:  |
 | Fast up-to-date checking                      | :+1:       | :white_large_square:  |
 | Automatic idempotency safeguard               | :+1:       | :white_large_square:  |

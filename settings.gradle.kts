@@ -74,8 +74,6 @@ buildscript {
             // needed by GitAttributesLineEndings
             classpath("org.eclipse.jgit:org.eclipse.jgit:5.6.0.201912101111-r")
             classpath("com.googlecode.concurrent-trees:concurrent-trees:2.6.1")
-            // used for xml parsing in EclipseFormatter
-            classpath("org.codehaus.groovy:groovy-xml:${"groovy-xml".v()}")
         }
     } else {
         repositories {

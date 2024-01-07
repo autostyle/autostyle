@@ -4,8 +4,6 @@ dependencies {
     // needed by GitAttributesLineEndings
     implementation("org.eclipse.jgit:org.eclipse.jgit")
     implementation("com.googlecode.concurrent-trees:concurrent-trees")
-    // used for xml parsing in EclipseFormatter
-    implementation("org.codehaus.groovy:groovy-xml")
 
     // testing
     testImplementation(project(":autostyle-testlib"))

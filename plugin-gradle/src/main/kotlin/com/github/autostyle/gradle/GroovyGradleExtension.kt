@@ -15,10 +15,7 @@
  */
 package com.github.autostyle.gradle
 
-import com.github.autostyle.extra.groovy.GrEclipseFormatterStep
-import com.github.autostyle.gradle.GroovyExtension.GrEclipseConfig
 import com.github.autostyle.java.ImportOrderStep
-import org.gradle.api.Action
 import javax.inject.Inject
 
 open class GroovyGradleExtension @Inject constructor(name: String, root: AutostyleExtension) :
@@ -29,20 +26,5 @@ open class GroovyGradleExtension @Inject constructor(name: String, root: Autosty
 
     fun importOrder(vararg importOrder: String?) {
         addStep(ImportOrderStep.forGroovy().createFrom(*importOrder))
-    }
-
-    fun greclipse(action: Action<GrEclipseConfig>) {
-        greclipse(GrEclipseFormatterStep.defaultVersion(), action)
-    }
-
-    @JvmOverloads
-    fun greclipse(
-        version: String = GrEclipseFormatterStep.defaultVersion(),
-        action: Action<GrEclipseConfig>? = null
-    ) {
-        GrEclipseConfig(version, root.project).also {
-            action?.execute(it)
-            addStep(it.createStep())
-        }
     }
 }
