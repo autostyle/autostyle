@@ -4,5 +4,22 @@
     "config:base"
   ],
   "labels": ["dependencies"],
-  "schedule": ["every 3 weeks on Monday"]
+  "schedule": ["every 3 weeks on Monday"],
+  "packageRules": [
+    {
+      "matchPackagePrefixes": ["org.eclipse.jgit"],
+      "groupName": "org.eclipse.jgit",
+      "description": "TODO: jgit 6.0 requires Java 11",
+      "allowedVersions": "< 6.0"
+    },
+    {
+      "matchPackagePrefixes": ["org.hamcrest"],
+      "groupName": "org.hamcrest"
+    },
+    {
+      "matchPackagePrefixes": ["org.slf4j"],
+      "groupName": "org.slf4j",
+      "allowedVersions": "< 2.0.0"
+    }
+  ]
 }
