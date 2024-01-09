@@ -13,6 +13,18 @@
       "allowedVersions": "< 6.0"
     },
     {
+      "matchPackagePrefixes": ["org.jdrupes.mdoclet"],
+      "groupName": "org.jdrupes.mdoclet",
+      "description": "TODO: mdoclet 4 requires Java 21",
+      "allowedVersions": "< 4.0"
+    },
+    {
+      "matchPackagePrefixes": ["org.jetbrains.kotlin.jvm"],
+      "groupName": "org.jetbrains.kotlin.jvm",
+      "description": "We need to align Kotlin version with Gradle's embedded one",
+      "allowedVersions": "<= 1.9.20"
+    },
+    {
       "matchPackagePrefixes": ["org.hamcrest"],
       "groupName": "org.hamcrest"
     },
