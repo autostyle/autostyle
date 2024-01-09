@@ -53,7 +53,6 @@ allprojects {
         apply(plugin = "mdoclet")
         dependencies {
             val compileOnly by configurations
-            compileOnly("net.jcip:jcip-annotations:1.0")
             compileOnly("com.github.spotbugs:spotbugs-annotations:3.1.6")
             compileOnly("com.google.code.findbugs:jsr305:3.0.2")
         }
