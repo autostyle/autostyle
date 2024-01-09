@@ -31,7 +31,7 @@ dependencies {
         // In other words, marking dependency as "runtime" would avoid accidental
         // dependency on it during compilation
         api("com.diffplug.durian:durian-testlib:1.2.0")
-        api("org.exparity:hamcrest-date:2.0.4")
+        api("org.exparity:hamcrest-date:2.0.8")
         api("org.hamcrest:hamcrest:2.1")
         api("org.hamcrest:hamcrest-core:2.1")
         api("org.hamcrest:hamcrest-library:2.1")
