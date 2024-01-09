@@ -1,4 +1,11 @@
-### HEAD
+### Version 4.0
+* Drop Eclipse-based formatters
+* Bump Gradle to 8.5
+* Bump build Java version to 17
+* Bump Kotlin target to 1.4
+* Bump release-plugins: 1.70 -> 1.90
+
+### Version 3.2
 * Support Gradle build cache. The tasks were not cached previously since they produced no output
 * Move file processing to `...Process` task for better integration with Gradle caches
 * Produce helpful error messages by default (deprecate `paddedCell()` option)
