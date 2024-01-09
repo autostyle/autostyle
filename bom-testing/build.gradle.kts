@@ -36,6 +36,6 @@ dependencies {
         api("org.hamcrest:hamcrest-core:2.1")
         api("org.hamcrest:hamcrest-library:2.1")
         api("junit:junit:4.13.2")
-        api("org.assertj:assertj-core:3.5.2")
+        api("org.assertj:assertj-core:3.25.1")
     }
 }
