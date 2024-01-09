@@ -28,7 +28,7 @@ dependencies {
         // dependency on it during compilation
         api("org.eclipse.jgit:org.eclipse.jgit:5.6.0.201912101111-r")
         api("com.googlecode.concurrent-trees:concurrent-trees:2.6.1")
-        api("org.slf4j:slf4j-api:1.7.25")
-        api("org.slf4j:slf4j-log4j12:1.7.25")
+        api("org.slf4j:slf4j-api:1.7.36")
+        api("org.slf4j:slf4j-log4j12:1.7.36")
     }
 }
