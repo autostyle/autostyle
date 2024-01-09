@@ -1,5 +1,6 @@
 dependencies {
     api(project(":autostyle-lib"))
+    api(platform(project(":autostyle-bom-testing")))
     api("com.diffplug.durian:durian-testlib")
     api("org.assertj:assertj-core")
     api("org.junit.jupiter:junit-jupiter-api")

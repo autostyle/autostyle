@@ -20,6 +20,7 @@ if (JavaVersion.current() < JavaVersion.VERSION_17) {
 
 for (p in listOf(
     "bom",
+    "bom-testing",
     "testlib",
     "lib",
     "lib-extra",

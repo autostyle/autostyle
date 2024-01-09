@@ -79,6 +79,7 @@ allprojects {
         dependencies {
             val testImplementation by configurations
             val testRuntimeOnly by configurations
+            testImplementation(platform(project(":autostyle-bom-testing")))
             testImplementation("org.junit.jupiter:junit-jupiter-api")
             testImplementation("org.junit.jupiter:junit-jupiter-params")
             testImplementation("org.hamcrest:hamcrest")

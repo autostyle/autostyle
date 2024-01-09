@@ -19,17 +19,23 @@ plugins {
     `java-platform`
 }
 
+javaPlatform {
+    allowDependencies()
+}
+
 dependencies {
-    // Parenthesis are needed here: https://github.com/gradle/gradle/issues/9248
+    api(platform("org.junit:junit-bom:5.10.1"))
     constraints {
         // api means "the dependency is for both compilation and runtime"
         // runtime means "the dependency is only for runtime, not for compilation"
         // In other words, marking dependency as "runtime" would avoid accidental
         // dependency on it during compilation
-        api("org.eclipse.jgit:org.eclipse.jgit:5.6.0.201912101111-r")
-        api("com.googlecode.concurrent-trees:concurrent-trees:2.6.1")
-        api("org.codehaus.groovy:groovy-xml:2.4.7")
-        api("org.slf4j:slf4j-api:1.7.25")
-        api("org.slf4j:slf4j-log4j12:1.7.25")
+        api("com.diffplug.durian:durian-testlib:1.2.0")
+        api("org.exparity:hamcrest-date:2.0.4")
+        api("org.hamcrest:hamcrest:2.1")
+        api("org.hamcrest:hamcrest-core:2.1")
+        api("org.hamcrest:hamcrest-library:2.1")
+        api("junit:junit:4.13.2")
+        api("org.assertj:assertj-core:3.5.2")
     }
 }
