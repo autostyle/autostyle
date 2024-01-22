@@ -73,7 +73,7 @@ buildscript {
                 "lib/build/libs/autostyle-lib-$ver.jar",
                 "lib-extra/build/libs/autostyle-lib-extra-$ver.jar"))
             // needed by GitAttributesLineEndings
-            classpath("org.eclipse.jgit:org.eclipse.jgit:5.13.2.202306221912-r")
+            classpath("org.eclipse.jgit:org.eclipse.jgit:5.13.3.202401111512-r")
             classpath("com.googlecode.concurrent-trees:concurrent-trees:2.6.1")
         }
     } else {
