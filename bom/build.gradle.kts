@@ -26,7 +26,7 @@ dependencies {
         // runtime means "the dependency is only for runtime, not for compilation"
         // In other words, marking dependency as "runtime" would avoid accidental
         // dependency on it during compilation
-        api("org.eclipse.jgit:org.eclipse.jgit:5.13.2.202306221912-r")
+        api("org.eclipse.jgit:org.eclipse.jgit:5.13.3.202401111512-r")
         api("com.googlecode.concurrent-trees:concurrent-trees:2.6.1")
         api("org.slf4j:slf4j-api:1.7.36")
         api("org.slf4j:slf4j-log4j12:1.7.36")
