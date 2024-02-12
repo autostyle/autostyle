@@ -24,7 +24,7 @@ javaPlatform {
 }
 
 dependencies {
-    api(platform("org.junit:junit-bom:5.10.1"))
+    api(platform("org.junit:junit-bom:5.10.2"))
     constraints {
         // api means "the dependency is for both compilation and runtime"
         // runtime means "the dependency is only for runtime, not for compilation"
