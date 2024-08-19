@@ -32,9 +32,9 @@ dependencies {
         // dependency on it during compilation
         api("com.diffplug.durian:durian-testlib:1.2.0")
         api("org.exparity:hamcrest-date:2.0.8")
-        api("org.hamcrest:hamcrest:2.2")
-        api("org.hamcrest:hamcrest-core:2.2")
-        api("org.hamcrest:hamcrest-library:2.2")
+        api("org.hamcrest:hamcrest:3.0")
+        api("org.hamcrest:hamcrest-core:3.0")
+        api("org.hamcrest:hamcrest-library:3.0")
         api("junit:junit:4.13.2")
         api("org.assertj:assertj-core:3.26.0")
     }
