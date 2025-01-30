@@ -9,7 +9,7 @@ pluginManagement {
         id("com.github.vlsi.ide") version "1.90"
         id("com.github.vlsi.license-gather") version "1.90"
         id("com.github.vlsi.stage-vote-release") version "1.90"
-        id("com.gradle.plugin-publish") version "1.2.1"
+        id("com.gradle.plugin-publish") version "1.3.1"
         kotlin("jvm") version "1.9.20"
     }
 }
