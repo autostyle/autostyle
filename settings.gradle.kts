@@ -5,7 +5,7 @@ pluginManagement {
 
         idv("com.github.autostyle", "released")
         id("com.github.vlsi.crlf") version "1.90"
-        id("com.github.vlsi.gradle-extensions") version "1.90"
+        id("com.github.vlsi.gradle-extensions") version "2.0.0"
         id("com.github.vlsi.ide") version "1.90"
         id("com.github.vlsi.license-gather") version "1.90"
         id("com.github.vlsi.stage-vote-release") version "1.90"
