@@ -32,7 +32,7 @@ public class GoogleJavaFormatStep {
   // prevent direct instantiation
   private GoogleJavaFormatStep() {}
 
-  private static final String DEFAULT_VERSION = "1.7";
+  private static final String DEFAULT_VERSION = "1.28.0";
   private static final String DEFAULT_STYLE = "GOOGLE";
   static final String NAME = "google-java-format";
   static final String MAVEN_COORDINATE = "com.google.googlejavaformat:google-java-format:";
