@@ -7,6 +7,12 @@
   "schedule": ["every 3 weeks on Monday"],
   "packageRules": [
     {
+      "groupName": "com.github.vlsi",
+      "matchPackageNames": [
+        "com.github.vlsi{/,}**"
+      ]
+    },
+    {
       "matchPackagePrefixes": ["org.eclipse.jgit"],
       "groupName": "org.eclipse.jgit",
       "description": "TODO: jgit 6.0 requires Java 11",
