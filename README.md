@@ -2,11 +2,9 @@
 
 <!---freshmark shields
 output = [
-  link(image('Travis CI', 'https://travis-ci.org/{{org}}/{{name}}.svg?branch=master'), 'https://travis-ci.org/{{org}}/{{name}}'),
   link(image('CI Status', 'https://github.com/{{org}}/{{name}}/workflows/CI/badge.svg'), 'https://github.com/{{org}}/{{name}}/actions'),
   ].join('\n');
 -->
-[![Travis CI](https://travis-ci.org/autostyle/autostyle.svg?branch=master)](https://travis-ci.org/autostyle/autostyle)
 [![CI Status](https://github.com/autostyle/autostyle/workflows/CI/badge.svg)](https://github.com/autostyle/autostyle/actions)
 <!---freshmark /shields -->
 
@@ -81,6 +79,10 @@ And if you want to add FooFormatter support, we'll happily accept the PR even if
 
 Once someone has filled in one square of the formatter/build system matrix, 
 it's easy for interested parties to fill in any empty squares, since you'll now have a working example for every piece needed.
+
+## Release signing keys
+
+`6FF955169D698CC09BA7403AC99BFE8CD562EAC1` since 2025-07-20
 
 ## Acknowledgements
 - Thanks to contributors of [Spotless](https://github.com/diffplug/spotless).
