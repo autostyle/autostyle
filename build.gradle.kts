@@ -28,7 +28,7 @@ val skipJavadoc by props()
 
 nmcpAggregation {
     val centralPortalPublishingType = providers.gradleProperty("centralPortalPublishingType").orElse("AUTOMATIC")
-    val centralPortalValidationTimeout = providers.gradleProperty("centralPortalValidationTimeout").map { it.toLong() }
+    val centralPortalValidationTimeout = providers.gradleProperty("centralPortalValidationTimeout").map { it.toLong() }.orElse(60)
 
     centralPortal {
         username = providers.environmentVariable("CENTRAL_PORTAL_USERNAME")
