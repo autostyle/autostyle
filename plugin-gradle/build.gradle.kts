@@ -50,7 +50,6 @@ gradlePlugin {
 }
 
 tasks.withType<PublishToMavenRepository>()
-    .matching { it.name.endsWith("ToNmcpRepository") }
     .configureEach {
-    dependsOn(name.replaceFirst("publish", "sign").removeSuffix("ToNmcpRepository"))
+    dependsOn(tasks.withType<Sign>())
 }
