@@ -48,3 +48,7 @@ gradlePlugin {
         }
     }
 }
+
+tasks.publishMavenJavaPublicationToNmcpRepository {
+    mustRunAfter("signPluginMavenPublication")
+}
