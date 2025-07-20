@@ -1,44 +1,46 @@
 import com.github.vlsi.gradle.properties.dsl.props
-import java.util.Locale
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+import java.time.Duration
 
 plugins {
     id("com.github.autostyle")
     id("com.gradle.plugin-publish") apply false
     id("com.github.vlsi.gradle-extensions")
     id("com.github.vlsi.ide")
-    id("com.github.vlsi.stage-vote-release")
+    id("com.gradleup.nmcp.aggregation")
     kotlin("jvm") apply false
 }
 
 val String.v: String get() = rootProject.extra["$this.version"] as String
 
-val buildVersion = "autostyle".v + releaseParams.snapshotSuffix
+val release by props()
+
+val buildVersion = "current".v + (if (release) "" else "-SNAPSHOT")
 
 println("Building Autostyle $buildVersion")
 
-val enableGradleMetadata by props()
 val autostyleSelf by props()
 val skipAutostyle by props()
 val skipJavadoc by props()
 
-releaseParams {
-    tlp.set("Autostyle")
-    organizationName.set("autostyle")
-    componentName.set("Autostyle")
-    prefixForProperties.set("gh")
-    svnDistEnabled.set(false)
-    sitePreviewEnabled.set(false)
-    nexus {
-        mavenCentral()
-    }
-    voteText.set {
-        """
-        ${it.componentName} v${it.version}-rc${it.rc} is ready for preview.
+nmcpAggregation {
+    val centralPortalPublishingType = providers.gradleProperty("centralPortalPublishingType").orElse("AUTOMATIC")
+    val centralPortalValidationTimeout = providers.gradleProperty("centralPortalValidationTimeout").map { it.toLong() }
 
-        Git SHA: ${it.gitSha}
-        Staging repository: ${it.nexusRepositoryUri}
-        """.trimIndent()
+    centralPortal {
+        username = providers.environmentVariable("CENTRAL_PORTAL_USERNAME")
+        password = providers.environmentVariable("CENTRAL_PORTAL_PASSWORD")
+        publishingType = centralPortalPublishingType
+        validationTimeout = centralPortalValidationTimeout.map { Duration.ofMinutes(it) }
+    }
+}
+
+dependencies {
+    subprojects.forEach {
+        nmcpAggregation(project(it.path))
     }
 }
 
@@ -86,20 +88,20 @@ allprojects {
         }
     }
 
-    tasks.withType<AbstractArchiveTask>().configureEach {
-        // Ensure builds are reproducible
-        isPreserveFileTimestamps = false
-        isReproducibleFileOrder = true
-        dirMode = "775".toInt(8)
-        fileMode = "664".toInt(8)
+    plugins.withId("org.jetbrains.kotlin.jvm") {
+        configure<KotlinProjectExtension> {
+            coreLibrariesVersion = "1.8.20"
+        }
     }
 
-    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions {
-            apiVersion = "1.4"
-            jvmTarget = "1.8"
-            freeCompilerArgs += "-Xjvm-default=all"
-            freeCompilerArgs += "-Xjdk-release=1.8"
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile> {
+        compilerOptions {
+            @Suppress("DEPRECATION")
+            apiVersion = KotlinVersion.KOTLIN_1_8
+            languageVersion = apiVersion
+            jvmTarget = JvmTarget.JVM_1_8
+            freeCompilerArgs.add("-Xjvm-default=all")
+            freeCompilerArgs.add("-Xjdk-release=1.8")
         }
     }
 
@@ -120,18 +122,6 @@ allprojects {
             withSourcesJar()
             if (!skipJavadoc) {
                 withJavadocJar()
-            }
-        }
-
-        repositories {
-            mavenCentral()
-        }
-
-        apply(plugin = "maven-publish")
-
-        if (!enableGradleMetadata) {
-            tasks.withType<GenerateModuleMetadata> {
-                enabled = false
             }
         }
 
@@ -167,97 +157,6 @@ allprojects {
                 passProperty("junit.jupiter.execution.parallel.enabled", "true")
                 passProperty("junit.jupiter.execution.parallel.mode.default", "concurrent")
                 passProperty("junit.jupiter.execution.timeout.default", "5 m")
-            }
-            configure<PublishingExtension> {
-                if (project.path == ":") {
-                    // Do not publish "root" project. Java plugin is applied here for DSL purposes only
-                    return@configure
-                }
-                publications {
-                    if (project.path != ":autostyle-plugin-gradle") {
-                        create<MavenPublication>(project.name) {
-                            artifactId = project.name
-                            version = rootProject.version.toString()
-                            description = project.description
-                            from(project.components.get("java"))
-                        }
-                    }
-                    withType<MavenPublication> {
-                        // if (!skipJavadoc) {
-                        // Eager task creation is required due to
-                        // https://github.com/gradle/gradle/issues/6246
-                        //  artifact(sourcesJar.get())
-                        //  artifact(javadocJar.get())
-                        // }
-
-                        // Use the resolved versions in pom.xml
-                        // Gradle might have different resolution rules, so we set the versions
-                        // that were used in Gradle build/test.
-                        versionMapping {
-                            usage(Usage.JAVA_RUNTIME) {
-                                fromResolutionResult()
-                            }
-                            usage(Usage.JAVA_API) {
-                                fromResolutionOf("runtimeClasspath")
-                            }
-                        }
-                        pom {
-                            withXml {
-                                val sb = asString()
-                                var s = sb.toString()
-                                // <scope>compile</scope> is Maven default, so delete it
-                                s = s.replace("<scope>compile</scope>", "")
-                                // Cut <dependencyManagement> because all dependencies have the resolved versions
-                                s = s.replace(
-                                    Regex(
-                                        "<dependencyManagement>.*?</dependencyManagement>",
-                                        RegexOption.DOT_MATCHES_ALL
-                                    ),
-                                    ""
-                                )
-                                sb.setLength(0)
-                                sb.append(s)
-                                // Re-format the XML
-                                asNode()
-                            }
-                            name.set(
-                                (project.findProperty("artifact.name") as? String)
-                                    ?: "Autostyle ${project.name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }}"
-                            )
-                            description.set(
-                                project.description
-                                    ?: "Autostyle ${project.name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }}"
-                            )
-                            developers {
-                                developer {
-                                    id.set("vlsi")
-                                    name.set("Vladimir Sitnikov")
-                                    email.set("sitnikov.vladimir@gmail.com")
-                                }
-                            }
-                            inceptionYear.set("2019")
-                            url.set("https://github.com/autostyle/autostyle")
-                            licenses {
-                                license {
-                                    name.set("The Apache License, Version 2.0")
-                                    url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
-                                    comments.set("A business-friendly OSS license")
-                                    distribution.set("repo")
-                                }
-                            }
-                            issueManagement {
-                                system.set("GitHub")
-                                url.set("https://github.com/autostyle/autostyle/issues")
-                            }
-                            scm {
-                                connection.set("scm:git:https://github.com/autostyle/autostyle.git")
-                                developerConnection.set("scm:git:https://github.com/autostyle/autostyle.git")
-                                url.set("https://github.com/autostyle/autostyle")
-                                tag.set("HEAD")
-                            }
-                        }
-                    }
-                }
             }
         }
     }

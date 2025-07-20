@@ -1,1 +1,6 @@
-// intentionally left blank
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}

@@ -1,3 +1,7 @@
+plugins {
+    id("build.java-published-library")
+}
+
 dependencies {
     api(project(":autostyle-lib"))
     api(platform(project(":autostyle-bom-testing")))

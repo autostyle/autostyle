@@ -1,5 +1,5 @@
 plugins {
-    id("java-library")
+    id("build.java-published-library")
 }
 
 dependencies {

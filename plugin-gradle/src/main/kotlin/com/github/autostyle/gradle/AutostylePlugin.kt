@@ -68,7 +68,6 @@ class AutostylePlugin : Plugin<Project> {
             AutostyleExtension::class.java,
             this
         )
-        configurations.detachedConfiguration()
         val checkTask = tasks.register(AutostyleExtension.EXTENSION + AutostyleExtension.CHECK) {
             group = TASK_GROUP
             description = CHECK_DESCRIPTION

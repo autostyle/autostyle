@@ -8,9 +8,15 @@ pluginManagement {
         id("com.github.vlsi.gradle-extensions") version "2.0.0"
         id("com.github.vlsi.ide") version "2.0.0"
         id("com.github.vlsi.license-gather") version "2.0.0"
-        id("com.github.vlsi.stage-vote-release") version "2.0.0"
         id("com.gradle.plugin-publish") version "1.3.1"
-        kotlin("jvm") version "1.9.20"
+        id("com.gradleup.nmcp.aggregation") version "1.0.1"
+        kotlin("jvm") version "2.2.0"
+    }
+}
+
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
     }
 }
 
