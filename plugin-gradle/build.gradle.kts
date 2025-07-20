@@ -1,6 +1,7 @@
 plugins {
     id("com.gradle.plugin-publish")
     id("java-gradle-plugin")
+    id("build.java-published-library")
     `kotlin-dsl`
 }
 

@@ -19,3 +19,29 @@ plugins {
     id("java-library")
     id("build.publish-to-central")
 }
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+
+            // Gradle feature variants can't be mapped to Maven's pom
+            suppressAllPomMetadataWarnings()
+        }
+        // artifacts.removeIf below resolves the configuration, so it causes the following warning:
+        // Mutating a configuration after it has been resolved, consumed as a variant, or used for generating published metadata
+        withType<MavenPublication>().configureEach {
+            // Use the resolved versions in pom.xml
+            // Gradle might have different resolution rules, so we set the versions
+            // that were used in Gradle build/test.
+            versionMapping {
+                usage(Usage.JAVA_API) {
+                    fromResolutionOf("runtimeClasspath")
+                }
+                usage(Usage.JAVA_RUNTIME) {
+                    fromResolutionResult()
+                }
+            }
+        }
+    }
+}

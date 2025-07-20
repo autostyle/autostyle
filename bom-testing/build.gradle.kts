@@ -16,7 +16,7 @@
  */
 
 plugins {
-    `java-platform`
+    id("build.java-published-platform")
 }
 
 javaPlatform {

@@ -18,7 +18,6 @@
 import java.util.*
 
 plugins {
-    id("java-library")
     id("maven-publish")
     id("signing")
     id("build.reproducible-timestamps")
@@ -59,33 +58,7 @@ if (!release) {
 
 publishing {
     publications {
-        if (project.path != ":autostyle-plugin-gradle") {
-            create<MavenPublication>(project.name) {
-                artifactId = project.name
-                version = rootProject.version.toString()
-                description = project.description
-                from(project.components.get("java"))
-            }
-        }
         withType<MavenPublication> {
-            // if (!skipJavadoc) {
-            // Eager task creation is required due to
-            // https://github.com/gradle/gradle/issues/6246
-            //  artifact(sourcesJar.get())
-            //  artifact(javadocJar.get())
-            // }
-
-            // Use the resolved versions in pom.xml
-            // Gradle might have different resolution rules, so we set the versions
-            // that were used in Gradle build/test.
-            versionMapping {
-                usage(Usage.JAVA_RUNTIME) {
-                    fromResolutionResult()
-                }
-                usage(Usage.JAVA_API) {
-                    fromResolutionOf("runtimeClasspath")
-                }
-            }
             pom {
                 withXml {
                     val sb = asString()
@@ -115,30 +88,30 @@ publishing {
                 )
                 developers {
                     developer {
-                        id.set("vlsi")
-                        name.set("Vladimir Sitnikov")
-                        email.set("sitnikov.vladimir@gmail.com")
+                        id = "vlsi"
+                        name = "Vladimir Sitnikov"
+                        email = "sitnikov.vladimir@gmail.com"
                     }
                 }
-                inceptionYear.set("2019")
-                url.set("https://github.com/autostyle/autostyle")
+                inceptionYear = "2019"
+                url = "https://github.com/autostyle/autostyle"
                 licenses {
                     license {
-                        name.set("The Apache License, Version 2.0")
-                        url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
-                        comments.set("A business-friendly OSS license")
-                        distribution.set("repo")
+                        name = "The Apache License, Version 2.0"
+                        url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+                        comments = "A business-friendly OSS license"
+                        distribution = "repo"
                     }
                 }
                 issueManagement {
-                    system.set("GitHub")
-                    url.set("https://github.com/autostyle/autostyle/issues")
+                    system = "GitHub"
+                    url = "https://github.com/autostyle/autostyle/issues"
                 }
                 scm {
-                    connection.set("scm:git:https://github.com/autostyle/autostyle.git")
-                    developerConnection.set("scm:git:https://github.com/autostyle/autostyle.git")
-                    url.set("https://github.com/autostyle/autostyle")
-                    tag.set("HEAD")
+                    connection = "scm:git:https://github.com/autostyle/autostyle.git"
+                    developerConnection = "scm:git:https://github.com/autostyle/autostyle.git"
+                    url = "https://github.com/autostyle/autostyle"
+                    tag = "HEAD"
                 }
             }
         }
