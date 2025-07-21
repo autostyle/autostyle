@@ -27,7 +27,7 @@ sealed class ConvergenceResult(open val formatted: String) {
     }
 
     data class Convergence(val cycle: List<String>) : ConvergenceResult(cycle.last())
-    data class Cycle(val cycle: List<String>) : ConvergenceResult(cycle.minWith(listComparator)!!)
+    data class Cycle(val cycle: List<String>) : ConvergenceResult(cycle.minWithOrNull(listComparator)!!)
     data class Divergence(val cycle: List<String>) : ConvergenceResult("") {
         override val formatted: String
             get() = throw IllegalStateException("The formatting result diverges")

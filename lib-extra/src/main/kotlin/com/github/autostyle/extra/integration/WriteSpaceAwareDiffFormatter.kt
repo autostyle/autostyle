@@ -49,10 +49,10 @@ internal class WriteSpaceAwareDiffFormatter(
         private val CR_UTF8 = CR.toByteArray(StandardCharsets.UTF_8)
         private val LF_UTF8 = LF.toByteArray(StandardCharsets.UTF_8)
         private val TAB_UTF8 = TAB.toByteArray(StandardCharsets.UTF_8)
-        private val SPACE_SIMPLE = byteArrayOf(' '.toByte())
-        private val CR_SIMPLE = byteArrayOf('\\'.toByte(), 'r'.toByte())
-        private val LF_SIMPLE = byteArrayOf('\\'.toByte(), 'n'.toByte())
-        private val TAB_SIMPLE = byteArrayOf('\\'.toByte(), 't'.toByte())
+        private val SPACE_SIMPLE = byteArrayOf(' '.code.toByte())
+        private val CR_SIMPLE = byteArrayOf('\\'.code.toByte(), 'r'.code.toByte())
+        private val LF_SIMPLE = byteArrayOf('\\'.code.toByte(), 'n'.code.toByte())
+        private val TAB_SIMPLE = byteArrayOf('\\'.code.toByte(), 't'.code.toByte())
         private val isWindows = "win" in System.getProperty("os.name").toLowerCase()
         private fun replacementFor(
             charsetEncoder: CharsetEncoder,
@@ -96,7 +96,7 @@ internal class WriteSpaceAwareDiffFormatter(
             if (firstLine) {
                 firstLine = false
             } else {
-                out.write('\n'.toInt())
+                out.write('\n'.code)
             }
             header(lineA, endA, lineB, endB)
             var showWhitespace = edit.type == Edit.Type.REPLACE
@@ -153,26 +153,26 @@ internal class WriteSpaceAwareDiffFormatter(
     }
 
     private fun header(lineA: Int, endA: Int, lineB: Int, endB: Int) {
-        out.write('@'.toInt())
-        out.write('@'.toInt())
+        out.write('@'.code)
+        out.write('@'.code)
         range('-', lineA + 1, endA - lineA)
         range('+', lineB + 1, endB - lineB)
-        out.write(' '.toInt())
-        out.write('@'.toInt())
-        out.write('@'.toInt())
+        out.write(' '.code)
+        out.write('@'.code)
+        out.write('@'.code)
     }
 
     private fun range(prefix: Char, begin: Int, length: Int) {
-        out.write(' '.toInt())
-        out.write(prefix.toInt())
+        out.write(' '.code)
+        out.write(prefix.code)
         if (length == 0) {
             writeInt(begin - 1)
-            out.write(','.toInt())
-            out.write('0'.toInt())
+            out.write(','.code)
+            out.write('0'.code)
         } else {
             writeInt(begin)
             if (length > 1) {
-                out.write(','.toInt())
+                out.write(','.code)
                 writeInt(length)
             }
         }
@@ -183,7 +183,7 @@ internal class WriteSpaceAwareDiffFormatter(
         var i = 0
         val len = str.length
         while (i < len) {
-            out.write(str[i].toInt())
+            out.write(str[i].code)
             i++
         }
     }
@@ -195,8 +195,8 @@ internal class WriteSpaceAwareDiffFormatter(
         lines: IntList,
         showWhitespace: Boolean
     ) {
-        out.write('\n'.toInt())
-        out.write(prefix.toInt())
+        out.write('\n'.code)
+        out.write(prefix.code)
         if (!showWhitespace) {
             a.writeLine(out, lineA)
             return
@@ -206,16 +206,16 @@ internal class WriteSpaceAwareDiffFormatter(
         val end = lines[lineA + 2]
         while (i < end) {
             when (val b = bytes[i]) {
-                ' '.toByte() -> {
+                ' '.code.toByte() -> {
                     out.write(middleDot)
                 }
-                '\t'.toByte() -> {
+                '\t'.code.toByte() -> {
                     out.write(tab)
                 }
-                '\r'.toByte() -> {
+                '\r'.code.toByte() -> {
                     out.write(cr)
                 }
-                '\n'.toByte() -> {
+                '\n'.code.toByte() -> {
                     out.write(lf)
                 }
                 else -> {
