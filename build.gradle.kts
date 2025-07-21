@@ -1,9 +1,9 @@
 import com.github.vlsi.gradle.properties.dsl.props
+import java.time.Duration
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
-import java.time.Duration
 
 plugins {
     id("com.github.autostyle")
