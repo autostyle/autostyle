@@ -8,7 +8,7 @@ plugins {
 dependencies {
     api(project(":autostyle-lib"))
     api(project(":autostyle-lib-extra"))
-    implementation("org.ec4j.core:ec4j-core:0.3.0")
+    implementation("org.ec4j.core:ec4j-core:1.1.1")
 
     testImplementation(project(":autostyle-testlib"))
     testImplementation("org.assertj:assertj-core")
