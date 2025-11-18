@@ -19,7 +19,7 @@ jobs:
     name: 'Linux (JDK 17)'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 50
       - name: 'Set up JDK 17'
@@ -34,7 +34,7 @@ jobs:
     name: 'Self-check, Linux (JDK 17)'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 10
       - name: 'Set up JDK 17'
