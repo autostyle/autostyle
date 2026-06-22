@@ -23,10 +23,12 @@ import org.gradle.api.Project
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.tasks.*
 import org.gradle.kotlin.dsl.extra
+import org.gradle.work.DisableCachingByDefault
 import org.gradle.kotlin.dsl.property
 import java.nio.charset.Charset
 import javax.inject.Inject
 
+@DisableCachingByDefault(because = "Autostyle reports formatting violations and is not worth caching")
 open class AutostyleCheckTask @Inject constructor(
     objects: ObjectFactory
 ) : DefaultTask() {

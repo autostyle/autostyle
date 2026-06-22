@@ -81,8 +81,8 @@ open class GradleIntegrationTest : ResourceHarness() {
                 val file = iterator.previous()
                 val subPath = file.absolutePath.substring(rootLength)
                 if (subpathsToInclude.test(subPath)) {
-                    appendln("### $subPath ###")
-                    appendln(read(subPath))
+                    appendLine("### $subPath ###")
+                    appendLine(read(subPath))
                 }
             }
         }.toString()

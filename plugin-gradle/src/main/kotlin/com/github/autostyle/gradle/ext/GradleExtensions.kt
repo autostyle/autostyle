@@ -49,11 +49,11 @@ fun Project.asProvisioner() =
 
 val gradleGe51 = GradleVersion.current() >= GradleVersion.version("5.1")
 
-fun <T> Property<T>.conv(v: T) = if (gradleGe51) convention(v) else apply { set(v) }
-fun <T> Property<T>.conv(v: Provider<out T>) = if (gradleGe51) convention(v) else apply { set(v) }
+fun <T : Any> Property<T>.conv(v: T) = if (gradleGe51) convention(v) else apply { set(v) }
+fun <T : Any> Property<T>.conv(v: Provider<out T>) = if (gradleGe51) convention(v) else apply { set(v) }
 
-fun <T> ListProperty<T>.conv(v: Iterable<T>) = if (gradleGe51) convention(v) else apply { set(v) }
-fun <T> ListProperty<T>.conv(v: Provider<out Iterable<T>>) = if (gradleGe51) convention(v) else apply { set(v) }
+fun <T : Any> ListProperty<T>.conv(v: Iterable<T>) = if (gradleGe51) convention(v) else apply { set(v) }
+fun <T : Any> ListProperty<T>.conv(v: Provider<out Iterable<T>>) = if (gradleGe51) convention(v) else apply { set(v) }
 
-fun <K, V> MapProperty<K, V>.conv(v: Map<K, V>) = if (gradleGe51) convention(v) else apply { set(v) }
-fun <K, V> MapProperty<K, V>.conv(v: Provider<out Map<K, V>>) = if (gradleGe51) convention(v) else apply { set(v) }
+fun <K : Any, V : Any> MapProperty<K, V>.conv(v: Map<K, V>) = if (gradleGe51) convention(v) else apply { set(v) }
+fun <K : Any, V : Any> MapProperty<K, V>.conv(v: Provider<out Map<K, V>>) = if (gradleGe51) convention(v) else apply { set(v) }

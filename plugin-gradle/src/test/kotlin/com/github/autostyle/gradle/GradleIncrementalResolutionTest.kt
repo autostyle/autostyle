@@ -72,7 +72,7 @@ class GradleIncrementalResolutionTest : GradleIntegrationTest() {
     }
 
     private fun filename(name: String): String {
-        return name.toLowerCase(Locale.ROOT) + ".md"
+        return name.lowercase() + ".md"
     }
 
     private fun writeState(state: String) {
@@ -91,11 +91,11 @@ class GradleIncrementalResolutionTest : GradleIntegrationTest() {
             val letter = String(charArrayOf(c))
             if (Character.isLowerCase(c)) {
                 Assertions.assertEquals(
-                    letter.toLowerCase(Locale.ROOT),
+                    letter.lowercase(),
                     read(filename(letter)).trim())
             } else {
                 Assertions.assertEquals(
-                    letter.toUpperCase(Locale.ROOT),
+                    letter.uppercase(),
                     read(filename(letter)).trim())
             }
         }
@@ -133,5 +133,5 @@ class GradleIncrementalResolutionTest : GradleIntegrationTest() {
         get() = rootFolder().listFiles { it: File ->
             it.isFile && it.name.length == 4 && it.name.endsWith(".md")
         }
-            ?.all { read(it.name).let { c -> c == c.toLowerCase(Locale.ROOT) } } == true
+            ?.all { read(it.name).let { c -> c == c.lowercase() } } == true
 }

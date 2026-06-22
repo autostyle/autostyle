@@ -18,8 +18,10 @@ package com.github.autostyle.gradle
 import org.gradle.api.DefaultTask
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.tasks.*
+import org.gradle.work.DisableCachingByDefault
 import javax.inject.Inject
 
+@DisableCachingByDefault(because = "Autostyle rewrites sources in place, so caching brings no benefit")
 open class AutostyleApplyTask @Inject constructor(
     objects: ObjectFactory
 ) : DefaultTask() {
