@@ -85,6 +85,10 @@ allprojects {
             testImplementation("org.junit.jupiter:junit-jupiter-params")
             testImplementation("org.hamcrest:hamcrest")
             testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+            // Gradle bundles an older junit-platform-launcher; declare it so the launcher
+            // aligns with the junit-bom (5.13.x / platform 1.13.x), otherwise test discovery
+            // fails with "OutputDirectoryProvider not available".
+            testRuntimeOnly("org.junit.platform:junit-platform-launcher")
         }
     }
 
@@ -145,6 +149,15 @@ allprojects {
             }
             withType<Test>().configureEach {
                 useJUnitPlatform()
+                // google-java-format 1.28 reaches into jdk.compiler internals; tests that
+                // run the formatter need these exports on JDK 16+.
+                jvmArgs(
+                    "--add-exports", "jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
+                    "--add-exports", "jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
+                    "--add-exports", "jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED",
+                    "--add-exports", "jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
+                    "--add-exports", "jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED"
+                )
                 testLogging {
                     exceptionFormat = TestExceptionFormat.FULL
                     showStandardStreams = true

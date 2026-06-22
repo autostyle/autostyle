@@ -22,6 +22,8 @@ import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.ResolveException
 import org.gradle.api.artifacts.dsl.RepositoryHandler
 import org.gradle.api.attributes.Bundling
+import org.gradle.api.attributes.Usage
+import org.gradle.api.attributes.java.TargetJvmEnvironment
 import org.gradle.testfixtures.ProjectBuilder
 import java.io.File
 import java.nio.file.Files
@@ -62,6 +64,20 @@ object TestProvisioner {
                     it.attribute(
                         Bundling.BUNDLING_ATTRIBUTE,
                         project.objects.named(Bundling::class.java, Bundling.EXTERNAL)
+                    )
+                    // google-java-format 1.28 pulls guava, which publishes both jre/android
+                    // and api/runtime variants. Bundling alone is ambiguous, so pin the
+                    // runtime classpath on a standard JVM to select guava's jreRuntimeElements.
+                    it.attribute(
+                        Usage.USAGE_ATTRIBUTE,
+                        project.objects.named(Usage::class.java, Usage.JAVA_RUNTIME)
+                    )
+                    it.attribute(
+                        TargetJvmEnvironment.TARGET_JVM_ENVIRONMENT_ATTRIBUTE,
+                        project.objects.named(
+                            TargetJvmEnvironment::class.java,
+                            TargetJvmEnvironment.STANDARD_JVM
+                        )
                     )
                 }
             }.resolve()
