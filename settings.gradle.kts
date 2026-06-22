@@ -68,7 +68,7 @@ buildscript {
     if (property("skipAutostyle")?.ifBlank { "true" }?.toBoolean() == true) {
         // Skip
     } else if (property("autostyleSelf")?.ifBlank { "true" }?.toBoolean() == true) {
-        val ver = property("autostyle.version") + "-SNAPSHOT"
+        val ver = "current".v() + "-SNAPSHOT"
 
         repositories {
             gradlePluginPortal()
