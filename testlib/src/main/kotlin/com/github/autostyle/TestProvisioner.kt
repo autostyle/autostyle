@@ -17,6 +17,7 @@ package com.github.autostyle
 
 import com.github.autostyle.serialization.deserialize
 import com.github.autostyle.serialization.serialize
+import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.ResolveException
@@ -94,7 +95,9 @@ object TestProvisioner {
                 }
                 resolve()
             } catch (e: ResolveException) { /* Provide Maven coordinates in exception message instead of static string 'detachedConfiguration' */
-                throw ResolveException(mavenCoords.toString(), e)
+                // Gradle 9 makes ResolveException's constructors protected, so wrap in a
+                // GradleException to keep the coordinates in the message.
+                throw GradleException(mavenCoords.toString(), e)
             } finally { // delete the temp dir
                 Files.walk(tempDir.toPath())
                     .sorted(Comparator.reverseOrder())
