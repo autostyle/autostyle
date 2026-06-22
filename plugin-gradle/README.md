@@ -32,6 +32,9 @@ Autostyle is a general-purpose formatting plugin.  It is completely à la carte,
 |-----------|---------|--------------|-------------|---------------|
 | 3.2       | 5.6-7.0 | 8-16         | 8           | 1.3           |
 | 4.0       | 7.0+    | 8+           | 8           | 1.4           |
+| 5.0       | 7.3+    | 17+          | 17          | 1.8           |
+
+Autostyle 5.0 requires Java 17. It bundles JGit 7.x, which needs Java 17, so run Gradle on a Java 17 (or newer) JVM.
 
 To people who use your build, it looks like this:
 

@@ -1,3 +1,7 @@
+### Version 5.0
+* Require Java 17 to run Autostyle (the Java target moves from 8 to 17)
+* Bump org.eclipse.jgit to 7.7.0; jgit 7.x requires Java 17
+
 ### Version 4.0
 * Drop Eclipse-based formatters
 * Bump Gradle to 8.5
