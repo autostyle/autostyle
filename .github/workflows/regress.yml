@@ -27,14 +27,17 @@ jobs:
         run: |
           git clone --depth 100 https://github.com/apache/jmeter.git ../jmeter
           git rev-parse HEAD
+      # JMeter enables Gradle dependency verification, but its verification-metadata.xml
+      # does not cover Autostyle's own build dependencies, so turn verification off for
+      # the regression check.
       - name: 'autostyleCheck'
         working-directory: ../jmeter
         run: |
-          ./gradlew -no-parallel --no-daemon -PchecksumIgnore -PlocalAutostyle autostyleCheck
+          ./gradlew -no-parallel --no-daemon -PchecksumIgnore -PlocalAutostyle --dependency-verification=off autostyleCheck
       - name: 'autostyleApply'
         working-directory: ../jmeter
         run: |
-          ./gradlew -no-parallel --no-daemon -PchecksumIgnore -PlocalAutostyle autostyleApply
+          ./gradlew -no-parallel --no-daemon -PchecksumIgnore -PlocalAutostyle --dependency-verification=off autostyleApply
 
   linux-vrp:
     name: 'vlsi-release-plugins (JDK 17, Linux)'
