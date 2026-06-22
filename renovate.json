@@ -15,8 +15,7 @@
     {
       "matchPackagePrefixes": ["org.eclipse.jgit"],
       "groupName": "org.eclipse.jgit",
-      "description": "TODO: jgit 6.0 requires Java 11",
-      "allowedVersions": "< 6.0"
+      "description": "jgit 7.x requires Java 17, which Autostyle 5.0 already targets"
     },
     {
       "matchPackagePrefixes": ["org.jdrupes.mdoclet"],

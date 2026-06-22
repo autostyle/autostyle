@@ -103,9 +103,9 @@ allprojects {
             @Suppress("DEPRECATION")
             apiVersion = KotlinVersion.KOTLIN_1_8
             languageVersion = apiVersion
-            jvmTarget = JvmTarget.JVM_1_8
+            jvmTarget = JvmTarget.JVM_17
             freeCompilerArgs.add("-Xjvm-default=all")
-            freeCompilerArgs.add("-Xjdk-release=1.8")
+            freeCompilerArgs.add("-Xjdk-release=17")
         }
     }
 
@@ -132,7 +132,7 @@ allprojects {
         tasks {
             withType<JavaCompile>().configureEach {
                 options.encoding = "UTF-8"
-                options.release.set(8)
+                options.release.set(17)
             }
 
             withType<Jar>().configureEach {
