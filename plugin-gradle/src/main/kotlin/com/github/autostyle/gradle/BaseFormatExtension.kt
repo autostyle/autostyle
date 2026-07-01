@@ -221,10 +221,17 @@ open class BaseFormatExtension @Inject constructor(
                             project.files(it).asFileTree
                         }
                     is String ->
-                        if (File(it).isDirectory) {
-                            project.fileTree(it)
-                        } else {
-                            project.files(it).asFileTree
+                        when {
+                            File(it).isDirectory -> project.fileTree(it)
+                            it.any { c -> c == '*' || c == '?' } -> {
+                                // Ant-style glob (e.g. "**/*.md"): resolve as an include pattern
+                                // relative to the project directory. Project.files() does not
+                                // expand globs, so a glob target would otherwise silently match
+                                // nothing.
+                                val pattern = it
+                                project.fileTree(project.projectDir) { include(pattern) }
+                            }
+                            else -> project.files(it).asFileTree
                         }
                     else -> project.fileTree(it)
                 }.matching(filter)
