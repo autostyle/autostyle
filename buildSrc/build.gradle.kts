@@ -18,5 +18,5 @@ plugins {
 }
 
 dependencies {
-    api("com.gradleup.nmcp:com.gradleup.nmcp.gradle.plugin:1.6.1")
+    api("com.gradleup.nmcp:com.gradleup.nmcp.gradle.plugin:1.6.2")
 }
