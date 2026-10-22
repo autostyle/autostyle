@@ -54,10 +54,121 @@ class ApplyTaskTest : GradleIntegrationTest() {
         Assertions.assertEquals(expected, file.readText())
     }
 
+    /**
+     * Escapes CR and LF as the literal text `\r` and `\n`, so a line-ending mismatch stays legible
+     * in an `assertEquals` failure.
+     */
+    private fun String.escapeLineEndings() =
+        replace("\r", "\\r").replace("\n", "\\n")
+
     @Test
     fun lowercase() {
         writeBuildFile("'42'")
         applyTask(true, "42")
+    }
+
+    @Test
+    fun appliesWindowsLineEndings() {
+        setFile("build.gradle").toContent(
+            """
+        plugins {
+            id 'com.github.autostyle'
+        }
+        autostyle {
+            lineEndings = com.github.autostyle.LineEnding.WINDOWS
+            format 'misc', {
+                target file('src/README.md')
+                endWithNewline()
+            }
+        }
+        """.trimIndent()
+        )
+
+        val source = setFile("src/README.md").toContent("first\nsecond\n")
+
+        runner.withArguments("autostyleApply").build()
+
+        Assertions.assertEquals(
+            "first\r\nsecond\r\n".escapeLineEndings(),
+            source.readText().escapeLineEndings()
+        )
+
+        runner.withArguments("autostyleCheck").build()
+
+        val formatted = newFile(
+            "build/autostyle/autostyleMiscProcess/formatted/src/README.md"
+        )
+        Assertions.assertFalse(formatted.exists())
+
+        runner.withArguments("autostyleApply").build()
+        Assertions.assertEquals(
+            "first\r\nsecond\r\n".escapeLineEndings(),
+            source.readText().escapeLineEndings()
+        )
+
+        runner.withArguments("autostyleCheck").build()
+        Assertions.assertFalse(formatted.exists())
+    }
+
+    @Test
+    fun appliesUnixLineEndings() {
+        setFile("build.gradle").toContent(
+            """
+        plugins {
+            id 'com.github.autostyle'
+        }
+        autostyle {
+            lineEndings = com.github.autostyle.LineEnding.UNIX
+            format 'misc', {
+                target file('src/README.md')
+                endWithNewline()
+            }
+        }
+        """.trimIndent()
+        )
+
+        val source = setFile("src/README.md").toContent("first\r\nsecond\r\n")
+
+        runner.withArguments("autostyleApply").build()
+
+        Assertions.assertEquals(
+            "first\nsecond\n".escapeLineEndings(),
+            source.readText().escapeLineEndings()
+        )
+
+        runner.withArguments("autostyleCheck").build()
+    }
+
+    @Test
+    fun appliesGitAttributesLineEndings() {
+        // GradleIntegrationTest's @BeforeEach writes a ".gitattributes" of "* text eol=lf" into
+        // every test project; this test replaces it so *.md resolves to CRLF under the default policy.
+        setFile(".gitattributes").toContent("*.md text eol=crlf\n")
+
+        setFile("build.gradle").toContent(
+            """
+        plugins {
+            id 'com.github.autostyle'
+        }
+        autostyle {
+            format 'misc', {
+                target file('src/README.md')
+                endWithNewline()
+            }
+        }
+        """.trimIndent()
+        )
+
+        val source = setFile("src/README.md").toContent("first\nsecond\n")
+
+        runner.withArguments("autostyleApply").build()
+
+        Assertions.assertEquals(
+            "first\r\nsecond\r\n".escapeLineEndings(),
+            source.readText().escapeLineEndings()
+        )
+
+        runner.withArguments("autostyleCheck").build()
     }
 
     @Test

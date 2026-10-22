@@ -123,7 +123,10 @@ abstract class AutostyleTask @Inject constructor(
                 is ConvergenceResult.Clean ->
                     project.delete(outFile)
                 is ConvergenceResult.Convergence ->
-                    outFile.writeText(result.formatted, formatter.encoding)
+                    outFile.writeText(
+                        formatter.computeLineEndings(result.formatted, file),
+                        formatter.encoding
+                    )
                 is ConvergenceResult.Cycle -> {
                     storeCycle(formatter, divergingDir, relativeFile, result.cycle)
                     cycles += relativeFile.toString()
